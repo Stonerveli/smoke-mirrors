@@ -71,6 +71,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5}
 .stash-item.pick{outline:2px solid var(--bud);outline-offset:-2px}
 .stash-item .pickbadge{position:absolute;top:6px;left:6px;background:var(--bud);color:#0a0a0a;font-size:10px;font-weight:800;padding:2px 6px;border-radius:3px;display:none}
 .stash-item.pick .pickbadge{display:block}
+.stash-item .vbadge{position:absolute;top:6px;left:6px;background:rgba(10,10,10,.82);color:var(--bud);font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.04em;z-index:2}.stash-item .vbadge.add{color:var(--bone-dim)}
 .filterbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .shot{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px;margin-bottom:10px}
 .shot .sh-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
@@ -127,21 +128,29 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 .collapse .body code{color:var(--bone);background:var(--black);padding:1px 5px;border-radius:3px;font-size:11px}
 .tokenchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .steptag{font-family:var(--slate);font-stretch:condensed;font-weight:800;font-size:11px;letter-spacing:.1em;color:var(--gold);text-transform:uppercase;margin:18px 0 8px;display:block}
+.brand .clap{height:40px;width:auto;align-self:center;flex:0 0 auto}
+.stash-item .noimg{height:120px;display:flex;align-items:center;justify-content:center;font-family:var(--slate);font-weight:800;font-size:24px;color:var(--bud);background:#161616}
+@media(max-width:760px){nav{overflow-x:auto;justify-content:flex-start}nav button{flex:0 0 auto;min-width:60px}}
+.stash-item .setmain{position:absolute;top:6px;left:6px;font-size:9px;padding:2px 6px;background:rgba(20,20,20,.85);color:var(--bone);border:1px solid var(--line);border-radius:4px;cursor:pointer;z-index:3}.stash-item .mainbadge{position:absolute;top:6px;left:6px;background:var(--bud);color:#0a0a0a;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;z-index:3}.stash-item.ismain img{outline:2px solid var(--bud);outline-offset:-2px}
 </style>
 </head>
 <body>
 <div class="appwrap">
 <nav>
-  <button data-go="studio" class="on"><span class="ic">◉</span>Studio</button>
+  <button data-go="episodes" class="on"><span class="ic">▤</span>Episodes</button>
+  <button data-go="studio"><span class="ic">◉</span>Studio</button>
   <button data-go="board"><span class="ic">▦</span>Pre-Roll</button>
   <button data-go="stash"><span class="ic">⊞</span>Stash</button>
+  <button data-go="cast"><span class="ic">☺</span>Cast</button>
+  <button data-go="sets"><span class="ic">◳</span>Sets</button>
   <button data-go="story"><span class="ic">✎</span>Story</button>
+  <button data-go="media"><span class="ic">♪</span>Media</button>
   <button data-go="reel"><span class="ic">▷</span>Cut</button>
   <button data-go="settings"><span class="ic">⚙</span>Setup</button>
 </nav>
 <div class="layout">
 <header>
-  <div class="brand"><div><h1>Smoke <span class="amp">&amp;</span> Mirrors</h1><div class="sub">Stoneralia Studio</div></div></div>
+  <div class="brand"><img class="clap" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAADICAYAAADWfGxSAABAe0lEQVR4nO29eZglVZmv+64VEXvO3LlzqCGLmilBEEQLhCoQBBVQQZS2EGVUwaHb7j59731u3+5z+97TT5/uPucOp2+3Q9syqaACBcrQKg6MKoVKMjdYUDM1ZOWw5zki1rp/xI6srKzMrMxi7ygo432efMgi944hc/9ire/7fetbEBISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEnIA0ekTrF271vK/Hxoacqb8WHf6/CEhxzIdF/BsnHfeeWa5XJ64hlDgISHzo1MCFoC++OKLo6VS6S+EEFGtdbNer99kGEYTIB6Pq8cff7w820FCgYeEzE5HBbx+/fouIUTRsrxZtOM4ZSGEEkKgtWpqzU1AQ2stgMYbFfiqVavUxo0b1aSXhAIPOabpqIDXrl3bH41GNwshusrlMkopCwRKawwpicaiRCwLwzAAsG27DLQErpvATUKIhtZaSCnnLXA4OAYPBR5yrNERAa9du9YaGhqyzz777L+yLOvvc7m88z/9xR9bAwMDeveu7ezctZex8SzlctUZz+XI5wqYpimEEKYQBy7JMAy01hNfMwlcKaUjkYhwHGeT4zhPua4rBgYG9EMPPVScy7X634cCD3mrYXb4+DGttbAsi/XvOY3jj18pmo0z8DVabTStaDTGXXffx5f/7C8ZGOjXUkqi0SiWZSGldEzTxLIshBDCsqyU1hpf5IZh/JUvbh/DMIqGYehSqSTOOuusTVLKTQCmaTKdwIeGhmz/vUNDQ4fcwGEEDqHIQ44iHRawdBzHYWCgl2QiztjoKK6rWwIWCAEmksce30Sz2aRYLAqlDtKHZRgGpmliGAaGYWjTNA8SuGVZk39uCSG6J27ONC8SQlw0ncCr1Yo499xzN6HUJgVIKY9I4GGiLeRo0kkBCymJNRoOmZ4eunu6qVWqmKYEQGtNLBbl2edf5M677iad9nQnpZw4gC8827ZpNpu0kl2TsaSUmKaJaZpIKbEsS0ciESKRCFJKZZqmslpxtmEYFtBtGJJypYpjOxfFYrGLTNNAStl6jSyC0PV6zRM4bFJKHSTweDwua7WaCjPpIUebTghYDA0N2evXr+8C/fl6vU4q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" alt="clapperboard"><div><h1>Smoke <span class="amp">&amp;</span> Mirrors</h1><div class="sub">Stoneralia Studio</div></div></div>
   <div class="keystat"><span class="dot" id="keydot"></span><span id="keytxt">No key</span></div>
 </header>
 <main>
@@ -170,6 +179,10 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <button class="btn ghost sm" id="directBtn" style="margin-top:12px;width:100%">✦ Direct this shot (AI)</button>
     <div id="directOut"></div>
   </div>
+  <div class="card" id="castSetCard" style="display:none">
+    <label class="fld">Cast in this shot</label><div class="tokenchips" id="castPick"></div>
+    <label class="fld" style="margin-top:10px">Set / location</label><div class="tokenchips" id="setPick"></div>
+  </div>
   <div class="card" id="refsCard" style="display:none">
     <label class="fld">Reference gear — from The Stash</label>
     <div class="hint" style="margin-bottom:10px">Tap pieces to dress the shot. They get fed in as reference images.</div>
@@ -180,7 +193,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <div class="row">
       <div><label class="fld">Aspect</label><select id="aspect"><option value="auto">auto</option><option value="9:16">9:16 · TikTok / Reels / Shorts</option><option value="1:1">1:1 · Instagram feed</option><option value="4:5">4:5 · Instagram / FB portrait</option><option value="16:9">16:9 · YouTube / landscape</option><option value="2:3">2:3 · Pinterest</option><option value="3:2">3:2 · photo / landscape</option></select></div>
       <div id="numWrap"><label class="fld">Count</label><select id="numImages"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
-      <div id="durWrap" style="display:none"><label class="fld">Duration (s)</label><select id="duration"><option>5</option><option>8</option><option>10</option></select></div>
+      <div id="durWrap" style="display:none"><label class="fld">Duration (s) — per clip</label><select id="duration"><option>5</option><option>8</option><option>10</option><option>12</option><option>15</option></select><div class="hint">Max 15s (Seedance) / 10s (Kling) per clip. Build 1–10 min films by chaining clips in The Cut → CapCut.</div></div>
       <div id="resWrap" style="display:none"><label class="fld">Resolution</label><select id="resolution"><option>720p</option><option>1080p</option></select></div>
     </div>
     <div id="audioWrap" style="display:none;margin-top:10px"><label class="chip" style="cursor:pointer"><input type="checkbox" id="genAudio" style="width:auto;margin-right:6px">Generate audio</label></div>
@@ -254,10 +267,10 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <div class="row" style="margin-bottom:10px">
       <input type="text" id="stashName" placeholder="Name — e.g. Common Scents Tee">
       <select id="stashCat" style="min-width:130px">
-        <option value="Tees">Tees</option><option value="Hoodies">Hoodies</option><option value="Top">Top</option>
-        <option value="Sportswear">Sportswear</option><option value="Jogger">Jogger</option><option value="Pants">Pants</option><option value="Shorts">Shorts</option>
-        <option value="Tracksuit">Tracksuit</option><option value="Hat">Hat</option><option value="Footwear">Footwear</option>
-        <option value="Outerwear">Outerwear</option><option value="Accessory">Accessory</option>
+        <option value="Tees">Tees</option><option value="Hoodies">Hoodies</option><option value="Tops">Tops</option>
+        <option value="Sportswear">Sportswear</option><option value="Joggers">Joggers</option><option value="Pants">Pants</option><option value="Shorts">Shorts</option>
+        <option value="Tracksuits">Tracksuits</option><option value="Hats">Hats</option><option value="Footwear">Footwear</option>
+        <option value="Outerwear">Outerwear</option><option value="Accessories">Accessories</option>
       </select>
     </div>
     <div class="row" style="margin-bottom:10px">
@@ -282,6 +295,8 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <div id="stylistOut"></div>
   </div>
 
+  <div id="stashEditor" class="card" style="display:none"></div>
+  <input type="file" id="viewFile" accept="image/*" style="display:none">
   <div class="filterbar" id="stashFilter"></div>
   <div id="stashGrid"></div>
 </section>
@@ -327,6 +342,120 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
   <div id="reelGrid"></div>
 </section>
 
+<!-- ===== CAST ===== -->
+<section class="view" id="view-cast">
+  <div class="card">
+    <label class="fld">Add a character</label>
+    <input type="text" id="castName" placeholder="Name — e.g. Chieff, Szn, The Landlord">
+    <textarea id="castIdentity" style="min-height:72px;margin-top:8px" placeholder="Identity lock — the canonical look injected into every shot of this character"></textarea>
+    <button class="btn green" id="castAdd" style="margin-top:10px;width:100%">+ Add character</button>
+    <div class="hint" style="margin-top:8px">Then tap the character to add reference photos, build a 6-angle sheet, and set a voice. Chieff loads himself on first run.</div>
+  </div>
+  <div class="filterbar" id="castFilter"></div>
+  <div id="castEditor" class="card" style="display:none"></div>
+  <div id="castGrid"></div>
+  <input type="file" id="assetFile" accept="image/*" style="display:none">
+</section>
+<!-- ===== SETS ===== -->
+<section class="view" id="view-sets">
+  <div class="card">
+    <label class="fld">Add a location</label>
+    <input type="text" id="setName" placeholder="Name — e.g. The Bodega, Rooftop, Stoneralia Alley">
+    <textarea id="setVibe" style="min-height:72px;margin-top:8px" placeholder="Vibe — time of day, mood, energy, light"></textarea>
+    <button class="btn green" id="setAdd" style="margin-top:10px;width:100%">+ Add location</button>
+    <label class="fld" style="margin-top:12px">Or tap a recommended set</label>
+    <div class="tokenchips" id="setPresets"></div>
+    <div class="hint" style="margin-top:8px">Tap a location to get scene suggestions, build a plate image, or add reference photos.</div>
+  </div>
+  <div id="setsEditor" class="card" style="display:none"></div>
+  <div id="setsGrid"></div>
+</section>
+<!-- ===== MEDIA HOUSE ===== -->
+<section class="view" id="view-media">
+  <div class="card">
+    <label class="fld">Narrator &harr; Chieff — write the bit</label>
+    <input type="text" id="banterCtx" placeholder="The beat — e.g. Chieff ignores the HOA notice">
+    <button class="btn ghost" id="banterBtn" style="margin-top:10px;width:100%">&#10022; Write narrator + Chieff reaction (AI)</button>
+    <div id="banterStatus"></div>
+    <label class="fld" style="margin-top:12px">Narrator line</label>
+    <textarea id="narratorLine" style="min-height:58px"></textarea>
+    <button class="btn sm green" id="voiceNarr" style="margin-top:6px">&#128266; Voice narrator</button>
+    <label class="fld" style="margin-top:12px">Chieff's dry line (optional)</label>
+    <textarea id="chieffLine" style="min-height:48px"></textarea>
+    <button class="btn sm green" id="voiceChief" style="margin-top:6px">&#128266; Voice Chieff</button>
+    <label class="fld" style="margin-top:12px">Chieff's physical bit (silent — direction only, not voiced)</label>
+    <textarea id="chieffPhysical" style="min-height:48px" readonly></textarea>
+  </div>
+  <div class="card">
+    <label class="fld">Voice model</label>
+    <select id="ttsSel">
+      <option value="fal-ai/elevenlabs/tts/eleven-v3">ElevenLabs v3 — expressive, inline tags</option>
+      <option value="fal-ai/minimax/speech-02-hd">MiniMax Speech 02 HD — 300+ voices</option>
+      <option value="__custom">Custom&hellip;</option>
+    </select>
+    <input type="text" id="ttsCustom" placeholder="paste a fal tts model id" style="display:none;margin-top:8px">
+    <div class="hint" id="ttsCost"></div>
+    <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="testTts">Test voice model</button></div>
+    <div id="ttsTest" class="statusline" style="display:none"></div>
+    <label class="fld" style="margin-top:12px">Any line — type, pick the voice type, voice it</label>
+    <select id="ttsType"><option>Narrator</option><option>Inner Chieff</option><option>Character</option></select>
+    <textarea id="ttsText" style="min-height:58px;margin-top:8px" placeholder="Type a line. Add [sarcastically], [deadpan], [sighs]&hellip; (ElevenLabs v3 performs them)"></textarea>
+    <input type="text" id="ttsVoice" placeholder="voice name (optional)" style="margin-top:8px">
+    <button class="btn green" id="ttsBtn" style="margin-top:10px;width:100%">&#128266; Voice it</button>
+    <div id="ttsStatus"></div><div class="result-wrap" id="ttsResult"></div>
+  </div>
+  <div class="card">
+    <label class="fld">Talking clip (lip-sync) — face + audio &rarr; video</label>
+    <select id="lipSel">
+      <option value="veed/fabric-1.0">VEED Fabric 1.0 — fast, realistic faces</option>
+      <option value="fal-ai/ai-avatar">MultiTalk (ai-avatar) — image + audio</option>
+      <option value="__custom">Custom&hellip; (HeyGen Avatar IV — best for Chieff)</option>
+    </select>
+    <input type="text" id="lipCustom" placeholder="paste a fal lip-sync model id" style="display:none;margin-top:8px">
+    <div class="hint" id="lipCost"></div>
+    <div class="hint" style="margin-top:4px">Chieff has no mouth — for him try HeyGen Avatar IV (built for cartoon / non-human) via Custom. Mouthed humans &amp; characters work on any of these.</div>
+    <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="testLip">How to test</button></div>
+    <div id="lipTest" class="statusline" style="display:none"></div>
+    <label class="fld" style="margin-top:12px">Face — pick a character, upload, or paste a URL</label><select id="lsFace"></select>
+    <input type="file" id="lipFaceFile" accept="image/*" style="display:none">
+    <label class="fld" style="margin-top:10px">Audio</label><select id="lsAudio"></select>
+    <button class="btn green" id="lipBtn" style="margin-top:10px;width:100%">&#127916; Make talking clip</button>
+    <div id="lipStatus"></div><div class="result-wrap" id="lipResult"></div>
+  </div>
+  <div class="card">
+    <label class="fld">Sound effect</label>
+    <select id="sfxSel"><option value="fal-ai/elevenlabs/sound-effects">ElevenLabs Sound Effects</option><option value="__custom">Custom&hellip;</option></select>
+    <input type="text" id="sfxCustom" placeholder="paste a fal sfx model id" style="display:none;margin-top:8px">
+    <div class="hint" id="sfxCost"></div>
+    <textarea id="sfxText" style="min-height:52px;margin-top:8px" placeholder="lighter flick, vinyl crackle, distant siren&hellip;"></textarea>
+    <button class="btn green" id="sfxBtn" style="margin-top:10px;width:100%">&#128266; Make sound</button>
+    <div id="sfxStatus"></div><div class="result-wrap" id="sfxResult"></div>
+  </div>
+  <div class="card">
+    <label class="fld">Suno prompt builder — copy-paste ready</label>
+    <textarea id="sunoScene" style="min-height:58px" placeholder="Scene / vibe / mood / story the song scores"></textarea>
+    <label class="row" style="margin-top:10px;align-items:center;gap:8px"><input type="checkbox" id="sunoInstrumental" style="width:auto;flex:0"> Instrumental — no vocals</label>
+    <label class="fld" style="margin-top:10px">Your genres — tap a few (less is more)</label>
+    <div class="tokenchips" id="sunoGenreChips"></div>
+    <div class="row" style="margin-top:8px"><input type="text" id="genreInput" placeholder="add your own genre…"><button class="btn ghost sm" id="genreAdd" style="flex:0">+ Save</button></div>
+    <button class="btn green" id="sunoBtn" style="margin-top:10px;width:100%">&#10022; Build Suno prompt</button>
+    <div id="sunoStatus"></div><div id="sunoOut"></div>
+  </div>
+</section>
+
+<!-- ===== EPISODES ===== -->
+<section class="view" id="view-episodes">
+  <div id="epHub">
+    <div class="card" style="text-align:center">
+      <div style="font-family:var(--slate);font-weight:800;font-size:18px;text-transform:uppercase;letter-spacing:.05em">Think in Episodes</div>
+      <div class="hint" style="margin-top:6px">Pick a creator type, lock the look, and let the brain write it in your voice — auto-reviewed &amp; cinematic by default.</div>
+      <button class="btn green" id="epNew" style="margin-top:12px;width:100%">+ New Episode</button>
+    </div>
+    <div id="epList"></div>
+  </div>
+  <div id="epEditorWrap" style="display:none"><div id="epEditor"></div></div>
+</section>
+
 <!-- ===== SETUP ===== -->
 <section class="view" id="view-settings">
   <div class="slatehead"><span class="num">06</span><h2>Setup</h2><span class="tag">Keys &amp; Models</span></div>
@@ -342,10 +471,17 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
   </div>
   <div class="card">
     <label class="fld">AI brain — Stylist, Director &amp; writers</label>
-    <input type="text" id="llmModel" placeholder="anthropic/claude-sonnet-4.6">
+    <select id="llmSel">
+      <option value="anthropic/claude-sonnet-4.6">Claude Sonnet 4.6 — best taste + speed</option>
+      <option value="google/gemini-2.5-pro">Gemini 2.5 Pro — smart alternative</option>
+      <option value="google/gemini-2.5-flash">Gemini 2.5 Flash — fastest / cheapest</option>
+      <option value="__custom">Custom&hellip;</option>
+    </select>
+    <input type="text" id="llmCustom" placeholder="paste a fal any-llm model id" style="display:none;margin-top:8px">
+    <div class="hint" id="llmCost"></div>
     <div class="row" style="margin-top:10px"><button class="btn ghost sm" id="testLlm">Test the brain</button></div>
     <div id="llmResult" class="statusline" style="display:none"></div>
-    <div class="hint" style="margin-top:10px">Powers the Stylist, Direct-this-shot, viral pitches, shot breakdowns &amp; Seedance writing — via <code>fal-ai/any-llm</code>.<br><b>Best fit (taste + speed):</b> <code>anthropic/claude-sonnet-4.6</code><br><b>Smart alt:</b> <code>google/gemini-2.5-pro</code><br><b>Fastest/cheapest:</b> <code>google/gemini-2.5-flash</code><br>Tap <b>Test the brain</b> to confirm a model works before relying on it.</div>
+    <div class="hint" style="margin-top:10px">Powers the Stylist, Direct-this-shot, viral pitches, shot breakdowns, Set ideas &amp; the Suno builder — via <code>fal-ai/any-llm</code>. Tap Test before relying on a model.</div>
   </div>
   <details class="collapse"><summary>Models in play</summary><div class="body">
     <p><b>Image</b> — <code>nano-banana-2</code>, <code>nano-banana-pro</code>, <code>gpt-image-2</code><br>
@@ -364,7 +500,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v5.1 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v5.5 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -378,7 +514,9 @@ const blank={
   picked:{image:"fal-ai/nano-banana-2",edit:"fal-ai/nano-banana-2/edit",video:"bytedance/seedance-2.0/reference-to-video",audio:"fal-ai/elevenlabs/sound-effects"},
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",charRefs:[],adjust:[],lastUrl:""},
-  stashFilter:"All"
+  stashFilter:"All",
+  cast:[],sets:[],castInit:false,customGenres:[],episodes:[],currentEp:null,castFilter:"All",
+  mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
 let S=load();
 function load(){try{return deepMerge(structuredClone(blank),JSON.parse(localStorage.getItem(LS)||"{}"));}catch(e){return structuredClone(blank);}}
@@ -426,14 +564,17 @@ function go(name){
   if(name==="story")renderShots();
   if(name==="studio")renderRefs();
   if(name==="board")renderBoardChars();
+  if(name==="episodes")renderEpisodes();
+  if(name==="cast")renderCast();
+  if(name==="sets")renderSets();
+  if(name==="media")renderMedia();
   window.scrollTo(0,0);
 }
 
 /* key */
 const keyDot=$("keydot"),keyTxt=$("keytxt");
 function refreshKeyStat(){const on=!!S.apiKey;keyDot.classList.toggle("on",on);keyTxt.textContent=on?"Key set":"No key";}
-$("apiKey").value=S.apiKey;$("llmModel").value=S.llmModel;
-$("llmModel").addEventListener("input",e=>{S.llmModel=e.target.value.trim()||"google/gemini-2.5-flash";save();});
+$("apiKey").value=S.apiKey;
 $("saveKey").addEventListener("click",()=>{S.apiKey=$("apiKey").value.trim();save();refreshKeyStat();toast(S.apiKey?"Key saved.":"Key cleared.");});
 $("testKey").addEventListener("click",async()=>{
   const r=$("keyResult"),key=$("apiKey").value.trim();
@@ -504,7 +645,9 @@ function syncStation(){
   const cust=document.createElement("option");cust.value="__custom";cust.textContent="Custom…";sel.appendChild(cust);
   const cur=S.picked[st.key]||MODEL_OPTS[st.key][0][0];const known=MODEL_OPTS[st.key].some(m=>m[0]===cur);
   sel.value=known?cur:"__custom";$("modelCustom").style.display=known?"none":"block";$("modelCustom").value=known?"":cur;
-  $("modelHint").textContent=st.hint;
+  $("modelHint").textContent=st.hint+" · ≈ "+costOf(currentModel());
+  if($("castSetCard"))$("castSetCard").style.display=(st.kind==="image"||st.kind==="video")?"block":"none";
+  renderCastSet();
   $("refsCard").style.display=st.refs?"block":"none";
   $("numWrap").style.display=st.kind==="image"?"block":"none";
   $("durWrap").style.display=st.kind==="video"?"block":"none";
@@ -514,7 +657,7 @@ function syncStation(){
 }
 $("modelSelect").addEventListener("change",e=>{const v=e.target.value;
   if(v==="__custom"){$("modelCustom").style.display="block";$("modelCustom").focus();}
-  else{$("modelCustom").style.display="none";S.picked[S.station]=v;save();}});
+  else{$("modelCustom").style.display="none";S.picked[S.station]=v;save();}$("modelHint").textContent=STATIONS[S.station].hint+" · ≈ "+costOf(currentModel());});
 $("modelCustom").addEventListener("input",e=>{if($("modelSelect").value==="__custom"){S.picked[S.station]=e.target.value.trim();save();}});
 function currentModel(){const v=$("modelSelect").value;return v==="__custom"?$("modelCustom").value.trim():v;}
 (function buildTokens(){const w=$("tokenChips");Object.keys(TOKENS).forEach(name=>{const c=document.createElement("span");c.className="chip";c.textContent="+ "+name;
@@ -534,11 +677,18 @@ async function runGenerate(){
   if(!model){toast("Pick a model.",true);return;}if(!prompt){toast("Write a prompt.",true);return;}
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const aspect=$("aspect").value;let input={prompt};
+  const stashItems=st.refs?S.stash.filter(x=>pickedRefs.has(x.id)):[];
+  const castItems=S.cast.filter(c=>prompt.toLowerCase().indexOf(("@"+c.name).toLowerCase())>-1);
+  const setItem=S.sets.find(x=>x.id===setPicked)||null;
+  const sceneText=identityNote(castItems)+setNote(setItem)+refNote(stashItems);
+  const refItems=[...castItems,...(setItem?[setItem]:[]),...stashItems];
   if(st.kind==="image"){input.num_images=parseInt($("numImages").value)||1;Object.assign(input,sizeFor(model,aspect));
-    if(st.refs){const urls=S.stash.filter(x=>pickedRefs.has(x.id)).map(x=>x.src);if(urls.length)input.image_urls=urls;}}
-  if(st.kind==="video"){const refs=S.stash.filter(x=>pickedRefs.has(x.id)).map(x=>x.src);
-    if(model.includes("kling")){input.duration=String($("duration").value);if(refs[0])input.image_url=refs[0];}
-    else{input.resolution=$("resolution").value;input.duration=String($("duration").value);if(aspect!=="auto")input.aspect_ratio=aspect;if(refs.length)input.image_urls=refs;if($("genAudio").checked)input.generate_audio=true;}}
+    if(st.refs){const urls=flattenRefs(refItems,12);if(urls.length)input.image_urls=urls;}
+    if(sceneText)input.prompt=prompt+sceneText;}
+  if(st.kind==="video"){
+    if(model.includes("kling")){input.duration=String($("duration").value);const cv=flattenRefs(refItems,1);if(cv[0])input.image_url=cv[0];}
+    else{input.resolution=$("resolution").value;input.duration=String($("duration").value);if(aspect!=="auto")input.aspect_ratio=aspect;const urls=flattenRefs(refItems,4);if(urls.length)input.image_urls=urls;if($("genAudio").checked)input.generate_audio=true;}
+    if(sceneText)input.prompt=prompt+sceneText;}
   const btn=$("genBtn");btn.disabled=true;btn.textContent="● Rolling…";
   const stat=$("studioStatus");stat.innerHTML='<div class="statusline"><span class="rec"></span><span id="stxt">Submitting to fal…</span></div>';$("studioResult").innerHTML="";
   try{
@@ -600,8 +750,9 @@ async function genBoard(){
   const g=GRIDS[gridKey];boardFrameCount=g.n;
   const useEdit=S.board.charRefs.length>0;
   const model=useEdit?"openai/gpt-image-2/edit":"openai/gpt-image-2";
-  const input={prompt:boardPrompt(g),image_size:{width:g.w,height:g.h}};
-  if(useEdit){const urls=S.board.charRefs.map(id=>{const it=S.stash.find(x=>x.id===id);return it?it.src:null;}).filter(Boolean).slice(0,8);if(urls.length)input.image_urls=urls;}
+  const bp=boardPrompt(g);
+  const input={prompt:bp,image_size:{width:g.w,height:g.h}};
+  if(useEdit){const items=S.board.charRefs.map(id=>S.stash.find(x=>x.id===id)).filter(Boolean);const urls=flattenRefs(items,12);if(urls.length)input.image_urls=urls;input.prompt=bp+refNote(items);}
   const btn=$("boardGen");btn.disabled=true;btn.textContent="● Boarding…";
   const stat=$("boardStatus");stat.innerHTML='<div class="statusline"><span class="rec"></span><span id="btxt">Submitting…</span></div>';$("boardResult").innerHTML="";
   try{
@@ -651,6 +802,32 @@ $("boardSeedance").addEventListener("click",async()=>{
 
 /* stash */
 function cat(it){return it.category||it.type||"piece";}
+function viewsOf(it){return (it.views&&it.views.length)?it.views:[{label:"Main",src:it.src}];}
+function flattenRefs(items,cap){const out=[];for(const it of items){for(const v of viewsOf(it)){if(v.src)out.push(v.src);if(out.length>=cap)return out;}}return out;}
+function refNote(items){const m=items.filter(it=>viewsOf(it).length>1);if(!m.length)return "";return " Product references are shown from multiple sides — "+m.map(it=>it.name+" ("+viewsOf(it).map(v=>v.label).join(", ")+")").join("; ")+". Put each design on its correct side or panel and keep every other side accurate.";}
+let editId=null,pendingLabel="Back";
+const VIEW_LABELS=["Front","Back","Left Sleeve","Right Sleeve","Hood","Front Panel","Back Panel","Side Panel","Collar","Detail","Tag"];
+function openEditor(id){editId=id;pendingLabel="Back";renderEditor();const e=$("stashEditor");e.style.display="block";e.scrollIntoView({behavior:"smooth",block:"center"});}
+function closeEditor(){editId=null;const e=$("stashEditor");if(e)e.style.display="none";}
+function renderEditor(){
+  const it=S.stash.find(x=>x.id===editId);if(!it){closeEditor();return;}
+  const vs=viewsOf(it);
+  let h='<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div><div style="font-family:var(--slate);font-stretch:condensed;font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:.04em">'+esc(it.name)+'</div><div class="hint">'+esc(cat(it))+' · '+vs.length+' side'+(vs.length>1?'s':'')+' loaded</div></div><button class="btn sm ghost" id="edClose" style="margin-left:auto;flex:0">Done</button></div>';
+  h+='<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(106px,1fr))">';
+  vs.forEach((v,i)=>{h+='<div class="stash-item'+(i===0?' ismain':'')+'"><button class="x" data-i="'+i+'">✕</button>'+(i===0?'<span class="mainbadge">★ main</span>':'<button class="setmain" data-m="'+i+'">set main</button>')+'<img src="'+v.src+'"><div class="meta"><div class="nm">'+esc(v.label)+'</div></div></div>';});
+  h+='</div>';
+  h+='<label class="fld" style="margin-top:16px">Add a side — pick what it is, then choose the photo</label><div class="tokenchips" id="viewLabels"></div>';
+  h+='<div class="row" style="margin-top:12px"><button class="btn green sm" id="addViewUpload">⬆ Upload the '+esc(pendingLabel)+'</button><button class="btn ghost sm" id="addViewUrl">🔗 URL</button></div>';
+  $("stashEditor").innerHTML=h;
+  $("edClose").addEventListener("click",closeEditor);
+  const lw=$("viewLabels");VIEW_LABELS.forEach(l=>{const c=document.createElement("span");c.className="chip"+(l===pendingLabel?" on":"");c.textContent=l;c.addEventListener("click",()=>{pendingLabel=l;renderEditor();});lw.appendChild(c);});
+  $("stashEditor").querySelectorAll(".x").forEach(b=>b.addEventListener("click",()=>removeView(parseInt(b.dataset.i))));
+  $("stashEditor").querySelectorAll(".setmain").forEach(b=>b.addEventListener("click",()=>setMainStash(parseInt(b.dataset.m))));
+  $("addViewUpload").addEventListener("click",()=>$("viewFile").click());
+  $("addViewUrl").addEventListener("click",()=>{const u=window.prompt("Paste a direct image URL for the "+pendingLabel+":");if(!u)return;if(!/^https?:\/\//.test(u)){toast("Needs to start with http.",true);return;}addView(pendingLabel,u.trim());});
+}
+function addView(label,src){const it=S.stash.find(x=>x.id===editId);if(!it)return;if(!it.views||!it.views.length)it.views=[{label:"Front",src:it.src}];it.views.push({label,src});it.src=it.views[0].src;save();renderEditor();renderStash();toast(label+" added.");}
+function removeView(i){const it=S.stash.find(x=>x.id===editId);if(!it)return;const vs=viewsOf(it);if(vs.length<=1){toast("A product needs at least one image.",true);return;}it.views=vs.filter((_,idx)=>idx!==i);it.src=it.views[0].src;save();renderEditor();renderStash();}
 $("stashUploadBtn").addEventListener("click",()=>{if(!$("stashName").value.trim()){toast("Name the piece first.",true);return;}$("stashFile").click();});
 $("stashFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;
   try{const src=await resizeImage(f,1024,0.82);const color=await avgColor(src);addStash($("stashName").value.trim(),$("stashCat").value,$("stashCollection").value.trim(),$("stashSeason").value,color,src);}
@@ -659,8 +836,9 @@ $("stashUrlBtn").addEventListener("click",async()=>{const name=$("stashName").va
   const url=window.prompt("Paste a direct image URL:");if(!url)return;if(!/^https?:\/\//.test(url)){toast("Needs to start with http.",true);return;}
   let color="";try{color=await avgColor(url);}catch(e){}addStash(name,$("stashCat").value,$("stashCollection").value.trim(),$("stashSeason").value,color,url.trim());});
 function addStash(name,category,collection,season,color,src){
-  S.stash.unshift({id:uid(),name,category,collection,season,color,src});save();
-  $("stashName").value="";$("stashCollection").value="";toast("Added to The Stash.");renderStashFilter();renderStash();
+  const id=uid();
+  S.stash.unshift({id,name,category,collection,season,color,src,views:[{label:"Front",src}]});save();
+  $("stashName").value="";$("stashCollection").value="";toast("Added — tap it to load back, sleeves & panels.");renderStashFilter();renderStash();
 }
 function renderStashFilter(){
   const bar=$("stashFilter");const cats=["All",...new Set(S.stash.map(cat))];
@@ -670,13 +848,15 @@ function renderStashFilter(){
 }
 function renderStash(){
   const host=$("stashGrid");
-  if(!S.stash.length){host.innerHTML='<div class="empty"><div class="big">Closet\'s empty</div>Load your gear — tees, hoodies, hats. They become reference shots.</div>';return;}
+  if(!S.stash.length){host.innerHTML='<div class="empty"><div class="big">Closet\'s empty</div>Load your gear — tees, hoodies, hats. Tap a piece to load its back, sleeves &amp; panels.</div>';return;}
   const f=S.stashFilter||"All";const items=S.stash.filter(it=>f==="All"||cat(it)===f);
   host.innerHTML='<div class="grid"></div>';const g=host.firstChild;
   items.forEach(it=>{const d=document.createElement("div");d.className="stash-item";
     const sw=it.color?'<span class="sw" style="background:'+it.color+'"></span>':'';
-    d.innerHTML='<button class="x">✕</button><img src="'+it.src+'"><div class="meta"><div class="nm">'+esc(it.name)+'</div><div class="ty">'+sw+esc(cat(it))+(it.collection?' · '+esc(it.collection):'')+'</div></div>';
-    d.querySelector(".x").addEventListener("click",()=>{S.stash=S.stash.filter(x=>x.id!==it.id);pickedRefs.delete(it.id);S.board.charRefs=S.board.charRefs.filter(x=>x!==it.id);save();renderStashFilter();renderStash();});
+    const nv=viewsOf(it).length;const badge=nv>1?'<span class="vbadge">▦ '+nv+' sides</span>':'<span class="vbadge add">＋ add sides</span>';
+    d.innerHTML='<button class="x">✕</button>'+badge+'<img src="'+it.src+'"><div class="meta"><div class="nm">'+esc(it.name)+'</div><div class="ty">'+sw+esc(cat(it))+(it.collection?' · '+esc(it.collection):'')+'</div></div>';
+    d.querySelector(".x").addEventListener("click",e=>{e.stopPropagation();S.stash=S.stash.filter(x=>x.id!==it.id);pickedRefs.delete(it.id);S.board.charRefs=S.board.charRefs.filter(x=>x!==it.id);save();renderStashFilter();renderStash();closeEditor();});
+    d.addEventListener("click",()=>openEditor(it.id));
     g.appendChild(d);});
 }
 function resizeImage(file,max,q){return new Promise((res,rej)=>{const img=new Image(),rd=new FileReader();
@@ -691,9 +871,9 @@ function avgColor(src){return new Promise(res=>{const img=new Image();img.crossO
 
 /* stylist */
 $("styleBtn").addEventListener("click",async()=>{
-  const tops=S.stash.filter(it=>["Tee","Tees","Hoodie","Hoodies","Top","Outerwear","Sportswear"].includes(cat(it)));
-  const bottoms=S.stash.filter(it=>["Jogger","Pants","Shorts"].includes(cat(it)));
-  if(S.stash.length<2||(!tops.length&&!S.stash.some(it=>cat(it)==="Tracksuit"))){toast("Add at least a top and a bottom first.",true);return;}
+  const tops=S.stash.filter(it=>["Tee","Tees","Hoodie","Hoodies","Top","Tops","Outerwear","Sportswear"].includes(cat(it)));
+  const bottoms=S.stash.filter(it=>["Jogger","Joggers","Pants","Shorts"].includes(cat(it)));
+  if(S.stash.length<2||(!tops.length&&!S.stash.some(it=>["Tracksuit","Tracksuits"].includes(cat(it))))){toast("Add at least a top and a bottom first.",true);return;}
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const out=$("stylistOut");out.innerHTML='<div class="statusline"><span class="rec"></span>Styling…</div>';
   const list=S.stash.map(it=>({id:it.id,name:it.name,category:cat(it),color:it.color||"unknown",collection:it.collection||"",season:it.season||"All-season"}));
@@ -841,6 +1021,9 @@ async function viralPitch(){
 function addReelItem(type,url,label){S.reel.unshift({id:uid(),type,url,prompt:label,ts:Date.now()});save();renderReel();toast("Added to The Cut.");}
 function setupExtras(){
   $("viralBtn").addEventListener("click",viralPitch);
+  if($("assetFile"))$("assetFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const src=await resizeImage(f,1024,0.82);addAssetView(aLabel,src);}catch(err){toast("Could not read that.",true);}e.target.value="";});
+  if($("castAdd"))$("castAdd").addEventListener("click",addCast);
+  if($("setAdd"))$("setAdd").addEventListener("click",addSet);
   $("testLlm").addEventListener("click",async()=>{
     if(!S.apiKey){toast("Add your fal key first.",true);return;}
     const r=$("llmResult");r.style.display="flex";r.innerHTML='<span class="rec"></span>Testing the brain…';
@@ -849,16 +1032,406 @@ function setupExtras(){
       else throw new Error("no reply");
     }catch(e){r.innerHTML='✗ '+esc(e.message||"failed")+' — try a different model string.';r.style.color="var(--red)";}
   });
+  $("viewFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const src=await resizeImage(f,1024,0.82);addView(pendingLabel,src);}catch(err){toast("Couldn't read that.",true);}e.target.value="";});
   $("importImg").addEventListener("click",()=>$("importCutFile").click());
   $("importCutFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const src=await resizeImage(f,1280,0.85);addReelItem("image",src,"Imported image");}catch(err){toast("Couldn't read that.",true);}e.target.value="";});
   $("importUrl").addEventListener("click",()=>{const u=window.prompt("Paste an image or video URL:");if(!u)return;if(!/^https?:\/\//.test(u)){toast("Needs to start with http.",true);return;}const t=/\.(mp4|webm|mov)/i.test(u)?"video":"image";addReelItem(t,u.trim(),"Imported "+t);});
 }
+/* ===== model costs (only real published figures; honest fallback otherwise) ===== */
+const MODEL_COSTS={
+ "fal-ai/elevenlabs/tts/eleven-v3":"$0.10 per 1,000 characters · inline tags like [sarcastically]",
+ "fal-ai/minimax/speech-02-hd":"per-character · 300+ preset voices",
+ "veed/fabric-1.0":"$0.08–0.15 per second of output",
+ "fal-ai/ai-avatar":"$0.20 per second (2× at 720p) · image + audio",
+ "fal-ai/kling-video/lipsync/audio-to-video":"$0.014 per 5-sec block · needs a video",
+ "fal-ai/elevenlabs/sound-effects":"pay per generation",
+ "anthropic/claude-sonnet-4.6":"pennies per call (text)",
+ "google/gemini-2.5-pro":"pennies per call (text)",
+ "google/gemini-2.5-flash":"fractions of a cent (text)"
+};
+function costOf(m){return MODEL_COSTS[m]||"pay-per-use on fal — see fal.ai for the rate";}
+function setupPicker(selId,custId,costId,get,set){
+  const sel=$(selId),cust=$(custId),cost=$(costId);if(!sel)return;
+  function refresh(){const isC=sel.value==="__custom";if(cust)cust.style.display=isC?"block":"none";const v=isC&&cust?cust.value.trim():sel.value;if(v)set(v);if(cost)cost.textContent="≈ "+costOf(v);save();}
+  sel.addEventListener("change",refresh);
+  if(cust)cust.addEventListener("input",()=>{if(sel.value==="__custom"){set(cust.value.trim());if(cost)cost.textContent="≈ "+costOf(cust.value.trim());save();}});
+  const cur=get();const known=[...sel.options].some(o=>o.value===cur);
+  if(known)sel.value=cur;else if(cust){sel.value="__custom";cust.style.display="block";cust.value=cur;}
+  if(cost)cost.textContent="≈ "+costOf(cur);
+}
+function setupPickers(){
+  setupPicker("llmSel","llmCustom","llmCost",()=>S.llmModel,v=>{S.llmModel=v||"google/gemini-2.5-flash";});
+  setupPicker("ttsSel","ttsCustom","ttsCost",()=>S.mediaModels.tts,v=>{S.mediaModels.tts=v;});
+  setupPicker("lipSel","lipCustom","lipCost",()=>S.mediaModels.lipsync,v=>{S.mediaModels.lipsync=v;});
+  setupPicker("sfxSel","sfxCustom","sfxCost",()=>S.mediaModels.sfx,v=>{S.mediaModels.sfx=v;});
+}
+
+/* ===== generic asset editor (Cast + Sets, reuses the multi-view system) ===== */
+let aKind=null,aId=null,aLabel="Face";
+const CAST_LABELS=["Face","3/4","Profile","Full Body","Back","Expression","Detail"];
+const SET_LABELS=["Wide","Detail","Alt Angle","Night","Day","Empty Plate"];
+function assetArr(k){return k==="cast"?S.cast:k==="sets"?S.sets:S.stash;}
+function assetOf(){const a=assetArr(aKind);return a&&a.find(x=>x.id===aId);}
+function openAsset(k,id){aKind=k;aId=id;aLabel=k==="cast"?"3/4":"Detail";renderAssetEditor();const e=$(k+"Editor");if(e){e.style.display="block";e.scrollIntoView({behavior:"smooth",block:"center"});}}
+function closeAsset(k){const e=$(k+"Editor");if(e)e.style.display="none";if(aKind===k){aKind=null;aId=null;}}
+function renderAssetEditor(){
+  const it=assetOf();if(!it){closeAsset(aKind);return;}
+  const labels=aKind==="cast"?CAST_LABELS:SET_LABELS;const vs=viewsOf(it).filter(v=>v.src);
+  let h='<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div><div style="font-family:var(--slate);font-stretch:condensed;font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:.04em">'+esc(it.name)+'</div><div class="hint">'+vs.length+' reference'+(vs.length===1?'':'s')+'</div></div><button class="btn sm ghost" id="aClose" style="margin-left:auto;flex:0">Done</button></div>';
+  if(aKind==="cast"){
+    h+='<label class="fld">Identity lock — injected into every shot for consistency</label><textarea id="aIdentity" style="min-height:84px">'+esc(it.identity||"")+'</textarea>';
+    h+='<label class="fld" style="margin-top:10px">Voice / vibe note</label><input type="text" id="aVoice" value="'+esc(it.voice||"")+'" placeholder="deadpan, dry, gravelly">';
+    h+='<label class="fld" style="margin-top:10px">Side</label><select id="aSide"><option value="neutral">Neutral</option><option value="hero">Hero / good guy</option><option value="villain">Villain / bad guy</option></select>';
+    h+='<label class="fld" style="margin-top:10px">Powers / abilities</label><textarea id="aPowers" style="min-height:54px" placeholder="what they can do">'+esc(it.powers||"")+'</textarea>';
+    h+='<label class="fld" style="margin-top:8px">Weakness</label><input type="text" id="aWeakness" value="'+esc(it.weakness||"")+'" placeholder="the flaw / kryptonite">';
+    h+='<button class="btn ghost sm" id="aSheet" style="margin-top:10px;width:100%">✦ Build a 6-angle reference sheet from the main photo</button><div id="aSheetStatus"></div>';
+  }else{
+    h+='<label class="fld">Vibe — what this place feels like</label><textarea id="aVibe" style="min-height:74px" placeholder="late-night bodega, buzzing fluorescents, neon haze">'+esc(it.vibe||"")+'</textarea>';
+    h+='<div class="row" style="margin-top:10px"><button class="btn ghost sm" id="aSuggest">✦ Suggest scenes (AI)</button><button class="btn green sm" id="aBuild">✦ Build this location</button></div><div id="aSetStatus"></div><div id="aSetResult"></div>';
+  }
+  h+='<label class="fld" style="margin-top:14px">References</label><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(106px,1fr))">';
+  vs.forEach((v,i)=>{h+='<div class="stash-item'+(i===0?' ismain':'')+'"><button class="x" data-i="'+i+'">✕</button>'+(i===0?'<span class="mainbadge">★ main</span>':'<button class="setmain" data-m="'+i+'">set main</button>')+'<img src="'+v.src+'"><div class="meta"><div class="nm">'+esc(v.label)+'</div></div></div>';});
+  if(!vs.length)h+='<div class="hint" style="padding:8px">No references yet — add some below so the AI stays consistent.</div>';
+  h+='</div>';
+  h+='<label class="fld" style="margin-top:12px">Add a reference — pick the angle, then the photo</label><div class="tokenchips" id="aLabels"></div>';
+  h+='<div class="row" style="margin-top:10px"><button class="btn green sm" id="aUpload">⬆ Upload '+esc(aLabel)+'</button><button class="btn ghost sm" id="aUrl">🔗 URL</button></div>';
+  $(aKind+"Editor").innerHTML=h;
+  $("aClose").addEventListener("click",()=>closeAsset(aKind));
+  if(aKind==="cast"){
+    $("aIdentity").addEventListener("input",e=>{it.identity=e.target.value;save();});
+    $("aVoice").addEventListener("input",e=>{it.voice=e.target.value;save();});
+    $("aSheet").addEventListener("click",()=>buildSheet(it));
+    if($("aSide")){$("aSide").value=it.side||"neutral";$("aSide").addEventListener("change",e=>{it.side=e.target.value;save();renderCast();});}
+    if($("aPowers"))$("aPowers").addEventListener("input",e=>{it.powers=e.target.value;save();});
+    if($("aWeakness"))$("aWeakness").addEventListener("input",e=>{it.weakness=e.target.value;save();});
+  }else{
+    $("aVibe").addEventListener("input",e=>{it.vibe=e.target.value;save();});
+    $("aSuggest").addEventListener("click",()=>suggestScenes(it));
+    $("aBuild").addEventListener("click",()=>buildLocation(it));
+  }
+  const lw=$("aLabels");labels.forEach(l=>{const c=document.createElement("span");c.className="chip"+(l===aLabel?" on":"");c.textContent=l;c.addEventListener("click",()=>{aLabel=l;renderAssetEditor();});lw.appendChild(c);});
+  $(aKind+"Editor").querySelectorAll(".x").forEach(b=>b.addEventListener("click",()=>{const i=parseInt(b.dataset.i);const t=assetOf();const v=viewsOf(t).filter(x=>x.src);t.views=v.filter((_,idx)=>idx!==i);t.src=t.views[0]?t.views[0].src:"";save();renderAssetEditor();renderCast();renderSets();}));
+  $(aKind+"Editor").querySelectorAll(".setmain").forEach(b=>b.addEventListener("click",()=>setMainAsset(parseInt(b.dataset.m))));
+  $("aUpload").addEventListener("click",()=>$("assetFile").click());
+  $("aUrl").addEventListener("click",()=>{const u=window.prompt("Image URL for the "+aLabel+":");if(!u)return;if(!/^https?:\/\//.test(u)){toast("Needs to start with http.",true);return;}addAssetView(aLabel,u.trim());});
+}
+function addAssetView(label,src){const it=assetOf();if(!it)return;if(!it.views)it.views=[];if(it.src&&!it.views.length)it.views=[{label:"Main",src:it.src}];it.views.push({label,src});it.src=it.views[0].src;save();renderAssetEditor();renderCast();renderSets();toast(label+" added.");}
+async function buildSheet(it){
+  if(!it.src){toast("Add a main photo first.",true);return;}
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const st=$("aSheetStatus");st.innerHTML='<div class="statusline"><span class="rec"></span>Building the reference sheet…</div>';
+  const prompt="A clean character reference sheet of this exact character on a neutral grey studio background: six angles arranged in a 3x2 grid — front, 3/4 left, left profile, 3/4 right, back, and a face close-up. Identical character, wardrobe, colors and proportions in every panel. "+(it.identity||"")+" Even soft lighting, no text, no labels.";
+  try{const out=await falRun("openai/gpt-image-2/edit",{prompt,image_urls:[it.src],image_size:{width:1536,height:1024}},null);
+    const m=extractMedia(out);if(!m)throw new Error("no image came back");
+    if(!it.views||!it.views.length)it.views=[{label:"Main",src:it.src}];it.views.push({label:"Ref Sheet",src:m.url});save();
+    st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Reference sheet added</div>';renderAssetEditor();renderCast();
+  }catch(e){st.innerHTML='<div class="statusline" style="color:var(--red)">✗ '+esc(e.message)+'</div>';}
+}
+async function suggestScenes(it){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const st=$("aSetStatus");st.innerHTML='<div class="statusline"><span class="rec"></span>Thinking up scenes…</div>';$("aSetResult").innerHTML="";
+  const sys="You are a location scout and scene strategist for the user's cannabis-culture universes (Chiefin' Season / Stoneralia, The High Crusader / THC, super-strain heroes) — deadpan, dark-comedic, cinematic. Given a place, suggest the best scenes and moods to shoot there for Chieff, on-brand and visually strong.";
+  const usr="LOCATION: "+it.name+(it.vibe?" — "+it.vibe:"")+"\nGive 4 quick scene ideas (one line each: time of day, mood, what happens). No preamble.";
+  try{const txt=await llmRun(sys,usr);$("aSetResult").innerHTML='<div class="promptbox">'+esc(txt)+'</div>';st.innerHTML="";}
+  catch(e){st.innerHTML='<div class="statusline" style="color:var(--red)">✗ '+esc(e.message)+'</div>';}
+}
+async function buildLocation(it){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const st=$("aSetStatus");st.innerHTML='<div class="statusline"><span class="rec"></span>Building the plate…</div>';$("aSetResult").innerHTML="";
+  const prompt="A cinematic establishing location plate, no people: "+it.name+". "+(it.vibe||"")+" Photoreal, film-quality, atmospheric lighting, 16:9, production-ready, fine grain.";
+  try{const out=await falRun("fal-ai/nano-banana-2",{prompt,num_images:1,aspect_ratio:"16:9"},null);
+    const m=extractMedia(out);if(!m)throw new Error("no image came back");
+    if(!it.views)it.views=[];it.views.unshift({label:"Wide",src:m.url});it.src=m.url;save();
+    st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Location plate saved as a reference</div>';$("aSetResult").innerHTML='<div class="result-wrap"><img src="'+m.url+'"></div>';renderSets();renderAssetEditor();
+  }catch(e){st.innerHTML='<div class="statusline" style="color:var(--red)">✗ '+esc(e.message)+'</div>';}
+}
+
+/* ===== Cast + Sets sections ===== */
+function addCast(){const name=$("castName").value.trim();if(!name){toast("Name the character.",true);return;}
+  S.cast.unshift({id:uid(),name,identity:$("castIdentity").value.trim(),voice:"",color:"",src:"",views:[]});save();
+  $("castName").value="";$("castIdentity").value="";toast("Character added — tap it to add reference photos.");renderCast();renderCastSet();}
+function addSet(){const name=$("setName").value.trim();if(!name){toast("Name the location.",true);return;}
+  S.sets.unshift({id:uid(),name,vibe:$("setVibe").value.trim(),src:"",views:[]});save();
+  $("setName").value="";$("setVibe").value="";toast("Location added — tap it to build or add photos.");renderSets();renderCastSet();}
+function castCard(it,kind){
+  const d=document.createElement("div");d.className="stash-item";
+  const nv=viewsOf(it).filter(v=>v.src).length;
+  const img=it.src?'<img src="'+it.src+'">':'<div class="noimg">'+esc((it.name||"?").slice(0,2).toUpperCase())+'</div>';
+  const badge=nv>0?'<span class="vbadge">▦ '+nv+' ref'+(nv>1?'s':'')+'</span>':'<span class="vbadge add">＋ add refs</span>';
+  const sub=kind==="cast"?(it.identity?esc(it.identity.slice(0,44)):'no identity lock yet'):(it.vibe?esc(it.vibe.slice(0,44)):'no vibe set');
+  d.innerHTML='<button class="x">✕</button>'+badge+img+'<div class="meta"><div class="nm">'+esc(it.name)+'</div><div class="ty">'+sub+'</div></div>';
+  d.querySelector(".x").addEventListener("click",e=>{e.stopPropagation();
+    if(kind==="cast"){S.cast=S.cast.filter(x=>x.id!==it.id);castPicked.delete(it.id);}else{S.sets=S.sets.filter(x=>x.id!==it.id);if(setPicked===it.id)setPicked="";}
+    save();renderCast();renderSets();renderCastSet();closeAsset(kind);});
+  d.addEventListener("click",()=>openAsset(kind,it.id));
+  return d;
+}
+function renderCast(){renderCastFilter();const host=$("castGrid");if(!host)return;
+  if(!S.cast.length){host.innerHTML='<div class="empty"><div class="big">No cast yet</div>Add a character and lock their look. Chieff loads himself on first run.</div>';return;}
+  const f=S.castFilter||"All";const list=S.cast.filter(c=>f==="All"||(f==="Heroes"&&c.side==="hero")||(f==="Villains"&&c.side==="villain"));
+  host.innerHTML='<div class="grid"></div>';const g=host.firstChild;list.forEach(it=>g.appendChild(castCard(it,"cast")));}
+function renderSets(){renderSetPresets();const host=$("setsGrid");if(!host)return;
+  if(!S.sets.length){host.innerHTML='<div class="empty"><div class="big">No sets yet</div>Add a location, set its vibe, and build the plate.</div>';return;}
+  host.innerHTML='<div class="grid"></div>';const g=host.firstChild;S.sets.forEach(it=>g.appendChild(castCard(it,"sets")));}
+
+/* ===== cast + set into the shot ===== */
+let castPicked=new Set(),setPicked="";
+function renderCastSet(){
+  const cw=$("castPick");if(cw){cw.innerHTML="";if(!S.cast.length){cw.innerHTML='<span class="hint">Add people in Cast.</span>';}
+    else S.cast.forEach(c=>{const tag="@"+c.name;const pv=$("prompt")?$("prompt").value:"";const on=pv.toLowerCase().indexOf(tag.toLowerCase())>-1;const ch=document.createElement("span");ch.className="chip"+(on?" on":"");ch.textContent=tag;ch.addEventListener("click",()=>{const pr=$("prompt");if(!pr)return;const cur=pr.value;const i=cur.toLowerCase().indexOf(tag.toLowerCase());if(i>-1){pr.value=(cur.slice(0,i)+cur.slice(i+tag.length)).replace(/\s{2,}/g," ").trim();}else{pr.value=(cur.trim()?cur.trim()+" ":"")+tag;}renderCastSet();});cw.appendChild(ch);});}
+  const sw=$("setPick");if(sw){sw.innerHTML="";const none=document.createElement("span");none.className="chip"+(!setPicked?" on":"");none.textContent="no set";none.addEventListener("click",()=>{setPicked="";renderCastSet();});sw.appendChild(none);
+    S.sets.forEach(s=>{const ch=document.createElement("span");ch.className="chip"+(setPicked===s.id?" on":"");ch.textContent=s.name;ch.addEventListener("click",()=>{setPicked=s.id;renderCastSet();});sw.appendChild(ch);});}
+}
+function identityNote(items){if(!items.length)return "";return " Characters in this shot: "+items.map(c=>c.name+(c.identity?" — "+c.identity:"")).join(" | ")+". Keep each character's face, design, colors and proportions exactly consistent with their reference images.";}
+function setNote(it){return it?(" Location: "+it.name+(it.vibe?" — "+it.vibe:"")+"."):"";}
+
+/* ===== Media House ===== */
+const SUNO_GENRES=["afro-jazz drill","gnawa funk","afro-rock ambient dub","Japanese boogie","drill and bass gnawa","drill-breakbeat","Japanese jungle","ambient techno afroswing","afrobeat","p-funk","p-funk cloud rap","afrobeat garage","dirty south boom bap","boogie","afrobeat new jack swing","psychedelic acid trance","caribbean","boogie caribbean","hip hop dubstep","afrobeat rockabilly","psychedelic cabaret","house reggae","pacific reggae afrobeat","afrobeat swing","lo-fi afro house","drum and bass swing","boom bap p-funk","Arabic reggae","New Orleans house","afro-jazz carnatic","riddim","old school hip hop","trip hop","gangster rap"];
+let sunoGenres=new Set();
+function bindMedia(){
+  if($("banterBtn"))$("banterBtn").addEventListener("click",writeBanter);
+  if($("voiceNarr"))$("voiceNarr").addEventListener("click",()=>voiceLine($("narratorLine").value,"Narrator"));
+  if($("voiceChief"))$("voiceChief").addEventListener("click",()=>voiceLine($("chieffLine").value,"Inner Chieff"));
+  if($("ttsBtn"))$("ttsBtn").addEventListener("click",()=>voiceLine($("ttsText").value,$("ttsType").value));
+  if($("lipBtn"))$("lipBtn").addEventListener("click",genLipsync);
+  if($("sfxBtn"))$("sfxBtn").addEventListener("click",genSfx);
+  if($("sunoBtn"))$("sunoBtn").addEventListener("click",buildSuno);
+  if($("genreAdd"))$("genreAdd").addEventListener("click",()=>{const g=$("genreInput").value.trim();if(!g)return;if(!S.customGenres)S.customGenres=[];if(!S.customGenres.includes(g)&&!SUNO_GENRES.includes(g))S.customGenres.push(g);$("genreInput").value="";save();renderMedia();toast("Genre saved.");});
+  if($("lsFace"))$("lsFace").addEventListener("change",()=>{const v=$("lsFace").value;if(v==="__upload"){$("lipFaceFile").click();$("lsFace").value="";}else if(v==="__url"){const u=window.prompt("Paste a face image URL:");if(u&&/^https?:\/\//.test(u)){extraFaces.push({src:u.trim(),label:"URL face "+(extraFaces.length+1)});renderMedia();$("lsFace").value=u.trim();}else{$("lsFace").value="";}}});
+  if($("lipFaceFile"))$("lipFaceFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const src=await resizeImage(f,1024,0.85);extraFaces.push({src,label:"Uploaded face "+(extraFaces.length+1)});renderMedia();$("lsFace").value=src;}catch(err){toast("Could not read that.",true);}e.target.value="";});
+  if($("testTts"))$("testTts").addEventListener("click",()=>testMedia(S.mediaModels.tts,{text:"This is Stoneralia."},"ttsTest"));
+  if($("testLip"))$("testLip").addEventListener("click",()=>{$("lipTest").style.display="flex";$("lipTest").innerHTML='Pick a face + audio above and hit “Make talking clip” to test — lip-sync needs both inputs.';$("lipTest").style.color="var(--bone-dim)";});
+}
+async function testMedia(model,input,outId){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const r=$(outId);r.style.display="flex";r.innerHTML='<span class="rec"></span>Testing '+esc(model)+'…';r.style.color="";
+  try{const out=await falRun(model,input,null);const m=extractMedia(out);if(!m)throw new Error("no media");r.innerHTML='✓ Online — '+esc(model);r.style.color="var(--bud)";}
+  catch(e){r.innerHTML='✗ '+esc(e.message||"failed")+' — try another model.';r.style.color="var(--red)";}
+}
+function renderMedia(){
+  const fw=$("lsFace");if(fw){const cur=fw.value;fw.innerHTML='<option value="">— pick a face —</option>';S.cast.filter(c=>c.src).forEach(c=>{const o=document.createElement("option");o.value=c.src;o.textContent=c.name;fw.appendChild(o);});extraFaces.forEach(f=>{const o=document.createElement("option");o.value=f.src;o.textContent=f.label;fw.appendChild(o);});["__upload","__url"].forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=k==="__upload"?"⬆ Upload a face…":"🔗 Paste image URL…";fw.appendChild(o);});fw.value=cur;}
+  const aw=$("lsAudio");if(aw){const cur=aw.value;aw.innerHTML='<option value="">— pick an audio —</option>';S.reel.filter(r=>r.type==="audio").slice(0,20).forEach(r=>{const o=document.createElement("option");o.value=r.url;o.textContent=(r.prompt||"audio").slice(0,38);aw.appendChild(o);});const u=document.createElement("option");u.value="__url";u.textContent="Paste audio URL…";aw.appendChild(u);aw.value=cur;}
+  const gw=$("sunoGenreChips");if(gw){gw.innerHTML="";const all=SUNO_GENRES.concat(S.customGenres||[]);all.forEach((gname,idx)=>{const custom=idx>=SUNO_GENRES.length;const ch=document.createElement("span");ch.className="chip"+(sunoGenres.has(gname)?" on":"");ch.textContent=gname;ch.addEventListener("click",()=>{sunoGenres.has(gname)?sunoGenres.delete(gname):sunoGenres.add(gname);renderMedia();});if(custom){const x=document.createElement("span");x.textContent=" ✕";x.style.opacity=".55";x.addEventListener("click",e=>{e.stopPropagation();S.customGenres=(S.customGenres||[]).filter(g=>g!==gname);sunoGenres.delete(gname);save();renderMedia();});ch.appendChild(x);}gw.appendChild(ch);});}
+}
+async function voiceLine(text,label){
+  text=(text||"").trim();if(!text){toast("Write a line first.",true);return;}
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const st=$("ttsStatus");st.innerHTML='<div class="statusline"><span class="rec"></span>Voicing…</div>';$("ttsResult").innerHTML="";
+  const input={text};const voice=$("ttsVoice")?$("ttsVoice").value.trim():"";if(voice)input.voice=voice;
+  try{const out=await falRun(S.mediaModels.tts,input,null);const m=extractMedia(out);if(!m)throw new Error("no audio came back");
+    S.reel.unshift({id:uid(),type:"audio",url:m.url,prompt:label+": "+text.slice(0,40),ts:Date.now()});save();
+    st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ '+esc(label)+' saved to The Cut</div>';$("ttsResult").innerHTML='<audio src="'+m.url+'" controls style="width:100%"></audio>';renderMedia();
+  }catch(e){st.innerHTML='<div class="statusline" style="color:var(--red)">✗ '+esc(e.message)+' — check the voice model below.</div>';}
+}
+async function writeBanter(){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const st=$("banterStatus");st.innerHTML='<div class="statusline"><span class="rec"></span>Writing the bit…</div>';
+  const sys="You write deadpan comedy for the user's cannabis-culture universes — Chiefin' Season / Stoneralia, The High Crusader (THC), super-strain heroes (Carlin, Patrice O'Neal, Deadpool energy). The Narrator is an omniscient dry voice that sets up the bit and can be heard by Chieff and everyone around. Chieff barely speaks — his comedy is PHYSICAL and one optional dry inner line; he can side-eye, argue with, or bump heads with the narrator. Return JSON only: {\"narrator\":\"the narrator's spoken line\",\"chieff\":\"Chieff's short dry spoken line, can be empty\",\"physical\":\"the silent physical bit Chieff does (a stage direction, never spoken)\"}.";
+  const usr="SCENE/BEAT: "+($("banterCtx").value.trim()||"Chieff vs the Algorithm")+"\nWrite it.";
+  try{const txt=await llmRun(sys,usr);const d=parseJSON(txt);
+    $("narratorLine").value=d.narrator||"";$("chieffLine").value=d.chieff||"";$("chieffPhysical").value=d.physical||"";
+    st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Filled in below — voice each line, layer in The Cut</div>';
+  }catch(e){st.innerHTML='<div class="statusline" style="color:var(--red)">✗ '+esc(e.message)+'</div>';}
+}
+async function genLipsync(){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  let face=$("lsFace").value,audio=$("lsAudio").value;
+  if(face==="__url"){face=window.prompt("Paste an image URL of the face:")||"";}
+  if(audio==="__url"){audio=window.prompt("Paste an audio URL:")||"";}
+  if(!face||!audio){toast("Need a face image and an audio clip.",true);return;}
+  const st=$("lipStatus");st.innerHTML='<div class="statusline"><span class="rec"></span>Syncing the mouth…</div>';$("lipResult").innerHTML="";
+  try{const out=await falRun(S.mediaModels.lipsync,{image_url:face,audio_url:audio},(s,t)=>{const e=st.querySelector(".statusline");});
+    const m=extractMedia(out);if(!m)throw new Error("no clip came back");
+    S.reel.unshift({id:uid(),type:"video",url:m.url,prompt:"Talking clip",ts:Date.now()});save();
+    st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Talking clip saved to The Cut</div>';$("lipResult").innerHTML='<video src="'+m.url+'" controls playsinline></video>';
+  }catch(e){st.innerHTML='<div class="statusline" style="color:var(--red)">✗ '+esc(e.message)+' — try another lip-sync model below.</div>';}
+}
+async function genSfx(){
+  const text=$("sfxText").value.trim();if(!text){toast("Describe the sound.",true);return;}
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const st=$("sfxStatus");st.innerHTML='<div class="statusline"><span class="rec"></span>Making the sound…</div>';$("sfxResult").innerHTML="";
+  try{const out=await falRun(S.mediaModels.sfx,{text},null);const m=extractMedia(out);if(!m)throw new Error("no audio came back");
+    S.reel.unshift({id:uid(),type:"audio",url:m.url,prompt:"SFX: "+text.slice(0,40),ts:Date.now()});save();
+    st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Saved to The Cut</div>';$("sfxResult").innerHTML='<audio src="'+m.url+'" controls style="width:100%"></audio>';
+  }catch(e){st.innerHTML='<div class="statusline" style="color:var(--red)">✗ '+esc(e.message)+'</div>';}
+}
+async function buildSuno(){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const st=$("sunoStatus");st.innerHTML='<div class="statusline"><span class="rec"></span>Writing the Suno package…</div>';$("sunoOut").innerHTML="";
+  const instrumental=$("sunoInstrumental")&&$("sunoInstrumental").checked;let scene=$("sunoScene").value.trim();const picked=[...sunoGenres];if(instrumental)scene=(scene||"instrumental piece")+" — INSTRUMENTAL ONLY: no vocals or sung words; the Style Prompt MUST include the word 'instrumental'; the Lyrics Prompt must contain ONLY structural tags like [Intro] [Instrumental Interlude] [Break] [Percussion Break] [Outro] with no lyrics.";
+  const sys="You are a Suno prompt engineer for the user's cannabis-culture universes (Chiefin' Season / Stoneralia, The High Crusader / THC, super-strain heroes) — deadpan, dark-comedic, cinematic. Produce a ready-to-paste Suno package. STRICT RULES: (1) Style Prompt MAX 200 characters, comma-separated genre + mood + key instruments + vocal style, less-is-more — do not overload. (2) Lyrics Prompt MAX 3000 characters using section tags [Intro][Verse][Pre-Chorus][Chorus][Bridge][Outro] etc; background singers in (parentheses); performance meta-tags like [Rap Verse] or [Sad Verse] used SPARINGLY. (3) Title short and brand-flavored. Match the scene's mood and the brand's dry voice. Return JSON only: {\"title\":\"\",\"style\":\"\",\"lyrics\":\"\"}.";
+  const usr="SCENE / VIBE: "+(scene||"Chieff strolls through Stoneralia, unbothered, the world bending around him")+"\nPreferred genres (blend tastefully, do not cram): "+(picked.join(", ")||"pick what fits")+"\nWrite the Suno package now.";
+  try{const txt=await llmRun(sys,usr);const d=parseJSON(txt);
+    let h=sunoField("Title",d.title||"",80)+sunoField("Style Prompt",d.style||"",200)+sunoField("Lyrics Prompt",d.lyrics||"",3000);
+    $("sunoOut").innerHTML=h;st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Ready to paste straight into Suno</div>';bindSunoCopies();
+  }catch(e){st.innerHTML='<div class="statusline" style="color:var(--red)">✗ '+esc(e.message)+'</div>';}
+}
+function sunoField(label,val,limit){const over=val.length>limit;return '<label class="fld" style="margin-top:12px">'+label+' <span class="hint" style="color:'+(over?'var(--red)':'var(--bone-dim)')+'">('+val.length+'/'+limit+' chars)</span></label><div class="promptbox" id="sf_'+label.replace(/\W/g,'')+'">'+esc(val)+'</div><button class="btn ghost sm sunocopy" data-t="'+label.replace(/\W/g,'')+'" style="margin-top:6px">⧉ Copy '+label+'</button>';}
+function bindSunoCopies(){document.querySelectorAll(".sunocopy").forEach(b=>b.addEventListener("click",()=>{const el=$("sf_"+b.dataset.t);if(el)navigator.clipboard.writeText(el.textContent).then(()=>toast("Copied.")).catch(()=>toast("Copy failed.",true));}));}
+function preloadCast(){
+  if(S.castInit)return;S.castInit=true;
+  if(!S.cast.some(c=>(c.name||"").toLowerCase().indexOf("chieff")>-1)){
+    S.cast.unshift({id:uid(),name:"Chieff",identity:(typeof TOKENS!=="undefined"&&TOKENS["Photoreal Chieff"])?TOKENS["Photoreal Chieff"]:"Chieff — the deadpan cannabis-nug-faced vinyl-toy native of Stoneralia, matte-black snapback, 8-bit pixel sunglasses, never a victim.",voice:"deadpan, dry, unbothered",color:"",src:"",views:[]});
+  }
+  save();
+}
+/* ===== v5.4 helpers ===== */
+const SET_PRESETS=[
+ {name:"The Bodega",vibe:"late-night corner store, buzzing fluorescents, neon signage, urban haze"},
+ {name:"Rooftop at Dusk",vibe:"city rooftop, golden hour into neon, smoke drifting, skyline behind"},
+ {name:"Back Alley",vibe:"narrow graffiti alley, wet pavement, single sodium streetlamp, moody"},
+ {name:"Smoke Lounge",vibe:"dim velvet lounge, thick haze, warm low light, gold accents"},
+ {name:"Dispensary",vibe:"clean modern dispensary, glass displays, cool LED light, premium"},
+ {name:"City Street Night",vibe:"rain-slick street, headlights, reflections, cinematic neon"},
+ {name:"Subway Platform",vibe:"underground platform, green fluorescent tint, tiled walls, grime"},
+ {name:"Warehouse",vibe:"empty industrial warehouse, shafts of light, dust, raw concrete"},
+ {name:"Comic Splash BG",vibe:"dynamic comic-book splash background, bold ink lines, halftone, dramatic"},
+ {name:"Epic Battlefield",vibe:"epic cinematic battlefield, smoke and embers, god rays, huge scale"},
+ {name:"Hero HQ",vibe:"sleek superhero headquarters interior, glowing tech panels, dramatic uplight"},
+ {name:"Desert Highway",vibe:"sun-baked desert highway, heat haze, wide open, dusty warm light"}
+];
+let extraFaces=[];
+function setMainStash(i){const it=S.stash.find(x=>x.id===editId);if(!it)return;const v=viewsOf(it).slice();if(i<=0||i>=v.length)return;const pick=v.splice(i,1)[0];v.unshift(pick);it.views=v;it.src=v[0].src;save();renderEditor();renderStash();toast("Main image updated.");}
+function setMainAsset(i){const t=assetOf();if(!t)return;const v=viewsOf(t).filter(x=>x.src);if(i<=0||i>=v.length)return;const pick=v.splice(i,1)[0];v.unshift(pick);t.views=v;t.src=v[0].src;save();renderAssetEditor();renderCast();renderSets();toast("Main image updated.");}
+function addSetPreset(name,vibe){if(S.sets.some(s=>s.name===name)){toast(name+" already added.",true);return;}S.sets.unshift({id:uid(),name,vibe,src:"",views:[]});save();renderSets();renderCastSet();toast(name+" added — tap it to build the plate.");}
+function renderSetPresets(){const w=$("setPresets");if(!w)return;w.innerHTML="";SET_PRESETS.forEach(p=>{const c=document.createElement("span");c.className="chip";c.textContent="+ "+p.name;c.addEventListener("click",()=>addSetPreset(p.name,p.vibe));w.appendChild(c);});}
+
+/* ================= PHASE 1 — EPISODE BRAIN ================= */
+const STONERALIA_LAW="STONERALIA LAW (the universe's hidden constitution — it governs every story but is NEVER stated aloud in the work): In Stoneralia everything non-human is alive, has opinions, and is secretly organized — lighters, food, smoke, furniture, doors, the moon, plants, animals. Humans are the last to know. Comedy and twists come from the gap between the conscious world operating and the clueless human missing it. Chieff is the one human who SEES it and simply does not engage — the deadpan native, never the victim. The audience must EARN this realization by watching; never narrate the rule.";
+const VOICE_DNA="VOICE: write with the tension of Jordan Peele and the grounded soul of Ryan Coogler, and the comedic mind of Dick Gregory, Patrice O'Neal, George Carlin, Adam Ray and Deadpool — smart, culturally sharp, deadpan, a little uncomfortable, then it flips the table. Funny because it is true; unsettling because it is real. Relatable equals shareable, accurate equals trust, twist equals replay.";
+const CINE_STD="STANDARD: trillion-dollar taste on every choice — the right lens and angle for the emotion, motivated light, intentional blocking, real sound design, and where the cut lands. Premium and deliberate, never generic AI slop. Deliver blockbuster CHOICES within short-clip reality.";
+const LOOKS={
+ flat2d:{label:"Flat 2D Toon (Cloudtoons)",style:"bold flat 2D cartoon, thick uniform black outlines, flat color fills, light print grain, matte-black and bud-green palette, mobile-readable, silhouette-first; Cartoon Box pacing meets Far Side absurdity."},
+ boondocks:{label:"Boondocks-Style (action anime)",style:"anime-influenced 2D, clean confident linework, grounded-urban characters with anime expressiveness, exaggerated comedic faces, cinematic samurai-grade fight choreography, warm muted palette, film-quality shading."},
+ photoreal:{label:"Photoreal Cinematic",style:"film-quality photoreal realism, Kodak Vision3 texture, cinematic lighting and lensing, shallow depth, premium and tactile."},
+ documentary:{label:"Documentary / Vérité",style:"handheld observational documentary camera, natural available light, talking-head and interview setups, caught-it-real authenticity, subtle grain."},
+ vhs:{label:"VHS / Found-Footage",style:"90s camcorder look, 4:3, scanlines, chromatic bleed, tracking glitches, date stamp, degraded analog color, low-fi."},
+ custom:{label:"Custom…",style:""}
+};
+const CREATOR_TYPES={
+ shorts:{label:"Shorts Creator",desc:"Serialized vertical drama — episodic, cliffhanger endings. The algorithm rewards consistency.",aspect:"9:16",look:"flat2d",scenes:4,pacing:"punchy, fast, setup → hard twist, cliffhanger / end-card ending"},
+ indie:{label:"Indie Filmmaker",desc:"Nolan-style, episode structure, one workspace. No more stitching random clips.",aspect:"16:9",look:"photoreal",scenes:8,pacing:"3-act, cinematic, deliberate, layered"},
+ faceless:{label:"Faceless Channel",desc:"High-RPM serialized storytelling — no face, no hiring.",aspect:"16:9",look:"photoreal",scenes:6,pacing:"narration-led, serialized, retention-optimized"}
+};
+function spinner(t){return '<div class="statusline"><span class="rec"></span>'+esc(t)+'</div>';}
+function errLine(e){return '<div class="statusline" style="color:var(--red)">✗ '+esc((e&&e.message)||"hiccup")+'</div>';}
+function curEp(){return S.episodes.find(x=>x.id===S.currentEp)||null;}
+function writerSys(ep){return STONERALIA_LAW+" "+VOICE_DNA+" "+CINE_STD+" Stay 100% consistent with the chosen LOOK and with the established characters and locations.";}
+function epContext(ep){
+  const lookStr=ep.look==="custom"?(ep.lookCustom||""):((LOOKS[ep.look]||LOOKS.flat2d).style);
+  const heroes=S.cast.filter(c=>c.side==="hero").map(c=>c.name+(c.powers?" [powers: "+c.powers+"]":"")+(c.weakness?" [weakness: "+c.weakness+"]":"")).join("; ");
+  const villains=S.cast.filter(c=>c.side==="villain").map(c=>c.name+(c.powers?" [powers: "+c.powers+"]":"")+(c.weakness?" [weakness: "+c.weakness+"]":"")).join("; ");
+  const sets=S.sets.map(s=>s.name).join(", ");
+  let t="LOOK: "+lookStr+"\n";
+  if(heroes)t+="HEROES / GOOD GUYS: "+heroes+"\n";
+  if(villains)t+="VILLAINS / BAD GUYS: "+villains+"\n";
+  if(sets)t+="AVAILABLE LOCATIONS: "+sets+"\n";
+  return t;
+}
+function newEpisode(){const ep={id:uid(),title:"",creatorType:"shorts",look:"flat2d",lookCustom:"",series:false,logline:"",grandExpectation:"",source:"ai",sourceText:"",outline:"",script:"",optimizeNote:"",ts:Date.now()};S.episodes.unshift(ep);S.currentEp=ep.id;save();renderEpisodes();}
+function renderEpisodes(){
+  const host=$("epList");if(!host)return;
+  if(S.currentEp){if($("epHub"))$("epHub").style.display="none";if($("epEditorWrap"))$("epEditorWrap").style.display="block";renderEpEditor();return;}
+  if($("epHub"))$("epHub").style.display="block";if($("epEditorWrap"))$("epEditorWrap").style.display="none";
+  if(!S.episodes.length){host.innerHTML='<div class="empty"><div class="big">No episodes yet</div>Smoke &amp; Mirrors thinks in episodes. Start one — pick a creator type, lock the look, and let the brain write it in your voice.</div>';return;}
+  host.innerHTML="";S.episodes.forEach(ep=>{const ct=CREATOR_TYPES[ep.creatorType]||{label:"Episode"};const d=document.createElement("div");d.className="card";d.style.cursor="pointer";
+    d.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><div style="font-family:var(--slate);font-weight:800;text-transform:uppercase;letter-spacing:.04em">'+esc(ep.title||"Untitled episode")+'</div><button class="x" style="position:static;flex:0 0 auto">✕</button></div><div class="hint">'+esc(ct.label)+' · '+esc((LOOKS[ep.look]||{}).label||ep.look||"")+' · '+(ep.script?"scripted":"draft")+'</div>'+(ep.logline?'<div style="margin-top:6px;font-size:13px">'+esc(ep.logline)+'</div>':'');
+    d.querySelector(".x").addEventListener("click",e=>{e.stopPropagation();if(confirm("Delete this episode?")){S.episodes=S.episodes.filter(x=>x.id!==ep.id);if(S.currentEp===ep.id)S.currentEp=null;save();renderEpisodes();}});
+    d.addEventListener("click",()=>{S.currentEp=ep.id;renderEpisodes();});host.appendChild(d);});
+}
+function renderEpEditor(){
+  const ep=curEp();if(!ep){S.currentEp=null;renderEpisodes();return;}
+  let h='<button class="btn sm ghost" id="epBack" style="margin-bottom:12px">← All episodes</button>';
+  h+='<div class="card"><label class="fld">Episode title</label><input type="text" id="epTitle" value="'+esc(ep.title)+'" placeholder="EP 001 — This Ain’t Hitting">';
+  h+='<label class="fld" style="margin-top:12px">Creator type</label><div class="tokenchips" id="epCreator"></div><div class="hint" id="epCreatorDesc" style="margin-top:6px"></div>';
+  h+='<label class="fld" style="margin-top:12px">Look</label><select id="epLook"></select>';
+  h+='<input type="text" id="epLookCustom" placeholder="describe your custom look" style="margin-top:8px;display:'+(ep.look==="custom"?"block":"none")+'" value="'+esc(ep.lookCustom||"")+'"><div class="hint" id="epLookDesc" style="margin-top:6px"></div>';
+  h+='<label class="row" style="margin-top:12px;align-items:center;gap:8px"><input type="checkbox" id="epSeries" style="width:auto;flex:0" '+(ep.series?"checked":"")+'> Series (multi-episode) — else single episode</label></div>';
+  h+='<div class="card"><label class="fld">Logline</label><div class="row"><input type="text" id="epLogline" value="'+esc(ep.logline)+'" placeholder="one-sentence hook"><button class="btn ghost sm" id="recLogline" style="flex:0">✦</button></div><div id="loglineStatus"></div>';
+  h+='<label class="fld" style="margin-top:12px">Grand Expectation</label><div class="row"><input type="text" id="epGrand" value="'+esc(ep.grandExpectation)+'" placeholder="the big promise / payoff the audience should feel"><button class="btn ghost sm" id="recGrand" style="flex:0">✦</button></div><div id="grandStatus"></div></div>';
+  h+='<div class="card"><label class="fld">Source</label><select id="epSource"><option value="ai">Make It Ours — AI original (brand-accurate)</option><option value="script">I have a script / outline</option><option value="novel">I have a novel / story text</option></select>';
+  h+='<textarea id="epSourceText" style="min-height:90px;margin-top:8px;display:'+(ep.source==="ai"?"none":"block")+'" placeholder="paste your script or story here">'+esc(ep.sourceText||"")+'</textarea>';
+  h+='<button class="btn ghost" id="epMakeOurs" style="margin-top:10px;width:100%;display:'+(ep.source==="ai"?"block":"none")+'">✦ Make It Ours — pitch the concept</button>';
+  h+='<button class="btn green" id="epGen" style="margin-top:10px;width:100%">✦ Generate outline + script (auto-optimized)</button><div id="epGenStatus"></div></div>';
+  h+='<div class="card"><label class="fld">Outline</label><textarea id="epOutline" style="min-height:120px">'+esc(ep.outline||"")+'</textarea>';
+  h+='<label class="fld" style="margin-top:12px">Script</label><textarea id="epScript" style="min-height:240px">'+esc(ep.script||"")+'</textarea>';
+  if(ep.optimizeNote)h+='<div class="hint" style="margin-top:8px;color:var(--bud)">✓ '+esc(ep.optimizeNote)+'</div>';
+  h+='<button class="btn ghost sm" id="epCine" style="margin-top:10px;width:100%">✦ Make It Cinematic — trillion-dollar pass</button><div id="epCineStatus"></div></div>';
+  $("epEditor").innerHTML=h;bindEpEditor(ep);
+}
+function bindEpEditor(ep){
+  $("epBack").addEventListener("click",()=>{S.currentEp=null;renderEpisodes();});
+  $("epTitle").addEventListener("input",e=>{ep.title=e.target.value;save();});
+  const cc=$("epCreator");cc.innerHTML="";Object.keys(CREATOR_TYPES).forEach(k=>{const c=document.createElement("span");c.className="chip"+(ep.creatorType===k?" on":"");c.textContent=CREATOR_TYPES[k].label;c.addEventListener("click",()=>{ep.creatorType=k;if(CREATOR_TYPES[k].look)ep.look=CREATOR_TYPES[k].look;save();renderEpEditor();});cc.appendChild(c);});
+  $("epCreatorDesc").textContent=(CREATOR_TYPES[ep.creatorType]||{}).desc||"";
+  const ls=$("epLook");ls.innerHTML="";Object.keys(LOOKS).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=LOOKS[k].label;ls.appendChild(o);});ls.value=ep.look;
+  $("epLookDesc").textContent=ep.look==="custom"?"":((LOOKS[ep.look]||{}).style||"");
+  ls.addEventListener("change",e=>{ep.look=e.target.value;save();renderEpEditor();});
+  $("epLookCustom").addEventListener("input",e=>{ep.lookCustom=e.target.value;save();});
+  $("epSeries").addEventListener("change",e=>{ep.series=e.target.checked;save();});
+  $("epLogline").addEventListener("input",e=>{ep.logline=e.target.value;save();});
+  $("epGrand").addEventListener("input",e=>{ep.grandExpectation=e.target.value;save();});
+  $("recLogline").addEventListener("click",()=>recommendField("logline"));
+  $("recGrand").addEventListener("click",()=>recommendField("grand"));
+  const so=$("epSource");so.value=ep.source;so.addEventListener("change",e=>{ep.source=e.target.value;save();renderEpEditor();});
+  $("epSourceText").addEventListener("input",e=>{ep.sourceText=e.target.value;save();});
+  $("epMakeOurs").addEventListener("click",makeItOurs);
+  $("epGen").addEventListener("click",genScript);
+  $("epOutline").addEventListener("input",e=>{ep.outline=e.target.value;save();});
+  $("epScript").addEventListener("input",e=>{ep.script=e.target.value;save();});
+  $("epCine").addEventListener("click",makeCinematic);
+}
+async function recommendField(which){
+  const ep=curEp();if(!ep)return;if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const st=$(which==="logline"?"loglineStatus":"grandStatus");st.innerHTML=spinner("Thinking…");
+  const usr=(which==="logline"?"Propose ONE killer logline (a single sentence) for this episode. ":"Propose ONE Grand Expectation — the big promise / payoff the audience should feel by the end (1-2 sentences). ")+"TITLE: "+(ep.title||"(untitled)")+"\n"+epContext(ep)+"\nReturn only the line — no quotes, no preamble.";
+  try{const txt=(await llmRun(writerSys(ep),usr)).trim().replace(/^["']|["']$/g,"");if(which==="logline")ep.logline=txt;else ep.grandExpectation=txt;save();renderEpEditor();}
+  catch(e){st.innerHTML=errLine(e);}
+}
+async function makeItOurs(){
+  const ep=curEp();if(!ep)return;if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const st=$("epGenStatus");st.innerHTML=spinner("Making it ours…");
+  const usr="Pitch an ORIGINAL episode concept true to the universe and brand. No live trends — use proven viral structure and the Stoneralia Law. Give a title, a logline, and a grand expectation. "+epContext(ep)+"\nReturn JSON only: {\"title\":\"\",\"logline\":\"\",\"grand\":\"\"}.";
+  try{const d=parseJSON(await llmRun(writerSys(ep),usr));if(d.title&&!ep.title)ep.title=d.title;ep.logline=d.logline||ep.logline;ep.grandExpectation=d.grand||ep.grandExpectation;ep.source="ai";save();renderEpEditor();$("epGenStatus").innerHTML='<div class="statusline" style="color:var(--bud)">✓ Concept set — now generate the script</div>';}
+  catch(e){st.innerHTML=errLine(e);}
+}
+async function genScript(){
+  const ep=curEp();if(!ep)return;if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const ct=CREATOR_TYPES[ep.creatorType]||CREATOR_TYPES.shorts;
+  const st=$("epGenStatus");st.innerHTML=spinner("Writing the episode…");
+  const src=ep.source==="ai"?"Invent an original premise true to the universe.":("SOURCE MATERIAL to adapt and Make It Ours (re-skin into the universe + voice):\n"+(ep.sourceText||""));
+  const usr="TITLE: "+(ep.title||"Untitled")+"\nFORMAT: "+ct.label+" — "+ct.pacing+", about "+ct.scenes+" scenes, aspect "+ct.aspect+".\nLOGLINE: "+(ep.logline||"(none — create one)")+"\nGRAND EXPECTATION: "+(ep.grandExpectation||"(none — propose one)")+"\n"+epContext(ep)+"\n"+src+"\n\nWrite (1) a tight OUTLINE (beat list) and (2) the SCRIPT in punchy scene blocks like [Scene N – Location | vibe] with action, sparse dialogue, building to a TWIST and an END CARD. Return JSON only: {\"logline\":\"\",\"grand\":\"\",\"outline\":\"\",\"script\":\"\"}.";
+  try{
+    const d=parseJSON(await llmRun(writerSys(ep),usr));
+    if(d.logline&&!ep.logline)ep.logline=d.logline;
+    if(d.grand&&!ep.grandExpectation)ep.grandExpectation=d.grand;
+    ep.outline=d.outline||"";ep.script=d.script||"";save();
+    st.innerHTML=spinner("Auto-reviewing &amp; optimizing…");
+    const opt=await optimizePass(ep);
+    if(opt){if(opt.outline)ep.outline=opt.outline;if(opt.script)ep.script=opt.script;ep.optimizeNote="Optimizer: "+(opt.note||"sharpened the hook, beats and twist");save();}
+    renderEpEditor();$("epGenStatus").innerHTML='<div class="statusline" style="color:var(--bud)">✓ Written, reviewed &amp; optimized</div>';
+  }catch(e){st.innerHTML=errLine(e);}
+}
+async function optimizePass(ep){
+  const sys=writerSys(ep)+" You are now the SCRIPT DOCTOR: do a ruthless review-and-optimize pass — sharpen the hook, tighten every beat, strengthen the twist, fix continuity, raise production value to trillion-dollar taste, keep the voice. Return JSON only: {\"outline\":\"\",\"script\":\"\",\"note\":\"one short line: what you improved\"}.";
+  try{return parseJSON(await llmRun(sys,"Optimize this episode.\nOUTLINE:\n"+(ep.outline||"")+"\n\nSCRIPT:\n"+(ep.script||"")));}catch(e){return null;}
+}
+async function makeCinematic(){
+  const ep=curEp();if(!ep)return;if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  if(!ep.script){toast("Generate a script first.",true);return;}
+  const st=$("epCineStatus");st.innerHTML=spinner("Applying the trillion-dollar pass…");
+  const sys=writerSys(ep)+" You are now a master director + DP + sound designer. Elevate every scene to theatrical, trillion-dollar production value: right lens and angle for the emotion, motivated lighting, intentional blocking and camera movement, sound design (a score cue + the one diegetic sound that sells it), and where the cut lands. Fold the choices INTO the script as inline direction. Keep the voice and the twist. Return JSON only: {\"script\":\"\",\"note\":\"one line on what you elevated\"}.";
+  try{const d=parseJSON(await llmRun(sys,"Make this cinematic:\n"+ep.script));if(d.script)ep.script=d.script;ep.optimizeNote="Cinematic: "+(d.note||"elevated the craft");save();renderEpEditor();$("epCineStatus").innerHTML='<div class="statusline" style="color:var(--bud)">✓ Elevated to cinematic</div>';}
+  catch(e){st.innerHTML=errLine(e);}
+}
+function renderCastFilter(){const w=$("castFilter");if(!w)return;w.innerHTML="";["All","Heroes","Villains"].forEach(f=>{const c=document.createElement("span");c.className="chip"+((S.castFilter||"All")===f?" on":"");c.textContent=f;c.addEventListener("click",()=>{S.castFilter=f;save();renderCast();});w.appendChild(c);});}
 /* boot */
 function boot(){
-  $("apiKey").value=S.apiKey;$("llmModel").value=S.llmModel;
+  S.stash.forEach(it=>{if(!it.views||!it.views.length)it.views=[{label:"Front",src:it.src}];if(!it.src&&it.views[0])it.src=it.views[0].src;});
+  $("apiKey").value=S.apiKey;
   $("storyTitle").value=S.story.title;$("storyBody").value=S.story.body;
   $("boardScript").value=S.board.script;$("boardGrade").value=S.board.grade;$("boardGrid").value=S.board.grid;
-  refreshKeyStat();renderStations();syncStation();renderBoardChars();renderStashFilter();buildLookControls();setupExtras();
+  preloadCast();refreshKeyStat();renderStations();syncStation();renderBoardChars();renderStashFilter();buildLookControls();setupExtras();setupPickers();bindMedia();renderCast();renderSets();renderMedia();renderCastSet();renderEpisodes();renderCastFilter();if($("epNew"))$("epNew").addEventListener("click",newEpisode);go("episodes");
 }
 boot();
 </script>

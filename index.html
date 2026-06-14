@@ -500,7 +500,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v5.5 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v5.6 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1357,6 +1357,8 @@ function renderEpEditor(){
   h+='<label class="fld" style="margin-top:12px">Script</label><textarea id="epScript" style="min-height:240px">'+esc(ep.script||"")+'</textarea>';
   if(ep.optimizeNote)h+='<div class="hint" style="margin-top:8px;color:var(--bud)">✓ '+esc(ep.optimizeNote)+'</div>';
   h+='<button class="btn ghost sm" id="epCine" style="margin-top:10px;width:100%">✦ Make It Cinematic — trillion-dollar pass</button><div id="epCineStatus"></div></div>';
+  h+='<div class="card"><div style="font-family:var(--slate);font-weight:800;text-transform:uppercase;letter-spacing:.04em">Scene Board</div><div class="hint" style="margin-top:4px">Break the script into shootable scenes — each gets a one-tap storyboard &amp; video, auto-saved to The Cut.</div><button class="btn green" id="epBreak" style="margin-top:10px;width:100%">\u229f Break script into scenes</button><div id="epBreakStatus"></div><div id="epScenes" style="margin-top:12px"></div></div>';
+  h+='<div class="card"><div style="font-family:var(--slate);font-weight:800;text-transform:uppercase;letter-spacing:.04em">Fight Choreographer</div><div class="hint" style="margin-top:4px">Two characters + a location \u2192 action beats with shot prompts, added as scenes.</div><div class="row" style="margin-top:10px;gap:8px"><select id="fcA" style="flex:1"></select><select id="fcB" style="flex:1"></select></div><select id="fcLoc" style="margin-top:8px"></select><select id="fcInt" style="margin-top:8px"><option value="grounded brutal">Grounded &amp; brutal</option><option value="anime spectacle">Anime spectacle</option><option value="comedic slapstick">Comedic slapstick</option><option value="samurai duel">Samurai duel</option></select><button class="btn ghost" id="fcGo" style="margin-top:10px;width:100%">\u2726 Choreograph the fight</button><div id="fcStatus"></div></div>';
   $("epEditor").innerHTML=h;bindEpEditor(ep);
 }
 function bindEpEditor(ep){
@@ -1380,6 +1382,15 @@ function bindEpEditor(ep){
   $("epOutline").addEventListener("input",e=>{ep.outline=e.target.value;save();});
   $("epScript").addEventListener("input",e=>{ep.script=e.target.value;save();});
   $("epCine").addEventListener("click",makeCinematic);
+  $("epBreak").addEventListener("click",breakIntoScenes);
+  renderSceneBoard(ep);
+  const fa=$("fcA"),fb=$("fcB"),fl=$("fcLoc");
+  if(fa&&fb&&fl){
+    const opts=S.cast.map(c=>'<option value="'+c.id+'">'+esc(c.name)+'</option>').join("");
+    fa.innerHTML=opts;fb.innerHTML=opts;if(S.cast[1])fb.value=S.cast[1].id;
+    fl.innerHTML='<option value="">— location —</option>'+S.sets.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join("");
+    $("fcGo").addEventListener("click",fightChoreograph);
+  }
 }
 async function recommendField(which){
   const ep=curEp();if(!ep)return;if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
@@ -1425,6 +1436,114 @@ async function makeCinematic(){
   catch(e){st.innerHTML=errLine(e);}
 }
 function renderCastFilter(){const w=$("castFilter");if(!w)return;w.innerHTML="";["All","Heroes","Villains"].forEach(f=>{const c=document.createElement("span");c.className="chip"+((S.castFilter||"All")===f?" on":"");c.textContent=f;c.addEventListener("click",()=>{S.castFilter=f;save();renderCast();});w.appendChild(c);});}
+/* ================= PHASE 2 — SCENE BOARD → PRODUCTION ================= */
+function lookStyleOf(ep){return ep.look==="custom"?(ep.lookCustom||""):((LOOKS[ep.look]||LOOKS.flat2d).style);}
+function sceneImgModel(hasRefs){return hasRefs?(S.picked.edit||"fal-ai/nano-banana-pro/edit"):(S.picked.image||"fal-ai/nano-banana-pro");}
+function sceneVidModel(){return S.picked.video||"bytedance/seedance-2.0/reference-to-video";}
+function matchSceneRefs(ep,s){
+  const txt=((s.heading||"")+" "+(s.action||"")+" "+(s.dialogue||"")).toLowerCase();
+  const cast=S.cast.filter(c=>c.name&&txt.indexOf(c.name.toLowerCase())>-1);
+  const set=S.sets.find(x=>x.name&&txt.indexOf(x.name.toLowerCase())>-1)||null;
+  const items=[...cast,...(set?[set]:[])];
+  const note=identityNote(cast)+(set?setNote(set):"");
+  return {items,note};
+}
+async function breakIntoScenes(){
+  const ep=curEp();if(!ep)return;if(!ep.script){toast("Generate a script first.",true);return;}
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const ct=CREATOR_TYPES[ep.creatorType]||CREATOR_TYPES.shorts;
+  const st=$("epBreakStatus");st.innerHTML=spinner("Breaking into scenes…");
+  const sys=writerSys(ep)+" You are a first AD + storyboard artist. Break the script into shootable SCENES. For each scene return: heading (LOCATION | vibe), action (what we see), dialogue (or empty), shot (a COMPLETE ready-to-render IMAGE prompt for a single cinematic still — subject, blocking, lens/angle, lighting, atmosphere), motion (a COMPLETE ready-to-render VIDEO prompt — camera movement and motion, diegetic sound only, never music), ambience (one-line sound bed), grade (one color-grade name fitting the mood). Bake the LOOK into shot and motion. Return JSON only: {\"scenes\":[{\"heading\":\"\",\"action\":\"\",\"dialogue\":\"\",\"shot\":\"\",\"motion\":\"\",\"ambience\":\"\",\"grade\":\"\"}]}.";
+  const usr="LOOK: "+lookStyleOf(ep)+"\nASPECT: "+ct.aspect+"\n"+epContext(ep)+"\nSCRIPT:\n"+ep.script;
+  try{
+    const d=parseJSON(await llmRun(sys,usr));const arr=d.scenes||[];
+    ep.scenes=arr.map((s,i)=>({id:uid(),n:i+1,heading:s.heading||"",action:s.action||"",dialogue:s.dialogue||"",shot:s.shot||"",motion:s.motion||"",ambience:s.ambience||"",grade:s.grade||"",continueFrom:false,boardUrl:"",videoUrl:""}));
+    for(let i=1;i<ep.scenes.length;i++){const a=(ep.scenes[i].heading||"").split("|")[0].trim().toLowerCase();const b=(ep.scenes[i-1].heading||"").split("|")[0].trim().toLowerCase();if(a&&a===b)ep.scenes[i].continueFrom=true;}
+    save();renderSceneBoard(ep);st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ '+ep.scenes.length+' scenes ready — tap Storyboard or Video on any scene</div>';
+  }catch(e){st.innerHTML=errLine(e);}
+}
+function renderSceneBoard(ep){
+  const host=$("epScenes");if(!host)return;
+  if(!ep.scenes||!ep.scenes.length){host.innerHTML='<div class="hint">No scenes yet — break the script above.</div>';return;}
+  let chain=0;host.innerHTML="";
+  ep.scenes.forEach((s,idx)=>{
+    chain=s.continueFrom?chain+1:0;
+    const d=document.createElement("div");d.className="card";d.style.borderLeft="3px solid var(--bud)";
+    let h='<div style="font-weight:800;font-family:var(--slate)">Scene '+s.n+'</div>';
+    h+='<div class="hint" style="margin-top:2px">'+esc(s.heading||"")+'</div>';
+    if(s.action)h+='<div style="font-size:13px;margin-top:6px">'+esc(s.action)+'</div>';
+    h+='<details style="margin-top:8px"><summary class="hint" style="cursor:pointer">Shot &amp; motion prompts</summary>';
+    h+='<label class="fld" style="margin-top:8px">Storyboard prompt</label><textarea data-sid="'+s.id+'" data-f="shot" style="min-height:70px">'+esc(s.shot||"")+'</textarea>';
+    h+='<label class="fld" style="margin-top:6px">Video prompt</label><textarea data-sid="'+s.id+'" data-f="motion" style="min-height:70px">'+esc(s.motion||"")+'</textarea>';
+    h+='<div class="hint" style="margin-top:6px">Ambience: '+esc(s.ambience||"—")+' · Grade: '+esc(s.grade||"auto")+'</div></details>';
+    if(idx>0)h+='<label class="row" style="margin-top:8px;align-items:center;gap:6px;font-size:12px"><input type="checkbox" data-cont="'+s.id+'" style="width:auto;flex:0" '+(s.continueFrom?"checked":"")+'> Continue from Scene '+(s.n-1)+' (carry last frame + grade)</label>';
+    if(chain>=3)h+='<div class="hint" style="color:var(--gold)">⚠ Long continuity chain — AI video drifts after ~3 linked scenes. Consider a fresh establishing shot here.</div>';
+    h+='<div class="row" style="margin-top:10px;gap:8px"><button class="btn sm green" data-board="'+s.id+'" style="flex:1">▦ Storyboard</button><button class="btn sm" data-vid="'+s.id+'" style="flex:1">▶ Video</button></div>';
+    h+='<div data-out="'+s.id+'" style="margin-top:8px"></div>';
+    if(s.boardUrl)h+='<img src="'+s.boardUrl+'" style="margin-top:8px;border-radius:8px;width:100%">';
+    if(s.videoUrl)h+='<video src="'+s.videoUrl+'" controls playsinline style="margin-top:8px;border-radius:8px;width:100%"></video>';
+    d.innerHTML=h;host.appendChild(d);
+  });
+  host.querySelectorAll("textarea[data-sid]").forEach(t=>t.addEventListener("input",()=>{const s=ep.scenes.find(x=>x.id===t.dataset.sid);if(s){s[t.dataset.f]=t.value;save();}}));
+  host.querySelectorAll("input[data-cont]").forEach(c=>c.addEventListener("change",()=>{const s=ep.scenes.find(x=>x.id===c.dataset.cont);if(s){s.continueFrom=c.checked;save();renderSceneBoard(ep);}}));
+  host.querySelectorAll("button[data-board]").forEach(b=>b.addEventListener("click",()=>createStoryboard(b.dataset.board)));
+  host.querySelectorAll("button[data-vid]").forEach(b=>b.addEventListener("click",()=>createVideo(b.dataset.vid)));
+}
+async function createStoryboard(sid){
+  const ep=curEp();if(!ep)return;const s=ep.scenes.find(x=>x.id===sid);if(!s)return;
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const ct=CREATOR_TYPES[ep.creatorType]||CREATOR_TYPES.shorts;
+  const out=document.querySelector('[data-out="'+sid+'"]');out.innerHTML=spinner("Storyboarding scene "+s.n+"…");
+  const mr=matchSceneRefs(ep,s);let refs=flattenRefs(mr.items,8);
+  const i=ep.scenes.findIndex(x=>x.id===sid);
+  if(s.continueFrom&&i>0&&ep.scenes[i-1].boardUrl)refs=[ep.scenes[i-1].boardUrl].concat(refs).slice(0,8);
+  const hasRefs=refs.length>0;
+  const grade=(s.grade&&s.grade!=="auto")?(" Color grade: "+s.grade+".") : "";
+  const prompt=(s.shot||s.action)+"\n\nLook: "+lookStyleOf(ep)+"."+grade+" "+CINE_STD+(s.continueFrom?" Maintain exact continuity with the provided previous-scene frame — same characters, wardrobe, environment, lighting and grade.":"")+mr.note;
+  const model=sceneImgModel(hasRefs);const input={prompt};Object.assign(input,sizeFor(model,ct.aspect));if(hasRefs)input.image_urls=refs;
+  try{
+    const o=await falRun(model,input,(stt,t)=>{out.innerHTML=spinner("Storyboarding scene "+s.n+"… ("+t+")");});
+    const m=extractMedia(o);if(!m)throw new Error("No image came back.");
+    s.boardUrl=m.url;S.reel.unshift({id:uid(),type:"image",url:m.url,prompt:"EP "+(ep.title||"untitled")+" — Scene "+s.n,ts:Date.now()});save();
+    renderSceneBoard(ep);toast("Scene "+s.n+" board saved to The Cut.");
+  }catch(e){out.innerHTML=errLine(e);}
+}
+async function createVideo(sid){
+  const ep=curEp();if(!ep)return;const s=ep.scenes.find(x=>x.id===sid);if(!s)return;
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const ct=CREATOR_TYPES[ep.creatorType]||CREATOR_TYPES.shorts;
+  const out=document.querySelector('[data-out="'+sid+'"]');out.innerHTML=spinner("Rolling scene "+s.n+"…");
+  const mr=matchSceneRefs(ep,s);let refs=flattenRefs(mr.items,4);
+  const i=ep.scenes.findIndex(x=>x.id===sid);
+  if(s.continueFrom&&i>0&&ep.scenes[i-1].boardUrl)refs=[ep.scenes[i-1].boardUrl].concat(refs).slice(0,4);
+  const model=sceneVidModel();
+  const prompt=(s.motion||s.action)+"\n\nLook: "+lookStyleOf(ep)+". "+CINE_STD+" Diegetic sound only — "+(s.ambience||"room tone, ambience")+"; no music."+(s.continueFrom?" Continue seamlessly from the previous scene's final frame; hold continuity of character, wardrobe, environment and grade.":"")+mr.note;
+  let input;
+  if(model.includes("kling")){input={prompt,duration:"5"};if(refs[0])input.image_url=refs[0];}
+  else{input={prompt,resolution:"720p",duration:"5",generate_audio:true};if(ct.aspect&&ct.aspect!=="auto")input.aspect_ratio=ct.aspect;if(refs.length)input.image_urls=refs;}
+  try{
+    const o=await falRun(model,input,(stt,t)=>{out.innerHTML=spinner("Rolling scene "+s.n+"… ("+t+")");});
+    const m=extractMedia(o);if(!m)throw new Error("No video came back.");
+    s.videoUrl=m.url;S.reel.unshift({id:uid(),type:"video",url:m.url,prompt:"EP "+(ep.title||"untitled")+" — Scene "+s.n+" (video)",ts:Date.now()});save();
+    renderSceneBoard(ep);toast("Scene "+s.n+" video saved to The Cut.");
+  }catch(e){out.innerHTML=errLine(e);}
+}
+async function fightChoreograph(){
+  const ep=curEp();if(!ep)return;if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const A=S.cast.find(c=>c.id===$("fcA").value),B=S.cast.find(c=>c.id===$("fcB").value);
+  if(!A||!B||A.id===B.id){toast("Pick two different characters.",true);return;}
+  const L=S.sets.find(x=>x.id===$("fcLoc").value)||null;const intn=$("fcInt").value;
+  const st=$("fcStatus");st.innerHTML=spinner("Choreographing the fight…");
+  const sys=writerSys(ep)+" You are a legendary fight choreographer + action director (samurai-grade, Boondocks energy). Design a fight in clean BEATS. For each beat return heading (LOCATION | beat vibe), action (the exchange), shot (COMPLETE ready-to-render IMAGE prompt — angle, lens, blocking, impact, lighting), motion (COMPLETE ready-to-render VIDEO prompt — camera move + choreography + diegetic impact sound, no music), ambience, grade. Bake in the LOOK. Make each fighter's weakness matter and give a clear turn + finisher. Return JSON only: {\"beats\":[{\"heading\":\"\",\"action\":\"\",\"shot\":\"\",\"motion\":\"\",\"ambience\":\"\",\"grade\":\"\"}]}.";
+  const usr="FIGHTERS: "+A.name+(A.powers?" (powers: "+A.powers+")":"")+" VS "+B.name+(B.powers?" (powers: "+B.powers+")":"")+".\nWEAKNESSES: "+A.name+" — "+(A.weakness||"unknown")+"; "+B.name+" — "+(B.weakness||"unknown")+".\nLOCATION: "+(L?L.name:"a fitting arena")+".\nSTYLE: "+intn+".\nLOOK: "+lookStyleOf(ep)+".\nDesign 4-6 beats.";
+  try{
+    const d=parseJSON(await llmRun(sys,usr));const beats=d.beats||[];
+    const start=(ep.scenes||[]).length;
+    const mapped=beats.map((s,i)=>({id:uid(),n:start+i+1,heading:s.heading||"",action:s.action||"",dialogue:"",shot:s.shot||"",motion:s.motion||"",ambience:s.ambience||"",grade:s.grade||"",continueFrom:i>0,boardUrl:"",videoUrl:""}));
+    ep.scenes=(ep.scenes||[]).concat(mapped);save();renderSceneBoard(ep);
+    st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ '+mapped.length+' fight beats added to the Scene Board</div>';
+  }catch(e){st.innerHTML=errLine(e);}
+}
 /* boot */
 function boot(){
   S.stash.forEach(it=>{if(!it.views||!it.views.length)it.views=[{label:"Front",src:it.src}];if(!it.src&&it.views[0])it.src=it.views[0].src;});

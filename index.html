@@ -145,6 +145,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 <div class="appwrap">
 <nav>
   <button data-go="cloudtoons"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 17h11a3.5 3.5 0 0 0 .5-6.97A5 5 0 0 0 8 8.5 3.5 3.5 0 0 0 6 17z'/></svg></span>Cloudtoons</button>
+  <button data-go="comics"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span>Comics</button>
   <button data-go="episodes" class="on"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2.5' y='7.5' width='13' height='12' rx='2'/><path d='M7.5 7.5V5.5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2'/></svg></span>Episodes</button>
   <button data-go="cast"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='3.5'/><path d='M5.5 20a6.5 6.5 0 0 1 13 0'/><path d='M14.8 9.3l3.6-.6'/><circle cx='18.7' cy='8.6' r='.8' fill='currentColor' stroke='none'/><path d='M18.9 7.3c.7-.5.2-1.2.6-1.9'/></svg></span>Cast</button>
   <button data-go="sets"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M3 15l5-4 4 3 3-2 6 5'/><circle cx='8' cy='9' r='1.3'/></svg></span>Sets</button>
@@ -374,7 +375,9 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <textarea id="setVibe" style="min-height:72px;margin-top:8px" placeholder="Vibe — time of day, mood, energy, light"></textarea>
     <button class="btn green" id="setAdd" style="margin-top:10px;width:100%">+ Add location</button>
     <label class="fld" style="margin-top:12px">Or tap a recommended set</label>
+    <button class="btn ghost sm" id="setSuggestBtn" style="margin-bottom:8px">✦ Suggest locations</button><div id="setSuggestStatus"></div>
     <div class="tokenchips" id="setPresets"></div>
+    <div class="row" style="margin-top:10px"><input type="text" id="setQuickName" placeholder="add your own set…"><button class="btn ghost sm" id="setQuickAdd" style="flex:0">+ Save</button></div>
     <div class="hint" style="margin-top:8px">Tap a location to get scene suggestions, build a plate image, or add reference photos.</div>
   </div>
   <div id="setsEditor" class="card" style="display:none"></div>
@@ -470,11 +473,15 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 
 <!-- ===== CLOUDTOONS ===== -->
 <section class="view" id="view-cloudtoons">
-  <div class="slatehead"><span class="num" style="padding:3px 6px"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style="width:24px;height:24px;display:block"><path d='M6 17h11a3.5 3.5 0 0 0 .5-6.97A5 5 0 0 0 8 8.5 3.5 3.5 0 0 0 6 17z'/></svg></span><h2>Cloudtoons</h2><span class="tag">Silent Comedy</span></div>
+  <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style="width:30px;height:30px;display:block"><path d='M6 17h11a3.5 3.5 0 0 0 .5-6.97A5 5 0 0 0 8 8.5 3.5 3.5 0 0 0 6 17z'/></svg></span><h2>Cloudtoons</h2><span class="tag">Silent Comedy</span></div>
   <div id="ctBody"></div>
 </section>
 
 <!-- ===== SETUP ===== -->
+<section class="view" id="view-comics">
+  <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style="width:30px;height:30px;display:block"><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span><h2>Comics</h2><span class="tag">Strips · Far Side</span></div>
+  <div id="comicBody"></div>
+</section>
 <section class="view" id="view-settings">
   <div class="slatehead"><span class="num">⚙</span><h2>Setup</h2><span class="tag">Keys &amp; Models</span></div>
   <div class="card">
@@ -518,7 +525,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v6.5 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v6.8 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -533,7 +540,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",charRefs:[],adjust:[],lastUrl:""},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",
+  cast:[],sets:[],castInit:false,customGenres:[],episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
 let S=load();
@@ -568,7 +575,7 @@ const TOKENS={
 };
 const CANON=`<b>Chieff</b> — the deadpan native of Stoneralia. Never a victim, never a sidekick.<br><b>Core laws</b> — "stoner logic is physics"; "win by not engaging."<br><b>Goon Taxonomy</b> — 12 known threats: HOA, the Algorithm, the Landlord, the Small-Print meta-boss, and more.<br><b>Palette</b> — matte black + off-white (90%), sage / bud green (8%), gold + red (2%, rare).<br><b>Rule</b> — brand-mark elements get cropped from real artwork, never AI-regenerated.`;
 const GRADES=[{"n": "Bold Neon & Cyberpunk", "l": "Crushed blacks with hyper-saturated neon highlights (pinks, purples, blues) and a cool, futuristic teal shadow tint"}, {"n": "Moody Neo-Noir & Atmospheric Realism", "l": "Desaturated midtones, rich shadows, and a cooler, cinematic palette anchoring natural skin tones against deep environments"}, {"n": "Vintage Film & Nostalgic Warmth", "l": "Soft contrast, creamy highlights, and subtle grain mimicking analog stocks like Kodak Portra"}, {"n": "Cinematic Hyper-Realism & HDR", "l": "Accurate white balance with maximized dynamic range for vivid, organic color without artificial filters"}, {"n": "Hazy Lo-Fi & 90s Skate Tape", "l": "Faded blacks, moss-green casts, and heavy film grain emulating old Hi8 camcorders and counter-culture edits"}, {"n": "Gritty Concrete & Kush", "l": "Desaturated urban greys paired with hyper-emphasized earthy greens and muddy browns for an underground aesthetic"}, {"n": "Psychedelic Thermal & Acid Y2K", "l": "Warped, inverted hues focusing on toxic neon greens and acid yellows inspired by heat maps"}, {"n": "Surreal Aerochrome (Infrared)", "l": "Shifting natural greens into striking bubblegum pinks or blood reds, giving reality an otherworldly filter"}, {"n": "90s Point-and-Shoot Flash", "l": "Blown-out foregrounds and pitch-black backgrounds mimicking 90s-era disposable cameras; perfect for raw, night-out lookbooks"}, {"n": "Neo-Expressionist Pop", "l": "Raw, unblended primary colors pushed to their limits against stark, gritty backgrounds, evoking canvas street art"}, {"n": "Matte Puff-Print", "l": "Flat, high-density colors with zero shine, graded to make digital images feel tactile and heavily inked"}, {"n": "Late Night Bodega", "l": "Fluorescent overhead lighting casts mixed with neon sign reflections, creating an urban, nocturnal haze"}, {"n": "Washed Denim & Bleach", "l": "High exposure, faded blues, and stark whites that mimic the texture and vibe of acid-washed fabrics"}, {"n": "Chlorophyll Boost", "l": "Muting all surrounding colors while hyper-saturating deep forest, olive, and bright lime greens"}, {"n": "Smoked Glass / Frosted Matte", "l": "Lowered clarity and raised black levels to create a thick, cloudy, smoke-filled atmosphere"}, {"n": "Golden Hour Haze", "l": "Overly warm, amber-tinted light with heavy lens flares and glowing edges"}, {"n": "CCTV / Security Cam", "l": "High-contrast monochrome or harsh green-tinted, low-resolution grading with digital artifacting"}, {"n": "Bleach Bypass", "l": "High contrast with extremely low saturation, creating a gritty, metallic, and aggressive aesthetic"}, {"n": "Dark Academia / Vintage Prep", "l": "Deep browns, warm burgundies, and dark greens with a moody, low-exposure curve"}, {"n": "Pastel Goth / Soft Grunge", "l": "Muted, chalky pastels contrasted with deep, inky blacks"}, {"n": "Y2K Fisheye Distortion", "l": "Ultra-wide angle distortion paired with early-2000s digital camera color science (heavy on the magenta tints)"}, {"n": "Sunbaked Desert", "l": "Warm oranges, pale yellows, and dusty browns with lifted shadows for a dry, arid feel"}, {"n": "High-Contrast Monotone", "l": "Pure black and white with no grey midtones, resembling xeroxed punk flyers"}, {"n": "Cyber-Ghetto / Techwear Blue", "l": "Deep, steely blues and slate greys with sharp, clinical clarity"}, {"n": "Polaroid Faded Edge", "l": "Distinctive green/yellow color shifts in the shadows with soft, vignetted borders"}, {"n": "Super 8mm Warmth", "l": "Heavy yellow/orange tint, significant grain, and jittery frame-like edge burns"}, {"n": "Toxic Glow / Uranium", "l": "Radioactive greens and sickly yellows pushed to the forefront"}, {"n": "Retro-Reflective Flash", "l": "Dark, moody grading where only specific materials pop with blinding white light"}, {"n": "Velvet Night", "l": "Crushed blacks pushed toward deep, luxurious purples, giving a premium feel to nighttime shots"}, {"n": "Sunset Boulevard Warmth", "l": "Peachy skin tones, magenta skies, and golden-hour rim lighting"}, {"n": "Dirty Lens Flare", "l": "High contrast with anamorphic horizontal light streaks and visible dust/grime on the lens"}, {"n": "Halftone Print Texture", "l": "Colors separated into visible CMYK dot patterns mimicking vintage comic books or newspaper prints"}, {"n": "Liquid Chrome", "l": "Highly desaturated image where highlights are sharpened and cooled to look like liquid metal"}, {"n": "Faded Receipt Thermal", "l": "Low-contrast monochromatic blue or purple, looking like a faded cash register receipt"}, {"n": "Heatwave Mirage", "l": "Red and orange midtones pushed high with a slight wavy blur added to the lower thirds"}, {"n": "Ethereal Dreamscape (Bloom)", "l": "Drastically lowered contrast and glowing, diffused highlights for an angelic, soft-focus look"}, {"n": "Grime & Rust", "l": "Emphasis on brown, orange, and oxidized red tones to make environments look industrial and decaying"}, {"n": "Hyper-Pop Candy", "l": "Extreme saturation across the board with no shadows, creating a plastic, artificial, highly energetic look"}, {"n": "Midnight Smog", "l": "Deep navy skies with an ambient orange city-light glow reflecting off clouds or fog"}, {"n": "Sepia Slime", "l": "A traditional warm sepia tone but corrupted with stark, neon green highlights"}, {"n": "Embroidered Richness", "l": "Crushed shadows with intense, localized saturation to make specific fabric textures and threads pop visually"}, {"n": "Clean Minimalist Whiteout", "l": "Overexposed backgrounds with perfectly white-balanced, slightly desaturated subjects"}, {"n": "Vaporwave / Synthwave", "l": "Gradients of cyan and magenta dominating the entire frame, shifting shadows to purple and highlights to bright blue"}, {"n": "Glitch Art / Datamoshing", "l": "Chromatic aberration (red/blue color splitting) heavily applied to the edges with sharp contrast"}, {"n": "Ozone Depletion", "l": "Harsh, unshielded UV-looking light, casting intense, sharp shadows with a blueish tint"}, {"n": "Alleyway Amber", "l": "Sodium-vapor streetlamp coloring, bathing everything in a gritty, high-contrast orange"}, {"n": "Woven Gold / Custom Lace", "l": "Highlights tinted exclusively with warm gold, contrasting against dark, neutral backgrounds to emphasize metallic hardware"}, {"n": "Subway Fluorescent", "l": "Sickly green-blue tint mimicking cheap fluorescent tube lighting in urban transit systems"}, {"n": "Overcast Concrete", "l": "Completely flat lighting, lifting the greys to create an isolated, brutalist aesthetic"}, {"n": "Seasonal Drop Hype", "l": "Hyper-clarity, high contrast, and perfectly balanced, color-accurate grading designed to make premium product details pop on an e-commerce grid"}];
-const ANGLES=[{"n": "The Sneakerhead Low-Angle", "d": "Camera on the ground pointing up, exaggerating the footwear silhouette against an urban skyline"}, {"n": "90s Fisheye", "d": "Ultra-wide, distorted lens pushed close to the subject, a staple of classic skate tapes and underground lookbooks"}, {"n": "Macro Texture Focus", "d": "Extreme close-up with a shallow depth of field, strictly highlighting heavy puff-print graphics or thick embroidery threads"}, {"n": "The Dubrae Drop", "d": "A low, tight profile shot focusing precisely on the shoelaces to highlight custom gold lace dubraes catching the light"}, {"n": "The Tongue Pop", "d": "A top-down macro shot looking directly at the top of the sneaker, perfectly framing custom branded tongue labels"}, {"n": "Over-the-Shoulder Smoke Ring", "d": "Shooting from behind the subject just as they exhale, framing the hazy street scene through the smoke"}, {"n": "Bodega Aisle Frame", "d": "A medium shot using the cramped, neon-lit aisles of a corner store as natural framing for a fit pic"}, {"n": "The Trunk Shot", "d": "Camera placed inside the trunk of a car looking up at the subjects peering in, highlighting upper body outerwear"}, {"n": "Neo-Expressionist Dutch Angle", "d": "A tilted, deliberately unbalanced frame that evokes the chaotic, raw energy of 90s street art and tagging"}, {"n": "Security Camera High Angle", "d": "Camera mounted high in a corner pointing down, mimicking raw CCTV footage for a gritty, surveilled aesthetic"}, {"n": "First-Person POV Fit Check", "d": "Camera placed at the subject eye level looking straight down at their own layered apparel and footwear"}, {"n": "The Walk-By Tracking Shot", "d": "Camera tracks parallel to the subject walking down the block, maintaining a smooth profile shot of the outfit in motion"}, {"n": "Low-Hanging Skater Follow", "d": "Camera positioned inches from the concrete, following just behind the subject to capture the heel of the shoes and pavement texture"}, {"n": "Direct Flash Mugshot", "d": "Straight-on medium close-up against a stark wall with harsh, direct lighting mimicking 90s disposable cameras"}, {"n": "The Plume Profile", "d": "A tight side-profile shot focusing on the subject face illuminated briefly by the cherry of a lighter or joint"}, {"n": "Concrete Puddle Reflection", "d": "Camera placed on the ground focusing on the reflection of the subject in a street puddle rather than the subject itself"}, {"n": "The Detail Crop (Faceless)", "d": "Framing tight on the torso or legs, intentionally cutting off the head to make the apparel the undeniable focal point"}, {"n": "Peeking Through the Chainlink", "d": "Shooting through a chainlink fence with the wire blurred in the foreground, focusing on the subject in the lot beyond"}, {"n": "The Huddle / Cypher Angle", "d": "Low angle in the center of a circle of people, shooting up as they look down, capturing the communal streetwear vibe"}, {"n": "High-Contrast Silhouette", "d": "Shooting directly into a strong light source to black out the subject entirely, focusing strictly on the outfit silhouette"}, {"n": "Over-the-Balcony Look-Down", "d": "A steep, high angle shooting straight down from a fire escape or balcony onto the subject walking the pavement below"}, {"n": "The Backstep Zoom (Dolly Zoom)", "d": "Camera moves backward quickly while zooming in, creating a disorienting, psychedelic background shift"}, {"n": "Handheld Shaky Cam", "d": "Intentional micro-jitters mimicking amateur VHS footage, adding a raw, documentary feel to a brand promo"}, {"n": "The Lighter Strike Close-Up", "d": "Extreme macro on the thumb striking a lighter, with the background outfit completely blurred out until the flame hits"}, {"n": "Looking Through the Glass", "d": "Shooting the subject from outside a storefront or car window, capturing the reflections of the city layered over the fit"}, {"n": "The Zippo Illumination", "d": "Pitch black environment where the only light source is a flame near the subject face, catching the edge of a hood or collar"}, {"n": "Low-Angle Trunk Lean", "d": "Subject leaning against the back of a vintage car, shot from the bumper level looking up into the sky"}, {"n": "Extreme Low-Angle Step-Over", "d": "Camera placed flat on the concrete as the subject steps directly over the lens, showcasing the sole of the sneaker"}, {"n": "The What's in the Bag Shot", "d": "First-person perspective looking down into an open duffel or shopping bag full of premium product or lifestyle items"}, {"n": "Raking Light Texture Shot", "d": "Sidelight hitting the fabric at a harsh angle to emphasize the 3D depth of heavy stitching or tactical fabrics"}, {"n": "Wide Alleyway Symmetrical", "d": "A perfectly centered, wide shot placing the subject small in the frame, flanked by tall brick walls or shipping containers"}, {"n": "The Roll-Up Top-Down", "d": "Bird's-eye view looking straight down at a table or flat surface showcasing hands interacting with accessories or rolling papers"}, {"n": "The Zipper Pull Macro", "d": "A tight tracking shot that follows a zipper being pulled up a heavy jacket, emphasizing hardware details"}, {"n": "The Hoodie Tug", "d": "Medium close-up focusing on the hands pulling the hood down or adjusting the drawstrings, framing the upper chest logo"}, {"n": "The Drop-In", "d": "Camera starts high up looking at the sky, then quickly tilts down to aggressively reveal the subject staring into the lens"}, {"n": "Back-to-Back Profile", "d": "Two subjects standing back-to-back shot from a side profile, contrasting two different colorways of the same outerwear piece"}, {"n": "The Panning Blur (Whip Pan)", "d": "A fast blur as the camera whips from a background element and snaps onto the sharply focused subject in CHIEFIN gear"}, {"n": "Split Focus (Diopter)", "d": "A specialized shot where both a very close foreground object and the background subject are in sharp focus simultaneously"}, {"n": "The Lookback", "d": "Subject is walking away from the camera, then casually throws a glance over their shoulder, highlighting back graphics on a jacket or tee"}, {"n": "Leading Lines Stairwell", "d": "Subject positioned at the bottom or top of an urban concrete stairwell, using the railing lines to draw the eye to the apparel"}, {"n": "The Sidewalk Sit", "d": "Subject sitting on the curb with knees bent, shot from an eye-level squat to emphasize the shoes and pant drape"}, {"n": "The Dashboard Mount", "d": "Camera mounted on the dashboard looking into the driver/passenger seats, capturing a casual, road-trip vibe"}, {"n": "The Shadow Play", "d": "Framing the subject elongated shadow cast on a brick wall or pavement during late afternoon golden hour, rather than the person"}, {"n": "Heavy Foreground Obstruction", "d": "Shooting past a blurry, out-of-focus object in the immediate foreground to spy on the subject"}, {"n": "The Spin Transition", "d": "Camera pans aggressively in a full 360-degree circle around the subject, used to cut between different outfits in the same spot"}, {"n": "The Low-Slung Backpack Angle", "d": "Camera follows behind the subject tracking specifically on a branded bag or backpack slung over one shoulder"}, {"n": "The Pocket Plunge", "d": "Extreme close-up of a hand slipping into a stash pocket or pulling out a lighter, focusing on the fabric tension and utility"}, {"n": "Bird's Eye Concrete", "d": "High altitude drone shot pointing 90-degrees straight down at a single person standing on an interesting geometric street pattern"}, {"n": "The Cuff Drop", "d": "Focus starts on the waist and tilts straight down the pant leg, ending on how the hem stacks perfectly over the sneaker"}, {"n": "The Final Walk-Away", "d": "A slow tracking shot behind the subject as they fade into a hazy, neon-lit street, leaving a lingering impression of the silhouette"}];
+const ANGLES=[{"n": "The Sneakerhead Low-Angle", "d": "Camera on the ground pointing up, exaggerating the footwear silhouette against an urban skyline"}, {"n": "90s Fisheye", "d": "Ultra-wide, distorted lens pushed close to the subject, a staple of classic skate tapes and underground lookbooks"}, {"n": "Macro Texture Focus", "d": "Extreme close-up with a shallow depth of field, strictly highlighting heavy puff-print graphics or thick embroidery threads"}, {"n": "The Dubrae Drop", "d": "A low, tight profile shot focusing precisely on the shoelaces to highlight custom gold lace dubraes catching the light"}, {"n": "The Tongue Pop", "d": "A top-down macro shot looking directly at the top of the sneaker, perfectly framing custom branded tongue labels"}, {"n": "Over-the-Shoulder Smoke Ring", "d": "Shooting from behind the subject just as they exhale, framing the hazy street scene through the smoke"}, {"n": "Bodega Aisle Frame", "d": "A medium shot using the cramped, neon-lit aisles of a corner store as natural framing for a fit pic"}, {"n": "The Trunk Shot", "d": "Camera placed inside the trunk of a car looking up at the subjects peering in, highlighting upper body outerwear"}, {"n": "Neo-Expressionist Dutch Angle", "d": "A tilted, deliberately unbalanced frame that evokes the chaotic, raw energy of 90s street art and tagging"}, {"n": "Security Camera High Angle", "d": "Camera mounted high in a corner pointing down, mimicking raw CCTV footage for a gritty, surveilled aesthetic"}, {"n": "First-Person POV Fit Check", "d": "Camera placed at the subject eye level looking straight down at their own layered apparel and footwear"}, {"n": "The Walk-By Tracking Shot", "d": "Camera tracks parallel to the subject walking down the block, maintaining a smooth profile shot of the outfit in motion"}, {"n": "Low-Hanging Skater Follow", "d": "Camera positioned inches from the concrete, following just behind the subject to capture the heel of the shoes and pavement texture"}, {"n": "Direct Flash Mugshot", "d": "Straight-on medium close-up against a stark wall with harsh, direct lighting mimicking 90s disposable cameras"}, {"n": "The Plume Profile", "d": "A tight side-profile shot focusing on the subject face illuminated briefly by the cherry of a lighter or joint"}, {"n": "Concrete Puddle Reflection", "d": "Camera placed on the ground focusing on the reflection of the subject in a street puddle rather than the subject itself"}, {"n": "The Detail Crop (Faceless)", "d": "Framing tight on the torso or legs, intentionally cutting off the head to make the apparel the undeniable focal point"}, {"n": "Peeking Through the Chainlink", "d": "Shooting through a chainlink fence with the wire blurred in the foreground, focusing on the subject in the lot beyond"}, {"n": "The Huddle / Cypher Angle", "d": "Low angle in the center of a circle of people, shooting up as they look down, capturing the communal streetwear vibe"}, {"n": "High-Contrast Silhouette", "d": "Shooting directly into a strong light source to black out the subject entirely, focusing strictly on the outfit silhouette"}, {"n": "Over-the-Balcony Look-Down", "d": "A steep, high angle shooting straight down from a fire escape or balcony onto the subject walking the pavement below"}, {"n": "The Backstep Zoom (Dolly Zoom)", "d": "Camera moves backward quickly while zooming in, creating a disorienting, psychedelic background shift"}, {"n": "Handheld Shaky Cam", "d": "Intentional micro-jitters mimicking amateur VHS footage, adding a raw, documentary feel to a brand promo"}, {"n": "The Lighter Strike Close-Up", "d": "Extreme macro on the thumb striking a lighter, with the background outfit completely blurred out until the flame hits"}, {"n": "Looking Through the Glass", "d": "Shooting the subject from outside a storefront or car window, capturing the reflections of the city layered over the fit"}, {"n": "The Zippo Illumination", "d": "Pitch black environment where the only light source is a flame near the subject face, catching the edge of a hood or collar"}, {"n": "Low-Angle Trunk Lean", "d": "Subject leaning against the back of a vintage car, shot from the bumper level looking up into the sky"}, {"n": "Extreme Low-Angle Step-Over", "d": "Camera placed flat on the concrete as the subject steps directly over the lens, showcasing the sole of the sneaker"}, {"n": "The What's in the Bag Shot", "d": "First-person perspective looking down into an open duffel or shopping bag full of premium product or lifestyle items"}, {"n": "Raking Light Texture Shot", "d": "Sidelight hitting the fabric at a harsh angle to emphasize the 3D depth of heavy stitching or tactical fabrics"}, {"n": "Wide Alleyway Symmetrical", "d": "A perfectly centered, wide shot placing the subject small in the frame, flanked by tall brick walls or shipping containers"}, {"n": "The Roll-Up Top-Down", "d": "Bird's-eye view looking straight down at a table or flat surface showcasing hands interacting with accessories or rolling papers"}, {"n": "The Zipper Pull Macro", "d": "A tight tracking shot that follows a zipper being pulled up a heavy jacket, emphasizing hardware details"}, {"n": "The Hoodie Tug", "d": "Medium close-up focusing on the hands pulling the hood down or adjusting the drawstrings, framing the upper chest logo"}, {"n": "The Drop-In", "d": "Camera starts high up looking at the sky, then quickly tilts down to aggressively reveal the subject staring into the lens"}, {"n": "Back-to-Back Profile", "d": "Two subjects standing back-to-back shot from a side profile, contrasting two different colorways of the same outerwear piece"}, {"n": "The Panning Blur (Whip Pan)", "d": "A fast blur as the camera whips from a background element and snaps onto the sharply focused subject in CHIEFIN gear"}, {"n": "Split Focus (Diopter)", "d": "A specialized shot where both a very close foreground object and the background subject are in sharp focus simultaneously"}, {"n": "The Lookback", "d": "Subject is walking away from the camera, then casually throws a glance over their shoulder, highlighting back graphics on a jacket or tee"}, {"n": "Leading Lines Stairwell", "d": "Subject positioned at the bottom or top of an urban concrete stairwell, using the railing lines to draw the eye to the apparel"}, {"n": "The Sidewalk Sit", "d": "Subject sitting on the curb with knees bent, shot from an eye-level squat to emphasize the shoes and pant drape"}, {"n": "The Dashboard Mount", "d": "Camera mounted on the dashboard looking into the driver/passenger seats, capturing a casual, road-trip vibe"}, {"n": "The Shadow Play", "d": "Framing the subject elongated shadow cast on a brick wall or pavement during late afternoon golden hour, rather than the person"}, {"n": "Heavy Foreground Obstruction", "d": "Shooting past a blurry, out-of-focus object in the immediate foreground to spy on the subject"}, {"n": "The Spin Transition", "d": "Camera pans aggressively in a full 360-degree circle around the subject, used to cut between different outfits in the same spot"}, {"n": "The Low-Slung Backpack Angle", "d": "Camera follows behind the subject tracking specifically on a branded bag or backpack slung over one shoulder"}, {"n": "The Pocket Plunge", "d": "Extreme close-up of a hand slipping into a stash pocket or pulling out a lighter, focusing on the fabric tension and utility"}, {"n": "Bird's Eye Concrete", "d": "High altitude drone shot pointing 90-degrees straight down at a single person standing on an interesting geometric street pattern"}, {"n": "The Cuff Drop", "d": "Focus starts on the waist and tilts straight down the pant leg, ending on how the hem stacks perfectly over the sneaker"}, {"n": "The Final Walk-Away", "d": "A slow tracking shot behind the subject as they fade into a hazy, neon-lit street, leaving a lingering impression of the silhouette"}, {"n": "Bodega CCTV Footage", "d": "Grainy fixed security-camera view from a high corner of a bodega or shop \u2014 wide, slightly fisheyed, timestamp burn-in, washed IR-tinted color, subject caught mid-frame like found footage"}, {"n": "Police Body Cam (Chest)", "d": "Chest-mounted bodycam POV \u2014 low chest height, wide and shaky, harsh on-cam light, lens flare and motion blur, tense cop-footage realism"}, {"n": "Dashcam Night", "d": "Fixed dashboard camera at night, wide flat lens, headlight wash, timestamp and speed overlay, windshield reflections"}];
 const BOARD_ADJ=["smoke atmosphere","hotbox haze","thick fog","rain atmosphere","dust & embers","neon glow","golden-hour haze","lens flares","backlit silhouette","slow-motion","darker mood","wider angles","more close-ups","handheld feel","slower pacing","aggressive framing"];
 
 /* nav */
@@ -584,6 +591,7 @@ function go(name){
   if(name==="board")renderBoardChars();
   if(name==="episodes")renderEpisodes();
   if(name==="cloudtoons")renderCloudtoons();
+  if(name==="comics")renderComics();
   if(name==="cast")renderCast();
   if(name==="sets")renderSets();
   if(name==="media")renderMedia();
@@ -736,10 +744,20 @@ $("boardGrid").addEventListener("change",e=>{S.board.grid=e.target.value;save();
     c.addEventListener("click",()=>{const p=$("boardScript");p.value=(p.value.trim()?p.value.trim()+" ":"")+TOKENS[name];S.board.script=p.value;save();});tw.appendChild(c);});
 })();
 function renderBoardChars(){
-  const w=$("boardChars");w.innerHTML="";
-  if(!S.stash.length){w.innerHTML='<span class="hint">Add pieces/characters in The Stash to lock them here.</span>';return;}
-  S.stash.forEach(it=>{const c=document.createElement("span");c.className="chip"+(S.board.charRefs.includes(it.id)?" on":"");c.textContent=it.name;
-    c.addEventListener("click",()=>{const i=S.board.charRefs.indexOf(it.id);i>=0?S.board.charRefs.splice(i,1):S.board.charRefs.push(it.id);save();c.classList.toggle("on");});w.appendChild(c);});
+  const w=$("boardChars");if(!w)return;w.innerHTML="";
+  const castSvg="<svg viewBox='0 0 24 24' width='13' height='13' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='3.5'/><path d='M5.5 20a6.5 6.5 0 0 1 13 0'/></svg>";
+  const stashSvg="<svg viewBox='0 0 24 24' width='13' height='13' fill='none' stroke='currentColor' stroke-width='2' stroke-linejoin='round'><path d='M8.5 3.5l3.5 2.5 3.5-2.5 5 3-2.5 3v10.5h-12V9.5L3.5 6.5z'/></svg>";
+  if(!S.cast.length&&!S.stash.length){w.innerHTML='<span class="hint">Add characters in Cast or pieces in The Stash to lock them here.</span>';return;}
+  const grp=(label,svg,items)=>{
+    if(!items.length)return;
+    const hd=document.createElement("div");
+    hd.style.cssText="display:flex;align-items:center;gap:6px;width:100%;flex-basis:100%;margin:8px 0 2px;color:var(--bone-dim,#8a8f86);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em";
+    hd.innerHTML=svg+"<span>"+label+"</span>";w.appendChild(hd);
+    items.forEach(it=>{const c=document.createElement("span");c.className="chip"+(S.board.charRefs.includes(it.id)?" on":"");c.textContent=it.name;
+      c.addEventListener("click",()=>{const i=S.board.charRefs.indexOf(it.id);i>=0?S.board.charRefs.splice(i,1):S.board.charRefs.push(it.id);save();c.classList.toggle("on");});w.appendChild(c);});
+  };
+  grp("Cast",castSvg,S.cast);
+  grp("Stash",stashSvg,S.stash);
 }
 function recommendGrid(script){
   const words=script.trim().split(/\s+/).filter(Boolean).length;
@@ -771,7 +789,7 @@ async function genBoard(){
   const model=useEdit?"openai/gpt-image-2/edit":"openai/gpt-image-2";
   const bp=boardPrompt(g);
   const input={prompt:bp,image_size:{width:g.w,height:g.h}};
-  if(useEdit){const items=S.board.charRefs.map(id=>S.stash.find(x=>x.id===id)).filter(Boolean);const urls=flattenRefs(items,12);if(urls.length)input.image_urls=urls;input.prompt=bp+refNote(items);}
+  if(useEdit){const items=S.board.charRefs.map(id=>S.cast.find(x=>x.id===id)||S.stash.find(x=>x.id===id)).filter(Boolean);const urls=flattenRefs(items,12);if(urls.length)input.image_urls=urls;input.prompt=bp+refNote(items);}
   const btn=$("boardGen");btn.disabled=true;btn.textContent="● Boarding…";
   const stat=$("boardStatus");stat.innerHTML='<div class="statusline"><span class="rec"></span><span id="btxt">Submitting…</span></div>';$("boardResult").innerHTML="";
   try{
@@ -832,6 +850,7 @@ function renderEditor(){
   const it=S.stash.find(x=>x.id===editId);if(!it){closeEditor();return;}
   const vs=viewsOf(it);
   let h='<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div><div style="font-family:var(--slate);font-stretch:condensed;font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:.04em">'+esc(it.name)+'</div><div class="hint">'+esc(cat(it))+' · '+vs.length+' side'+(vs.length>1?'s':'')+' loaded</div></div><button class="btn sm ghost" id="edClose" style="margin-left:auto;flex:0">Done</button></div>';
+  h+='<label class="fld">Name</label><input type="text" id="edName" value="'+esc(it.name)+'">';
   h+='<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(106px,1fr))">';
   vs.forEach((v,i)=>{h+='<div class="stash-item'+(i===0?' ismain':'')+'"><button class="x" data-i="'+i+'">✕</button>'+(i===0?'<span class="mainbadge">★ main</span>':'<button class="setmain" data-m="'+i+'">set main</button>')+'<img src="'+v.src+'"><div class="meta"><div class="nm">'+esc(v.label)+'</div></div></div>';});
   h+='</div>';
@@ -839,6 +858,7 @@ function renderEditor(){
   h+='<div class="row" style="margin-top:12px"><button class="btn green sm" id="addViewUpload">⬆ Upload the '+esc(pendingLabel)+'</button><button class="btn ghost sm" id="addViewUrl">🔗 URL</button></div>';
   $("stashEditor").innerHTML=h;
   $("edClose").addEventListener("click",closeEditor);
+  $("edName").addEventListener("input",e=>{it.name=e.target.value;save();});$("edName").addEventListener("change",()=>{renderStash();});
   const lw=$("viewLabels");VIEW_LABELS.forEach(l=>{const c=document.createElement("span");c.className="chip"+(l===pendingLabel?" on":"");c.textContent=l;c.addEventListener("click",()=>{pendingLabel=l;renderEditor();});lw.appendChild(c);});
   $("stashEditor").querySelectorAll(".x").forEach(b=>b.addEventListener("click",()=>removeView(parseInt(b.dataset.i))));
   $("stashEditor").querySelectorAll(".setmain").forEach(b=>b.addEventListener("click",()=>setMainStash(parseInt(b.dataset.m))));
@@ -1044,6 +1064,8 @@ function setupExtras(){
   if($("assetFile"))$("assetFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const src=await resizeImage(f,1024,0.82);addAssetView(aLabel,src);}catch(err){toast("Could not read that.",true);}e.target.value="";});
   if($("castAdd"))$("castAdd").addEventListener("click",addCast);
   if($("setAdd"))$("setAdd").addEventListener("click",addSet);
+  if($("setQuickAdd"))$("setQuickAdd").addEventListener("click",quickAddSet);
+  if($("setQuickName"))$("setQuickName").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();quickAddSet();}});
   $("testLlm").addEventListener("click",async()=>{
     if(!S.apiKey){toast("Add your fal key first.",true);return;}
     const r=$("llmResult");r.style.display="flex";r.innerHTML='<span class="rec"></span>Testing the brain…';
@@ -1098,6 +1120,7 @@ function renderAssetEditor(){
   const it=assetOf();if(!it){closeAsset(aKind);return;}
   const labels=aKind==="cast"?CAST_LABELS:SET_LABELS;const vs=viewsOf(it).filter(v=>v.src);
   let h='<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div><div style="font-family:var(--slate);font-stretch:condensed;font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:.04em">'+esc(it.name)+'</div><div class="hint">'+vs.length+' reference'+(vs.length===1?'':'s')+'</div></div><button class="btn sm ghost" id="aClose" style="margin-left:auto;flex:0">Done</button></div>';
+  h+='<label class="fld">Name</label><input type="text" id="aName" value="'+esc(it.name)+'">';
   if(aKind==="cast"){
     h+='<label class="fld">Identity lock — injected into every shot for consistency</label><textarea id="aIdentity" style="min-height:84px">'+esc(it.identity||"")+'</textarea>';
     h+='<label class="fld" style="margin-top:10px">Voice / vibe note</label><input type="text" id="aVoice" value="'+esc(it.voice||"")+'" placeholder="deadpan, dry, gravelly">';
@@ -1125,6 +1148,7 @@ function renderAssetEditor(){
   h+='<div class="row" style="margin-top:10px"><button class="btn green sm" id="aUpload">⬆ Upload '+esc(aLabel)+'</button><button class="btn ghost sm" id="aUrl">🔗 URL</button></div>';
   $(aKind+"Editor").innerHTML=h;
   $("aClose").addEventListener("click",()=>closeAsset(aKind));
+  $("aName").addEventListener("input",e=>{it.name=e.target.value;save();});$("aName").addEventListener("change",()=>{renderCast();renderSets();});
   if(aKind==="cast"){
     $("aIdentity").addEventListener("input",e=>{it.identity=e.target.value;save();});
     $("aVoice").addEventListener("input",e=>{it.voice=e.target.value;save();});
@@ -1314,24 +1338,31 @@ function preloadCast(){
 }
 /* ===== v5.4 helpers ===== */
 const SET_PRESETS=[
- {name:"The Bodega",vibe:"late-night corner store, buzzing fluorescents, neon signage, urban haze"},
- {name:"Rooftop at Dusk",vibe:"city rooftop, golden hour into neon, smoke drifting, skyline behind"},
- {name:"Back Alley",vibe:"narrow graffiti alley, wet pavement, single sodium streetlamp, moody"},
- {name:"Smoke Lounge",vibe:"dim velvet lounge, thick haze, warm low light, gold accents"},
- {name:"Dispensary",vibe:"clean modern dispensary, glass displays, cool LED light, premium"},
- {name:"City Street Night",vibe:"rain-slick street, headlights, reflections, cinematic neon"},
- {name:"Subway Platform",vibe:"underground platform, green fluorescent tint, tiled walls, grime"},
- {name:"Warehouse",vibe:"empty industrial warehouse, shafts of light, dust, raw concrete"},
- {name:"Comic Splash BG",vibe:"dynamic comic-book splash background, bold ink lines, halftone, dramatic"},
- {name:"Epic Battlefield",vibe:"epic cinematic battlefield, smoke and embers, god rays, huge scale"},
- {name:"Hero HQ",vibe:"sleek superhero headquarters interior, glowing tech panels, dramatic uplight"},
- {name:"Desert Highway",vibe:"sun-baked desert highway, heat haze, wide open, dusty warm light"}
+ {name:"The 24-Hour Bodega",vibe:"3am corner store, buzzing fluorescents, lotto-ticket glow, cat asleep on the register"},
+ {name:"Golden-Hour Rooftop",vibe:"tar-paper rooftop as the sun bleeds into neon, smoke curling over the skyline"},
+ {name:"The Wet Back Alley",vibe:"rain-slick graffiti alley, one flickering sodium lamp, steam rising off the grates"},
+ {name:"Velvet Smoke Lounge",vibe:"dim speakeasy haze, warm gold light, low leather seats, slow-jazz energy"},
+ {name:"The Flagship Dispensary",vibe:"museum-clean glass cases, cool LED wash, premium hush, everything behind glass"},
+ {name:"Neon Rain Street",vibe:"rain-slick avenue, headlight smear, the whole city doubled in the puddles"},
+ {name:"Last-Train Platform",vibe:"empty underground platform, sickly green tube light, tiled echo, distant rumble"},
+ {name:"The Abandoned Warehouse",vibe:"cathedral-empty warehouse, dust in the god-rays, raw concrete, pigeons up top"},
+ {name:"Comic Splash Void",vibe:"explosive comic-book splash background, bold ink, halftone burst, pure drama"},
+ {name:"The Battlefield",vibe:"epic smoke-and-ember battlefield, god rays through the haze, impossible scale"},
+ {name:"The Headquarters",vibe:"sleek hero HQ, glowing tech panels, dramatic uplight, the calm before the call"},
+ {name:"Sun-Baked Highway",vibe:"endless desert blacktop, heat-shimmer mirage, one car, dust and warm light"}
 ];
 let extraFaces=[];
 function setMainStash(i){const it=S.stash.find(x=>x.id===editId);if(!it)return;const v=viewsOf(it).slice();if(i<=0||i>=v.length)return;const pick=v.splice(i,1)[0];v.unshift(pick);it.views=v;it.src=v[0].src;save();renderEditor();renderStash();toast("Main image updated.");}
 function setMainAsset(i){const t=assetOf();if(!t)return;const v=viewsOf(t).filter(x=>x.src);if(i<=0||i>=v.length)return;const pick=v.splice(i,1)[0];v.unshift(pick);t.views=v;t.src=v[0].src;save();renderAssetEditor();renderCast();renderSets();toast("Main image updated.");}
 function addSetPreset(name,vibe){if(S.sets.some(s=>s.name===name)){toast(name+" already added.",true);return;}S.sets.unshift({id:uid(),name,vibe,src:"",views:[]});save();renderSets();renderCastSet();toast(name+" added — tap it to build the plate.");}
-function renderSetPresets(){const w=$("setPresets");if(!w)return;w.innerHTML="";SET_PRESETS.forEach(p=>{const c=document.createElement("span");c.className="chip";c.textContent="+ "+p.name;c.addEventListener("click",()=>addSetPreset(p.name,p.vibe));w.appendChild(c);});}
+function quickAddSet(){
+  const inp=$("setQuickName");if(!inp)return;const name=inp.value.trim();
+  if(!name){toast("Name your set first.",true);return;}
+  const ex=S.sets.find(x=>x.name.toLowerCase()===name.toLowerCase());
+  if(ex){inp.value="";toast(name+" already exists \u2014 opening it.");openAsset("sets",ex.id);return;}
+  const id=uid();S.sets.unshift({id,name,vibe:"",src:"",views:[]});save();renderSets();renderCastSet();inp.value="";openAsset("sets",id);toast(name+" added \u2014 drop a vibe + photo.");
+}
+function renderSetPresets(){const sb=$("setSuggestBtn");if(sb&&!sb.dataset.b){sb.dataset.b="1";sb.addEventListener("click",suggestLocations);}const w=$("setPresets");if(!w)return;w.innerHTML="";SET_PRESETS.forEach(p=>{const c=document.createElement("span");c.className="chip";c.textContent="+ "+p.name;c.title=p.vibe;c.addEventListener("click",()=>addSetPreset(p.name,p.vibe));w.appendChild(c);});}
 
 /* ================= PHASE 1 — EPISODE BRAIN ================= */
 const STONERALIA_LAW="STONERALIA LAW (the universe's hidden constitution — it governs every story but is NEVER stated aloud in the work): In Stoneralia everything non-human is alive, has opinions, and is secretly organized — lighters, food, smoke, furniture, doors, the moon, plants, animals. Humans are the last to know. Comedy and twists come from the gap between the conscious world operating and the clueless human missing it. Chieff is the one human who SEES it and simply does not engage — the deadpan native, never the victim. The audience must EARN this realization by watching; never narrate the rule.";
@@ -1807,13 +1838,160 @@ async function fillBlanksSet(it){
     save();toast("Filled the blanks.");renderAssetEditor();renderSets();
   }catch(e){if(st)st.innerHTML=errLine(e);}
 }
+/* ux fixes */
+/* ================= UX FIXES ================= */
+function paintAIButtons(root){if(!root||root.nodeType!==1)return;const list=[];if(root.tagName==="BUTTON")list.push(root);if(root.querySelectorAll)root.querySelectorAll("button").forEach(b=>list.push(b));list.forEach(b=>{if(b.dataset.aiPainted)return;if(b.textContent&&b.textContent.indexOf("✦")>-1){b.classList.remove("ghost");b.classList.add("green");b.dataset.aiPainted="1";}});}
+async function suggestLocations(){
+  if(!S.apiKey){toast("Add your fal key in Setup for AI suggestions.",true);return;}
+  const st=$("setSuggestStatus");if(st)st.innerHTML=spinner("Scouting locations…");
+  const have=S.sets.map(s=>s.name).join(", ");
+  const sys=STONERALIA_LAW+" "+VOICE_DNA+" You are a location scout for a deadpan cannabis-culture universe (Chiefin' Season / Stoneralia). Pitch vivid, specific, attention-grabbing locations with attitude — names with flavor, vibes concrete with one telling detail. Never generic, never boring.";
+  const usr=(have?"Already have: "+have+". Suggest DIFFERENT, complementary spots.\n":"")+"Give 6 locations. Return JSON only: {\"sets\":[{\"name\":\"\",\"vibe\":\"\"}]}.";
+  try{
+    const d=parseJSON(await llmRun(sys,usr));const sets=(d.sets||[]).filter(s=>s&&s.name);
+    const w=$("setPresets");if(w&&sets.length){w.innerHTML="";sets.forEach(s=>{const c=document.createElement("span");c.className="chip";c.textContent="+ "+s.name;c.title=s.vibe||"";c.addEventListener("click",()=>addSetPreset(s.name,s.vibe||""));w.appendChild(c);});}
+    if(st)st.innerHTML="";
+  }catch(e){if(st)st.innerHTML=errLine(e);}
+}
+/* phase4 comics */
+/* ================= PHASE 4 — COMICS ================= */
+const COMIC_KINDS={
+ single:{label:"Single Panel (Far Side)",panels:1},
+ strip3:{label:"3-Panel Strip",panels:3},
+ strip4:{label:"4-Panel Strip",panels:4},
+ strip6:{label:"6-Panel Strip",panels:6}
+};
+const COMIC_LOOKS={
+ toon:{label:"Flat 2D Toon",style:"bold flat 2D cartoon, thick uniform black outlines, flat color fills, light print grain, matte-black and bud-green palette, mobile-readable"},
+ inked:{label:"Inked Comic Book",style:"inked comic-book art, bold confident linework, halftone shading, dramatic comic-panel composition, saturated"},
+ farside:{label:"Pen & Ink (Far Side)",style:"single-panel pen-and-ink cartoon, loose hand-drawn line, crosshatch shading, absurdist deadpan, black and white"},
+ manga:{label:"Manga / B&W",style:"black-and-white manga panel, screentone shading, dynamic expressive linework"}
+};
+function curComic(){return S.comics.find(c=>c.id===S.curComic)||null;}
+function comicRefs(comic){
+  const out=[],cap=6;
+  const lead=comic.leadId?S.cast.find(c=>c.id===comic.leadId):null;
+  if(lead){viewsOf(lead).forEach(v=>{if(v.src&&out.length<cap)out.push(v.src);});
+    (lead.wardrobe||[]).forEach(id=>{const sp=S.stash.find(x=>x.id===id);if(sp)viewsOf(sp).forEach(v=>{if(v.src&&out.length<cap)out.push(v.src);});});}
+  const set=comic.setId?S.sets.find(x=>x.id===comic.setId):null;
+  if(set)viewsOf(set).forEach(v=>{if(v.src&&out.length<cap)out.push(v.src);});
+  return out;
+}
+function comicNote(comic){
+  const lead=comic.leadId?S.cast.find(c=>c.id===comic.leadId):null;
+  const set=comic.setId?S.sets.find(x=>x.id===comic.setId):null;
+  return (lead?identityNote([lead]):"")+(set?setNote(set):"");
+}
+function renderComics(){
+  const host=$("comicBody");if(!host)return;
+  const cc=curComic();if(cc){renderComicView(cc);return;}
+  S.curComic=null;
+  let h='<div class="card"><label class="fld">Type</label><select id="comicKind"></select>';
+  h+='<label class="fld" style="margin-top:10px">Look</label><select id="comicLook"></select>';
+  h+='<label class="fld" style="margin-top:10px">Lead character</label><select id="comicLead"></select>';
+  h+='<label class="fld" style="margin-top:10px">Location</label><select id="comicSet"></select>';
+  h+='<label class="fld" style="margin-top:10px">Idea</label><div class="row"><input type="text" id="comicIdea" placeholder="the gag / situation (or leave blank)"><button class="btn ghost sm" id="comicIdeaBtn" style="flex:0">✦</button></div><div id="comicIdeaStatus"></div>';
+  h+='<button class="btn green" id="comicGen" style="margin-top:12px;width:100%">✦ Generate comic</button><div id="comicGenStatus"></div></div>';
+  h+='<div style="margin-top:16px"><div class="hint">Your comics</div><div id="comicList" style="margin-top:8px"></div></div>';
+  host.innerHTML=h;
+  const kk=$("comicKind");Object.keys(COMIC_KINDS).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=COMIC_KINDS[k].label;kk.appendChild(o);});kk.value=S.comicKind||"strip3";kk.addEventListener("change",e=>{S.comicKind=e.target.value;save();});
+  const lk=$("comicLook");Object.keys(COMIC_LOOKS).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=COMIC_LOOKS[k].label;lk.appendChild(o);});lk.value=S.comicLook||"toon";lk.addEventListener("change",e=>{S.comicLook=e.target.value;save();});
+  const ld=$("comicLead");ld.innerHTML='<option value="">— none —</option>'+S.cast.map(c=>'<option value="'+c.id+'">'+esc(c.name)+'</option>').join("");ld.value=S.comicLead||"";ld.addEventListener("change",e=>{S.comicLead=e.target.value;save();});
+  const se=$("comicSet");se.innerHTML='<option value="">— none —</option>'+S.sets.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join("");se.value=S.comicSet||"";se.addEventListener("change",e=>{S.comicSet=e.target.value;save();});
+  $("comicIdeaBtn").addEventListener("click",suggestComicIdea);
+  $("comicGen").addEventListener("click",genComic);
+  const list=$("comicList");
+  if(!S.comics.length)list.innerHTML='<div class="hint">None yet — generate your first comic above.</div>';
+  else{list.innerHTML="";S.comics.forEach(c=>{const d=document.createElement("div");d.className="card";d.style.cursor="pointer";const drawn=c.panels.filter(p=>p.url).length;
+    d.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px"><div style="font-weight:800;font-family:var(--slate)">'+esc(c.title||"Untitled")+'</div><button class="x" style="position:static;flex:0 0 auto">✕</button></div><div class="hint" style="margin-top:2px">'+esc((COMIC_KINDS[c.kind]||{}).label||"")+' · '+drawn+'/'+c.panels.length+' drawn</div>';
+    d.querySelector(".x").addEventListener("click",e=>{e.stopPropagation();if(confirm("Delete this comic?")){S.comics=S.comics.filter(x=>x.id!==c.id);save();renderComics();}});
+    d.addEventListener("click",()=>{S.curComic=c.id;save();renderComics();});list.appendChild(d);});}
+}
+async function suggestComicIdea(){
+  if(!S.apiKey){toast("Add your fal key in Setup for AI suggestions.",true);return;}
+  const st=$("comicIdeaStatus");st.innerHTML=spinner("Thinking up a gag…");
+  const lead=S.cast.find(c=>c.id===($("comicLead")?$("comicLead").value:""));const set=S.sets.find(x=>x.id===($("comicSet")?$("comicSet").value:""));
+  const sys=STONERALIA_LAW+" "+VOICE_DNA+" Pitch ONE deadpan, visual comic gag — Far Side energy, the kind that lands in one read.";
+  const usr=(lead?"LEAD: "+lead.name+"\n":"")+(set?"LOCATION: "+set.name+(set.props&&set.props.length?" (recurring: "+set.props.map(p=>p.name).join(", ")+")":"")+"\n":"")+"Give one short comic idea (1 sentence). Return only the line, no quotes.";
+  try{const txt=(await llmRun(sys,usr)).trim().replace(/^["']|["']$/g,"");if($("comicIdea"))$("comicIdea").value=txt;st.innerHTML="";}
+  catch(e){st.innerHTML=errLine(e);}
+}
+async function genComic(){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const kind=$("comicKind").value,look=$("comicLook").value,leadId=$("comicLead").value,setId=$("comicSet").value,idea=$("comicIdea").value.trim();
+  const ko=COMIC_KINDS[kind]||COMIC_KINDS.strip3;const single=ko.panels===1;
+  const st=$("comicGenStatus");st.innerHTML=spinner("Writing the comic…");
+  const lead=leadId?S.cast.find(c=>c.id===leadId):null;const set=setId?S.sets.find(x=>x.id===setId):null;
+  const sys=STONERALIA_LAW+" "+VOICE_DNA+" You write COMICS — "+(single?"a single-panel Far Side-style cartoon: one image, one short deadpan caption, the whole joke in one frame.":"a "+ko.panels+"-panel comic strip: setup, escalation, hard punchline, each panel one clean readable beat.")+" Keep captions short and dry; lean visual.";
+  const ctx=(lead?"LEAD: "+lead.name+(lead.identity?" — "+lead.identity:"")+wardrobePieces(lead)+(lead.wardrobeNote?" Wardrobe: "+lead.wardrobeNote:"")+"\n":"")+(set?"LOCATION: "+set.name+(set.vibe?" — "+set.vibe:"")+(set.props&&set.props.length?" Recurring here: "+set.props.map(p=>p.name+(p.desc?" ("+p.desc+")":"")).join("; "):"")+"\n":"");
+  const usr=ctx+(idea?"IDEA: "+idea+"\n":"Invent an original gag true to the universe.\n")+"Write "+ko.panels+" panel"+(ko.panels>1?"s":"")+". For each panel: caption (short, dry — or empty) and visual (a COMPLETE ready-to-render image prompt for that panel). Also a title. Return JSON only: {\"title\":\"\",\"panels\":[{\"caption\":\"\",\"visual\":\"\"}]}.";
+  try{
+    const d=parseJSON(await llmRun(sys,usr));const ps=(d.panels||[]).slice(0,ko.panels);
+    if(!ps.length)throw new Error("No panels came back.");
+    const comic={id:uid(),title:d.title||idea||"Untitled comic",kind,look,leadId,setId,idea,panels:ps.map((p,i)=>({id:uid(),n:i+1,caption:p.caption||"",visual:p.visual||"",url:""})),ts:Date.now()};
+    S.comics.unshift(comic);S.curComic=comic.id;save();renderComics();toast("Comic written — draw the panels.");
+  }catch(e){st.innerHTML=errLine(e);}
+}
+function renderComicView(comic){
+  const host=$("comicBody");if(!host)return;
+  let h='<button class="btn sm ghost" id="comicBack" style="margin-bottom:12px">← All comics</button>';
+  h+='<div class="card"><input type="text" id="comicTitle" value="'+esc(comic.title||"")+'" placeholder="comic title" style="font-family:var(--slate);font-weight:800"><div class="hint" style="margin-top:4px">'+esc((COMIC_KINDS[comic.kind]||{}).label||"")+' · '+esc((COMIC_LOOKS[comic.look]||{}).label||"")+'</div></div>';
+  h+='<div class="row"><button class="btn green" id="comicRenderAll" style="flex:1">▦ Draw all panels</button><button class="btn ghost" id="comicExport" style="flex:0">⧉ Export</button></div><div id="comicAllStatus" style="margin-top:6px"></div>';
+  comic.panels.forEach(p=>{
+    h+='<div class="card" style="border-left:3px solid var(--bud)"><div style="font-weight:800;font-family:var(--slate)">Panel '+p.n+'</div>';
+    h+='<div data-pout="'+p.id+'" style="margin-top:8px"></div>';
+    if(p.url)h+='<img src="'+p.url+'" style="margin-top:8px;border-radius:8px;width:100%">';
+    if(p.caption)h+='<div style="margin-top:8px;font-size:14px;font-style:italic;text-align:center">\u201c'+esc(p.caption)+'\u201d</div>';
+    h+='<details style="margin-top:8px"><summary class="hint" style="cursor:pointer">Caption &amp; visual</summary><label class="fld" style="margin-top:6px">Caption</label><input type="text" data-pcap="'+p.id+'" value="'+esc(p.caption||"")+'"><label class="fld" style="margin-top:6px">Visual prompt</label><textarea data-pvis="'+p.id+'" style="min-height:60px">'+esc(p.visual||"")+'</textarea></details>';
+    h+='<button class="btn sm green" data-pdraw="'+p.id+'" style="margin-top:8px;width:100%">'+(p.url?"↻ Redraw panel":"✎ Draw panel")+'</button></div>';
+  });
+  host.innerHTML=h;
+  $("comicBack").addEventListener("click",()=>{S.curComic=null;save();renderComics();});
+  $("comicTitle").addEventListener("input",e=>{comic.title=e.target.value;save();});
+  $("comicRenderAll").addEventListener("click",renderAllPanels);
+  $("comicExport").addEventListener("click",exportComic);
+  host.querySelectorAll("[data-pcap]").forEach(i=>i.addEventListener("input",()=>{const p=comic.panels.find(x=>x.id===i.dataset.pcap);if(p){p.caption=i.value;save();}}));
+  host.querySelectorAll("[data-pvis]").forEach(t=>t.addEventListener("input",()=>{const p=comic.panels.find(x=>x.id===t.dataset.pvis);if(p){p.visual=t.value;save();}}));
+  host.querySelectorAll("[data-pdraw]").forEach(b=>b.addEventListener("click",()=>renderComicImage(b.dataset.pdraw)));
+}
+async function renderComicImage(pid){
+  const comic=curComic();if(!comic)return;const pan=comic.panels.find(p=>p.id===pid);if(!pan)return;
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const look=COMIC_LOOKS[comic.look]||COMIC_LOOKS.toon;
+  const out=document.querySelector('[data-pout="'+pid+'"]');if(out)out.innerHTML=spinner("Drawing panel "+pan.n+"…");
+  const refs=comicRefs(comic);const hasRefs=refs.length>0;
+  const prompt=(pan.visual||pan.caption||"comic panel")+"\n\nStyle: "+look.style+". A single comic panel, clean readable composition, strong silhouette."+comicNote(comic)+" Do not render any caption or speech text in the image (it appears beneath the panel).";
+  const model=hasRefs?(S.picked.edit||"fal-ai/nano-banana-pro/edit"):(S.picked.image||"fal-ai/nano-banana-pro");
+  const ar=comic.kind==="single"?"1:1":"4:5";
+  const input={prompt};Object.assign(input,sizeFor(model,ar));if(hasRefs)input.image_urls=refs;
+  try{
+    const o=await falRun(model,input,(s,t)=>{if(out)out.innerHTML=spinner("Drawing panel "+pan.n+"… ("+t+")");});
+    const m=extractMedia(o);if(!m)throw new Error("No image came back.");
+    pan.url=m.url;S.reel.unshift({id:uid(),type:"image",url:m.url,prompt:"Comic — "+(comic.title||"untitled")+" — panel "+pan.n,ts:Date.now()});save();
+    renderComicView(comic);toast("Panel "+pan.n+" drawn + saved to The Cut.");
+  }catch(e){if(out)out.innerHTML=errLine(e);}
+}
+async function renderAllPanels(){
+  const comic=curComic();if(!comic)return;
+  const st=$("comicAllStatus");if(st)st.innerHTML=spinner("Drawing every panel…");
+  for(const p of comic.panels){if(!p.url)await renderComicImage(p.id);}
+  const s2=$("comicAllStatus");if(s2)s2.innerHTML='<div class="statusline" style="color:var(--bud)">✓ All panels drawn</div>';
+}
+function exportComic(){
+  const comic=curComic();if(!comic)return;
+  const urls=comic.panels.map(p=>p.url).filter(Boolean);
+  const script=(comic.title||"Comic")+"\n\n"+comic.panels.map(p=>"Panel "+p.n+(p.caption?': "'+p.caption+'"':"")+"\n"+(p.visual||"")).join("\n\n");
+  downloadText(script,"comic-"+comic.id+".txt");
+  if(urls.length)navigator.clipboard.writeText(urls.join("\n")).then(()=>toast(urls.length+" panel URLs copied + script saved.")).catch(()=>toast("Script saved (copy failed).",true));
+  else toast("Script saved — draw panels to export images.");
+}
 /* boot */
 function boot(){
   S.stash.forEach(it=>{if(!it.views||!it.views.length)it.views=[{label:"Front",src:it.src}];if(!it.src&&it.views[0])it.src=it.views[0].src;});
   $("apiKey").value=S.apiKey;
   $("storyTitle").value=S.story.title;$("storyBody").value=S.story.body;
   $("boardScript").value=S.board.script;$("boardGrade").value=S.board.grade;$("boardGrid").value=S.board.grid;
-  preloadCast();refreshKeyStat();renderStations();syncStation();renderBoardChars();renderStashFilter();buildLookControls();setupExtras();setupPickers();bindMedia();renderCast();renderSets();renderMedia();renderCastSet();renderEpisodes();renderCastFilter();renderCloudtoons();if($("epNew"))$("epNew").addEventListener("click",newEpisode);go("episodes");
+  preloadCast();refreshKeyStat();renderStations();syncStation();renderBoardChars();renderStashFilter();buildLookControls();setupExtras();setupPickers();bindMedia();renderCast();renderSets();renderMedia();renderCastSet();renderEpisodes();renderCastFilter();renderCloudtoons();renderComics();if($("epNew"))$("epNew").addEventListener("click",newEpisode);go("episodes");try{var _aiObs=new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(n){paintAIButtons(n);});});});_aiObs.observe(document.body,{childList:true,subtree:true});}catch(e){}paintAIButtons(document.body);
 }
 boot();
 </script>

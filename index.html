@@ -144,8 +144,8 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 <body>
 <div class="appwrap">
 <nav>
-  <button data-go="episodes" class="on"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2.5' y='7.5' width='13' height='12' rx='2'/><path d='M7.5 7.5V5.5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2'/></svg></span>Episodes</button>
   <button data-go="cloudtoons"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 17h11a3.5 3.5 0 0 0 .5-6.97A5 5 0 0 0 8 8.5 3.5 3.5 0 0 0 6 17z'/></svg></span>Cloudtoons</button>
+  <button data-go="episodes" class="on"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2.5' y='7.5' width='13' height='12' rx='2'/><path d='M7.5 7.5V5.5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2'/></svg></span>Episodes</button>
   <button data-go="cast"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='3.5'/><path d='M5.5 20a6.5 6.5 0 0 1 13 0'/><path d='M14.8 9.3l3.6-.6'/><circle cx='18.7' cy='8.6' r='.8' fill='currentColor' stroke='none'/><path d='M18.9 7.3c.7-.5.2-1.2.6-1.9'/></svg></span>Cast</button>
   <button data-go="sets"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M3 15l5-4 4 3 3-2 6 5'/><circle cx='8' cy='9' r='1.3'/></svg></span>Sets</button>
   <button data-go="stash"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='4.5' y='5.5' width='15' height='15' rx='1.5'/><path d='M4.5 9h15'/><path d='M12.8 9v1.7'/><path d='M12 13.2c0-1.1 1-1.1 1-2.2'/><path d='M12 13.2L7.8 17.4h8.4z'/></svg></span>Stash</button>
@@ -470,7 +470,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 
 <!-- ===== CLOUDTOONS ===== -->
 <section class="view" id="view-cloudtoons">
-  <div class="slatehead"><span class="num">☁</span><h2>Cloudtoons</h2><span class="tag">Wordless · Far Side</span></div>
+  <div class="slatehead"><span class="num" style="padding:3px 6px"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style="width:24px;height:24px;display:block"><path d='M6 17h11a3.5 3.5 0 0 0 .5-6.97A5 5 0 0 0 8 8.5 3.5 3.5 0 0 0 6 17z'/></svg></span><h2>Cloudtoons</h2><span class="tag">Silent Comedy</span></div>
   <div id="ctBody"></div>
 </section>
 
@@ -518,7 +518,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v6.3 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v6.5 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -533,7 +533,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",charRefs:[],adjust:[],lastUrl:""},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,
+  cast:[],sets:[],castInit:false,customGenres:[],episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
 let S=load();
@@ -1104,11 +1104,17 @@ function renderAssetEditor(){
     h+='<label class="fld" style="margin-top:10px">Side</label><select id="aSide"><option value="neutral">Neutral</option><option value="hero">Hero / good guy</option><option value="villain">Villain / bad guy</option></select>';
     h+='<label class="fld" style="margin-top:10px">Powers / abilities</label><textarea id="aPowers" style="min-height:54px" placeholder="what they can do">'+esc(it.powers||"")+'</textarea>';
     h+='<label class="fld" style="margin-top:8px">Weakness</label><input type="text" id="aWeakness" value="'+esc(it.weakness||"")+'" placeholder="the flaw / kryptonite">';
-    h+='<button class="btn ghost sm" id="aIdBtn" style="margin-top:10px;width:100%">✦ Suggest an identity (writer\u2019s block)</button><div id="aIdStatus"></div>';
+    h+='<label class="fld" style="margin-top:12px">Wardrobe — Chiefin’ gear they wear</label><div class="tokenchips" id="aWardrobe"></div>';
+    h+='<textarea id="aWardrobeNote" style="min-height:48px;margin-top:8px" placeholder="e.g. Chiefin’ Season black hoodie, black cap, sage accents">'+esc(it.wardrobeNote||"")+'</textarea>';
+    h+='<button class="btn ghost sm" id="aDress" style="margin-top:8px;width:100%">✦ Dress in Chiefin’ gear</button><div id="aDressStatus"></div>';
+    h+='<button class="btn ghost sm" id="aFill" style="margin-top:10px;width:100%">✦ Fill in the blanks (AI)</button><div id="aFillStatus"></div>';
     h+='<button class="btn ghost sm" id="aSheet" style="margin-top:10px;width:100%">✦ Build a 6-angle reference sheet from the main photo</button><div id="aSheetStatus"></div>';
   }else{
     h+='<label class="fld">Vibe — what this place feels like</label><textarea id="aVibe" style="min-height:74px" placeholder="late-night bodega, buzzing fluorescents, neon haze">'+esc(it.vibe||"")+'</textarea>';
     h+='<button class="btn ghost sm" id="aVibeBtn" style="margin-top:8px;width:100%">✦ Suggest a vibe</button><div id="aVibeStatus"></div><div id="aVibeSuggest"></div>';
+    h+='<label class="fld" style="margin-top:14px">Props &amp; extras — the recurring world</label><div id="aPropList"></div>';
+    h+='<div class="row" style="margin-top:8px"><button class="btn ghost sm" id="aPropBtn">✦ Suggest props</button><button class="btn ghost sm" id="aPropAdd" style="flex:0">＋ Add</button></div><div id="aPropStatus"></div><div id="aPropSuggest"></div>';
+    h+='<button class="btn ghost sm" id="aSetFill" style="margin-top:10px;width:100%">✦ Fill in the blanks (AI)</button><div id="aSetFillStatus"></div>';
     h+='<div class="row" style="margin-top:10px"><button class="btn ghost sm" id="aSuggest">✦ Suggest scenes (AI)</button><button class="btn green sm" id="aBuild">✦ Build this location</button></div><div id="aSetStatus"></div><div id="aSetResult"></div>';
   }
   h+='<label class="fld" style="margin-top:14px">References</label><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(106px,1fr))">';
@@ -1123,13 +1129,20 @@ function renderAssetEditor(){
     $("aIdentity").addEventListener("input",e=>{it.identity=e.target.value;save();});
     $("aVoice").addEventListener("input",e=>{it.voice=e.target.value;save();});
     $("aSheet").addEventListener("click",()=>buildSheet(it));
-    if($("aIdBtn"))$("aIdBtn").addEventListener("click",()=>suggestIdentity(it));
+    const wc=$("aWardrobe");if(wc){if(!S.stash.length){wc.innerHTML='<span class="hint">Add pieces in The Stash to dress them.</span>';}else{wc.innerHTML="";S.stash.forEach(sp=>{const ch=document.createElement("span");ch.className="chip"+(((it.wardrobe||[]).includes(sp.id))?" on":"");ch.textContent=sp.name;ch.addEventListener("click",()=>{if(!it.wardrobe)it.wardrobe=[];const i=it.wardrobe.indexOf(sp.id);i>=0?it.wardrobe.splice(i,1):it.wardrobe.push(sp.id);save();ch.classList.toggle("on");});wc.appendChild(ch);});}}
+    if($("aWardrobeNote"))$("aWardrobeNote").addEventListener("input",e=>{it.wardrobeNote=e.target.value;save();});
+    if($("aDress"))$("aDress").addEventListener("click",()=>dressInGear(it));
+    if($("aFill"))$("aFill").addEventListener("click",()=>fillBlanksCast(it));
     if($("aSide")){$("aSide").value=it.side||"neutral";$("aSide").addEventListener("change",e=>{it.side=e.target.value;save();renderCast();});}
     if($("aPowers"))$("aPowers").addEventListener("input",e=>{it.powers=e.target.value;save();});
     if($("aWeakness"))$("aWeakness").addEventListener("input",e=>{it.weakness=e.target.value;save();});
   }else{
     $("aVibe").addEventListener("input",e=>{it.vibe=e.target.value;save();});
     $("aVibeBtn").addEventListener("click",()=>suggestVibe(it));
+    renderProps(it);
+    if($("aPropBtn"))$("aPropBtn").addEventListener("click",()=>suggestProps(it));
+    if($("aPropAdd"))$("aPropAdd").addEventListener("click",()=>{const nm=window.prompt("Prop / character name:");if(!nm)return;const ds=window.prompt("The running bit (optional):")||"";if(!it.props)it.props=[];it.props.push({name:nm.trim(),desc:ds.trim()});save();renderProps(it);});
+    if($("aSetFill"))$("aSetFill").addEventListener("click",()=>fillBlanksSet(it));
     $("aSuggest").addEventListener("click",()=>suggestScenes(it));
     $("aBuild").addEventListener("click",()=>buildLocation(it));
   }
@@ -1206,8 +1219,8 @@ function renderCastSet(){
   const sw=$("setPick");if(sw){sw.innerHTML="";const none=document.createElement("span");none.className="chip"+(!setPicked?" on":"");none.textContent="no set";none.addEventListener("click",()=>{setPicked="";renderCastSet();});sw.appendChild(none);
     S.sets.forEach(s=>{const ch=document.createElement("span");ch.className="chip"+(setPicked===s.id?" on":"");ch.textContent=s.name;ch.addEventListener("click",()=>{setPicked=s.id;renderCastSet();});sw.appendChild(ch);});}
 }
-function identityNote(items){if(!items.length)return "";return " Characters in this shot: "+items.map(c=>c.name+(c.identity?" — "+c.identity:"")).join(" | ")+". Keep each character's face, design, colors and proportions exactly consistent with their reference images.";}
-function setNote(it){return it?(" Location: "+it.name+(it.vibe?" — "+it.vibe:"")+"."):"";}
+function identityNote(items){if(!items.length)return "";return " Characters in this shot: "+items.map(c=>c.name+(c.identity?" — "+c.identity:"")+(c.wardrobeNote?" Wardrobe: "+c.wardrobeNote:"")+wardrobePieces(c)).join(" | ")+". Keep each character's face, design, colors and proportions exactly consistent with their reference images.";}
+function setNote(it){if(!it)return "";let t=" Location: "+it.name+(it.vibe?" — "+it.vibe:"")+".";if(it.props&&it.props.length)t+=" Recurring elements here: "+it.props.map(p=>p.name+(p.desc?" ("+p.desc+")":"")).join("; ")+".";return t;}
 
 /* ===== Media House ===== */
 const SUNO_GENRES=["afro-jazz drill","gnawa funk","afro-rock ambient dub","Japanese boogie","drill and bass gnawa","drill-breakbeat","Japanese jungle","ambient techno afroswing","afrobeat","p-funk","p-funk cloud rap","afrobeat garage","dirty south boom bap","boogie","afrobeat new jack swing","psychedelic acid trance","caribbean","boogie caribbean","hip hop dubstep","afrobeat rockabilly","psychedelic cabaret","house reggae","pacific reggae afrobeat","afrobeat swing","lo-fi afro house","drum and bass swing","boom bap p-funk","Arabic reggae","New Orleans house","afro-jazz carnatic","riddim","old school hip hop","trip hop","gangster rap"];
@@ -1340,7 +1353,7 @@ const CREATOR_TYPES={
 function spinner(t){return '<div class="statusline"><span class="rec"></span>'+esc(t)+'</div>';}
 function errLine(e){return '<div class="statusline" style="color:var(--red)">✗ '+esc((e&&e.message)||"hiccup")+'</div>';}
 function curEp(){return S.episodes.find(x=>x.id===S.currentEp)||null;}
-function writerSys(ep){let s=STONERALIA_LAW+" "+VOICE_DNA+" "+CINE_STD+" Stay 100% consistent with the chosen LOOK and with the established characters and locations.";if(ep&&ep.line==="cloudtoon"){s+=" THIS IS A CLOUDTOON: wordless visual comedy, NO dialogue, Cartoon Box pacing, setup → hard twist, end card only. Emphasize this Stoneralia Law: "+(ep.lawUsed||"")+".";if(ep.hiddenChieff)s+=" Plant a subtle HIDDEN CHIEFF cameo in frame (figurine/sticker/poster), never acknowledged — Chieff Sighting #"+(ep.sightingNo||"")+".";}return s;}
+function writerSys(ep){let s=STONERALIA_LAW+" "+VOICE_DNA+" "+CINE_STD+" Stay 100% consistent with the chosen LOOK and with the established characters and locations.";if(ep&&ep.line==="cloudtoon"){s+=" THIS IS A CLOUDTOON: wordless visual comedy, NO dialogue, Cartoon Box pacing, setup → hard twist, end card only. Emphasize this Stoneralia Law: "+(ep.lawUsed||"")+".";const _ld=ep.leadId?S.cast.find(c=>c.id===ep.leadId):null;if(_ld)s+=" RECURRING LEAD (wordless audience avatar, never named on screen): "+_ld.name+(_ld.identity?" — "+_ld.identity:"")+". Everything weird happens around him while he reacts minimally.";if(ep.hiddenChieff)s+=" Plant a subtle HIDDEN CHIEFF cameo in frame (figurine/sticker/poster), never acknowledged — Chieff Sighting #"+(ep.sightingNo||"")+".";}return s;}
 function epContext(ep){
   const lookStr=ep.look==="custom"?(ep.lookCustom||""):((LOOKS[ep.look]||LOOKS.flat2d).style);
   const heroes=S.cast.filter(c=>c.side==="hero").map(c=>c.name+(c.powers?" [powers: "+c.powers+"]":"")+(c.weakness?" [weakness: "+c.weakness+"]":"")).join("; ");
@@ -1504,7 +1517,8 @@ function matchSceneRefs(ep,s){
   const txt=((s.heading||"")+" "+(s.action||"")+" "+(s.dialogue||"")).toLowerCase();
   const cast=S.cast.filter(c=>c.name&&txt.indexOf(c.name.toLowerCase())>-1);
   const set=S.sets.find(x=>x.name&&txt.indexOf(x.name.toLowerCase())>-1)||null;
-  const items=[...cast,...(set?[set]:[])];
+  const wardrobe=[];cast.forEach(c=>(c.wardrobe||[]).forEach(id=>{const sp=S.stash.find(x=>x.id===id);if(sp&&wardrobe.indexOf(sp)<0)wardrobe.push(sp);}));
+  const items=[...cast,...wardrobe,...(set?[set]:[])];
   const note=identityNote(cast)+(set?setNote(set):"");
   return {items,note};
 }
@@ -1652,12 +1666,15 @@ function renderCloudtoons(){
   let h='';
   h+='<div class="card"><div class="hint">This toon\'s Stoneralia Law (rotates each time)</div><div style="font-family:var(--slate);font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--bud);margin-top:4px">'+esc(law.n)+'</div><div style="font-size:13px;margin-top:4px">'+esc(law.law)+'</div><button class="btn ghost sm" id="ctRotate" style="margin-top:10px">↻ Rotate the Law</button></div>';
   h+='<div class="card"><label class="fld">Season / bank</label><select id="ctSeason"></select><div class="hint" id="ctSeasonDesc" style="margin-top:6px"></div></div>';
+  h+='<div class="card"><label class="fld">Recurring lead — the audience avatar (in every toon)</label><select id="ctLead"></select><div class="hint" style="margin-top:6px">The everyday guy everything weird happens around — never named on screen, he becomes the audience.</div><button class="btn ghost sm" id="ctEvery" style="margin-top:10px;width:100%">✦ Create “The EveryStoner”</button></div>';
   h+='<div class="card"><label class="row" style="align-items:center;gap:8px"><input type="checkbox" id="ctHidden" style="width:auto;flex:0" '+(S.ctHidden?"checked":"")+'> Plant a Hidden Chieff cameo</label><div class="hint" style="margin-top:6px">Sightings so far: <b style="color:var(--bud)">#'+(S.chieffSightings||0)+'</b> — a subtle figurine / sticker / poster, never acknowledged, escalating over time.</div></div>';
   h+='<button class="btn green" id="ctGen" style="width:100%">✦ Generate a Cloudtoon</button><div id="ctGenStatus"></div>';
   h+='<div style="margin-top:16px"><div class="hint">Your Cloudtoons</div><div id="ctList" style="margin-top:8px"></div></div>';
   host.innerHTML=h;
   const ss=$("ctSeason");CT_SEASONS.forEach(s=>{const o=document.createElement("option");o.value=s.key;o.textContent=s.label;ss.appendChild(o);});ss.value=season.key;$("ctSeasonDesc").textContent=season.theme;
   ss.addEventListener("change",e=>{S.ctSeason=e.target.value;save();renderCloudtoons();});
+  const ld=$("ctLead");if(ld){ld.innerHTML='<option value="">— none —</option>'+S.cast.map(c=>'<option value="'+c.id+'">'+esc(c.name)+'</option>').join("");ld.value=S.ctLead||"";ld.addEventListener("change",e=>{S.ctLead=e.target.value;save();});}
+  const ev=$("ctEvery");if(ev)ev.addEventListener("click",createEveryStoner);
   $("ctRotate").addEventListener("click",()=>{S.lawIndex=((S.lawIndex||0)+1)%STONERALIA_LAWS.length;save();renderCloudtoons();});
   $("ctHidden").addEventListener("change",e=>{S.ctHidden=e.target.checked;save();});
   $("ctGen").addEventListener("click",genCloudtoon);
@@ -1671,9 +1688,10 @@ async function genCloudtoon(){
   const st=$("ctGenStatus");st.innerHTML=spinner("Dreaming up a Cloudtoon…");
   const hidden=!!S.ctHidden;const sightingNo=hidden?((S.chieffSightings||0)+1):0;
   const fmt=season.key==="farside"?"single_panel":"frame_seq";
-  const ep={id:uid(),line:"cloudtoon",title:"",creatorType:"shorts",format:fmt,formula:(FORMATS[fmt].formula||"auto"),look:"flat2d",lookCustom:"",series:false,logline:"",grandExpectation:"",source:"ai",sourceText:"",outline:"",script:"",optimizeNote:"",season:season.key,lawUsed:law.n+" — "+law.law,hiddenChieff:hidden,sightingNo:sightingNo,scenes:[],ts:Date.now()};
+  const ep={id:uid(),line:"cloudtoon",title:"",creatorType:"shorts",format:fmt,formula:(FORMATS[fmt].formula||"auto"),look:"flat2d",lookCustom:"",series:false,logline:"",grandExpectation:"",source:"ai",sourceText:"",outline:"",script:"",optimizeNote:"",season:season.key,lawUsed:law.n+" — "+law.law,hiddenChieff:hidden,sightingNo:sightingNo,leadId:(S.ctLead||""),scenes:[],ts:Date.now()};
+  const lead=S.ctLead?S.cast.find(c=>c.id===S.ctLead):null;
   const sys=STONERALIA_LAW+" "+VOICE_DNA+" You write CLOUDTOONS: wordless Far Side / Cartoon Box cartoons — silent visual comedy, setup then a hard twist, end card only, no dialogue.";
-  const usr="SEASON: "+season.label+" — "+season.theme+"\nLAW IN FOCUS THIS TOON: "+law.n+" — "+law.law+"\n"+(hidden?"Plant a subtle HIDDEN CHIEFF cameo (figurine/sticker/poster), never acknowledged.\n":"")+"Pitch ONE original wordless cartoon premise true to the universe. Give a punchy title, a one-line logline, and the grand expectation (the payoff/twist feel). Return JSON only: {\"title\":\"\",\"logline\":\"\",\"grand\":\"\"}.";
+  const usr="SEASON: "+season.label+" — "+season.theme+"\nLAW IN FOCUS THIS TOON: "+law.n+" — "+law.law+"\n"+(lead?"RECURRING LEAD (never named on screen, the audience avatar): "+lead.name+(lead.identity?" — "+lead.identity:"")+". Everything weird happens around him while he reacts minimally.\n":"")+(hidden?"Plant a subtle HIDDEN CHIEFF cameo (figurine/sticker/poster), never acknowledged.\n":"")+"Pitch ONE original wordless cartoon premise true to the universe. Give a punchy title, a one-line logline, and the grand expectation (the payoff/twist feel). Return JSON only: {\"title\":\"\",\"logline\":\"\",\"grand\":\"\"}.";
   try{
     const d=parseJSON(await llmRun(sys,usr));
     ep.title=d.title||"Untitled toon";ep.logline=d.logline||"";ep.grandExpectation=d.grand||"";
@@ -1711,6 +1729,82 @@ async function suggestIdentity(it){
     if(d.identity){it.identity=d.identity;if($("aIdentity"))$("aIdentity").value=d.identity;}
     if(d.voice&&!it.voice){it.voice=d.voice;if($("aVoice"))$("aVoice").value=d.voice;}
     save();if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Filled — tweak it however you like</div>';
+  }catch(e){if(st)st.innerHTML=errLine(e);}
+}
+/* ================= CLOUDTOONS — RECURRING LEAD ================= */
+function createEveryStoner(){
+  let ex=S.cast.find(c=>c.name==="The EveryStoner");
+  if(ex){S.ctLead=ex.id;save();renderCloudtoons();toast("The EveryStoner is your recurring lead.");return;}
+  const c={id:uid(),name:"The EveryStoner",identity:"The recurring everyday-guy audience avatar. An ordinary, grounded man, late 20s to 40s, average build, in a plain hoodie, sweatpants, and slides or sneakers. Slightly tired but warm, friendly eyes; good-hearted, calm and mildly bewildered, with unbothered deadpan energy. Never named on screen — he is the audience's eyes, and all the weird stuff happens around him while he barely reacts.",voice:"calm, deadpan, unbothered, warm",side:"neutral",powers:"",weakness:"",views:[],src:""};
+  S.cast.push(c);S.ctLead=c.id;save();renderCast();renderCloudtoons();toast("The EveryStoner added to Cast + set as recurring lead.");
+}
+/* ================= WARDROBE + PROPS + FILL-BLANKS ================= */
+function wardrobePieces(c){if(!c||!c.wardrobe||!c.wardrobe.length)return "";const names=c.wardrobe.map(id=>{const s=S.stash.find(x=>x.id===id);return s?s.name:null;}).filter(Boolean);return names.length?(" Wearing Chiefin' Season gear: "+names.join(", ")+"."):"";}
+
+async function dressInGear(it){
+  if(!S.apiKey){toast("Add your fal key in Setup for AI suggestions.",true);return;}
+  const st=$("aDressStatus");if(st)st.innerHTML=spinner("Pulling Chiefin' fits…");
+  const stashList=S.stash.map(s=>s.name).join(", ")||"(no Stash pieces yet)";
+  const sys="You are the wardrobe stylist for Chiefin' Season, a premium cannabis-culture streetwear brand (matte black + off-white foundation, sage/bud-green accent, rare gold/red — deadpan luxury, never head-shop). Dress characters in on-brand Chiefin' gear that reads premium and versatile across settings.";
+  const usr="CHARACTER: "+it.name+(it.identity?" — "+it.identity:"")+"\nAVAILABLE STASH PIECES: "+stashList+"\nDescribe a clean, specific Chiefin' Season outfit (pieces, colors, fit). Prefer pieces from the Stash list when they fit; you may add staple Chiefin' items. Under 30 words. Return JSON only: {\"wardrobe\":\"\",\"pieces\":[\"matching names from the Stash list\"]}.";
+  try{
+    const d=parseJSON(await llmRun(sys,usr));
+    if(d.wardrobe)it.wardrobeNote=d.wardrobe;
+    if(Array.isArray(d.pieces)&&d.pieces.length){const ids=S.stash.filter(sp=>d.pieces.some(n=>n&&(sp.name.toLowerCase().indexOf(n.toLowerCase())>-1||n.toLowerCase().indexOf(sp.name.toLowerCase())>-1))).map(sp=>sp.id);if(ids.length)it.wardrobe=Array.from(new Set([...(it.wardrobe||[]),...ids]));}
+    save();toast("Dressed in Chiefin' gear.");renderAssetEditor();renderCast();
+  }catch(e){if(st)st.innerHTML=errLine(e);}
+}
+
+async function fillBlanksCast(it){
+  if(!S.apiKey){toast("Add your fal key in Setup for AI suggestions.",true);return;}
+  const st=$("aFillStatus");if(st)st.innerHTML=spinner("Filling the blanks…");
+  const blanks=[];if(!it.identity)blanks.push("identity");if(!it.voice)blanks.push("voice");if(!it.powers)blanks.push("powers");if(!it.weakness)blanks.push("weakness");if(!it.wardrobeNote)blanks.push("wardrobe");
+  if(!blanks.length){if(st)st.innerHTML='<div class="statusline">Nothing blank — all set.</div>';return;}
+  const sys="You design characters for a deadpan cannabis-culture universe (Chiefin' Season / Stoneralia). Fill ONLY the requested blank fields, cohesively and on-brand. identity = a vivid visual + personality lock for shot consistency (build, face, wardrobe, props, palette, energy). wardrobe = a Chiefin' Season streetwear outfit. Keep each concise.";
+  const usr="CHARACTER: "+it.name+(it.side&&it.side!=="neutral"?" ("+it.side+")":"")+(it.identity?"\nExisting identity: "+it.identity:"")+"\nFILL THESE BLANKS: "+blanks.join(", ")+".\nReturn JSON only with exactly these keys: {"+blanks.map(b=>'"'+b+'":""').join(",")+"}.";
+  try{
+    const d=parseJSON(await llmRun(sys,usr));
+    if(blanks.includes("identity")&&d.identity)it.identity=d.identity;
+    if(blanks.includes("voice")&&d.voice)it.voice=d.voice;
+    if(blanks.includes("powers")&&d.powers)it.powers=d.powers;
+    if(blanks.includes("weakness")&&d.weakness)it.weakness=d.weakness;
+    if(blanks.includes("wardrobe")&&d.wardrobe)it.wardrobeNote=d.wardrobe;
+    save();toast("Filled the blanks.");renderAssetEditor();renderCast();
+  }catch(e){if(st)st.innerHTML=errLine(e);}
+}
+
+function renderProps(it){
+  const w=$("aPropList");if(!w)return;const ps=it.props||[];
+  if(!ps.length){w.innerHTML='<div class="hint">No props yet — suggest or add some.</div>';return;}
+  w.innerHTML="";ps.forEach((p,i)=>{const d=document.createElement("div");d.className="row";d.style.cssText="align-items:flex-start;gap:8px;margin-top:6px";
+    d.innerHTML='<div style="flex:1;font-size:13px"><b>'+esc(p.name)+'</b>'+(p.desc?' — '+esc(p.desc):'')+'</div><button class="btn ghost sm" style="flex:0">✕</button>';
+    d.querySelector("button").addEventListener("click",()=>{it.props.splice(i,1);save();renderProps(it);});w.appendChild(d);});
+}
+async function suggestProps(it){
+  if(!S.apiKey){toast("Add your fal key in Setup for AI suggestions.",true);return;}
+  const st=$("aPropStatus");if(st)st.innerHTML=spinner("Populating the world…");
+  const box=$("aPropSuggest");if(box)box.innerHTML="";
+  const sys="You populate locations with recurring characters, animals, love interests, rivals and objects for a deadpan, urban, cannabis-culture comedy universe (Stoneralia). Far Side side-characters: a neighborhood cat he is secretly beefing with, a crush clearly out of his league, a rival, a cursed object. Specific, funny, characterful, reusable.";
+  const usr="LOCATION: "+it.name+(it.vibe?" — "+it.vibe:"")+"\nGive 4 recurring props/extras for this place. Each: a short name + a one-line running bit. Return JSON only: {\"props\":[{\"name\":\"\",\"desc\":\"\"}]}.";
+  try{
+    const d=parseJSON(await llmRun(sys,usr));const props=(d.props||[]).filter(p=>p&&p.name);
+    if(box){box.innerHTML="";props.forEach(p=>{const b=document.createElement("button");b.className="btn ghost sm";b.style.cssText="display:block;width:100%;text-align:left;margin-top:6px;white-space:normal;line-height:1.35";b.innerHTML='<b>'+esc(p.name)+'</b> — '+esc(p.desc||"");b.addEventListener("click",()=>{if(!it.props)it.props=[];it.props.push({name:p.name,desc:p.desc||""});save();renderProps(it);});box.appendChild(b);});
+      const hint=document.createElement("div");hint.className="hint";hint.style.marginTop="6px";hint.textContent="Tap to add — or Suggest again for more.";box.appendChild(hint);}
+    if(st)st.innerHTML="";
+  }catch(e){if(st)st.innerHTML=errLine(e);}
+}
+async function fillBlanksSet(it){
+  if(!S.apiKey){toast("Add your fal key in Setup for AI suggestions.",true);return;}
+  const st=$("aSetFillStatus");if(st)st.innerHTML=spinner("Filling the blanks…");
+  const needVibe=!it.vibe;const needProps=!it.props||!it.props.length;
+  if(!needVibe&&!needProps){if(st)st.innerHTML='<div class="statusline">Nothing blank — all set.</div>';return;}
+  const sys="You build locations for a deadpan urban cannabis-culture comedy universe (Stoneralia). vibe = what the place feels like (concrete, one telling detail). props = recurring characters / animals / love interests / rivals / objects that live here (Far Side side-characters).";
+  const usr="LOCATION: "+it.name+"\nFILL: "+[needVibe?"vibe":"",needProps?"props (3)":""].filter(Boolean).join(", ")+".\nReturn JSON only: {"+(needVibe?'"vibe":""':"")+(needVibe&&needProps?",":"")+(needProps?'"props":[{"name":"","desc":""}]':"")+"}.";
+  try{
+    const d=parseJSON(await llmRun(sys,usr));
+    if(needVibe&&d.vibe)it.vibe=d.vibe;
+    if(needProps&&Array.isArray(d.props))it.props=(it.props||[]).concat(d.props.filter(p=>p&&p.name));
+    save();toast("Filled the blanks.");renderAssetEditor();renderSets();
   }catch(e){if(st)st.innerHTML=errLine(e);}
 }
 /* boot */

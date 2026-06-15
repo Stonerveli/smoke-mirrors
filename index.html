@@ -529,7 +529,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.1 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.2 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -544,7 +544,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",charRefs:[],adjust:[],lastUrl:""},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",
+  cast:[],sets:[],castInit:false,customGenres:[],episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
 let S=load();
@@ -1470,15 +1470,41 @@ const LOOKS={
  vhs:{label:"VHS / Found-Footage",style:"90s camcorder look, 4:3, scanlines, chromatic bleed, tracking glitches, date stamp, degraded analog color, low-fi."},
  custom:{label:"Custom…",style:""}
 };
+/* ============ SILENT COMEDY ENGINE ============ */
+const SILENT_COMEDY="SILENT-ERA PHYSICAL COMEDY RULES — the joke must read with the sound off: no dialogue, no subtitles, no speech bubbles. Body language, props, timing and visual punchlines do all the work. Core engine: a regular guy (the Everyday Stoner) wants something simple; life makes it stupidly hard; he spirals; CHIEFF stays calm and silent beside him — witness, tiny guardian, deadpan judge — and the gag lands through Chieff's reaction, not words. Chieff rarely tells the joke; he SURVIVES it with dignity (the only adult in a room full of malfunctioning cereal boxes). Timing: the 3-beat rule (establish, repeat, twist); hold the shot on the awkwardness; pause before the reaction; let the audience see the truth before the character does; end on a strong visual button. One main prop per scene, escalate visually, repeat with variation, keep dignity alive through the disaster.";
+const COMEDY_MECHANICS=[
+ {n:"Object Betrayal",p:"a simple prop refuses to cooperate (lighter, grinder, hoodie string, snack bag), quietly sabotaging him"},
+ {n:"Delayed Realization",p:"the audience sees the truth long before the character does; the answer was in plain sight the whole time"},
+ {n:"Dignity vs Disaster",p:"he tries to stay classy and composed while everything around him falls apart"},
+ {n:"Repetition with Variation",p:"the gag repeats three times, worse or stranger each time (the 3-beat rule)"},
+ {n:"The Slow Burn",p:"he stays calm far too long, then finally reacts after a long held beat"},
+ {n:"False Victory",p:"he thinks he won, then the real problem appears one beat later"},
+ {n:"Final Silent Stare",p:"it ends on a long deadpan stare at the situation; total silent judgment, no words"},
+ {n:"The Double Take",p:"he sees something strange, looks away, then slowly looks back to confirm it"},
+ {n:"Misdirection",p:"attention is guided one way while the real joke happens somewhere else in frame"},
+ {n:"Status Reversal",p:"the powerful becomes helpless or the weak becomes powerful (a villain humbled by a stubborn snack bag)"},
+ {n:"The Unwanted Helper",p:"someone tries to help and makes the whole thing dramatically worse"},
+ {n:"The Prop Ladder",p:"one prop leads to another, each adding to the joke, escalating to an absurd reveal"},
+ {n:"Mechanical Logic",p:"clear cause-and-effect chaos; one action dominoes into the next, absurd but logical"},
+ {n:"Hidden World",p:"objects and places have a secret life revealed when no one is looking (a tiny city under the couch)"},
+ {n:"Choreographed Chaos",p:"every move looks accidental but is precisely timed, like people pretending to trip in rhythm"}
+];
+const CHIEFF_MODES=[
+ {k:"side",label:"By his side",desc:"Chieff walks with him, sits near him, reacts to him — best for stress, the grind, lonely beats"},
+ {k:"spectator",label:"Background spectator",desc:"Chieff watches from the couch, shelf, doorway or corner — best for silent judgment and running gags"},
+ {k:"surprise",label:"Surprise appearance",desc:"Chieff appears only at the punchline / realization — best for mystery, dream logic, absurd reveals"},
+ {k:"solo",label:"Chieff solo (no Stoner)",desc:"Classic mascot mode — Chieff alone, the world acts against him (brand & teaser moments)"}
+];
 const CREATOR_TYPES={
  shorts:{label:"Shorts Creator",desc:"Serialized vertical drama — episodic, cliffhanger endings. The algorithm rewards consistency.",aspect:"9:16",look:"flat2d",scenes:4,pacing:"punchy, fast, setup → hard twist, cliffhanger / end-card ending"},
  indie:{label:"Indie Filmmaker",desc:"Nolan-style, episode structure, one workspace. No more stitching random clips.",aspect:"16:9",look:"photoreal",scenes:8,pacing:"3-act, cinematic, deliberate, layered"},
- faceless:{label:"Faceless Channel",desc:"High-RPM serialized storytelling — no face, no hiring.",aspect:"16:9",look:"photoreal",scenes:6,pacing:"narration-led, serialized, retention-optimized"}
+ faceless:{label:"Faceless Channel",desc:"High-RPM serialized storytelling — no face, no hiring.",aspect:"16:9",look:"photoreal",scenes:6,pacing:"narration-led, serialized, retention-optimized"},
+ silent:{label:"Silent Physical Comedy",desc:"Wordless visual gags — body language, props, timing, visual punchlines. Reads with the sound off.",aspect:"9:16",look:"flat2d",scenes:9,pacing:"silent, prop-driven, 3-beat timing, hold reactions, end on a visual button"}
 };
 function spinner(t){return '<div class="statusline"><span class="rec"></span>'+esc(t)+'</div>';}
 function errLine(e){return '<div class="statusline" style="color:var(--red)">✗ '+esc((e&&e.message)||"hiccup")+'</div>';}
 function curEp(){return S.episodes.find(x=>x.id===S.currentEp)||null;}
-function writerSys(ep){let s=STONERALIA_LAW+" "+VOICE_DNA+" "+CINE_STD+" Stay 100% consistent with the chosen LOOK and with the established characters and locations.";if(ep&&ep.line==="cloudtoon"){s+=" THIS IS A CLOUDTOON: wordless visual comedy, NO dialogue, Cartoon Box pacing, setup → hard twist, end card only. Emphasize this Stoneralia Law: "+(ep.lawUsed||"")+".";const _ld=ep.leadId?S.cast.find(c=>c.id===ep.leadId):null;if(_ld)s+=" RECURRING LEAD (wordless audience avatar, never named on screen): "+_ld.name+(_ld.identity?" — "+_ld.identity:"")+". Everything weird happens around him while he reacts minimally.";if(ep.hiddenChieff)s+=" Plant a subtle HIDDEN CHIEFF cameo in frame (figurine/sticker/poster), never acknowledged — Chieff Sighting #"+(ep.sightingNo||"")+".";}return s;}
+function writerSys(ep){let s=STONERALIA_LAW+" "+VOICE_DNA+" "+CINE_STD+" Stay 100% consistent with the chosen LOOK and with the established characters and locations.";if(ep&&ep.line==="cloudtoon"){s+=" "+SILENT_COMEDY;if(ep.mechanic)s+=" PRIMARY COMEDY MECHANIC: "+ep.mechanic+".";if(ep.chieffMode)s+=" "+ep.chieffMode;s+=" THIS IS A CLOUDTOON: wordless visual comedy, NO dialogue, Cartoon Box pacing, setup → hard twist, end card only. Emphasize this Stoneralia Law: "+(ep.lawUsed||"")+".";const _ld=ep.leadId?S.cast.find(c=>c.id===ep.leadId):null;if(_ld)s+=" RECURRING LEAD (wordless audience avatar, never named on screen): "+_ld.name+(_ld.identity?" — "+_ld.identity:"")+". Everything weird happens around him while he reacts minimally.";if(ep.hiddenChieff)s+=" Plant a subtle HIDDEN CHIEFF cameo in frame (figurine/sticker/poster), never acknowledged — Chieff Sighting #"+(ep.sightingNo||"")+".";}return s;}
 function epContext(ep){
   const lookStr=ep.look==="custom"?(ep.lookCustom||""):((LOOKS[ep.look]||LOOKS.flat2d).style);
   const heroes=S.cast.filter(c=>c.side==="hero").map(c=>c.name+(c.powers?" [powers: "+c.powers+"]":"")+(c.weakness?" [weakness: "+c.weakness+"]":"")).join("; ");
@@ -1793,7 +1819,7 @@ function renderCloudtoons(){
   h+='<div class="card"><label class="fld">Season / bank</label><select id="ctSeason"></select><div class="hint" id="ctSeasonDesc" style="margin-top:6px"></div></div>';
   h+='<div class="card"><label class="fld">Recurring lead — the audience avatar (in every toon)</label><select id="ctLead"></select><div class="hint" style="margin-top:6px">The everyday guy everything weird happens around — never named on screen, he becomes the audience.</div><button class="btn ghost sm" id="ctEvery" style="margin-top:10px;width:100%">✦ Create “The EveryStoner”</button></div>';
   h+='<div class="card"><label class="row" style="align-items:center;gap:8px"><input type="checkbox" id="ctHidden" style="width:auto;flex:0" '+(S.ctHidden?"checked":"")+'> Plant a Hidden Chieff cameo</label><div class="hint" style="margin-top:6px">Sightings so far: <b style="color:var(--bud)">#'+(S.chieffSightings||0)+'</b> — a subtle figurine / sticker / poster, never acknowledged, escalating over time.</div></div>';
-  h+='<button class="btn green" id="ctGen" style="width:100%">✦ Generate a Cloudtoon</button><div id="ctGenStatus"></div>';
+  h+='<div class="card"><label class="fld">Comedy mechanic</label><select id="ctMechanic"></select><label class="fld" style="margin-top:10px">Chieff\'s role in the scene</label><select id="ctMode"></select><div class="hint" id="ctModeDesc" style="margin-top:6px"></div></div>';h+='<button class="btn green" id="ctGen" style="width:100%">✦ Generate a Cloudtoon</button><div id="ctGenStatus"></div>';
   h+='<div style="margin-top:16px"><div class="hint">Your Cloudtoons</div><div id="ctList" style="margin-top:8px"></div></div>';
   host.innerHTML=h;
   const ss=$("ctSeason");CT_SEASONS.forEach(s=>{const o=document.createElement("option");o.value=s.key;o.textContent=s.label;ss.appendChild(o);});ss.value=season.key;$("ctSeasonDesc").textContent=season.theme;
@@ -1803,6 +1829,8 @@ function renderCloudtoons(){
   $("ctRotate").addEventListener("click",()=>{S.lawIndex=((S.lawIndex||0)+1)%STONERALIA_LAWS.length;save();renderCloudtoons();});
   $("ctHidden").addEventListener("change",e=>{S.ctHidden=e.target.checked;save();});
   $("ctGen").addEventListener("click",genCloudtoon);
+  const cm=$("ctMechanic");if(cm){cm.innerHTML='<option value="">— auto / mix —</option>'+COMEDY_MECHANICS.map(m=>'<option value="'+esc(m.n)+'">'+esc(m.n)+'</option>').join("");cm.value=S.ctMechanic||"";cm.addEventListener("change",e=>{S.ctMechanic=e.target.value;save();});}
+  const md=$("ctMode");if(md){md.innerHTML=CHIEFF_MODES.map(m=>'<option value="'+m.k+'">'+esc(m.label)+'</option>').join("");md.value=S.ctMode||"side";const setMD=()=>{const x=CHIEFF_MODES.find(m=>m.k===md.value);if($("ctModeDesc"))$("ctModeDesc").textContent=x?x.desc:"";};setMD();md.addEventListener("change",e=>{S.ctMode=e.target.value;save();setMD();});}
   const list=$("ctList");const toons=S.episodes.filter(e=>e.line==="cloudtoon");
   if(!toons.length){list.innerHTML='<div class="hint">None yet — generate your first toon above.</div>';}
   else{list.innerHTML="";toons.forEach(ep=>{const d=document.createElement("div");d.className="card";d.style.cursor="pointer";d.innerHTML='<div style="font-weight:800;font-family:var(--slate)">'+esc(ep.title||"Untitled toon")+'</div><div class="hint" style="margin-top:2px">'+esc((CT_SEASONS.find(s=>s.key===ep.season)||{}).label||"")+(ep.script?" · scripted":" · draft")+'</div>'+(ep.logline?'<div style="font-size:13px;margin-top:4px">'+esc(ep.logline)+'</div>':'');d.addEventListener("click",()=>{S.currentEp=ep.id;go("episodes");renderEpisodes();});list.appendChild(d);});}
@@ -1811,11 +1839,11 @@ async function genCloudtoon(){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const law=curLaw();const season=CT_SEASONS.find(s=>s.key===(S.ctSeason||"hidden"))||CT_SEASONS[0];
   const st=$("ctGenStatus");st.innerHTML=spinner("Dreaming up a Cloudtoon…");
-  const hidden=!!S.ctHidden;const sightingNo=hidden?((S.chieffSightings||0)+1):0;
+  const mech=COMEDY_MECHANICS.find(m=>m.n===S.ctMechanic)||null;const mode=CHIEFF_MODES.find(m=>m.k===(S.ctMode||"side"))||null;const modeStr=mode?("Chieff appears in "+mode.label+" mode: "+mode.desc+". The lead (everyday stoner) carries the human chaos; Chieff is the silent companion who reacts, never narrates."):"";const hidden=!!S.ctHidden;const sightingNo=hidden?((S.chieffSightings||0)+1):0;
   const fmt=season.key==="farside"?"single_panel":"frame_seq";
-  const ep={id:uid(),line:"cloudtoon",title:"",creatorType:"shorts",format:fmt,formula:(FORMATS[fmt].formula||"auto"),look:"flat2d",lookCustom:"",series:false,logline:"",grandExpectation:"",source:"ai",sourceText:"",outline:"",script:"",optimizeNote:"",season:season.key,lawUsed:law.n+" — "+law.law,hiddenChieff:hidden,sightingNo:sightingNo,leadId:(S.ctLead||""),scenes:[],ts:Date.now()};
+  const ep={id:uid(),line:"cloudtoon",title:"",creatorType:"shorts",format:fmt,formula:(FORMATS[fmt].formula||"auto"),look:"flat2d",lookCustom:"",series:false,logline:"",grandExpectation:"",source:"ai",sourceText:"",outline:"",script:"",optimizeNote:"",season:season.key,lawUsed:law.n+" — "+law.law,hiddenChieff:hidden,sightingNo:sightingNo,leadId:(S.ctLead||""),mechanic:(mech?mech.n+" — "+mech.p:""),chieffMode:modeStr,scenes:[],ts:Date.now()};
   const lead=S.ctLead?S.cast.find(c=>c.id===S.ctLead):null;
-  const sys=STONERALIA_LAW+" "+VOICE_DNA+" You write CLOUDTOONS: wordless Far Side / Cartoon Box cartoons — silent visual comedy, setup then a hard twist, end card only, no dialogue.";
+  const sys=STONERALIA_LAW+" "+VOICE_DNA+" You write CLOUDTOONS: wordless Far Side / Cartoon Box cartoons — silent visual comedy, setup then a hard twist, end card only, no dialogue."+SILENT_COMEDY+(mech?" PRIMARY COMEDY MECHANIC: "+mech.n+" — "+mech.p+".":"")+(modeStr?" "+modeStr:"");
   const usr="SEASON: "+season.label+" — "+season.theme+"\nLAW IN FOCUS THIS TOON: "+law.n+" — "+law.law+"\n"+(lead?"RECURRING LEAD (never named on screen, the audience avatar): "+lead.name+(lead.identity?" — "+lead.identity:"")+". Everything weird happens around him while he reacts minimally.\n":"")+(hidden?"Plant a subtle HIDDEN CHIEFF cameo (figurine/sticker/poster), never acknowledged.\n":"")+"Pitch ONE original wordless cartoon premise true to the universe. Give a punchy title, a one-line logline, and the grand expectation (the payoff/twist feel). Return JSON only: {\"title\":\"\",\"logline\":\"\",\"grand\":\"\"}.";
   try{
     const d=parseJSON(await llmRun(sys,usr));
@@ -1982,7 +2010,7 @@ function renderComics(){
   const cc=curComic();if(cc){renderComicView(cc);return;}
   S.curComic=null;
   let h='<div class="card"><label class="fld">Type</label><select id="comicKind"></select>';
-  h+='<label class="fld" style="margin-top:10px">Look</label><select id="comicLook"></select>';
+  h+='<label class="fld" style="margin-top:10px">Look</label><select id="comicLook"></select>';h+='<label class="fld" style="margin-top:10px">Comedy mechanic</label><select id="comicMechanic"></select>';
   h+='<label class="fld" style="margin-top:10px">Lead character</label><select id="comicLead"></select>';
   h+='<label class="fld" style="margin-top:10px">Location</label><select id="comicSet"></select>';
   h+='<label class="fld" style="margin-top:10px">Idea</label><div class="row"><input type="text" id="comicIdea" placeholder="the gag / situation (or leave blank)"><button class="btn ghost sm" id="comicIdeaBtn" style="flex:0">✦</button></div><div id="comicIdeaStatus"></div>';
@@ -1990,7 +2018,7 @@ function renderComics(){
   h+='<div style="margin-top:16px"><div class="hint">Your comics</div><div id="comicList" style="margin-top:8px"></div></div>';
   host.innerHTML=h;
   const kk=$("comicKind");Object.keys(COMIC_KINDS).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=COMIC_KINDS[k].label;kk.appendChild(o);});kk.value=S.comicKind||"strip3";kk.addEventListener("change",e=>{S.comicKind=e.target.value;save();});
-  const lk=$("comicLook");Object.keys(COMIC_LOOKS).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=COMIC_LOOKS[k].label;lk.appendChild(o);});lk.value=S.comicLook||"toon";lk.addEventListener("change",e=>{S.comicLook=e.target.value;save();});
+  const lk=$("comicLook");Object.keys(COMIC_LOOKS).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=COMIC_LOOKS[k].label;lk.appendChild(o);});lk.value=S.comicLook||"toon";lk.addEventListener("change",e=>{S.comicLook=e.target.value;save();});const mk2=$("comicMechanic");if(mk2){mk2.innerHTML='<option value="">— auto / mix —</option>'+COMEDY_MECHANICS.map(m=>'<option value="'+esc(m.n)+'">'+esc(m.n)+'</option>').join("");mk2.value=S.comicMechanic||"";mk2.addEventListener("change",e=>{S.comicMechanic=e.target.value;save();});}
   const ld=$("comicLead");ld.innerHTML='<option value="">— none —</option>'+S.cast.map(c=>'<option value="'+c.id+'">'+esc(c.name)+'</option>').join("");ld.value=S.comicLead||"";ld.addEventListener("change",e=>{S.comicLead=e.target.value;save();});
   const se=$("comicSet");se.innerHTML='<option value="">— none —</option>'+S.sets.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join("");se.value=S.comicSet||"";se.addEventListener("change",e=>{S.comicSet=e.target.value;save();});
   $("comicIdeaBtn").addEventListener("click",suggestComicIdea);
@@ -2015,9 +2043,9 @@ async function genComic(){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const kind=$("comicKind").value,look=$("comicLook").value,leadId=$("comicLead").value,setId=$("comicSet").value,idea=$("comicIdea").value.trim();
   const ko=COMIC_KINDS[kind]||COMIC_KINDS.strip3;const single=ko.panels===1;
-  const st=$("comicGenStatus");st.innerHTML=spinner("Writing the comic…");
+  const cmech=COMEDY_MECHANICS.find(m=>m.n===S.comicMechanic)||null;const st=$("comicGenStatus");st.innerHTML=spinner("Writing the comic…");
   const lead=leadId?S.cast.find(c=>c.id===leadId):null;const set=setId?S.sets.find(x=>x.id===setId):null;
-  const sys=STONERALIA_LAW+" "+VOICE_DNA+" You write COMICS — "+(single?"a single-panel Far Side-style cartoon: one image, one short deadpan caption, the whole joke in one frame.":"a "+ko.panels+"-panel comic strip: setup, escalation, hard punchline, each panel one clean readable beat.")+" Keep captions short and dry; lean visual.";
+  const sys=STONERALIA_LAW+" "+VOICE_DNA+" You write COMICS — "+(single?"a single-panel Far Side-style cartoon: one image, one short deadpan caption, the whole joke in one frame.":"a "+ko.panels+"-panel comic strip: setup, escalation, hard punchline, each panel one clean readable beat.")+" Keep captions short and dry; lean visual. The joke must read with the sound off — visual punchline, no dialogue, no speech bubbles."+(cmech?" PRIMARY COMEDY MECHANIC: "+cmech.n+" — "+cmech.p+".":"");
   const ctx=(lead?"LEAD: "+lead.name+(lead.identity?" — "+lead.identity:"")+wardrobePieces(lead)+(lead.wardrobeNote?" Wardrobe: "+lead.wardrobeNote:"")+"\n":"")+(set?"LOCATION: "+set.name+(set.vibe?" — "+set.vibe:"")+(set.props&&set.props.length?" Recurring here: "+set.props.map(p=>p.name+(p.desc?" ("+p.desc+")":"")).join("; "):"")+"\n":"");
   const usr=ctx+(idea?"IDEA: "+idea+"\n":"Invent an original gag true to the universe.\n")+"Write "+ko.panels+" panel"+(ko.panels>1?"s":"")+". For each panel: caption (short, dry — or empty) and visual (a COMPLETE ready-to-render image prompt for that panel). Also a title. Return JSON only: {\"title\":\"\",\"panels\":[{\"caption\":\"\",\"visual\":\"\"}]}.";
   try{

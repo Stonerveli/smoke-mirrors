@@ -238,7 +238,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <div class="tokenchips" id="boardAdjust" style="margin-top:12px"></div>
     <div class="tokenchips" id="boardTokens" style="margin-top:8px"></div>
   </div>
-  <button class="btn green" id="boardGen" style="width:100%;padding:13px">▦ Generate storyboard</button>
+  <button class="btn green" id="boardGen" data-cost="openai/gpt-image-2" style="width:100%;padding:13px">▦ Generate storyboard</button>
   <div id="boardStatus"></div>
   <div class="result-wrap" id="boardResult"></div>
   <div id="boardAfter" style="display:none">
@@ -525,7 +525,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v6.8 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v6.9 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1089,7 +1089,15 @@ const MODEL_COSTS={
  "fal-ai/elevenlabs/sound-effects":"pay per generation",
  "anthropic/claude-sonnet-4.6":"pennies per call (text)",
  "google/gemini-2.5-pro":"pennies per call (text)",
- "google/gemini-2.5-flash":"fractions of a cent (text)"
+ "google/gemini-2.5-flash":"fractions of a cent (text)",
+ "fal-ai/nano-banana-2":"$0.06–0.08 per image",
+ "fal-ai/nano-banana-2/edit":"$0.06–0.08 per image",
+ "fal-ai/nano-banana-pro":"$0.15 per image ($0.30 at 4K)",
+ "fal-ai/nano-banana-pro/edit":"$0.15 per edit",
+ "openai/gpt-image-2":"$0.02–0.17 per image (by quality)",
+ "openai/gpt-image-2/edit":"$0.02–0.17 per image (by quality)",
+ "bytedance/seedance-2.0/reference-to-video":"$0.30/sec at 720p · ~$1.50 per 5-sec clip",
+ "fal-ai/kling-video/v3/pro/image-to-video":"$0.11–0.17 per second"
 };
 function costOf(m){return MODEL_COSTS[m]||"pay-per-use on fal — see fal.ai for the rate";}
 function setupPicker(selId,custId,costId,get,set){
@@ -1131,14 +1139,14 @@ function renderAssetEditor(){
     h+='<textarea id="aWardrobeNote" style="min-height:48px;margin-top:8px" placeholder="e.g. Chiefin’ Season black hoodie, black cap, sage accents">'+esc(it.wardrobeNote||"")+'</textarea>';
     h+='<button class="btn ghost sm" id="aDress" style="margin-top:8px;width:100%">✦ Dress in Chiefin’ gear</button><div id="aDressStatus"></div>';
     h+='<button class="btn ghost sm" id="aFill" style="margin-top:10px;width:100%">✦ Fill in the blanks (AI)</button><div id="aFillStatus"></div>';
-    h+='<button class="btn ghost sm" id="aSheet" style="margin-top:10px;width:100%">✦ Build a 6-angle reference sheet from the main photo</button><div id="aSheetStatus"></div>';
+    h+='<button class="btn ghost sm" id="aSheet" data-cost="img" style="margin-top:10px;width:100%">✦ Build a 6-angle reference sheet from the main photo</button><div id="aSheetStatus"></div>';
   }else{
     h+='<label class="fld">Vibe — what this place feels like</label><textarea id="aVibe" style="min-height:74px" placeholder="late-night bodega, buzzing fluorescents, neon haze">'+esc(it.vibe||"")+'</textarea>';
     h+='<button class="btn ghost sm" id="aVibeBtn" style="margin-top:8px;width:100%">✦ Suggest a vibe</button><div id="aVibeStatus"></div><div id="aVibeSuggest"></div>';
     h+='<label class="fld" style="margin-top:14px">Props &amp; extras — the recurring world</label><div id="aPropList"></div>';
     h+='<div class="row" style="margin-top:8px"><button class="btn ghost sm" id="aPropBtn">✦ Suggest props</button><button class="btn ghost sm" id="aPropAdd" style="flex:0">＋ Add</button></div><div id="aPropStatus"></div><div id="aPropSuggest"></div>';
     h+='<button class="btn ghost sm" id="aSetFill" style="margin-top:10px;width:100%">✦ Fill in the blanks (AI)</button><div id="aSetFillStatus"></div>';
-    h+='<div class="row" style="margin-top:10px"><button class="btn ghost sm" id="aSuggest">✦ Suggest scenes (AI)</button><button class="btn green sm" id="aBuild">✦ Build this location</button></div><div id="aSetStatus"></div><div id="aSetResult"></div>';
+    h+='<div class="row" style="margin-top:10px"><button class="btn ghost sm" id="aSuggest">✦ Suggest scenes (AI)</button><button class="btn green sm" id="aBuild" data-cost="img">✦ Build this location</button></div><div id="aSetStatus"></div><div id="aSetResult"></div>';
   }
   h+='<label class="fld" style="margin-top:14px">References</label><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(106px,1fr))">';
   vs.forEach((v,i)=>{h+='<div class="stash-item'+(i===0?' ismain':'')+'"><button class="x" data-i="'+i+'">✕</button>'+(i===0?'<span class="mainbadge">★ main</span>':'<button class="setmain" data-m="'+i+'">set main</button>')+'<img src="'+v.src+'"><div class="meta"><div class="nm">'+esc(v.label)+'</div></div></div>';});
@@ -1585,7 +1593,7 @@ function renderSceneBoard(ep){
     h+='<div class="hint" style="margin-top:6px">Ambience: '+esc(s.ambience||"—")+' · Grade: '+esc(s.grade||"auto")+'</div></details>';
     if(idx>0)h+='<label class="row" style="margin-top:8px;align-items:center;gap:6px;font-size:12px"><input type="checkbox" data-cont="'+s.id+'" style="width:auto;flex:0" '+(s.continueFrom?"checked":"")+'> Continue from Scene '+(s.n-1)+' (carry last frame + grade)</label>';
     if(chain>=3)h+='<div class="hint" style="color:var(--gold)">⚠ Long continuity chain — AI video drifts after ~3 linked scenes. Consider a fresh establishing shot here.</div>';
-    h+='<div class="row" style="margin-top:10px;gap:8px"><button class="btn sm green" data-board="'+s.id+'" style="flex:1">▦ Storyboard</button><button class="btn sm" data-vid="'+s.id+'" style="flex:1">▶ Video</button></div>';
+    h+='<div class="row" style="margin-top:10px;gap:8px"><button class="btn sm green" data-board="'+s.id+'" data-cost="img" style="flex:1">▦ Storyboard</button><button class="btn sm" data-vid="'+s.id+'" data-cost="vid" style="flex:1">▶ Video</button></div>';
     h+='<div data-out="'+s.id+'" style="margin-top:8px"></div>';
     if(s.boardUrl)h+='<img src="'+s.boardUrl+'" style="margin-top:8px;border-radius:8px;width:100%">';
     if(s.videoUrl)h+='<video src="'+s.videoUrl+'" controls playsinline style="margin-top:8px;border-radius:8px;width:100%"></video>';
@@ -1840,7 +1848,8 @@ async function fillBlanksSet(it){
 }
 /* ux fixes */
 /* ================= UX FIXES ================= */
-function paintAIButtons(root){if(!root||root.nodeType!==1)return;const list=[];if(root.tagName==="BUTTON")list.push(root);if(root.querySelectorAll)root.querySelectorAll("button").forEach(b=>list.push(b));list.forEach(b=>{if(b.dataset.aiPainted)return;if(b.textContent&&b.textContent.indexOf("✦")>-1){b.classList.remove("ghost");b.classList.add("green");b.dataset.aiPainted="1";}});}
+function _costFor(b){const dc=b.dataset.cost;if(!dc)return"";if(dc==="img")return costOf((S.picked&&S.picked.image)||"fal-ai/nano-banana-2");if(dc==="edit")return costOf((S.picked&&S.picked.edit)||"fal-ai/nano-banana-pro/edit");if(dc==="vid")return costOf((S.picked&&S.picked.video)||"bytedance/seedance-2.0/reference-to-video");return costOf(dc);}
+function paintAIButtons(root){if(!root||root.nodeType!==1)return;const list=[];if(root.tagName==="BUTTON")list.push(root);if(root.querySelectorAll)root.querySelectorAll("button").forEach(b=>list.push(b));list.forEach(b=>{const txt=(b.textContent||"").trim();const star=txt.indexOf("✦")>-1;if(star&&!b.dataset.aiPainted){b.classList.remove("ghost");b.classList.add("green");b.dataset.aiPainted="1";}if(!b.dataset.priced){let note="";if(b.dataset.cost){const cf=_costFor(b);if(cf)note="≈ "+cf;}else if(star&&txt.length>2){note=costOf((typeof S!=="undefined"&&S.llmModel)||"google/gemini-2.5-flash");}if(note){b.insertAdjacentHTML("beforeend",'<span style="display:block;font-weight:400;font-size:10px;letter-spacing:0;text-transform:none;opacity:.62;margin-top:3px">'+note+'</span>');b.dataset.priced="1";}}});}
 async function suggestLocations(){
   if(!S.apiKey){toast("Add your fal key in Setup for AI suggestions.",true);return;}
   const st=$("setSuggestStatus");if(st)st.innerHTML=spinner("Scouting locations…");
@@ -1936,14 +1945,14 @@ function renderComicView(comic){
   const host=$("comicBody");if(!host)return;
   let h='<button class="btn sm ghost" id="comicBack" style="margin-bottom:12px">← All comics</button>';
   h+='<div class="card"><input type="text" id="comicTitle" value="'+esc(comic.title||"")+'" placeholder="comic title" style="font-family:var(--slate);font-weight:800"><div class="hint" style="margin-top:4px">'+esc((COMIC_KINDS[comic.kind]||{}).label||"")+' · '+esc((COMIC_LOOKS[comic.look]||{}).label||"")+'</div></div>';
-  h+='<div class="row"><button class="btn green" id="comicRenderAll" style="flex:1">▦ Draw all panels</button><button class="btn ghost" id="comicExport" style="flex:0">⧉ Export</button></div><div id="comicAllStatus" style="margin-top:6px"></div>';
+  h+='<div class="row"><button class="btn green" id="comicRenderAll" data-cost="edit" style="flex:1">▦ Draw all panels</button><button class="btn ghost" id="comicExport" style="flex:0">⧉ Export</button></div><div id="comicAllStatus" style="margin-top:6px"></div>';
   comic.panels.forEach(p=>{
     h+='<div class="card" style="border-left:3px solid var(--bud)"><div style="font-weight:800;font-family:var(--slate)">Panel '+p.n+'</div>';
     h+='<div data-pout="'+p.id+'" style="margin-top:8px"></div>';
     if(p.url)h+='<img src="'+p.url+'" style="margin-top:8px;border-radius:8px;width:100%">';
     if(p.caption)h+='<div style="margin-top:8px;font-size:14px;font-style:italic;text-align:center">\u201c'+esc(p.caption)+'\u201d</div>';
     h+='<details style="margin-top:8px"><summary class="hint" style="cursor:pointer">Caption &amp; visual</summary><label class="fld" style="margin-top:6px">Caption</label><input type="text" data-pcap="'+p.id+'" value="'+esc(p.caption||"")+'"><label class="fld" style="margin-top:6px">Visual prompt</label><textarea data-pvis="'+p.id+'" style="min-height:60px">'+esc(p.visual||"")+'</textarea></details>';
-    h+='<button class="btn sm green" data-pdraw="'+p.id+'" style="margin-top:8px;width:100%">'+(p.url?"↻ Redraw panel":"✎ Draw panel")+'</button></div>';
+    h+='<button class="btn sm green" data-pdraw="'+p.id+'" data-cost="edit" style="margin-top:8px;width:100%">'+(p.url?"↻ Redraw panel":"✎ Draw panel")+'</button></div>';
   });
   host.innerHTML=h;
   $("comicBack").addEventListener("click",()=>{S.curComic=null;save();renderComics();});

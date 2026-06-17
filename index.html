@@ -501,7 +501,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
   <div class="card">
     <label class="fld">AI brain — Stylist, Director &amp; writers</label>
     <select id="llmSel">
-      <option value="anthropic/claude-sonnet-4.6">Claude Sonnet 4.6 — best taste + speed</option>
+      <option value="anthropic/claude-sonnet-4.5">Claude Sonnet 4.5 — best taste + speed</option>
       <option value="google/gemini-2.5-pro">Gemini 2.5 Pro — smart alternative</option>
       <option value="google/gemini-2.5-flash">Gemini 2.5 Flash — fastest / cheapest</option>
       <option value="__custom">Custom&hellip;</option>
@@ -529,7 +529,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.2 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.3 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -706,8 +706,15 @@ async function llmRun(systemPrompt,userPrompt){
   const input={model:S.llmModel,prompt:userPrompt};
   if(systemPrompt)input.system_prompt=systemPrompt;
   const out=await falRun("fal-ai/any-llm",input,null);
-  let txt=out.output||out.text||out.response||out.message||"";
-  if(!txt)JSON.stringify(out,(k,v)=>{if(!txt&&typeof v==="string"&&v.length>15)txt=v;return v;});
+  if(out&&(out.detail||out.error)){
+    let msg=out.error||out.detail;
+    if(Array.isArray(msg))msg=msg.map(x=>(x&&x.msg)?x.msg:(typeof x==="string"?x:JSON.stringify(x))).join("; ");
+    if(typeof msg!=="string")msg=JSON.stringify(msg);
+    if(/should be|valid|invalid|not found/i.test(msg))throw new Error("AI brain rejected by fal \u2014 pick a different brain in Setup (Gemini 2.5 Flash is safe).");
+    throw new Error("AI brain error \u2014 "+msg.slice(0,140));
+  }
+  const txt=out.output||out.text||out.response||(typeof out.message==="string"?out.message:"")||"";
+  if(!txt)throw new Error("AI brain returned nothing \u2014 try another brain in Setup.");
   return txt;
 }
 function parseJSON(txt){let t=(txt||"").trim().replace(/^```json/i,"").replace(/^```/,"").replace(/```$/,"").trim();
@@ -786,7 +793,7 @@ async function runGenerate(){
 function showResult(host,m){
   if(m.type==="video")host.innerHTML='<video src="'+m.url+'" controls playsinline></video>';
   else if(m.type==="audio")host.innerHTML='<audio src="'+m.url+'" controls style="width:100%"></audio>';
-  else{host.innerHTML='<img src="'+m.url+'">';const bar=document.createElement("div");bar.className="row";bar.style.marginTop="8px";const b=document.createElement("button");b.className="btn ghost sm";b.textContent="＋ Cast";b.addEventListener("click",()=>sendToCast(m.url));bar.appendChild(b);host.appendChild(bar);}
+  else{host.innerHTML='<img class="zoomable" src="'+m.url+'">';const bar=document.createElement("div");bar.className="row";bar.style.marginTop="8px";const b=document.createElement("button");b.className="btn ghost sm";b.textContent="＋ Cast";b.addEventListener("click",()=>sendToCast(m.url));bar.appendChild(b);host.appendChild(bar);}
 }
 
 /* pre-roll */
@@ -909,7 +916,7 @@ function renderEditor(){
   let h='<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div><div style="font-family:var(--slate);font-stretch:condensed;font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:.04em">'+esc(it.name)+'</div><div class="hint">'+esc(cat(it))+' · '+vs.length+' side'+(vs.length>1?'s':'')+' loaded</div></div><button class="btn sm ghost" id="edClose" style="margin-left:auto;flex:0">Done</button></div>';
   h+='<label class="fld">Name</label><input type="text" id="edName" value="'+esc(it.name)+'">';
   h+='<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(106px,1fr))">';
-  vs.forEach((v,i)=>{h+='<div class="stash-item'+(i===0?' ismain':'')+'"><button class="x" data-i="'+i+'">✕</button>'+(i===0?'<span class="mainbadge">★ main</span>':'<button class="setmain" data-m="'+i+'">set main</button>')+'<img src="'+v.src+'"><div class="meta"><div class="nm">'+esc(v.label)+'</div></div></div>';});
+  vs.forEach((v,i)=>{h+='<div class="stash-item'+(i===0?' ismain':'')+'"><button class="x" data-i="'+i+'">✕</button>'+(i===0?'<span class="mainbadge">★ main</span>':'<button class="setmain" data-m="'+i+'">set main</button>')+'<img class="zoomable" src="'+v.src+'"><div class="meta"><div class="nm">'+esc(v.label)+'</div></div></div>';});
   h+='</div>';
   h+='<label class="fld" style="margin-top:16px">Add a side — pick what it is, then choose the photo</label><div class="tokenchips" id="viewLabels"></div>';
   h+='<div class="row" style="margin-top:12px"><button class="btn green sm" id="addViewUpload">⬆ Upload the '+esc(pendingLabel)+'</button><button class="btn ghost sm" id="addViewUrl">🔗 URL</button></div>';
@@ -1035,7 +1042,7 @@ function renderReel(){
   if(!S.reel.length){host.innerHTML='<div class="empty"><div class="big">Nothing in the can</div>Head to Studio or Pre-Roll and roll your first shot.</div>';return;}
   host.innerHTML='<div class="reel-grid"></div>';const g=host.firstChild;
   S.reel.forEach(it=>{const d=document.createElement("div");d.className="reel-item";
-    const media=it.type==="video"?'<video src="'+it.url+'" muted></video>':it.type==="audio"?'<div style="height:120px;display:flex;align-items:center;justify-content:center;color:var(--bud)">♪ audio</div>':'<img src="'+it.url+'">';
+    const media=it.type==="video"?'<video class="zoomable" src="'+it.url+'" muted></video>':it.type==="audio"?'<div style="height:120px;display:flex;align-items:center;justify-content:center;color:var(--bud)">♪ audio</div>':'<img class="zoomable" src="'+it.url+'">';
     d.innerHTML=media+'<div class="rmeta">'+esc(it.prompt||"")+'</div><div class="acts"><button class="tl">+ Timeline</button>'+(it.type==="image"?'<button class="c2">+ Cast</button>':'')+'<button class="dl">Save</button><button class="del">✕</button></div>';
     d.querySelector(".tl").addEventListener("click",()=>{if(!S.timeline.includes(it.id)){S.timeline.push(it.id);save();toast("Added to timeline.");}});
     d.querySelector(".dl").addEventListener("click",()=>downloadUrl(it.url,"smokemirrors-"+it.id));
@@ -1048,7 +1055,7 @@ function renderTimeline(){
   if(!clips.length){tl.className="tl-track empty-tl";tl.textContent="Drop takes here — add from the reel below, then drag to reorder.";return;}
   tl.className="tl-track";tl.innerHTML="";
   clips.forEach((c,i)=>{const el=document.createElement("div");el.className="tl-clip";el.draggable=true;el.dataset.id=c.id;
-    const media=c.type==="video"?'<video src="'+c.url+'" muted></video>':c.type==="audio"?'<div style="width:120px;height:74px;display:flex;align-items:center;justify-content:center;color:var(--bud)">♪</div>':'<img src="'+c.url+'">';
+    const media=c.type==="video"?'<video class="zoomable" src="'+c.url+'" muted></video>':c.type==="audio"?'<div style="width:120px;height:74px;display:flex;align-items:center;justify-content:center;color:var(--bud)">♪</div>':'<img class="zoomable" src="'+c.url+'">';
     el.innerHTML='<span class="ord">'+(i+1)+'</span><button class="rm">✕</button>'+media;
     el.querySelector(".rm").addEventListener("click",e=>{e.stopPropagation();S.timeline=S.timeline.filter(x=>x!==c.id);save();renderTimeline();});
     el.addEventListener("dragstart",()=>{dragId=c.id;el.classList.add("drag");});
@@ -1173,7 +1180,7 @@ const MODEL_COSTS={
  "fal-ai/ai-avatar":"$0.20 per second (2× at 720p) · image + audio",
  "fal-ai/kling-video/lipsync/audio-to-video":"$0.014 per 5-sec block · needs a video",
  "fal-ai/elevenlabs/sound-effects":"pay per generation",
- "anthropic/claude-sonnet-4.6":"pennies per call (text)",
+ "anthropic/claude-sonnet-4.5":"pennies per call (text)",
  "google/gemini-2.5-pro":"pennies per call (text)",
  "google/gemini-2.5-flash":"fractions of a cent (text)",
  "fal-ai/nano-banana-2":"$0.06–0.08 per image",
@@ -1217,10 +1224,10 @@ function renderAssetEditor(){
   h+='<label class="fld">Name</label><input type="text" id="aName" value="'+esc(it.name)+'">';
   if(aKind==="cast"){
     h+='<label class="fld">Identity lock — injected into every shot for consistency</label><textarea id="aIdentity" style="min-height:84px">'+esc(it.identity||"")+'</textarea>';
-    h+='<label class="fld" style="margin-top:10px">Voice / vibe note</label><input type="text" id="aVoice" value="'+esc(it.voice||"")+'" placeholder="deadpan, dry, gravelly">';
+    h+='<label class="fld" style="margin-top:10px">Voice / vibe note</label><input type="text" id="aVoice" value="'+esc(it.voice||"")+'" placeholder="deadpan, dry, gravelly">';h+='<button class="btn ghost sm" id="aVoiceBtn" style="margin-top:6px;width:100%">✦ Suggest voice & vibe</button><div id="aVoiceStatus"></div>';
     h+='<label class="fld" style="margin-top:10px">Side</label><select id="aSide"><option value="neutral">Neutral</option><option value="hero">Hero / good guy</option><option value="villain">Villain / bad guy</option></select>';
-    h+='<label class="fld" style="margin-top:10px">Powers / abilities</label><textarea id="aPowers" style="min-height:54px" placeholder="what they can do">'+esc(it.powers||"")+'</textarea>';
-    h+='<label class="fld" style="margin-top:8px">Weakness</label><input type="text" id="aWeakness" value="'+esc(it.weakness||"")+'" placeholder="the flaw / kryptonite">';
+    h+='<label class="fld" style="margin-top:10px">Powers / abilities</label><textarea id="aPowers" style="min-height:54px" placeholder="what they can do">'+esc(it.powers||"")+'</textarea>';h+='<button class="btn ghost sm" id="aPowersBtn" style="margin-top:6px;width:100%">✦ Suggest powers & abilities</button><div id="aPowersStatus"></div>';
+    h+='<label class="fld" style="margin-top:8px">Weakness</label><input type="text" id="aWeakness" value="'+esc(it.weakness||"")+'" placeholder="the flaw / kryptonite">';h+='<button class="btn ghost sm" id="aWeaknessBtn" style="margin-top:6px;width:100%">✦ Suggest a weakness</button><div id="aWeaknessStatus"></div>';
     h+='<label class="fld" style="margin-top:12px">Wardrobe — Chiefin’ gear they wear</label><div class="tokenchips" id="aWardrobe"></div>';
     h+='<textarea id="aWardrobeNote" style="min-height:48px;margin-top:8px" placeholder="e.g. Chiefin’ Season black hoodie, black cap, sage accents">'+esc(it.wardrobeNote||"")+'</textarea>';
     h+='<button class="btn ghost sm" id="aDress" style="margin-top:8px;width:100%">✦ Dress in Chiefin’ gear</button><div id="aDressStatus"></div>';
@@ -1235,7 +1242,7 @@ function renderAssetEditor(){
     h+='<div class="row" style="margin-top:10px"><button class="btn ghost sm" id="aSuggest">✦ Suggest scenes (AI)</button><button class="btn green sm" id="aBuild" data-cost="img">✦ Build this location</button></div><div id="aSetStatus"></div><div id="aSetResult"></div>';
   }
   h+='<label class="fld" style="margin-top:14px">References</label><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(106px,1fr))">';
-  vs.forEach((v,i)=>{h+='<div class="stash-item'+(i===0?' ismain':'')+'"><button class="x" data-i="'+i+'">✕</button>'+(i===0?'<span class="mainbadge">★ main</span>':'<button class="setmain" data-m="'+i+'">set main</button>')+'<img src="'+v.src+'"><div class="meta"><div class="nm">'+esc(v.label)+'</div></div></div>';});
+  vs.forEach((v,i)=>{h+='<div class="stash-item'+(i===0?' ismain':'')+'"><button class="x" data-i="'+i+'">✕</button>'+(i===0?'<span class="mainbadge">★ main</span>':'<button class="setmain" data-m="'+i+'">set main</button>')+'<img class="zoomable" src="'+v.src+'"><div class="meta"><div class="nm">'+esc(v.label)+'</div></div></div>';});
   if(!vs.length)h+='<div class="hint" style="padding:8px">No references yet — add some below so the AI stays consistent.</div>';
   h+='</div>';
   h+='<label class="fld" style="margin-top:12px">Add a reference — pick the angle, then the photo</label><div class="tokenchips" id="aLabels"></div>';
@@ -1246,6 +1253,7 @@ function renderAssetEditor(){
   if(aKind==="cast"){
     $("aIdentity").addEventListener("input",e=>{it.identity=e.target.value;save();});
     $("aVoice").addEventListener("input",e=>{it.voice=e.target.value;save();});
+    if($("aVoiceBtn"))$("aVoiceBtn").addEventListener("click",()=>suggestVoice(it));
     $("aSheet").addEventListener("click",()=>buildSheet(it));
     const wc=$("aWardrobe");if(wc){if(!S.stash.length){wc.innerHTML='<span class="hint">Add pieces in The Stash to dress them.</span>';}else{wc.innerHTML="";S.stash.forEach(sp=>{const ch=document.createElement("span");ch.className="chip"+(((it.wardrobe||[]).includes(sp.id))?" on":"");ch.textContent=sp.name;ch.addEventListener("click",()=>{if(!it.wardrobe)it.wardrobe=[];const i=it.wardrobe.indexOf(sp.id);i>=0?it.wardrobe.splice(i,1):it.wardrobe.push(sp.id);save();ch.classList.toggle("on");});wc.appendChild(ch);});}}
     if($("aWardrobeNote"))$("aWardrobeNote").addEventListener("input",e=>{it.wardrobeNote=e.target.value;save();});
@@ -1253,7 +1261,9 @@ function renderAssetEditor(){
     if($("aFill"))$("aFill").addEventListener("click",()=>fillBlanksCast(it));
     if($("aSide")){$("aSide").value=it.side||"neutral";$("aSide").addEventListener("change",e=>{it.side=e.target.value;save();renderCast();});}
     if($("aPowers"))$("aPowers").addEventListener("input",e=>{it.powers=e.target.value;save();});
+    if($("aPowersBtn"))$("aPowersBtn").addEventListener("click",()=>suggestPowers(it));
     if($("aWeakness"))$("aWeakness").addEventListener("input",e=>{it.weakness=e.target.value;save();});
+    if($("aWeaknessBtn"))$("aWeaknessBtn").addEventListener("click",()=>suggestWeakness(it));
   }else{
     $("aVibe").addEventListener("input",e=>{it.vibe=e.target.value;save();});
     $("aVibeBtn").addEventListener("click",()=>suggestVibe(it));
@@ -1297,7 +1307,7 @@ async function buildLocation(it){
   try{const out=await falRun("fal-ai/nano-banana-2",{prompt,num_images:1,aspect_ratio:"16:9"},null);
     const m=extractMedia(out);if(!m)throw new Error("no image came back");
     if(!it.views)it.views=[];it.views.unshift({label:"Wide",src:m.url});it.src=m.url;save();
-    st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Location plate saved as a reference</div>';$("aSetResult").innerHTML='<div class="result-wrap"><img src="'+m.url+'"></div>';renderSets();renderAssetEditor();
+    st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Location plate saved as a reference</div>';$("aSetResult").innerHTML='<div class="result-wrap"><img class="zoomable" src="'+m.url+'"></div>';renderSets();renderAssetEditor();
   }catch(e){st.innerHTML='<div class="statusline" style="color:var(--red)">✗ '+esc(e.message)+'</div>';}
 }
 
@@ -1707,7 +1717,7 @@ function renderSceneBoard(ep){
     if(chain>=3)h+='<div class="hint" style="color:var(--gold)">⚠ Long continuity chain — AI video drifts after ~3 linked scenes. Consider a fresh establishing shot here.</div>';
     h+='<div class="row" style="margin-top:10px;gap:8px"><button class="btn sm green" data-board="'+s.id+'" data-cost="img" style="flex:1">▦ Storyboard</button><button class="btn sm" data-vid="'+s.id+'" data-cost="vid" style="flex:1">▶ Video</button></div>';
     h+='<div data-out="'+s.id+'" style="margin-top:8px"></div>';
-    if(s.boardUrl)h+='<img src="'+s.boardUrl+'" style="margin-top:8px;border-radius:8px;width:100%">';
+    if(s.boardUrl)h+='<img class="zoomable" src="'+s.boardUrl+'" style="margin-top:8px;border-radius:8px;width:100%">';
     if(s.videoUrl)h+='<video src="'+s.videoUrl+'" controls playsinline style="margin-top:8px;border-radius:8px;width:100%"></video>';
     d.innerHTML=h;host.appendChild(d);
   });
@@ -2063,7 +2073,7 @@ function renderComicView(comic){
   comic.panels.forEach(p=>{
     h+='<div class="card" style="border-left:3px solid var(--bud)"><div style="font-weight:800;font-family:var(--slate)">Panel '+p.n+'</div>';
     h+='<div data-pout="'+p.id+'" style="margin-top:8px"></div>';
-    if(p.url)h+='<img src="'+p.url+'" style="margin-top:8px;border-radius:8px;width:100%">';
+    if(p.url)h+='<img class="zoomable" src="'+p.url+'" style="margin-top:8px;border-radius:8px;width:100%">';
     if(p.caption)h+='<div style="margin-top:8px;font-size:14px;font-style:italic;text-align:center">\u201c'+esc(p.caption)+'\u201d</div>';
     h+='<details style="margin-top:8px"><summary class="hint" style="cursor:pointer">Caption &amp; visual</summary><label class="fld" style="margin-top:6px">Caption</label><input type="text" data-pcap="'+p.id+'" value="'+esc(p.caption||"")+'"><label class="fld" style="margin-top:6px">Visual prompt</label><textarea data-pvis="'+p.id+'" style="min-height:60px">'+esc(p.visual||"")+'</textarea></details>';
     h+='<button class="btn sm green" data-pdraw="'+p.id+'" data-cost="edit" style="margin-top:8px;width:100%">'+(p.url?"↻ Redraw panel":"✎ Draw panel")+'</button></div>';
@@ -2108,13 +2118,42 @@ function exportComic(){
   if(urls.length)navigator.clipboard.writeText(urls.join("\n")).then(()=>toast(urls.length+" panel URLs copied + script saved.")).catch(()=>toast("Script saved (copy failed).",true));
   else toast("Script saved — draw panels to export images.");
 }
+/* ux helpers */
+/* ===== media lightbox + cast field helpers ===== */
+function openLightbox(src,isVideo){if(!src)return;let lb=document.getElementById("lightbox");if(!lb){lb=document.createElement("div");lb.id="lightbox";lb.style.cssText="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.93);display:none;align-items:center;justify-content:center;padding:14px;cursor:zoom-out";lb.addEventListener("click",function(){lb.style.display="none";lb.innerHTML="";});document.body.appendChild(lb);}lb.innerHTML=isVideo?'<video src="'+src+'" controls autoplay playsinline style="max-width:100%;max-height:100%;border-radius:10px"></video>':'<img src="'+src+'" style="max-width:100%;max-height:100%;border-radius:10px">';lb.style.display="flex";}
+function initLightbox(){if(document._lbInit)return;document._lbInit=true;document.addEventListener("click",function(e){const t=e.target;if(t&&t.classList&&t.classList.contains("zoomable")){e.stopPropagation();openLightbox(t.getAttribute("src")||t.src,t.tagName==="VIDEO");}});}
+async function suggestVoice(it){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const st=$("aVoiceStatus");if(st)st.innerHTML=spinner("Finding the voice\u2026");
+  const sys=VOICE_DNA+" Write a VOICE & VIBE note for a character in the Chiefin' Season / Stoneralia universe \u2014 how they sound and carry themselves. Specific, attention-grabbing, unique to them. One tight line, no quotes.";
+  const usr="CHARACTER: "+it.name+(it.identity?" \u2014 "+it.identity:"")+"\nGive one vivid voice & vibe line (tone, cadence, energy). Return only the line.";
+  try{const txt=(await llmRun(sys,usr)).trim().replace(/^["\u2018\u2019']|["\u2018\u2019']$/g,"");it.voice=txt;save();if($("aVoice"))$("aVoice").value=txt;if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Voice set</div>';}
+  catch(e){if(st)st.innerHTML=errLine(e);}
+}
+async function suggestPowers(it){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const st=$("aPowersStatus");if(st)st.innerHTML=spinner("Cooking up abilities\u2026");
+  const sys=VOICE_DNA+" Invent POWERS / ABILITIES for a character in this cannabis-culture universe \u2014 on-brand, inventive, a little absurd but genuinely cool, unique to them. Vivid and specific.";
+  const usr="CHARACTER: "+it.name+(it.identity?" \u2014 "+it.identity:"")+(it.side?" (side: "+it.side+")":"")+"\nGive 1-3 signature powers/abilities, punchy, line-separated. Return only the abilities.";
+  try{const txt=(await llmRun(sys,usr)).trim();it.powers=txt;save();if($("aPowers"))$("aPowers").value=txt;if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Powers set</div>';}
+  catch(e){if(st)st.innerHTML=errLine(e);}
+}
+async function suggestWeakness(it){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const st=$("aWeaknessStatus");if(st)st.innerHTML=spinner("Finding the flaw\u2026");
+  const sys=VOICE_DNA+" Invent a WEAKNESS \u2014 the flaw / kryptonite \u2014 for a character in this universe. Characterful, ironic, specific, a little funny, unique to them. Never generic.";
+  const usr="CHARACTER: "+it.name+(it.identity?" \u2014 "+it.identity:"")+(it.powers?" Powers: "+it.powers:"")+"\nGive one memorable weakness that creates story. Return only the line.";
+  try{const txt=(await llmRun(sys,usr)).trim().replace(/^["\u2018\u2019']|["\u2018\u2019']$/g,"");it.weakness=txt;save();if($("aWeakness"))$("aWeakness").value=txt;if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Weakness set</div>';}
+  catch(e){if(st)st.innerHTML=errLine(e);}
+}
+
 /* boot */
 function boot(){
   S.stash.forEach(it=>{if(!it.views||!it.views.length)it.views=[{label:"Front",src:it.src}];if(!it.src&&it.views[0])it.src=it.views[0].src;});
   $("apiKey").value=S.apiKey;
   $("storyTitle").value=S.story.title;$("storyBody").value=S.story.body;
   $("boardScript").value=S.board.script;$("boardGrade").value=S.board.grade;$("boardGrid").value=S.board.grid;
-  preloadCast();refreshKeyStat();renderStations();syncStation();renderBoardChars();renderStashFilter();buildLookControls();setupExtras();setupPickers();bindMedia();renderCast();renderSets();renderMedia();renderCastSet();renderEpisodes();renderCastFilter();renderCloudtoons();renderComics();if($("epNew"))$("epNew").addEventListener("click",newEpisode);go("episodes");try{var _aiObs=new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(n){paintAIButtons(n);});});});_aiObs.observe(document.body,{childList:true,subtree:true});}catch(e){}paintAIButtons(document.body);
+  preloadCast();refreshKeyStat();renderStations();syncStation();renderBoardChars();renderStashFilter();buildLookControls();setupExtras();setupPickers();bindMedia();renderCast();renderSets();renderMedia();renderCastSet();renderEpisodes();renderCastFilter();renderCloudtoons();renderComics();if($("epNew"))$("epNew").addEventListener("click",newEpisode);go("episodes");if(S.llmModel==="anthropic/claude-sonnet-4.6"){S.llmModel="anthropic/claude-sonnet-4.5";save();}try{var _aiObs=new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(n){paintAIButtons(n);});});});_aiObs.observe(document.body,{childList:true,subtree:true});}catch(e){}paintAIButtons(document.body);initLightbox();
 }
 boot();
 </script>

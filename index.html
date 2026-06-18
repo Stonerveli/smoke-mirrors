@@ -219,10 +219,10 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 <!-- ===== PRE-ROLL (storyboard) ===== -->
 <section class="view" id="view-board">
   <div class="slatehead"><span class="num">06</span><h2>Pre-Roll</h2><span class="tag">Storyboard · GPT Image-2</span></div>
-  <div class="hint" style="margin-bottom:14px">Script in → a sheet of continuous cinematic frames → pull keepers as full shots → out comes a Seedance 2.0 prompt.</div>
+  <div class="hint" style="margin-bottom:14px">Pick a board style, script in → one-click board out. The frames sheet also lets you pull keepers as full shots → Seedance 2.0 prompt.</div>
   <span class="steptag">Step 1 · The script</span>
   <div class="card">
-    <textarea id="boardScript" placeholder="Type a logline or idea — or paste a full script…" style="min-height:110px"></textarea><div class="row" style="margin-top:8px"><button class="btn ghost sm" id="boardWriteBtn" style="flex:1">✦ Write the script</button><button class="btn ghost sm" id="boardClear" style="flex:0 0 auto;padding:8px 12px">✕ Clear</button></div><div id="boardWriteStatus"></div>
+    <textarea id="boardScript" placeholder="Type a logline or idea — or paste a full script…" style="min-height:110px"></textarea><div class="row" style="margin-top:8px"><button class="btn ghost sm" id="boardWriteBtn" style="flex:1">✦ Write the script</button><button class="btn ghost sm" id="boardClear" style="flex:0 0 auto;padding:8px 12px">✕ Clear</button></div><div id="boardWriteStatus"></div><label class="fld" style="margin-top:12px">Board style</label><select id="boardStyle"><option value="frames">Continuous frames sheet · film pre-viz</option><option value="pitchbible">Animation pitch-bible board · full template</option><option value="action9">9-frame action storyboard</option><option value="comic6">6-panel comic strip board</option></select><input type="text" id="boardTitle" placeholder="Title / episode (optional)" style="margin-top:8px"><input type="text" id="boardPalette" placeholder="Palette (optional) — defaults to brand palette" style="margin-top:8px"><div class="hint" style="margin-top:6px">Panel grid below is for the frames sheet. Pitch-bible / comic styles use a fixed wide layout.</div>
     <div class="row" style="margin-top:10px">
       <div><label class="fld">Panel grid</label>
         <select id="boardGrid">
@@ -529,7 +529,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.4 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.6 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -542,7 +542,7 @@ const blank={
   apiKey:"",llmModel:"google/gemini-2.5-flash",station:"image",
   picked:{image:"fal-ai/nano-banana-2",edit:"fal-ai/nano-banana-2/edit",video:"bytedance/seedance-2.0/reference-to-video",audio:"fal-ai/elevenlabs/sound-effects"},
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
-  board:{script:"",grade:"auto",grid:"3x3",charRefs:[],adjust:[],lastUrl:""},
+  board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},
   stashFilter:"All",
   cast:[],sets:[],castInit:false,customGenres:[],episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
@@ -793,7 +793,7 @@ async function runGenerate(){
 function showResult(host,m){
   if(m.type==="video")host.innerHTML='<video src="'+m.url+'" controls playsinline></video>';
   else if(m.type==="audio")host.innerHTML='<audio src="'+m.url+'" controls style="width:100%"></audio>';
-  else{host.innerHTML='<img class="zoomable" src="'+m.url+'">';const bar=document.createElement("div");bar.className="row";bar.style.marginTop="8px";const b=document.createElement("button");b.className="btn ghost sm";b.textContent="＋ Cast";b.addEventListener("click",()=>sendToCast(m.url));bar.appendChild(b);host.appendChild(bar);}
+  else{host.innerHTML='<img class="zoomable" src="'+m.url+'">';const bar=document.createElement("div");bar.className="row";bar.style.marginTop="8px";const b=document.createElement("button");b.className="btn ghost sm";b.textContent="＋ Cast";b.addEventListener("click",()=>sendToCast(m.url));bar.appendChild(b);const ed=document.createElement("button");ed.className="btn ghost sm";ed.textContent="⤢ Upscale / cut out";ed.addEventListener("click",()=>openLightbox(m.url,false));bar.appendChild(ed);host.appendChild(bar);}
 }
 
 /* pre-roll */
@@ -804,6 +804,7 @@ if($("boardClear"))$("boardClear").addEventListener("click",()=>{const p=$("boar
 if($("promptClear"))$("promptClear").addEventListener("click",()=>{const p=$("prompt");if(p)p.value="";});
 $("boardGrade").addEventListener("change",e=>{S.board.grade=e.target.value;save();});
 $("boardGrid").addEventListener("change",e=>{S.board.grid=e.target.value;save();});
+if($("boardStyle")){$("boardStyle").value=S.board.style||"frames";$("boardStyle").addEventListener("change",e=>{S.board.style=e.target.value;save();});}
 (function buildBoardChips(){
   const adj=$("boardAdjust");BOARD_ADJ.forEach(a=>{const c=document.createElement("span");c.className="chip"+(S.board.adjust.includes(a)?" on":"");c.textContent=a;
     c.addEventListener("click",()=>{const i=S.board.adjust.indexOf(a);i>=0?S.board.adjust.splice(i,1):S.board.adjust.push(a);save();c.classList.toggle("on");});adj.appendChild(c);});
@@ -832,6 +833,41 @@ function recommendGrid(script){
   const beats=Math.max(sentences,Math.ceil(words/14));
   if(beats<=4)return"2x2";if(beats<=6)return"3x2";if(beats<=9)return"3x3";if(beats<=12)return"4x3";if(beats<=16)return"4x4";return"5x5";
 }
+function boardStylePrompt(style,ctx){
+  if(style==="pitchbible")return pitchBibleBoard(ctx);
+  if(style==="action9")return actionBoard(ctx,9);
+  if(style==="comic6")return comicBoard(ctx,6);
+  return null;
+}
+function pitchBibleBoard(ctx){
+return `A wide horizontal ANIMATION PITCH-BIBLE STORYBOARD BOARD for an original animated short \u2014 one polished production-design sheet. Off-white/cream paper background, thin black panel borders, bold black section headers with white text, small green accent labels, clean readable production-board typography, warm cinematic cartoon lighting, playful deadpan-comedy tone. No copyrighted characters, no real logos, no messy unreadable text.
+
+TOP HEADER: a bold title bar reading "${ctx.title||"UNTITLED"}". Small metadata boxes: Cut Count, Color Palette (${ctx.palette}), Environment Fingerprint (one short line: location + visual gag). A small original studio-logo placeholder in the top-right corner.
+
+SECTION 1 \u2014 CHARACTER REFERENCE (left column): the main character shown in front view, side view, back view, facial close-up and side close-up; two outfit rows labelled Look A and Look B; small costume-detail boxes (headwear, chest emblem, hands/prop, footwear, accessory); an expression strip of four emotions; a small sticky note reading "Recurring Character". Character: ${ctx.charDesc||"the lead character"}.
+
+SECTION 2 \u2014 ENVIRONMENT / SET DESIGN (upper right): a large cinematic cartoon set with clear props, atmosphere and visual storytelling; a smaller "Hidden / Alternate Set Cutaway" panel; a short bullet detail list; a simplified top-down floor plan with furniture, doorways, character position and camera icons labelled Cut 1 through Cut 5.
+
+SECTION 3 \u2014 STORYBOARD (lower middle/left): a clean FIVE-panel cinematic storyboard strip telling this sequence as five clear beats \u2014 opening problem, stillness/setup, reveal, main gag, punchline freeze-frame \u2014 with tiny camera notes (lens \u00b7 seconds \u00b7 movement \u00b7 shot size) under each panel. Sequence to board: ${ctx.script}
+
+SECTION 4 \u2014 LIGHTING / MOOD / STYLE NOTES (bottom right): four small lighting thumbnails (warm practical, suspenseful still hold, hidden-set glow, playful freeze-frame), a short mood keyword list, and a few cinematography notes.
+
+${ctx.grade} Clean grid layout, strong composition, balanced and organised, detailed but not cluttered \u2014 a finished professional animation concept sheet. ${ctx.chars}`;
+}
+function actionBoard(ctx,n){
+return `A single wide 16:9 cinematic ACTION STORYBOARD sheet \u2014 ONE image laid out as a clean grid of exactly ${n} numbered frames (1 through ${n}, reading left-to-right then top-to-bottom), each a widescreen film still from ONE continuous action sequence. Bold comic-book action energy, dramatic perspective, motion lines, impact sparks, smoke, dynamic angles, no gore. Render a clear white frame number in every panel.
+
+SEQUENCE: ${ctx.script}
+
+Show a readable action progression across the ${n} frames \u2014 standoff, first attack, dodge or block, counter, environmental hit, reversal, signature move, final impact pose \u2014 with varied coverage (wide master, low-angle hero, over-the-shoulder, impact close-up, a slow-motion beat). ${ctx.grade} HARD CONTINUITY: identical character appearance, wardrobe, environment and color grade in every frame. ${ctx.chars} No dialogue text, no speech bubbles \u2014 only the frame numbers.`;
+}
+function comicBoard(ctx,n){
+return `A single ${n}-panel COMIC STRIP board \u2014 ONE image, ${n} clean comic panels with thick black gutters, reading left-to-right then top-to-bottom. Bold flat 2D cartoon look, thick uniform black outlines, flat color fills, light film grain, deadpan comedy timing. Palette: ${ctx.palette}.
+
+STORY: ${ctx.script}
+
+Tell it across the ${n} panels as setup \u2192 build \u2192 escalation \u2192 reveal \u2192 twist \u2192 punchline (compress cleanly to fit ${n} panels). Keep the character identical in every panel. ${ctx.chars} ${ctx.grade} No real logos, no copyrighted characters; keep any captions minimal and legible.`;
+}
 function boardPrompt(g){
   const script=$("boardScript").value.trim();
   const grade=$("boardGrade").value==="auto"?"Apply a cohesive professional cinematic color grade.":"Color grade: "+$("boardGrade").value+".";
@@ -852,19 +888,31 @@ async function genBoard(){
   let gridKey=$("boardGrid").value;
   if(gridKey==="auto"){gridKey=recommendGrid(script);toast("Recommended "+gridKey.replace("x","×")+" for this scene.");}
   const g=GRIDS[gridKey];boardFrameCount=g.n;
-  const useEdit=S.board.charRefs.length>0;
+  const style=(S.board.style||"frames");
+  const items=S.board.charRefs.map(id=>S.cast.find(x=>x.id===id)||S.stash.find(x=>x.id===id)).filter(Boolean);
+  const useEdit=items.length>0;
   const model=useEdit?"openai/gpt-image-2/edit":"openai/gpt-image-2";
-  const bp=boardPrompt(g);
-  const input={prompt:bp,image_size:{width:g.w,height:g.h}};
-  if(useEdit){const items=S.board.charRefs.map(id=>S.cast.find(x=>x.id===id)||S.stash.find(x=>x.id===id)).filter(Boolean);const urls=flattenRefs(items,12);if(urls.length)input.image_urls=urls;input.prompt=bp+refNote(items);}
+  let bp,sizeWH;
+  if(style==="frames"){bp=boardPrompt(g);sizeWH={width:g.w,height:g.h};}
+  else{
+    const ctx={script:script,
+      grade:$("boardGrade").value==="auto"?"Apply a cohesive professional color treatment.":"Color grade: "+$("boardGrade").value+".",
+      chars:useEdit?"Use the provided reference image(s) for the character(s); keep each character's face, build and wardrobe identical throughout.":"",
+      charDesc:items.map(c=>c.name+(c.identity?" \u2014 "+c.identity:"")).join("; "),
+      palette:(($("boardPalette")&&$("boardPalette").value.trim())||"matte black, off-white bone, sage cannabis-green, with rare gold accents"),
+      title:(($("boardTitle")&&$("boardTitle").value.trim())||"")};
+    bp=boardStylePrompt(style,ctx);sizeWH={width:1536,height:864};
+  }
+  const input={prompt:bp,image_size:sizeWH};
+  if(useEdit){const urls=flattenRefs(items,12);if(urls.length)input.image_urls=urls;input.prompt=bp+refNote(items);}
   const btn=$("boardGen");btn.disabled=true;btn.textContent="● Boarding…";
   const stat=$("boardStatus");stat.innerHTML='<div class="statusline"><span class="rec"></span><span id="btxt">Submitting…</span></div>';$("boardResult").innerHTML="";
   try{
     const out=await falRun(model,input,(s,t)=>{const e=$("btxt");if(e)e.textContent=({IN_QUEUE:"In queue…",IN_PROGRESS:"Drawing the board…"}[s]||s)+" ("+t+")";});
     const m=extractMedia(out);if(!m)throw new Error("No image came back.");
-    S.board.lastUrl=m.url;S.reel.unshift({id:uid(),type:"image",url:m.url,prompt:"STORYBOARD ("+gridKey+") — "+script.slice(0,80),ts:Date.now()});save();
-    stat.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Board\'s up ('+gridKey.replace("x","×")+') — saved to The Cut</div>';
-    showResult($("boardResult"),m);$("boardAfter").style.display="block";buildFrameBtns(g.n);
+    S.board.lastUrl=m.url;S.reel.unshift({id:uid(),type:"image",url:m.url,prompt:(style==="frames"?"STORYBOARD ("+gridKey+")":"BOARD: "+style)+" — "+script.slice(0,80),ts:Date.now()});save();
+    stat.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Board\'s up'+(style==="frames"?" ("+gridKey.replace("x","×")+")":"")+' — saved to The Cut</div>';
+    showResult($("boardResult"),m);if(style==="frames"){$("boardAfter").style.display="block";buildFrameBtns(g.n);}else{$("boardAfter").style.display="none";}
   }catch(e){stat.innerHTML='<div class="statusline" style="color:var(--red)">✗ '+esc(e.message)+'</div>';}
   finally{btn.disabled=false;btn.textContent="▦ Generate storyboard";}
 }
@@ -1184,6 +1232,8 @@ const MODEL_COSTS={
  "fal-ai/kling-video/lipsync/audio-to-video":"$0.014 per 5-sec block · needs a video",
  "fal-ai/elevenlabs/sound-effects":"pay per generation",
  "anthropic/claude-sonnet-4.5":"pennies per call (text)",
+ "fal-ai/topaz/upscale/image":"~$0.05+ per image (by output size)",
+ "fal-ai/birefnet/v2":"pennies per image",
  "google/gemini-2.5-pro":"pennies per call (text)",
  "google/gemini-2.5-flash":"fractions of a cent (text)",
  "fal-ai/nano-banana-2":"$0.06–0.08 per image",
@@ -2123,7 +2173,39 @@ function exportComic(){
 }
 /* ux helpers */
 /* ===== media lightbox + cast field helpers ===== */
-function openLightbox(src,isVideo){if(!src)return;let lb=document.getElementById("lightbox");if(!lb){lb=document.createElement("div");lb.id="lightbox";lb.style.cssText="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.93);display:none;align-items:center;justify-content:center;padding:14px;cursor:zoom-out";lb.addEventListener("click",function(){lb.style.display="none";lb.innerHTML="";});document.body.appendChild(lb);}lb.innerHTML=isVideo?'<video src="'+src+'" controls autoplay playsinline style="max-width:100%;max-height:100%;border-radius:10px"></video>':'<img src="'+src+'" style="max-width:100%;max-height:100%;border-radius:10px">';lb.style.display="flex";}
+async function imageOp(kind,src){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return null;}
+  const model=kind==="upscale"?"fal-ai/topaz/upscale/image":"fal-ai/birefnet/v2";
+  const input=kind==="upscale"?{image_url:src,upscale_factor:2,output_format:"png"}:{image_url:src,output_format:"png"};
+  const out=await falRun(model,input,null);
+  const m=extractMedia(out);if(!m)throw new Error("Nothing came back.");
+  S.reel.unshift({id:uid(),type:"image",url:m.url,prompt:(kind==="upscale"?"UPSCALED (Topaz)":"BG REMOVED"),ts:Date.now()});save();
+  return m.url;
+}
+function lbProcess(kind){
+  const lb=document.getElementById("lightbox");if(!lb)return;
+  const src=lb.dataset.src;if(!src)return;
+  const st=document.getElementById("lbStatus");
+  if(st)st.innerHTML=spinner(kind==="upscale"?"Upscaling with Topaz\u2026 (~30s)":"Removing background\u2026");
+  imageOp(kind,src).then(function(url){if(url){openLightbox(url,false);toast(kind==="upscale"?"Upscaled \u2014 saved to The Cut":"Background removed \u2014 saved to The Cut");}}).catch(function(e){if(st)st.innerHTML='<div class="statusline" style="color:var(--red)">\u2717 '+esc(e.message)+'</div>';});
+}
+function openLightbox(src,isVideo){
+  if(!src)return;
+  let lb=document.getElementById("lightbox");
+  if(!lb){lb=document.createElement("div");lb.id="lightbox";lb.style.cssText="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.93);display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:14px";lb.addEventListener("click",function(e){if(e.target===lb){lb.style.display="none";lb.innerHTML="";}});document.body.appendChild(lb);}
+  lb.dataset.src=src;
+  const up=costOf("fal-ai/topaz/upscale/image"),bg=costOf("fal-ai/birefnet/v2");
+  const media=isVideo?'<video src="'+src+'" controls autoplay playsinline style="max-width:100%;max-height:82%;border-radius:10px"></video>':'<img src="'+src+'" onclick="event.stopPropagation()" style="max-width:100%;max-height:74%;border-radius:10px">';
+  const tools=isVideo?'':'<button class="btn green sm" id="lbUp">\u2922 Upscale<span style="display:block;font-weight:400;font-size:10px;opacity:.72">\u2248 '+esc(up)+'</span></button><button class="btn green sm" id="lbBg">\u2b1a Remove BG<span style="display:block;font-weight:400;font-size:10px;opacity:.72">\u2248 '+esc(bg)+'</span></button>';
+  lb.innerHTML=media+'<div id="lbStatus"></div><div class="row" style="gap:8px;flex-wrap:wrap;justify-content:center" onclick="event.stopPropagation()">'+tools+'<button class="btn ghost sm" id="lbOpen">\u2b07 Open / save</button><button class="btn ghost sm" id="lbClose">\u2715 Close</button></div>';
+  if(!isVideo){
+    document.getElementById("lbUp").addEventListener("click",function(e){e.stopPropagation();lbProcess("upscale");});
+    document.getElementById("lbBg").addEventListener("click",function(e){e.stopPropagation();lbProcess("rembg");});
+  }
+  document.getElementById("lbOpen").addEventListener("click",function(e){e.stopPropagation();window.open(lb.dataset.src,"_blank");});
+  document.getElementById("lbClose").addEventListener("click",function(e){e.stopPropagation();lb.style.display="none";lb.innerHTML="";});
+  lb.style.display="flex";
+}
 function initLightbox(){if(document._lbInit)return;document._lbInit=true;document.addEventListener("click",function(e){const t=e.target;if(t&&t.classList&&t.classList.contains("zoomable")){e.stopPropagation();openLightbox(t.getAttribute("src")||t.src,t.tagName==="VIDEO");}});}
 async function writeBoardScript(){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}

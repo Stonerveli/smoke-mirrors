@@ -529,7 +529,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.7 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.8 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1730,6 +1730,18 @@ function lookStyleOf(ep){return ep.look==="custom"?(ep.lookCustom||""):((LOOKS[e
 function sceneImgModel(hasRefs){return hasRefs?(S.picked.edit||"fal-ai/nano-banana-pro/edit"):(S.picked.image||"fal-ai/nano-banana-pro");}
 function sceneVidModel(){return S.picked.video||"bytedance/seedance-2.0/reference-to-video";}
 function matchSceneRefs(ep,s){
+  if(s&&s.lockRefs&&s.lockRefs.length){
+    const cast=[],wardrobe=[];let set=null;
+    s.lockRefs.forEach(id=>{
+      const c=S.cast.find(x=>x.id===id);if(c){if(cast.indexOf(c)<0)cast.push(c);return;}
+      const sp=S.stash.find(x=>x.id===id);if(sp){if(wardrobe.indexOf(sp)<0)wardrobe.push(sp);return;}
+      const se=S.sets.find(x=>x.id===id);if(se&&!set)set=se;
+    });
+    cast.forEach(c=>(c.wardrobe||[]).forEach(id=>{const sp=S.stash.find(x=>x.id===id);if(sp&&wardrobe.indexOf(sp)<0)wardrobe.push(sp);}));
+    const items=[...cast,...wardrobe,...(set?[set]:[])];
+    const note=identityNote(cast)+(set?setNote(set):"");
+    return {items,note};
+  }
   const txt=((s.heading||"")+" "+(s.action||"")+" "+(s.dialogue||"")).toLowerCase();
   const cast=S.cast.filter(c=>c.name&&txt.indexOf(c.name.toLowerCase())>-1);
   const set=S.sets.find(x=>x.name&&txt.indexOf(x.name.toLowerCase())>-1)||null;
@@ -1767,7 +1779,7 @@ function renderSceneBoard(ep){
     h+='<details style="margin-top:8px"><summary class="hint" style="cursor:pointer">Shot &amp; motion prompts</summary>';
     h+='<label class="fld" style="margin-top:8px">Storyboard prompt</label><textarea data-sid="'+s.id+'" data-f="shot" style="min-height:70px">'+esc(s.shot||"")+'</textarea>';
     h+='<label class="fld" style="margin-top:6px">Video prompt</label><textarea data-sid="'+s.id+'" data-f="motion" style="min-height:70px">'+esc(s.motion||"")+'</textarea>';
-    h+='<div class="hint" style="margin-top:6px">Ambience: '+esc(s.ambience||"—")+' · Grade: '+esc(s.grade||"auto")+'</div></details>';
+    h+='<div class="hint" style="margin-top:6px">Ambience: '+esc(s.ambience||"—")+' · Grade: '+esc(s.grade||"auto")+'</div></details>';h+='<div class="hint" style="margin-top:10px">Lock the right cast &amp; set — overrides name-guessing, fixes wrong characters:</div>';h+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:5px">';S.cast.forEach(c=>{const on=(s.lockRefs||[]).indexOf(c.id)>-1;h+='<button class="chip'+(on?" on":"")+'" data-lock="'+s.id+'" data-aid="'+c.id+'">'+esc(c.name)+'</button>';});S.sets.forEach(x=>{const on=(s.lockRefs||[]).indexOf(x.id)>-1;h+='<button class="chip'+(on?" on":"")+'" data-lock="'+s.id+'" data-aid="'+x.id+'">⌖ '+esc(x.name)+'</button>';});if(!S.cast.length&&!S.sets.length)h+='<span class="hint">Add cast in the Cast tab first.</span>';h+='</div>';
     if(idx>0)h+='<label class="row" style="margin-top:8px;align-items:center;gap:6px;font-size:12px"><input type="checkbox" data-cont="'+s.id+'" style="width:auto;flex:0" '+(s.continueFrom?"checked":"")+'> Continue from Scene '+(s.n-1)+' (carry last frame + grade)</label>';
     if(chain>=3)h+='<div class="hint" style="color:var(--gold)">⚠ Long continuity chain — AI video drifts after ~3 linked scenes. Consider a fresh establishing shot here.</div>';
     h+='<div class="row" style="margin-top:10px;gap:8px"><button class="btn sm green" data-board="'+s.id+'" data-cost="img" style="flex:1">▦ Storyboard</button><button class="btn sm" data-vid="'+s.id+'" data-cost="vid" style="flex:1">▶ Video</button></div>';
@@ -1780,6 +1792,7 @@ function renderSceneBoard(ep){
   host.querySelectorAll("input[data-cont]").forEach(c=>c.addEventListener("change",()=>{const s=ep.scenes.find(x=>x.id===c.dataset.cont);if(s){s.continueFrom=c.checked;save();renderSceneBoard(ep);}}));
   host.querySelectorAll("button[data-board]").forEach(b=>b.addEventListener("click",()=>createStoryboard(b.dataset.board)));
   host.querySelectorAll("button[data-vid]").forEach(b=>b.addEventListener("click",()=>createVideo(b.dataset.vid)));
+  host.querySelectorAll("button[data-lock]").forEach(b=>b.addEventListener("click",()=>{const s=ep.scenes.find(x=>x.id===b.dataset.lock);if(!s)return;if(!s.lockRefs)s.lockRefs=[];const i=s.lockRefs.indexOf(b.dataset.aid);if(i>-1)s.lockRefs.splice(i,1);else s.lockRefs.push(b.dataset.aid);save();renderSceneBoard(ep);}));
 }
 async function createStoryboard(sid){
   const ep=curEp();if(!ep)return;const s=ep.scenes.find(x=>x.id===sid);if(!s)return;

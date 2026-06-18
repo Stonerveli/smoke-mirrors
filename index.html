@@ -176,7 +176,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
   </div>
   <div class="card">
     <label class="fld">Prompt</label>
-    <textarea id="prompt" placeholder="Describe the shot…"></textarea><div style="text-align:right;margin-top:4px"><button class="btn ghost sm" id="promptClear" style="padding:4px 10px;font-size:11px">✕ Clear</button></div>
+    <textarea id="prompt" placeholder="Describe the shot…"></textarea><div style="text-align:right;margin-top:4px"><button class="btn ghost sm" id="promptClear" style="padding:4px 10px;font-size:11px">✕ Clear</button></div><button class="btn ghost sm" id="editUpload" style="margin-top:8px;width:100%">⬆ Upload an image to upscale / remove BG</button><input type="file" id="editFile" accept="image/*" style="display:none">
     <div class="tokenchips" id="tokenChips"></div>
   </div>
   <div class="card">
@@ -529,7 +529,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.6 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.7 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1221,6 +1221,8 @@ function setupExtras(){
   $("viewFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const src=await resizeImage(f,1024,0.82);addView(pendingLabel,src);}catch(err){toast("Couldn't read that.",true);}e.target.value="";});
   $("importImg").addEventListener("click",()=>$("importCutFile").click());
   $("importCutFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const src=await resizeImage(f,1280,0.85);addReelItem("image",src,"Imported image");}catch(err){toast("Couldn't read that.",true);}e.target.value="";});
+  if($("editUpload"))$("editUpload").addEventListener("click",()=>$("editFile").click());
+  if($("editFile"))$("editFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const src=await resizeImage(f,1536,0.9);openLightbox(src,false);toast("Loaded \u2014 tap Upscale or Remove BG.");}catch(err){toast("Couldn't read that image.",true);}e.target.value="";});
   $("importUrl").addEventListener("click",()=>{const u=window.prompt("Paste an image or video URL:");if(!u)return;if(!/^https?:\/\//.test(u)){toast("Needs to start with http.",true);return;}const t=/\.(mp4|webm|mov)/i.test(u)?"video":"image";addReelItem(t,u.trim(),"Imported "+t);});
 }
 /* ===== model costs (only real published figures; honest fallback otherwise) ===== */

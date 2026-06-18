@@ -176,7 +176,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
   </div>
   <div class="card">
     <label class="fld">Prompt</label>
-    <textarea id="prompt" placeholder="Describe the shot…"></textarea>
+    <textarea id="prompt" placeholder="Describe the shot…"></textarea><div style="text-align:right;margin-top:4px"><button class="btn ghost sm" id="promptClear" style="padding:4px 10px;font-size:11px">✕ Clear</button></div>
     <div class="tokenchips" id="tokenChips"></div>
   </div>
   <div class="card">
@@ -222,7 +222,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
   <div class="hint" style="margin-bottom:14px">Script in → a sheet of continuous cinematic frames → pull keepers as full shots → out comes a Seedance 2.0 prompt.</div>
   <span class="steptag">Step 1 · The script</span>
   <div class="card">
-    <textarea id="boardScript" placeholder="Paste the cinematic scene script or description…" style="min-height:110px"></textarea>
+    <textarea id="boardScript" placeholder="Type a logline or idea — or paste a full script…" style="min-height:110px"></textarea><div class="row" style="margin-top:8px"><button class="btn ghost sm" id="boardWriteBtn" style="flex:1">✦ Write the script</button><button class="btn ghost sm" id="boardClear" style="flex:0 0 auto;padding:8px 12px">✕ Clear</button></div><div id="boardWriteStatus"></div>
     <div class="row" style="margin-top:10px">
       <div><label class="fld">Panel grid</label>
         <select id="boardGrid">
@@ -529,7 +529,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.3 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.4 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -799,6 +799,9 @@ function showResult(host,m){
 /* pre-roll */
 $("boardScript").value=S.board.script;$("boardGrade").value=S.board.grade;$("boardGrid").value=S.board.grid;
 $("boardScript").addEventListener("input",e=>{S.board.script=e.target.value;save();});
+if($("boardWriteBtn"))$("boardWriteBtn").addEventListener("click",writeBoardScript);
+if($("boardClear"))$("boardClear").addEventListener("click",()=>{const p=$("boardScript");if(p)p.value="";S.board.script="";save();});
+if($("promptClear"))$("promptClear").addEventListener("click",()=>{const p=$("prompt");if(p)p.value="";});
 $("boardGrade").addEventListener("change",e=>{S.board.grade=e.target.value;save();});
 $("boardGrid").addEventListener("change",e=>{S.board.grid=e.target.value;save();});
 (function buildBoardChips(){
@@ -1843,7 +1846,7 @@ function renderCloudtoons(){
   const md=$("ctMode");if(md){md.innerHTML=CHIEFF_MODES.map(m=>'<option value="'+m.k+'">'+esc(m.label)+'</option>').join("");md.value=S.ctMode||"side";const setMD=()=>{const x=CHIEFF_MODES.find(m=>m.k===md.value);if($("ctModeDesc"))$("ctModeDesc").textContent=x?x.desc:"";};setMD();md.addEventListener("change",e=>{S.ctMode=e.target.value;save();setMD();});}
   const list=$("ctList");const toons=S.episodes.filter(e=>e.line==="cloudtoon");
   if(!toons.length){list.innerHTML='<div class="hint">None yet — generate your first toon above.</div>';}
-  else{list.innerHTML="";toons.forEach(ep=>{const d=document.createElement("div");d.className="card";d.style.cursor="pointer";d.innerHTML='<div style="font-weight:800;font-family:var(--slate)">'+esc(ep.title||"Untitled toon")+'</div><div class="hint" style="margin-top:2px">'+esc((CT_SEASONS.find(s=>s.key===ep.season)||{}).label||"")+(ep.script?" · scripted":" · draft")+'</div>'+(ep.logline?'<div style="font-size:13px;margin-top:4px">'+esc(ep.logline)+'</div>':'');d.addEventListener("click",()=>{S.currentEp=ep.id;go("episodes");renderEpisodes();});list.appendChild(d);});}
+  else{list.innerHTML="";toons.forEach(ep=>{const d=document.createElement("div");d.className="card";d.style.cursor="pointer";d.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><div style="font-weight:800;font-family:var(--slate)">'+esc(ep.title||"Untitled toon")+'</div><button class="x" style="position:static;flex:0 0 auto">✕</button></div><div class="hint" style="margin-top:2px">'+esc((CT_SEASONS.find(s=>s.key===ep.season)||{}).label||"")+(ep.script?" · scripted":" · draft")+'</div>'+(ep.logline?'<div style="font-size:13px;margin-top:4px">'+esc(ep.logline)+'</div>':'');d.querySelector(".x").addEventListener("click",e=>{e.stopPropagation();if(confirm("Delete this Cloudtoon? The season generator can always make it again — nothing is lost.")){if(ep.hiddenChieff&&ep.sightingNo&&S.chieffSightings>0)S.chieffSightings=Math.max(0,S.chieffSightings-1);S.episodes=(S.episodes||[]).filter(x=>x.id!==ep.id);if(S.currentEp===ep.id)S.currentEp=null;save();renderCloudtoons();}});d.addEventListener("click",()=>{S.currentEp=ep.id;go("episodes");renderEpisodes();});list.appendChild(d);});}
 }
 async function genCloudtoon(){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
@@ -2122,6 +2125,19 @@ function exportComic(){
 /* ===== media lightbox + cast field helpers ===== */
 function openLightbox(src,isVideo){if(!src)return;let lb=document.getElementById("lightbox");if(!lb){lb=document.createElement("div");lb.id="lightbox";lb.style.cssText="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.93);display:none;align-items:center;justify-content:center;padding:14px;cursor:zoom-out";lb.addEventListener("click",function(){lb.style.display="none";lb.innerHTML="";});document.body.appendChild(lb);}lb.innerHTML=isVideo?'<video src="'+src+'" controls autoplay playsinline style="max-width:100%;max-height:100%;border-radius:10px"></video>':'<img src="'+src+'" style="max-width:100%;max-height:100%;border-radius:10px">';lb.style.display="flex";}
 function initLightbox(){if(document._lbInit)return;document._lbInit=true;document.addEventListener("click",function(e){const t=e.target;if(t&&t.classList&&t.classList.contains("zoomable")){e.stopPropagation();openLightbox(t.getAttribute("src")||t.src,t.tagName==="VIDEO");}});}
+async function writeBoardScript(){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const ta=$("boardScript");const seed=((ta&&ta.value)||"").trim();
+  if(!seed){toast("Type a logline or quick idea first \u2014 I'll expand it into a shot-by-shot script.",true);if(ta)ta.focus();return;}
+  const st=$("boardWriteStatus");if(st)st.innerHTML=spinner("Writing the script\u2026");
+  const heroes=(S.cast||[]).filter(c=>c.side==="hero").map(c=>c.name).join(", ");
+  const villains=(S.cast||[]).filter(c=>c.side==="villain").map(c=>c.name).join(", ");
+  const sets=(S.sets||[]).map(x=>x.name).join(", ");
+  const sys=STONERALIA_LAW+" "+VOICE_DNA+" "+CINE_STD+" You write tight cinematic scene scripts that get turned into a STORYBOARD SHEET of frames. Give a clear, continuous sequence of visual beats \u2014 shot by shot \u2014 each with a shot type, the action, and the mood. Concrete and shootable. Minimal or no dialogue.";
+  const usr="IDEA / LOGLINE: "+seed+"\n"+(heroes?"HEROES: "+heroes+"\n":"")+(villains?"VILLAINS: "+villains+"\n":"")+(sets?"LOCATIONS available: "+sets+"\n":"")+"Write the scene as 6-10 numbered visual beats (one line each: shot type + what happens). Keep it continuous so it reads as a storyboard. Return only the numbered beats.";
+  try{const txt=await llmRun(sys,usr);if(ta)ta.value=txt;S.board.script=txt;save();if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Script written \u2014 lock characters below, then \u25a6 Generate storyboard</div>';}
+  catch(e){if(st)st.innerHTML=errLine(e);}
+}
 async function suggestVoice(it){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const st=$("aVoiceStatus");if(st)st.innerHTML=spinner("Finding the voice\u2026");

@@ -529,7 +529,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.8 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v7.9 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -542,7 +542,7 @@ const blank={
   apiKey:"",llmModel:"google/gemini-2.5-flash",station:"image",
   picked:{image:"fal-ai/nano-banana-2",edit:"fal-ai/nano-banana-2/edit",video:"bytedance/seedance-2.0/reference-to-video",audio:"fal-ai/elevenlabs/sound-effects"},
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
-  board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},
+  board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",
   stashFilter:"All",
   cast:[],sets:[],castInit:false,customGenres:[],episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
@@ -773,7 +773,7 @@ async function runGenerate(){
   const setItem=S.sets.find(x=>x.id===setPicked)||null;
   const sceneText=identityNote(castItems)+setNote(setItem)+refNote(stashItems);
   const refItems=[...castItems,...(setItem?[setItem]:[]),...stashItems];
-  if(st.kind==="image"){input.num_images=parseInt($("numImages").value)||1;Object.assign(input,sizeFor(model,aspect));if(model.indexOf("nano-banana")>-1&&$("imgRes"))input.resolution=$("imgRes").value;
+  if(st.kind==="image"){input.num_images=parseInt($("numImages").value)||1;Object.assign(input,sizeFor(model,aspect));withRes(model,input);
     if(st.refs){const urls=flattenRefs(refItems,12);if(urls.length)input.image_urls=urls;}
     if(sceneText)input.prompt=prompt+sceneText;}
   if(st.kind==="video"){
@@ -805,6 +805,7 @@ if($("promptClear"))$("promptClear").addEventListener("click",()=>{const p=$("pr
 $("boardGrade").addEventListener("change",e=>{S.board.grade=e.target.value;save();});
 $("boardGrid").addEventListener("change",e=>{S.board.grid=e.target.value;save();});
 if($("boardStyle")){$("boardStyle").value=S.board.style||"frames";$("boardStyle").addEventListener("change",e=>{S.board.style=e.target.value;save();});}
+  if($("imgRes")){$("imgRes").value=S.imgRes||"1K";$("imgRes").addEventListener("change",e=>{S.imgRes=e.target.value;save();if($("comicRes"))$("comicRes").value=e.target.value;});}
 (function buildBoardChips(){
   const adj=$("boardAdjust");BOARD_ADJ.forEach(a=>{const c=document.createElement("span");c.className="chip"+(S.board.adjust.includes(a)?" on":"");c.textContent=a;
     c.addEventListener("click",()=>{const i=S.board.adjust.indexOf(a);i>=0?S.board.adjust.splice(i,1):S.board.adjust.push(a);save();c.classList.toggle("on");});adj.appendChild(c);});
@@ -833,6 +834,7 @@ function recommendGrid(script){
   const beats=Math.max(sentences,Math.ceil(words/14));
   if(beats<=4)return"2x2";if(beats<=6)return"3x2";if(beats<=9)return"3x3";if(beats<=12)return"4x3";if(beats<=16)return"4x4";return"5x5";
 }
+function withRes(model,input){if(model&&model.indexOf("nano-banana")>-1)input.resolution=(S.imgRes||"1K");return input;}
 function boardStylePrompt(style,ctx){
   if(style==="pitchbible")return pitchBibleBoard(ctx);
   if(style==="action9")return actionBoard(ctx,9);
@@ -1359,7 +1361,7 @@ async function buildLocation(it){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const st=$("aSetStatus");st.innerHTML='<div class="statusline"><span class="rec"></span>Building the plate…</div>';$("aSetResult").innerHTML="";
   const prompt="A cinematic establishing location plate, no people: "+it.name+". "+(it.vibe||"")+" Photoreal, film-quality, atmospheric lighting, 16:9, production-ready, fine grain.";
-  try{const out=await falRun("fal-ai/nano-banana-2",{prompt,num_images:1,aspect_ratio:"16:9"},null);
+  try{const out=await falRun("fal-ai/nano-banana-2",withRes("fal-ai/nano-banana-2",{prompt,num_images:1,aspect_ratio:"16:9"}),null);
     const m=extractMedia(out);if(!m)throw new Error("no image came back");
     if(!it.views)it.views=[];it.views.unshift({label:"Wide",src:m.url});it.src=m.url;save();
     st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Location plate saved as a reference</div>';$("aSetResult").innerHTML='<div class="result-wrap"><img class="zoomable" src="'+m.url+'"></div>';renderSets();renderAssetEditor();
@@ -1613,7 +1615,7 @@ function renderEpEditor(){
   if(ep.optimizeNote)h+='<div class="hint" style="margin-top:8px;color:var(--bud)">✓ '+esc(ep.optimizeNote)+'</div>';
   h+='<button class="btn ghost sm" id="epCine" style="margin-top:10px;width:100%">✦ Make It Cinematic — trillion-dollar pass</button><div id="epCineStatus"></div></div>';
   h+='<div class="card"><div style="font-family:var(--slate);font-weight:800;text-transform:uppercase;letter-spacing:.04em">Scene Board</div><div class="hint" style="margin-top:4px">Break the script into shootable scenes — each gets a one-tap storyboard &amp; video, auto-saved to The Cut.</div><label class="fld" style="margin-top:8px">Structure</label><select id="epFormula"></select><button class="btn green" id="epBreak" style="margin-top:10px;width:100%">\u229f Break script into scenes</button><div id="epBreakStatus"></div><div id="epScenes" style="margin-top:12px"></div></div>';
-  h+='<div class="card"><div style="font-family:var(--slate);font-weight:800;text-transform:uppercase;letter-spacing:.04em">Fight Choreographer</div><div class="hint" style="margin-top:4px">Two characters + a location \u2192 action beats with shot prompts, added as scenes.</div><div class="row" style="margin-top:10px;gap:8px"><select id="fcA" style="flex:1"></select><select id="fcB" style="flex:1"></select></div><select id="fcLoc" style="margin-top:8px"></select><select id="fcInt" style="margin-top:8px"><option value="grounded brutal">Grounded &amp; brutal</option><option value="anime spectacle">Anime spectacle</option><option value="comedic slapstick">Comedic slapstick</option><option value="samurai duel">Samurai duel</option></select><button class="btn ghost" id="fcGo" style="margin-top:10px;width:100%">\u2726 Choreograph the fight</button><div id="fcStatus"></div></div>';
+  h+='<div class="card"><div style="font-family:var(--slate);font-weight:800;text-transform:uppercase;letter-spacing:.04em">Fight Choreographer</div><div class="hint" style="margin-top:4px">Two characters + a location \u2192 action beats with shot prompts, added as scenes.</div><div class="row" style="margin-top:10px;gap:8px"><select id="fcA" style="flex:1"></select><select id="fcB" style="flex:1"></select></div><select id="fcLoc" style="margin-top:8px"></select><select id="fcInt" style="margin-top:8px"><option value="grounded brutal">Grounded &amp; brutal</option><option value="anime spectacle">Anime spectacle</option><option value="comedic slapstick">Comedic slapstick</option><option value="samurai duel">Samurai duel</option></select><select id="fcFormula" style="margin-top:8px"></select><select id="fcStyle" style="margin-top:8px"></select><button class="btn ghost" id="fcGo" style="margin-top:10px;width:100%">\u2726 Choreograph the fight</button><div id="fcStatus"></div></div>';
   $("epEditor").innerHTML=h;bindEpEditor(ep);
 }
 function bindEpEditor(ep){
@@ -1646,6 +1648,7 @@ function bindEpEditor(ep){
     const opts=S.cast.map(c=>'<option value="'+c.id+'">'+esc(c.name)+'</option>').join("");
     fa.innerHTML=opts;fb.innerHTML=opts;if(S.cast[1])fb.value=S.cast[1].id;
     fl.innerHTML='<option value="">— location —</option>'+S.sets.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join("");
+    if($("fcFormula")){$("fcFormula").innerHTML=FIGHT_FORMULAS.map(f=>'<option value="'+f.k+'">'+esc(f.label)+'</option>').join("");$("fcFormula").value="f8";}if($("fcStyle"))$("fcStyle").innerHTML='<option value="">— style: auto —</option>'+FIGHT_STYLES.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");
     $("fcGo").addEventListener("click",fightChoreograph);
   }
 }
@@ -1805,7 +1808,7 @@ async function createStoryboard(sid){
   const hasRefs=refs.length>0;
   const grade=(s.grade&&s.grade!=="auto")?(" Color grade: "+s.grade+".") : "";
   const prompt=(s.shot||s.action)+"\n\nLook: "+lookStyleOf(ep)+"."+grade+" "+CINE_STD+(s.continueFrom?" Maintain exact continuity with the provided previous-scene frame — same characters, wardrobe, environment, lighting and grade.":"")+mr.note;
-  const model=sceneImgModel(hasRefs);const input={prompt};Object.assign(input,sizeFor(model,epAspect(ep)));if(hasRefs)input.image_urls=refs;
+  const model=sceneImgModel(hasRefs);const input={prompt};Object.assign(input,sizeFor(model,epAspect(ep)));if(hasRefs)input.image_urls=refs;withRes(model,input);
   try{
     const o=await falRun(model,input,(stt,t)=>{out.innerHTML=spinner("Storyboarding scene "+s.n+"… ("+t+")");});
     const m=extractMedia(o);if(!m)throw new Error("No image came back.");
@@ -1833,20 +1836,31 @@ async function createVideo(sid){
     renderSceneBoard(ep);toast("Scene "+s.n+" video saved to The Cut.");
   }catch(e){out.innerHTML=errLine(e);}
 }
+const FIGHT_FORMULAS=[
+ {k:"f5",label:"5-beat reel (fast)",beats:"Beat 1 standoff; Beat 2 first attack; Beat 3 counter; Beat 4 reversal; Beat 5 finisher."},
+ {k:"f8",label:"8-beat cinematic duel",beats:"Beat 1 wide standoff; Beat 2 villain attacks first; Beat 3 hero dodges and counters; Beat 4 villain reveals real strength; Beat 5 hero gets knocked back; Beat 6 hero notices the weakness; Beat 7 hero uses the environment; Beat 8 signature finishing move."},
+ {k:"f12",label:"12-beat epic action short",beats:"Beat 1 establish battleground; 2 hero enters; 3 villain reveal; 4 first charge; 5 hero dodges; 6 rapid exchange; 7 villain lands a heavy hit; 8 hero crashes into environment; 9 hero rises; 10 hero changes strategy; 11 signature clash; 12 final impact pose."},
+ {k:"fmany",label:"One-vs-many",beats:"Beat 1 hero surrounded; 2 first attacker rushes; 3 hero redirects first into second; 4 third attacks from behind; 5 hero ducks and third hits second; 6 hero uses the environment; 7 the group regroups; 8 hero clears space with a signature move."},
+ {k:"fcom",label:"Action-comedy (accidental)",beats:"Beat 1 hero tries to avoid the fight; 2 villain attacks; 3 hero dodges by accident; 4 villain hits an object or another goon; 5 hero tries to look confident; 6 a prop causes chaos; 7 hero accidentally wins; 8 silent deadpan reaction button."}
+];
+const FIGHT_STYLES=["Brutal street boxing","Industrial brawler","Agile superhero combat","Martial-arts precision","Power-based combat (energy FX)","Comedy accidental fighting","Noir alley fight","Warehouse action combat","Rooftop duel","Comic-book splash fight"];
+const FIGHT_MECHANICS_TXT="Draw from the fight-mechanics vocabulary: stance, opening attack, dodge, block, parry, counter, feint, grapple, throw, impact beat, recovery beat, escalation, reversal, power shift, breathing beat, signature move, environmental hit, near miss, combo, finisher.";
+const FIGHT_CAMERAS_TXT="Vary the camera across beats: wide master, medium combat, low-angle hero, low-angle villain, over-the-shoulder strike, side tracking, circular dolly, whip pan, impact close-up, slow-motion impact, insert detail, overhead geography, final freeze pose.";
+const FIGHT_NEG="Brand-safe action: impact, sparks, smoke, dust and cracked concrete sell the power. No gore, no excessive blood, no dismemberment, no real brand logos, no copyrighted characters, no on-screen text, subtitles or speech bubbles. Diegetic impact sound only \u2014 hits, footsteps, fabric, sparks, breath \u2014 never music.";
 async function fightChoreograph(){
   const ep=curEp();if(!ep)return;if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const A=S.cast.find(c=>c.id===$("fcA").value),B=S.cast.find(c=>c.id===$("fcB").value);
   if(!A||!B||A.id===B.id){toast("Pick two different characters.",true);return;}
-  const L=S.sets.find(x=>x.id===$("fcLoc").value)||null;const intn=$("fcInt").value;
+  const L=S.sets.find(x=>x.id===$("fcLoc").value)||null;const intn=$("fcInt").value;const fm=FIGHT_FORMULAS.find(x=>x.k===($("fcFormula")?$("fcFormula").value:"f8"))||FIGHT_FORMULAS[1];const fstyle=$("fcStyle")?$("fcStyle").value:"";
   const st=$("fcStatus");st.innerHTML=spinner("Choreographing the fight…");
-  const sys=writerSys(ep)+" You are a legendary fight choreographer + action director (samurai-grade, Boondocks energy). Design a fight in clean BEATS. For each beat return heading (LOCATION | beat vibe), action (the exchange), shot (COMPLETE ready-to-render IMAGE prompt — angle, lens, blocking, impact, lighting), motion (COMPLETE ready-to-render VIDEO prompt — camera move + choreography + diegetic impact sound, no music), ambience, grade. Bake in the LOOK. Make each fighter's weakness matter and give a clear turn + finisher. Return JSON only: {\"beats\":[{\"heading\":\"\",\"action\":\"\",\"shot\":\"\",\"motion\":\"\",\"ambience\":\"\",\"grade\":\"\"}]}.";
-  const usr="FIGHTERS: "+A.name+(A.powers?" (powers: "+A.powers+")":"")+" VS "+B.name+(B.powers?" (powers: "+B.powers+")":"")+".\nWEAKNESSES: "+A.name+" — "+(A.weakness||"unknown")+"; "+B.name+" — "+(B.weakness||"unknown")+".\nLOCATION: "+(L?L.name:"a fitting arena")+".\nSTYLE: "+intn+".\nLOOK: "+lookStyleOf(ep)+".\nDesign 4-6 beats.";
+  const sys=writerSys(ep)+" You are a legendary fight choreographer + action director (samurai-grade, Boondocks energy). Design a readable, character-driven fight in clean BEATS, following the supplied beat structure EXACTLY (one scene per beat). "+FIGHT_MECHANICS_TXT+" "+FIGHT_CAMERAS_TXT+" For each beat return heading (LOCATION | beat vibe), action (the exchange — name the mechanic used), shot (COMPLETE ready-to-render IMAGE prompt — angle, lens, blocking, impact, lighting), motion (COMPLETE ready-to-render VIDEO prompt — camera move + choreography + diegetic impact sound, no music), ambience, grade. Bake in the LOOK. Make each fighter's style distinct and their weakness matter; build escalation, a clear reversal and a finisher. "+FIGHT_NEG+" Return JSON only: {\"beats\":[{\"heading\":\"\",\"action\":\"\",\"shot\":\"\",\"motion\":\"\",\"ambience\":\"\",\"grade\":\"\"}]}.";
+  const usr="FIGHTERS: "+A.name+(A.powers?" (powers: "+A.powers+")":"")+" VS "+B.name+(B.powers?" (powers: "+B.powers+")":"")+".\nWEAKNESSES: "+A.name+" — "+(A.weakness||"unknown")+"; "+B.name+" — "+(B.weakness||"unknown")+".\nLOCATION: "+(L?L.name:"a fitting arena")+".\nINTENSITY: "+intn+(fstyle?".\nFIGHT STYLE: "+fstyle:"")+".\nLOOK: "+lookStyleOf(ep)+".\nBEAT STRUCTURE (follow exactly): "+fm.beats;
   try{
     const d=parseJSON(await llmRun(sys,usr));const beats=d.beats||[];
     const start=(ep.scenes||[]).length;
-    const mapped=beats.map((s,i)=>({id:uid(),n:start+i+1,heading:s.heading||"",action:s.action||"",dialogue:"",shot:s.shot||"",motion:s.motion||"",ambience:s.ambience||"",grade:s.grade||"",continueFrom:i>0,boardUrl:"",videoUrl:""}));
+    const mapped=beats.map((s,i)=>({id:uid(),n:start+i+1,heading:s.heading||"",action:s.action||"",dialogue:"",shot:s.shot||"",motion:s.motion||"",ambience:s.ambience||"",grade:s.grade||"",continueFrom:i>0,boardUrl:"",videoUrl:"",lockRefs:[A.id,B.id].concat(L?[L.id]:[])}));
     ep.scenes=(ep.scenes||[]).concat(mapped);save();renderSceneBoard(ep);
-    st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ '+mapped.length+' fight beats added to the Scene Board</div>';
+    st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ '+mapped.length+' fight beats added — fighters auto-locked as refs</div>';
   }catch(e){st.innerHTML=errLine(e);}
 }
 /* ================= ONE-TAP → CAST ================= */
@@ -2088,7 +2102,7 @@ function renderComics(){
   const cc=curComic();if(cc){renderComicView(cc);return;}
   S.curComic=null;
   let h='<div class="card"><label class="fld">Type</label><select id="comicKind"></select>';
-  h+='<label class="fld" style="margin-top:10px">Look</label><select id="comicLook"></select>';h+='<label class="fld" style="margin-top:10px">Comedy mechanic</label><select id="comicMechanic"></select>';
+  h+='<label class="fld" style="margin-top:10px">Look</label><select id="comicLook"></select>';h+='<label class="fld" style="margin-top:10px">Comedy mechanic</label><select id="comicMechanic"></select>';h+='<label class="fld" style="margin-top:10px">Resolution</label><select id="comicRes"><option value="1K">1K · standard</option><option value="2K">2K · sharper</option><option value="4K">4K · 2× price</option></select>';
   h+='<label class="fld" style="margin-top:10px">Lead character</label><select id="comicLead"></select>';
   h+='<label class="fld" style="margin-top:10px">Location</label><select id="comicSet"></select>';
   h+='<label class="fld" style="margin-top:10px">Idea</label><div class="row"><input type="text" id="comicIdea" placeholder="the gag / situation (or leave blank)"><button class="btn ghost sm" id="comicIdeaBtn" style="flex:0">✦</button></div><div id="comicIdeaStatus"></div>';
@@ -2096,7 +2110,7 @@ function renderComics(){
   h+='<div style="margin-top:16px"><div class="hint">Your comics</div><div id="comicList" style="margin-top:8px"></div></div>';
   host.innerHTML=h;
   const kk=$("comicKind");Object.keys(COMIC_KINDS).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=COMIC_KINDS[k].label;kk.appendChild(o);});kk.value=S.comicKind||"strip3";kk.addEventListener("change",e=>{S.comicKind=e.target.value;save();});
-  const lk=$("comicLook");Object.keys(COMIC_LOOKS).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=COMIC_LOOKS[k].label;lk.appendChild(o);});lk.value=S.comicLook||"toon";lk.addEventListener("change",e=>{S.comicLook=e.target.value;save();});const mk2=$("comicMechanic");if(mk2){mk2.innerHTML='<option value="">— auto / mix —</option>'+COMEDY_MECHANICS.map(m=>'<option value="'+esc(m.n)+'">'+esc(m.n)+'</option>').join("");mk2.value=S.comicMechanic||"";mk2.addEventListener("change",e=>{S.comicMechanic=e.target.value;save();});}
+  const lk=$("comicLook");Object.keys(COMIC_LOOKS).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=COMIC_LOOKS[k].label;lk.appendChild(o);});lk.value=S.comicLook||"toon";lk.addEventListener("change",e=>{S.comicLook=e.target.value;save();});const mk2=$("comicMechanic");if(mk2){mk2.innerHTML='<option value="">— auto / mix —</option>'+COMEDY_MECHANICS.map(m=>'<option value="'+esc(m.n)+'">'+esc(m.n)+'</option>').join("");mk2.value=S.comicMechanic||"";mk2.addEventListener("change",e=>{S.comicMechanic=e.target.value;save();});}if($("comicRes")){$("comicRes").value=S.imgRes||"1K";$("comicRes").addEventListener("change",e=>{S.imgRes=e.target.value;save();if($("imgRes"))$("imgRes").value=e.target.value;});}
   const ld=$("comicLead");ld.innerHTML='<option value="">— none —</option>'+S.cast.map(c=>'<option value="'+c.id+'">'+esc(c.name)+'</option>').join("");ld.value=S.comicLead||"";ld.addEventListener("change",e=>{S.comicLead=e.target.value;save();});
   const se=$("comicSet");se.innerHTML='<option value="">— none —</option>'+S.sets.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join("");se.value=S.comicSet||"";se.addEventListener("change",e=>{S.comicSet=e.target.value;save();});
   $("comicIdeaBtn").addEventListener("click",suggestComicIdea);
@@ -2164,7 +2178,7 @@ async function renderComicImage(pid){
   const prompt=(pan.visual||pan.caption||"comic panel")+"\n\nStyle: "+look.style+". A single comic panel, clean readable composition, strong silhouette."+comicNote(comic)+" Do not render any caption or speech text in the image (it appears beneath the panel).";
   const model=hasRefs?(S.picked.edit||"fal-ai/nano-banana-pro/edit"):(S.picked.image||"fal-ai/nano-banana-pro");
   const ar=comic.kind==="single"?"1:1":"4:5";
-  const input={prompt};Object.assign(input,sizeFor(model,ar));if(hasRefs)input.image_urls=refs;
+  const input={prompt};Object.assign(input,sizeFor(model,ar));if(hasRefs)input.image_urls=refs;withRes(model,input);
   try{
     const o=await falRun(model,input,(s,t)=>{if(out)out.innerHTML=spinner("Drawing panel "+pan.n+"… ("+t+")");});
     const m=extractMedia(o);if(!m)throw new Error("No image came back.");

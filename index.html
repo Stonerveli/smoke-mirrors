@@ -146,6 +146,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 <nav>
   <button data-go="cloudtoons"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 17h11a3.5 3.5 0 0 0 .5-6.97A5 5 0 0 0 8 8.5 3.5 3.5 0 0 0 6 17z'/></svg></span>Cloudtoons</button>
   <button data-go="comics"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span>Comics</button>
+  <button data-go="fight"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M13 2 4.5 13.5H11l-1 8.5 9.5-12.5H12z'/></svg></span>Fight</button>
   <button data-go="episodes" class="on"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2.5' y='7.5' width='13' height='12' rx='2'/><path d='M7.5 7.5V5.5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2'/></svg></span>Episodes</button>
   <button data-go="cast"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='3.5'/><path d='M5.5 20a6.5 6.5 0 0 1 13 0'/><path d='M14.8 9.3l3.6-.6'/><circle cx='18.7' cy='8.6' r='.8' fill='currentColor' stroke='none'/><path d='M18.9 7.3c.7-.5.2-1.2.6-1.9'/></svg></span>Cast</button>
   <button data-go="sets"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M3 15l5-4 4 3 3-2 6 5'/><circle cx='8' cy='9' r='1.3'/></svg></span>Sets</button>
@@ -482,6 +483,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 </section>
 
 <!-- ===== SETUP ===== -->
+<section class="view" id="view-fight"><div class="wrap" id="fightBody"></div></section>
 <section class="view" id="view-comics">
   <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style="width:30px;height:30px;display:block"><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span><h2>Comics</h2><span class="tag">Strips · Far Side</span></div>
   <div id="comicBody"></div>
@@ -529,7 +531,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v8.0 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v8.6 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -542,7 +544,7 @@ const blank={
   apiKey:"",llmModel:"google/gemini-2.5-flash",station:"image",
   picked:{image:"fal-ai/nano-banana-2",edit:"fal-ai/nano-banana-2/edit",video:"bytedance/seedance-2.0/reference-to-video",audio:"fal-ai/elevenlabs/sound-effects"},
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
-  board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",
+  board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
   cast:[],sets:[],castInit:false,customGenres:[],episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
@@ -648,6 +650,7 @@ function go(name){
   if(name==="episodes")renderEpisodes();
   if(name==="cloudtoons")renderCloudtoons();
   if(name==="comics")renderComics();
+  if(name==="fight")renderFight();
   if(name==="cast")renderCast();
   if(name==="sets")renderSets();
   if(name==="media")renderMedia();
@@ -833,6 +836,338 @@ function recommendGrid(script){
   const sentences=script.split(/[.!?]+/).filter(s=>s.trim().length>3).length;
   const beats=Math.max(sentences,Math.ceil(words/14));
   if(beats<=4)return"2x2";if(beats<=6)return"3x2";if(beats<=9)return"3x3";if(beats<=12)return"4x3";if(beats<=16)return"4x4";return"5x5";
+}
+/* ===================== FIGHT LAB (FSB, native) ===================== */
+const FL_TYPES=[
+ {g:"Archetypes",items:[
+  {id:1,n:"Cinematic Fight",cam:"wide master into side tracking",sheet:"duel"},
+  {id:2,n:"Hand-to-Hand",cam:"tight handheld, close-range",sheet:"fist"},
+  {id:3,n:"Martial Arts",cam:"side tracking, clean lens changes",sheet:"duel"},
+  {id:4,n:"Superhero",cam:"low-angle hero framing, dramatic landings",sheet:"shvv"},
+  {id:5,n:"Villain Boss",cam:"rising orbit as villain escalates",sheet:"boss"},
+  {id:6,n:"Heavy Brawler",cam:"low slow push-ins on impacts",sheet:"fist"},
+  {id:7,n:"Speed Fighter",cam:"whip pans, speed-ramp tracking",sheet:"duel"},
+  {id:8,n:"One-vs-Many",cam:"180 orbit, hero-centered",sheet:"many"},
+  {id:9,n:"One-on-One Duel",cam:"locked two-shot, centerline pressure",sheet:"duel"}]},
+ {g:"Power & Form",items:[
+  {id:12,n:"Weapon Fight",cam:"clear attack-path framing, spacing reads",sheet:"weapon"},
+  {id:13,n:"Power-Based",cam:"wide to hold energy/smoke effects",sheet:"power"},
+  {id:23,n:"Hero vs Monster",cam:"scale-emphasis low angles, climbing tracks",sheet:"monster"},
+  {id:24,n:"Transformation",cam:"orbit during the form-change reveal",sheet:"boss"}]},
+ {g:"Setting",items:[
+  {id:10,n:"Environmental",cam:"wide masters that show usable objects",sheet:"duel"},
+  {id:14,n:"Street Fight",cam:"raw handheld, urgent close range",sheet:"fist"},
+  {id:15,n:"Industrial",cam:"sparks/chains framing, hard backlight",sheet:"fist"},
+  {id:16,n:"Rooftop",cam:"skyline silhouettes, vertical danger",sheet:"duel"},
+  {id:17,n:"Hallway",cam:"long-take advance through opponents",sheet:"many"},
+  {id:18,n:"Arena",cam:"formal wides, entrances and rounds",sheet:"boss"}]},
+ {g:"Comedy",items:[
+  {id:25,n:"Action Comedy",cam:"clean choreo + comedic reaction inserts",sheet:"comedy"},
+  {id:26,n:"Silent Fight Comedy",cam:"full-body framing, timing on faces",sheet:"comedy"},
+  {id:27,n:"Accidental Fighter",cam:"chaos wides, lucky-hit inserts",sheet:"comedy"},
+  {id:28,n:"Deadpan Sidekick",cam:"hold on the calm observer, cut to chaos",sheet:"comedy"}]},
+ {g:"Camera & Structure",items:[
+  {id:29,n:"One-Shot (no cuts)",cam:"single continuous unbroken take",sheet:"duel"},
+  {id:30,n:"Long-Take",cam:"few cuts, full spatial continuity",sheet:"duel"},
+  {id:31,n:"Slow-Motion Impact",cam:"speed ramps on debris, sparks, fabric",sheet:"fist"},
+  {id:32,n:"Comic-Book",cam:"splash-page framing, dynamic panels",sheet:"shvv"},
+  {id:33,n:"Frame-Order",cam:"numbered frame progression",sheet:"duel"},
+  {id:37,n:"Combat Camera",cam:"director-chosen framing per beat",sheet:"duel"}]},
+ {g:"Scenario",items:[
+  {id:19,n:"Chase-to-Fight",cam:"pursuit tracking that settles into combat",sheet:"duel"},
+  {id:20,n:"Rescue Fight",cam:"protect-the-civilian blocking",sheet:"many"},
+  {id:21,n:"Ambush",cam:"disadvantage opening, space discovery",sheet:"many"},
+  {id:22,n:"Team Fight",cam:"readable positions, distinct roles",sheet:"shvv"}]}
+];
+const FL_FW={
+ "12":[
+  {bt:"1 · Battleground",d:c=>`Establish ${c.loc}. ${c.style||"grounded"} look. Empty hostile space, consistent boundaries.`},
+  {bt:"2 · Hero stance",d:c=>`${c.hero} enters and takes a ${c.hStyle} stance.`},
+  {bt:"3 · Villain threat",d:c=>`${c.villain} enters and reveals the threat — ${c.vStyle}.`},
+  {bt:"4 · Opening attack",d:c=>`${c.villain} launches the first attack.`},
+  {bt:"5 · Defense",d:c=>`${c.hero} dodges, blocks, or redirects it.`},
+  {bt:"6 · Counter combo",d:c=>`${c.hero} answers with a short readable combination.`},
+  {bt:"7 · Villain reversal",d:c=>`${c.villain} absorbs or reverses the attack.`},
+  {bt:"8 · Disadvantage",d:c=>`${c.hero} is knocked back / placed at a disadvantage.`},
+  {bt:"9 · Reset / breath",d:c=>`Both fighters pause and reset. Brief breathing beat.`},
+  {bt:"10 · Weakness",d:c=>`${c.hero} notices ${c.villain}'s weakness.`},
+  {bt:"11 · Signature / env",d:c=>`${c.hero} uses the environment or a signature move.`},
+  {bt:"12 · Finish + pose",d:c=>`Final impact, ${c.villain} down, ${c.hero} holds a strong closing pose.`}],
+ "15":[
+  {bt:"1 · Location",d:c=>`Establish ${c.loc}.`},
+  {bt:"2 · Positions",d:c=>`${c.hero} screen-left, ${c.villain} screen-right — fixed duel line.`},
+  {bt:"3 · Styles",d:c=>`Hero: ${c.hStyle}. Villain: ${c.vStyle}.`},
+  {bt:"4 · Reason",d:c=>c.emo||"State the emotional reason for the fight."},
+  {bt:"5 · Opening",d:c=>`Readable opening attack from ${c.villain}.`},
+  {bt:"6 · Defense set",d:c=>`Dodges, blocks, parries, counters.`},
+  {bt:"7 · Cause/effect",d:c=>`Each move causes a visible reaction in the other.`},
+  {bt:"8 · Impact reactions",d:c=>`Fighters react to impacts — weight and recoil.`},
+  {bt:"9 · Environment",d:c=>`Use ${c.loc} surfaces and objects in the fight.`},
+  {bt:"10 · Reversal",d:c=>`The losing fighter unexpectedly takes control.`},
+  {bt:"11 · Breath",d:c=>`Pause — study each other, reveal emotion.`},
+  {bt:"12 · Escalate",d:c=>`Raise the danger and intensity.`},
+  {bt:"13 · Reveal",d:c=>`Reveal a weakness or a new power.`},
+  {bt:"14 · Signature",d:c=>`${c.hero} lands a signature move.`},
+  {bt:"15 · Final pose",d:c=>`Strong visual ending image — poster / thumbnail ready.`}],
+ "10":[
+  {bt:"1 · Standoff",d:c=>`${c.hero} vs ${c.villain} at ${c.loc}. Tense standoff.`},
+  {bt:"2 · Opening attack",d:c=>`${c.villain} opens.`},
+  {bt:"3 · Dodge/parry",d:c=>`${c.hero} defends.`},
+  {bt:"4 · Counterattack",d:c=>`${c.hero} counters.`},
+  {bt:"5 · Environment",d:c=>`Environmental interaction at ${c.loc}.`},
+  {bt:"6 · Villain reversal",d:c=>`${c.villain} reverses.`},
+  {bt:"7 · Hero recovery",d:c=>`${c.hero} recovers.`},
+  {bt:"8 · Weakness",d:c=>`Weakness discovered.`},
+  {bt:"9 · Signature move",d:c=>`${c.hero}'s signature move.`},
+  {bt:"10 · Final impact",d:c=>`Final impact and ending pose.`}]
+};
+const FL_SHEETS={
+ duel:{name:"Martial-Arts / Formal Duel",kind:"martial-arts duel",contrast:"controlled centerline technique against wide hard linear force"},
+ fist:{name:"Fist-Fight / Brawl",kind:"grounded hand-to-hand brawl",contrast:"messy urgent close-range pressure against compact defensive control"},
+ shvv:{name:"Superhero vs Villain",kind:"superhero versus villain clash",contrast:"agile power-based hero against a heavier dangerous villain"},
+ many:{name:"One-vs-Many",kind:"one hero against several opponents",contrast:"single hero managing spacing and attack order against a closing crew"},
+ weapon:{name:"Weapon Duel",kind:"story-weapon duel",contrast:"clear attack paths and spacing against committed weapon swings"},
+ power:{name:"Power-Based Clash",kind:"power and energy clash",contrast:"readable energy / smoke / flame effects against physical pressure"},
+ monster:{name:"Hero vs Monster (scale)",kind:"human-scale hero against a larger creature",contrast:"small fast hero exploiting weak points against overwhelming scale"},
+ boss:{name:"Boss Fight (multi-phase)",kind:"multi-stage boss battle",contrast:"a villain growing more dangerous forcing the hero to change strategy"},
+ comedy:{name:"Action Comedy / Slapstick",kind:"action-comedy fight",contrast:"impressive choreography undercut by timing, accidents and reactions"}
+};
+const FL_PANELS=[
+ {p:"P01",lens:"24mm wide",beat:"standoff / battleground"},
+ {p:"P02",lens:"35mm",beat:"threat reveal + opening attack"},
+ {p:"P03",lens:"50mm push-in",beat:"hero defends / redirects"},
+ {p:"P04",lens:"35mm medium",beat:"hero counter combination"},
+ {p:"P05",lens:"35mm side",beat:"villain absorbs / reverses"},
+ {p:"P06",lens:"50mm push-in",beat:"hero placed at disadvantage"},
+ {p:"P07",lens:"35mm",beat:"pause / reset breathing beat"},
+ {p:"P08",lens:"macro insert",beat:"weakness noticed + signature setup"},
+ {p:"P09",lens:"35mm pullback",beat:"final impact + closing pose"}
+];
+const FL_DISC={
+ auto:{label:"Auto / Mixed",desc:""},
+ cqc:{label:"Street CQC",desc:"Close-range survival combat using direct strikes, clinches, restraints, and environmental awareness."},
+ box:{label:"Boxing",desc:"Punch-focused footwork, slips, guards, combinations, counters, and head movement."},
+ kickbox:{label:"Kickboxing",desc:"Boxing combinations blended with powerful kicks, knees, range control, and movement."},
+ muay:{label:"Muay Thai",desc:"Close-range striking with punches, elbows, knees, kicks, clinches, and heavy impact."},
+ karate:{label:"Karate",desc:"Precise linear attacks, disciplined stances, sharp counters, and controlled distance."},
+ taekwondo:{label:"Taekwondo",desc:"Fast, athletic kicking combinations, spins, evasive movement, and long-range attacks."},
+ kungfu:{label:"Kung Fu",desc:"Flowing traditional movement, varied striking patterns, forms, balance, and expressive technique."},
+ wingchun:{label:"Wing Chun",desc:"Compact centerline attacks, trapping, rapid hand combinations, and close-range efficiency."},
+ jkd:{label:"Jeet Kune Do",desc:"Adaptive, direct combat blending interception, fluid movement, speed, and practical response."},
+ mma:{label:"MMA",desc:"Integrated striking, clinching, takedowns, grappling, ground control, and submissions."},
+ judo:{label:"Judo",desc:"Throws, grips, sweeps, balance disruption, and momentum-based takedowns."},
+ bjj:{label:"Brazilian Jiu-Jitsu",desc:"Ground control, positional transitions, escapes, locks, and submission-focused grappling."},
+ wrestling:{label:"Wrestling",desc:"Takedowns, clinch control, pressure, body positioning, and ground dominance."},
+ sambo:{label:"Sambo",desc:"Aggressive throws, takedowns, striking variations, leg attacks, and rapid transitions."},
+ kravmaga:{label:"Krav Maga",desc:"Direct defensive responses, fast threat neutralization, close-range strikes, and escape."},
+ capoeira:{label:"Capoeira",desc:"Acrobatic evasions, spinning kicks, deceptive rhythm, flowing movement, and low attacks."},
+ silat:{label:"Silat",desc:"Angular movement, close-range strikes, sweeps, joint control, and fluid takedowns."},
+ kali:{label:"Kali / Eskrima",desc:"Rapid weapon-flow principles, hand transitions, angular attacks, and coordinated footwork."},
+ wuxia:{label:"Wuxia Sword",desc:"Elegant airborne swordplay, flowing robes, graceful movement, and mythic cinematic action."},
+ samurai:{label:"Samurai Sword",desc:"Measured stances, disciplined timing, decisive cuts, restraint, and high-tension dueling."},
+ fantasysword:{label:"Fantasy Swordplay",desc:"Stylized blade combat using dramatic movement, fictional abilities, and heroic spectacle."},
+ staff:{label:"Staff Combat",desc:"Wide rotational strikes, sweeping defense, range control, vaults, and fluid combinations."},
+ knife:{label:"Knife Combat",desc:"Tight-range blade choreography emphasizing evasion, trapping, control, and fast exchanges."},
+ gunfu:{label:"Gun-Fu",desc:"Stylized close-range firearm choreography blended with grappling, movement, and precise transitions."},
+ power:{label:"Power-Based Combat",desc:"Enhanced attacks using energy, elemental abilities, shockwaves, transformations, or superhuman force."},
+ superhero:{label:"Superhero Combat",desc:"Heightened physical action using powers, heroic movement, dramatic impacts, and signature attacks."},
+ monster:{label:"Monster Combat",desc:"Creature-driven action emphasizing scale, unusual anatomy, brute force, movement patterns, and weak points."},
+};
+const FL_DISC_GROUPS=[
+ {g:"Martial Disciplines",items:["cqc","box","kickbox","muay","karate","taekwondo","kungfu","wingchun","jkd","mma","judo","bjj","wrestling","sambo","kravmaga","capoeira","silat","kali"]},
+ {g:"Weapon-Based Cinematic Styles",items:["wuxia","samurai","fantasysword","staff","knife","gunfu"]},
+ {g:"Power Styles",items:["power","superhero","monster"]},
+];
+const FL_FTYPE=[{v:"auto",l:"Auto"},{v:"duel",l:"One-on-One Duel"},{v:"many",l:"One-vs-Many"},{v:"team",l:"Team Fight"},{v:"herovillain",l:"Hero vs Villain"},{v:"villainboss",l:"Villain Boss Battle"},{v:"heromonster",l:"Hero vs Monster"},{v:"rival",l:"Rival Showdown"},{v:"street",l:"Street Confrontation"},{v:"tournament",l:"Tournament Match"},{v:"training",l:"Training Match"},{v:"surprise",l:"Surprise Attack"},{v:"final",l:"Final Battle"}];
+const FL_ARCH=[{v:"auto",l:"Auto"},{v:"cinematic",l:"Cinematic Fighter"},{v:"handtohand",l:"Hand-to-Hand Specialist"},{v:"martialarts",l:"Martial Arts Specialist"},{v:"superhero",l:"Superhero"},{v:"villainboss",l:"Villain Boss"},{v:"brawler",l:"Heavy Brawler"},{v:"acrobat",l:"Agile Acrobat"},{v:"speed",l:"Speed Fighter"},{v:"counter",l:"Technical Counterfighter"},{v:"defensive",l:"Defensive Specialist"},{v:"powerhouse",l:"Powerhouse"},{v:"weaponspec",l:"Weapon Specialist"},{v:"accidental",l:"Accidental Fighter"},{v:"deadpan",l:"Deadpan Sidekick"},{v:"monster",l:"Monster / Creature Fighter"}];
+const FL_SCEN=[{v:"auto",l:"Auto"},{v:"ambush",l:"Ambush"},{v:"chase",l:"Chase-to-Fight"},{v:"rescue",l:"Rescue Fight"},{v:"escape",l:"Escape Fight"},{v:"protection",l:"Protection Detail"},{v:"betrayal",l:"Betrayal Reveal"},{v:"revenge",l:"Revenge Confrontation"},{v:"tournament",l:"Tournament Round"},{v:"training",l:"Training Session"},{v:"interrupted",l:"Interrupted Meeting"},{v:"capture",l:"Capture Attempt"},{v:"laststand",l:"Last Stand"},{v:"finalshowdown",l:"Final Showdown"},{v:"accidental",l:"Accidental Conflict"}];
+const FL_CAMSTRUCT=[{v:"auto",l:"Auto"},{v:"oneshot",l:"One-Shot / No Cuts"},{v:"longtake",l:"Long Take"},{v:"traditional",l:"Traditional Coverage"},{v:"widechoreo",l:"Wide Choreography Coverage"},{v:"handheld",l:"Handheld Combat Camera"},{v:"stabilized",l:"Stabilized Tracking"},{v:"circular",l:"Circular Duel Camera"},{v:"overhead",l:"Overhead Geography"},{v:"slowmo",l:"Slow-Motion Impact"},{v:"frameorder",l:"Frame-Order Sequence"},{v:"comicpanel",l:"Comic-Panel Structure"},{v:"mixed",l:"Mixed Cinematic Coverage"}];
+const FL_TONE=[{v:"auto",l:"Auto"},{v:"grounded",l:"Grounded Realism"},{v:"cinematic",l:"Cinematic Realism"},{v:"stylized",l:"Stylized Action"},{v:"anime",l:"Anime Clarity"},{v:"comic",l:"Comic-Book Impact"},{v:"actioncomedy",l:"Action Comedy"},{v:"silentcomedy",l:"Silent Fight Comedy"},{v:"accidental",l:"Accidental Victory"},{v:"deadpan",l:"Deadpan Action"},{v:"brutal",l:"Brutal but Non-Graphic"},{v:"heroic",l:"Heroic Spectacle"},{v:"dark",l:"Dark and Tense"},{v:"kinetic",l:"Fast and Kinetic"},{v:"weighty",l:"Slow and Weighty"}];
+const FL_ENV=[{v:"auto",l:"Auto"},{v:"minimal",l:"Minimal"},{v:"active",l:"Active"},{v:"heavy",l:"Heavy"}];
+const FL_LEGACY={1:{archetype:"cinematic"},2:{archetype:"handtohand"},3:{archetype:"martialarts"},4:{archetype:"superhero"},5:{archetype:"villainboss",ftype:"villainboss"},6:{archetype:"brawler"},7:{archetype:"speed"},8:{ftype:"many"},9:{ftype:"duel"},12:{archetype:"weaponspec"},13:{discipline:"power"},23:{ftype:"heromonster"},10:{envuse:"active"},14:{ftype:"street"},25:{tone:"actioncomedy"},26:{tone:"silentcomedy"},27:{archetype:"accidental"},28:{archetype:"deadpan"},29:{camstruct:"oneshot"},30:{camstruct:"longtake"},31:{camstruct:"slowmo"},32:{tone:"comic"},33:{camstruct:"frameorder"},37:{camstruct:"handheld"},19:{scenario:"chase"},20:{scenario:"rescue"},21:{scenario:"ambush"},22:{ftype:"team"}};
+const FL_DISC_LEGACY={many:{ftype:"many"},duel:{ftype:"duel"},team:{ftype:"team"},boss:{ftype:"villainboss"},ambush:{scenario:"ambush"},chase:{scenario:"chase"},rescue:{scenario:"rescue"},environmental:{envuse:"active"},prop:{envuse:"active"},brawler:{archetype:"brawler"},acrobat:{archetype:"acrobat"},speed:{archetype:"speed"},counter:{archetype:"counter"},defensive:{archetype:"defensive"},grounded:{tone:"grounded"},cinematic:{tone:"cinematic"},stylized:{tone:"stylized"},anime:{tone:"anime"},comic:{tone:"comic"},actioncomedy:{tone:"actioncomedy"},silentcomedy:{tone:"silentcomedy"},slowmo:{camstruct:"slowmo"},oneshot:{camstruct:"oneshot"}};
+function flOpts(list,cur){return list.map(o=>'<option value="'+o.v+'"'+(((cur||"auto")===o.v)?" selected":"")+'>'+esc(o.l)+'</option>').join("");}
+function flLbl(list,v){const e=list.find(x=>x.v===v);return e?e.l:"";}
+function sideOpts(v){const o=[["auto","Auto"],["good","Hero’s side"],["bad","Villain’s side"]];return o.map(p=>'<option value="'+p[0]+'"'+(((v||"auto")===p[0])?" selected":"")+'>'+p[1]+'</option>').join("");}
+function flExtra(i,k,val){const F=S.fight;if(!Array.isArray(F.extras))F.extras=[];if(!F.extras[i])F.extras[i]={c:"",side:"auto"};F.extras[i][k]=val;save();flRebuild();}
+function flMigrate(){const F=S.fight;let ch=false;
+ if(F.typeId!==undefined){const m=FL_LEGACY[F.typeId];if(m)for(const k in m){if(F[k]===undefined||F[k]==="auto"||F[k]==="")F[k]=m[k];}delete F.typeId;ch=true;}
+ if(F.discipline&&!FL_DISC[F.discipline]){const m=FL_DISC_LEGACY[F.discipline];if(m)for(const k in m){if(F[k]===undefined||F[k]==="auto"||F[k]==="")F[k]=m[k];}F.discipline="auto";ch=true;}
+ if(!Array.isArray(F.extras))F.extras=[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}];
+ while(F.extras.length<4)F.extras.push({c:"",side:"auto"});
+ if(F.sideA!==undefined||F.sideB!==undefined){if(F.sideA)F.extras[0].c=F.sideA;if(F.sideB)F.extras[1].c=F.sideB;delete F.sideA;delete F.sideB;ch=true;}
+ if(ch)save();}
+function flCtx(){
+ const F=S.fight,h=S.cast.find(c=>c.id===F.hero)||{},v=S.cast.find(c=>c.id===F.villain)||{};
+ const loc=F.loc==="__custom"?(F.locCustom||"the location"):(F.loc?((S.sets.find(x=>x.id===F.loc)||{}).name||"a fitting arena"):"a fitting arena");
+ let cam=(F.angle&&F.angle!=="auto")?(()=>{const a=ANGLES.find(x=>x.n===F.angle);return a?F.angle+" — "+a.d:F.angle;})():"wide master into side tracking, readable two-person geography";
+ const gr=(F.grade&&F.grade!=="auto")?(()=>{const g=GRADES.find(x=>x.n===F.grade);return g?F.grade+": "+g.l:F.grade;})():"";
+ const fl=(F.film&&F.film!=="auto")?(()=>{const f=FILMSTOCKS.find(x=>x.n===F.film);return f?(F.film+(f.p?" — "+f.p:"")):F.film;})():"";
+ const style=[gr,fl].filter(Boolean).join(" · ");
+ const BAD=["villain","henchman","monster"],GOOD=["hero","sidekick","mentor","comic relief","comic","mascot"];
+ const heroSide=[h.name||"the hero"],villainSide=[v.name||"the villain"],loose=[];
+ (F.extras||[]).forEach(ex=>{if(!ex||!ex.c)return;const ch=S.cast.find(c=>c.id===ex.c);if(!ch)return;let sd=ex.side||"auto";if(sd==="auto"){const r=(ch.role||"").toLowerCase();sd=BAD.indexOf(r)>=0?"bad":GOOD.indexOf(r)>=0?"good":"loose";}if(sd==="good")heroSide.push(ch.name);else if(sd==="bad")villainSide.push(ch.name);else loose.push(ch.name);});
+ return {hero:h.name||"the hero",villain:v.name||"the villain",hLook:h.identity||h.name||"hero",vLook:v.identity||v.name||"villain",hStyle:h.powers||"agile tactical combat",vStyle:v.powers||"heavy aggressive combat",loc,cam,style,emo:F.emo||"",heroSide,villainSide,loose};
+}
+function flBeatVal(i){const F=S.fight,e=(F.beatEdits&&F.beatEdits[F.framework])||{};if(e[i]!==undefined)return e[i];return (FL_FW[F.framework]||FL_FW["12"])[i].d(flCtx());}
+function flBuildSheet(){
+ const c=flCtx(),F=S.fight,sh=FL_SHEETS[F.sheetKey]||FL_SHEETS.duel,disc=FL_DISC[F.discipline]||FL_DISC.auto;
+ const ftL=(!F.ftype||F.ftype==="auto")?"fight":flLbl(FL_FTYPE,F.ftype);
+ const discL=(!F.discipline||F.discipline==="auto")?"mixed discipline":disc.label;
+ const title=`${c.hero.toUpperCase()} vs ${c.villain.toUpperCase()} \u2014 ${sh.name.toUpperCase()}`;
+ let seq="";FL_PANELS.forEach(p=>{seq+=`${p.p} / ${p.lens} / ${p.beat}; `;});
+ const look=[c.cam?("Camera: "+c.cam):"",c.style?("Grade/film: "+c.style):""].filter(Boolean).join(". ");
+ const teamStr=(c.heroSide.length>1||c.villainSide.length>1||c.loose.length)?(" Teams — hero's side: "+c.heroSide.join(", ")+"; villain's side: "+c.villainSide.join(", ")+(c.loose.length?("; also: "+c.loose.join(", ")):"")+"."):"";
+ return `Create a 16:9 storyboard sheet image \u2014 a clean modern production board with ultra-clean low-detail blocking thumbnails, a designed project card, panel header strips and a director strip. ${sh.kind}.
+
+[PROJECT CARD]
+TITLE: ${title}
+META: ${ftL} / ${discL} / ${sh.kind}
+${look}
+MICRO BRIEF: ${c.hStyle} meets ${c.vStyle} until the final guard break, fought in ${discL} style.
+
+[SCENE]
+${c.hero} (${c.hLook}) faces ${c.villain} (${c.vLook}) at ${c.loc}. Starts mid-attack, then traps, jams, counters, close control, and ${c.villain} falling back defeated while ${c.hero} stays composed.${c.emo?(" Emotional drive: "+c.emo+"."):""} Must-read contrast: ${sh.contrast}.${teamStr}
+
+[REFERENCE RULE]
+Image A is the sole authority for ${c.hero}'s face, body, wardrobe, proportions and likeness; Image B is the sole authority for ${c.villain}'s. Storyboard figures are neutral staging proxies; this sheet controls only blocking, pose, eye-line, screen direction, geography and continuity.
+
+[VISUAL RULES]
+Panel interiors are light, readable, ultra-clean low-detail blocking thumbnails: open outline shapes, readable silhouettes, thin graphite lines, broad negative space, mostly white paper, minimum anchor detail. Headers, borders and labels use crisp dark-gray ink. Panel numbers, beat names and lens tags only in header strips outside panels. No facial detail, no heavy shading, no saturated color inside panels, no captions/arrows inside panels, no duplicate bodies.
+
+[CONTINUITY]
+P01 establishes the fixed space: ${c.hero} screen-left, ${c.villain} drives in from screen-right; keep the same left-right line every panel. Boundary, floor and key light stay consistent; only distance, guard, balance and ${c.villain}'s collapse change.
+
+[DIRECTOR STRIP]
+Bottom strip aligned to panel columns, two mini-cells per panel: a RHYTHM track and an ESCALATION L1\u2013L5 map with a curve trace.
+
+[SEQUENCE]
+9 panels in a clean 3x3 grid; each panel header outside the image uses P## / lens / beat. ${seq}`;
+}
+function flBuildVideo(){
+ const c=flCtx(),F=S.fight,fw=FL_FW[F.framework]||FL_FW["12"],disc=FL_DISC[F.discipline]||FL_DISC.auto;
+ const A=v=>(!v||v==="auto");
+ const ftLine=A(F.ftype)?"Auto \u2014 infer the encounter structure from the characters and story.":flLbl(FL_FTYPE,F.ftype);
+ const discLine=(!F.discipline||F.discipline==="auto")?"Auto / Mixed \u2014 infer a coherent combat blend from the fighters' training, powers, weapons and setting; state the chosen blend in one short line.":`${disc.label} \u2014 ${disc.desc}`;
+ const archLine=A(F.archetype)?"Auto \u2014 infer each fighter's combat personality from their design and role.":flLbl(FL_ARCH,F.archetype);
+ const scenLine=A(F.scenario)?"Auto \u2014 infer the immediate dramatic setup.":flLbl(FL_SCEN,F.scenario);
+ const camLine=A(F.camstruct)?"Auto \u2014 choose coverage that best preserves choreography readability.":flLbl(FL_CAMSTRUCT,F.camstruct);
+ const toneLine=A(F.tone)?"Auto \u2014 infer realism and visual intensity from the project tone and style refs.":flLbl(FL_TONE,F.tone);
+ const env=F.envuse||"auto";
+ const envLine=env==="minimal"?"Minimal environmental interaction \u2014 keep the fight clean and centered.":env==="active"?"Active environmental interaction \u2014 fighters use walls, surfaces, furniture and props.":env==="heavy"?"Heavy environmental destruction \u2014 smashing through objects, slams into surfaces, debris, dust, sparks, breaking glass.":"Use the environment as the location naturally suggests.";
+ const refsLine=(F.styleRefs&&F.styleRefs.trim())?`${F.styleRefs.trim()} (translate into descriptive movement and visual traits; do not copy protected characters, exact scenes or franchise-specific material)`:"none";
+ let moves="";fw.forEach((b,i)=>{moves+=`${i+1}. ${flBeatVal(i)}\n`;});
+ return `Professional cinematic fight choreography. Ultra-detailed anatomy, 8K, anamorphic lens character, subtle film grain, perfect temporal consistency, no morphing, no artifacts.
+
+FIGHT BRIEF
+Fight Type: ${ftLine}
+Discipline / Style: ${discLine}
+Fighter Archetype: ${archLine}
+Scenario: ${scenLine}
+Camera & Structure: ${camLine}
+Tone / Treatment: ${toneLine}
+Location: ${c.loc}
+Emotional Reason: ${c.emo||"Auto \u2014 infer the stakes from the matchup."}
+Style Refs: ${refsLine}
+
+CHARACTERS: Hero ${c.hero} @Image1 (${c.hLook}; ${c.hStyle}) vs Villain ${c.villain} @Image2 (${c.vLook}; ${c.vStyle}). Consistent appearance throughout.
+TEAMS: Hero's side — ${c.heroSide.join(", ")}. Villain's side — ${c.villainSide.join(", ")}.${c.loose.length?` Also present (align by context): ${c.loose.join(", ")}.`:""}
+
+EXACT MOVE SEQUENCE (${F.framework}-beat, in order):
+${moves}
+CAMERA: ${c.cam}. Apply the Camera & Structure choice above and keep consistent screen direction. Default flow when Auto: locked tracking on the action, orbit on the biggest strike, low angle on the finish, slow-motion macro on key impacts, whip-pan to a face close-up, wide reset to hold geography.
+PHYSICS: realistic momentum and weight transfer, visible impact force, motion blur on fast limbs, secondary cloth and hair physics, sweat particles, heavy breathing and fatigue micro-movements, real gravity at all times.
+ENVIRONMENT: ${envLine}
+AUDIO (diegetic only): impacts, footwork, fabric, breath, environmental hits \u2014 no music.
+RULES: single coherent 10\u201315s high-motion sequence (or clean storyboarded multi-shot flow). No gore, no excessive blood, no disappearing props, no changing costumes, no unreadable combat. Hold the same characters, wardrobe and location across every beat. Replace @Image1 / @Image2 with your Hero / Villain reference images (Seedance 2.0 reference-to-video syntax).`;
+}
+function flBuildPeak(){
+ const c=flCtx(),F=S.fight,disc=FL_DISC[F.discipline]||FL_DISC.auto;
+ const discTrait=(!F.discipline||F.discipline==="auto")?"":` Movement style: ${disc.label} \u2014 ${disc.desc}`;
+ const refsLine=(F.styleRefs&&F.styleRefs.trim())?` Reference traits (descriptive only, do not copy protected material): ${F.styleRefs.trim()}.`:"";
+ const fw=FL_FW[F.framework]||FL_FW["12"];const sig=flBeatVal(fw.length-2)||"a signature strike";
+ return `Single-frame peak-action still \u2014 freeze the technique mid-execution. ${c.hero} (${c.hLook}) lands ${sig} on ${c.villain} (${c.vLook}) at ${c.loc}.${discTrait} Dynamic action pose, perfect anatomical form, motion blur on fast limbs, debris and sparks frozen in air, sweat spray, fabric and hair caught mid-motion. ${c.cam}.${c.style?(" "+c.style+"."):""}${refsLine} Ultra-detailed, 8K, anamorphic, film grain, cinematic lighting, no artifacts. @Image1 = ${c.hero}, @Image2 = ${c.villain}; exact likeness.`;
+}
+function flRebuild(){
+ const sheet=flBuildSheet(),vid=flBuildVideo(),peak=flBuildPeak();window._flSheet=sheet;window._flVid=vid;window._flPeak=peak;
+ const o=$("flOut");if(!o)return;
+ o.innerHTML='<div class="card"><div style="display:flex;align-items:center;gap:8px"><b>\u25a6 Storyboard sheet \u00b7 image prompt</b><span style="flex:1"></span><button class="btn ghost sm" onclick="flCopy(window._flSheet,\'Sheet copied\')">Copy</button><button class="btn green sm" onclick="flSendSheet()">\u2192 Studio</button></div><pre style="white-space:pre-wrap;word-break:break-word;margin-top:8px;font-size:12px" id="flSheetOut"></pre></div>'
+  +'<div class="card" style="margin-top:10px"><div style="display:flex;align-items:center;gap:8px"><b>\u25b6 Fight scene \u00b7 video prompt</b><span style="flex:1"></span><button class="btn ghost sm" onclick="flCopy(window._flVid,\'Video copied\')">Copy</button><button class="btn green sm" onclick="flSendVideo()">\u2192 Studio</button></div><pre style="white-space:pre-wrap;word-break:break-word;margin-top:8px;font-size:12px" id="flVidOut"></pre></div>'
+  +'<div class="card" style="margin-top:10px"><div style="display:flex;align-items:center;gap:8px"><b>\u29f9 Peak-moment frame \u00b7 image prompt</b><span style="flex:1"></span><button class="btn ghost sm" onclick="flCopy(window._flPeak,\'Peak copied\')">Copy</button><button class="btn green sm" onclick="flSendPeak()">\u2192 Studio</button></div><pre style="white-space:pre-wrap;word-break:break-word;margin-top:8px;font-size:12px" id="flPeakOut"></pre></div>';
+ $("flSheetOut").textContent=sheet;$("flVidOut").textContent=vid;$("flPeakOut").textContent=peak;
+}
+function flCopy(t,m){navigator.clipboard.writeText(t).then(()=>toast(m||"Copied")).catch(()=>toast("Copy failed",true));}
+function flSendSheet(){const p=$("prompt");if(p)p.value=window._flSheet||"";go("studio");toast("Sheet \u2192 Studio. Use the image station + your Hero/Villain refs.");}
+function flSendVideo(){const p=$("prompt");if(p)p.value=window._flVid||"";go("studio");toast("Video \u2192 Studio. Use the video station + your refs.");}
+function flSendPeak(){const p=$("prompt");if(p)p.value=window._flPeak||flBuildPeak();go("studio");toast("Peak frame \u2192 Studio. Image station + your refs.");}
+function flCast(k,v){S.fight[k]=v;save();renderFight();}
+function flField(k,v){S.fight[k]=v;save();flRebuild();}
+function flField2(k,v){S.fight[k]=v;save();flRebuild();}
+function flLoc(v){S.fight.loc=v;save();renderFight();}
+function flSetFW(v){S.fight.framework=v;save();renderFight();}
+function flEditBeat(i,v){const F=S.fight;if(!F.beatEdits)F.beatEdits={};if(!F.beatEdits[F.framework])F.beatEdits[F.framework]={};F.beatEdits[F.framework][i]=v;save();flRebuild();}
+function flDisc(v){S.fight.discipline=v;save();const d=$("flDiscDesc");if(d){const e=FL_DISC[v];const t=(e&&e.desc)?e.desc:"";d.textContent=t;d.style.display=t?"block":"none";}flRebuild();}
+async function flSuggestEmo(){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ const c=flCtx();toast("Finding the reason\u2026");
+ const sys=VOICE_DNA+" One punchy line: the emotional reason these two are fighting \u2014 what each wants, the stakes. Cinematic, specific, no quotes.";
+ const usr="HERO: "+c.hero+". VILLAIN: "+c.villain+". LOCATION: "+c.loc+". One line.";
+ try{const txt=(await llmRun(sys,usr)).trim().replace(/^["']|["']$/g,"");S.fight.emo=txt;save();renderFight();}catch(e){toast("AI brain busy \u2014 try again.",true);}
+}
+function flSuggestLook(){
+ const F=S.fight,tone=F.tone||"auto";let g="Raw Action",a="auto";
+ if(tone==="anime"){g="Bold Neon & Cyberpunk";}
+ else if(tone==="comic"){g="Halftone Print Texture";}
+ else if(tone==="dark"){g="Moody Neo-Noir & Atmospheric Realism";a="Handheld Shaky Cam";}
+ else if(tone==="grounded"||tone==="brutal"){g="Gritty Concrete & Kush";a="Handheld Shaky Cam";}
+ else if(tone==="heroic"){g="Cinematic Hyper-Realism & HDR";}
+ else if(tone==="weighty"){g="Bleach Bypass";}
+ else if(tone==="kinetic"){g="Raw Action";a="Handheld Shaky Cam";}
+ if(GRADES.find(x=>x.n===g))S.fight.grade=g;
+ if(a!=="auto"&&ANGLES.find(x=>x.n===a))S.fight.angle=a;else S.fight.angle="auto";
+ save();renderFight();toast("Look set \u2014 tweak the dropdowns to taste.");
+}
+function renderFight(){
+ flMigrate();
+ const F=S.fight,body=$("fightBody");if(!body)return;
+ const castOpts=(val,none)=>{let h=none?'<option value="">\u2014 none \u2014</option>':'<option value="">\u2014 pick \u2014</option>';S.cast.forEach(c=>{h+='<option value="'+c.id+'"'+(c.id===val?" selected":"")+'>'+esc(c.name)+'</option>';});return h;};
+ let locSel='<option value=""'+(!F.loc?" selected":"")+'>\u2014 pick a set \u2014</option>';S.sets.forEach(x=>{locSel+='<option value="'+x.id+'"'+(x.id===F.loc?" selected":"")+'>'+esc(x.name)+'</option>';});locSel+='<option value="__custom"'+(F.loc==="__custom"?" selected":"")+'>Custom\u2026</option>';
+ const angSel='<option value="auto"'+(!F.angle||F.angle==="auto"?" selected":"")+'>Auto (readable default)</option>'+ANGLES.map(a=>'<option'+(a.n===F.angle?" selected":"")+'>'+esc(a.n)+'</option>').join("");
+ const grSel='<option value="auto"'+(!F.grade||F.grade==="auto"?" selected":"")+'>Auto</option>'+GRADES.map(g=>'<option'+(g.n===F.grade?" selected":"")+'>'+esc(g.n)+'</option>').join("");
+ const flmSel='<option value="auto"'+(!F.film||F.film==="auto"?" selected":"")+'>Auto</option>'+FILMSTOCKS.map(f=>'<option'+(f.n===F.film?" selected":"")+'>'+esc(f.n)+'</option>').join("");
+ const fwSel=["12","15","10"].map(k=>'<option value="'+k+'"'+(F.framework===k?" selected":"")+'>'+(k==="12"?"12-beat formula":k==="15"?"15-point core mechanics":"10-slot template")+'</option>').join("");
+ let shSel="";for(const k in FL_SHEETS)shSel+='<option value="'+k+'"'+(F.sheetKey===k?" selected":"")+'>'+esc(FL_SHEETS[k].name)+'</option>';
+ const dcur=F.discipline||"auto";
+ let discSel='<option value="auto"'+(dcur==="auto"?" selected":"")+'>Auto / Mixed</option>';
+ FL_DISC_GROUPS.forEach(grp=>{discSel+='<optgroup label="'+esc(grp.g)+'">';grp.items.forEach(sl=>{const e=FL_DISC[sl];if(e)discSel+='<option value="'+sl+'"'+(dcur===sl?" selected":"")+'>'+esc(e.label)+'</option>';});discSel+='</optgroup>';});
+ const _e=FL_DISC[dcur];const _d=(_e&&_e.desc)||"";
+ const fw=FL_FW[F.framework]||FL_FW["12"];const edits=(F.beatEdits&&F.beatEdits[F.framework])||{};
+ let beatsH="";fw.forEach((b,i)=>{const val=(edits[i]!==undefined)?edits[i]:b.d(flCtx());beatsH+='<div style="margin-top:8px"><label class="fld">'+esc(b.bt)+'</label><textarea oninput="flEditBeat('+i+',this.value)" style="min-height:44px">'+esc(val)+'</textarea></div>';});
+ const need=S.cast.length<2?'<div class="hint" style="color:#e8b94a">Add at least 2 characters in the Cast tab to set a Hero & Villain.</div>':"";
+ let h='<div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:30px;height:30px;display:block"><path d="M13 2 4.5 13.5H11l-1 8.5 9.5-12.5H12z"/></svg></span><h2>Fight Lab</h2></div>';
+ h+='<div class="hint" style="margin-bottom:10px">Six independent controls — Fight Type <span style="color:var(--bud)">(what)</span>, Discipline <span style="color:var(--bud)">(how they fight)</span>, Archetype <span style="color:var(--bud)">(what kind of fighter)</span>, Scenario <span style="color:var(--bud)">(what\'s happening)</span>, Camera &amp; Structure <span style="color:var(--bud)">(how we watch)</span>, Tone <span style="color:var(--bud)">(how it feels)</span>. Location sets where. Swap anything; prompts rebuild live.</div>'+need;
+ h+='<div class="card"><label class="fld">Fight type</label><select onchange="flField(\'ftype\',this.value)">'+flOpts(FL_FTYPE,F.ftype)+'</select>';
+ h+='<div class="row" style="gap:8px;margin-top:10px"><div style="flex:1"><label class="fld">Hero (Image A)</label><select onchange="flCast(\'hero\',this.value)">'+castOpts(F.hero,false)+'</select></div><div style="flex:1"><label class="fld">Villain (Image B)</label><select onchange="flCast(\'villain\',this.value)">'+castOpts(F.villain,false)+'</select></div></div>';
+ let _ex="";for(let _i=0;_i<4;_i++){const _e=(F.extras&&F.extras[_i])||{c:"",side:"auto"};_ex+='<div class="row" style="gap:8px;margin-top:6px"><div style="flex:2"><select onchange="flExtra('+_i+',\'c\',this.value)">'+castOpts(_e.c,true)+'</select></div><div style="flex:1"><select onchange="flExtra('+_i+',\'side\',this.value)">'+sideOpts(_e.side)+'</select></div></div>';}
+ h+='<label class="fld" style="margin-top:10px">Extras / sidekicks — tag each side</label>'+_ex+'</div>';
+ h+='<div class="card" style="margin-top:10px"><label class="fld">Discipline / style</label><select onchange="flDisc(this.value)">'+discSel+'</select>';
+ h+='<div id="flDiscDesc" class="hint" style="margin-top:4px'+(_d?"":";display:none")+'">'+esc(_d)+'</div>';
+ h+='<label class="fld" style="margin-top:10px">Fighter archetype</label><select onchange="flField(\'archetype\',this.value)">'+flOpts(FL_ARCH,F.archetype)+'</select></div>';
+ h+='<div class="card" style="margin-top:10px"><label class="fld">Scenario</label><select onchange="flField(\'scenario\',this.value)">'+flOpts(FL_SCEN,F.scenario)+'</select>';
+ h+='<label class="fld" style="margin-top:10px">Tone / treatment</label><select onchange="flField(\'tone\',this.value)">'+flOpts(FL_TONE,F.tone)+'</select>';
+ h+='<label class="fld" style="margin-top:10px">Location (from your Sets)</label><select onchange="flLoc(this.value)">'+locSel+'</select>';
+ if(F.loc==="__custom")h+='<input type="text" placeholder="Custom location\u2026" value="'+esc(F.locCustom||"")+'" oninput="flField2(\'locCustom\',this.value)" style="margin-top:8px">';
+ h+='<label class="fld" style="margin-top:10px">Use environment in fight</label><select onchange="flField(\'envuse\',this.value)">'+flOpts(FL_ENV,F.envuse)+'</select></div>';
+ h+='<div class="card" style="margin-top:10px"><label class="fld">Camera &amp; structure</label><select onchange="flField(\'camstruct\',this.value)">'+flOpts(FL_CAMSTRUCT,F.camstruct)+'</select>';
+ h+='<label class="fld" style="margin-top:10px">Camera angle</label><select onchange="flField(\'angle\',this.value)">'+angSel+'</select>';
+ h+='<div class="row" style="gap:8px;margin-top:8px"><div style="flex:1"><label class="fld">Grade</label><select onchange="flField(\'grade\',this.value)">'+grSel+'</select></div><div style="flex:1"><label class="fld">Film stock</label><select onchange="flField(\'film\',this.value)">'+flmSel+'</select></div></div>';
+ h+='<button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="flSuggestLook()">\u2726 Suggest the look</button>';
+ h+='<label class="fld" style="margin-top:10px">Style refs</label><input type="text" value="'+esc(F.styleRefs||"")+'" placeholder="Optional film, scene, animation, or choreography references" oninput="flField2(\'styleRefs\',this.value)">';
+ h+='<label class="fld" style="margin-top:10px">Emotional reason for the fight</label><div class="row" style="gap:8px"><input type="text" value="'+esc(F.emo||"")+'" placeholder="why are they fighting? what does each want?" oninput="flField2(\'emo\',this.value)"><button class="btn ghost sm" style="flex:0" onclick="flSuggestEmo()">\u2726</button></div></div>';
+ h+='<div class="card" style="margin-top:10px"><label class="fld">Beat framework</label><select onchange="flSetFW(this.value)">'+fwSel+'</select><div class="hint" style="margin-top:4px">Beats auto-seed from the matchup. Edit any line \u2014 your text overrides the default.</div>'+beatsH+'</div>';
+ h+='<div class="card" style="margin-top:10px"><label class="fld">Storyboard sheet skeleton</label><select onchange="flField(\'sheetKey\',this.value)">'+shSel+'</select></div>';
+ h+='<div id="flOut" style="margin-top:16px"></div>';
+ body.innerHTML=h;flRebuild();
 }
 function withRes(model,input){if(model&&model.indexOf("nano-banana")>-1)input.resolution=(S.imgRes||"1K");return input;}
 function boardStylePrompt(style,ctx){

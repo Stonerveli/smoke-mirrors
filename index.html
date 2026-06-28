@@ -570,6 +570,66 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <select id="rhymeSel"></select>
     <div id="rhymeOut"></div>
   </div>
+  <div class="card">
+    <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:30px;height:30px;display:block"><rect x="2" y="4" width="20" height="16" rx="1"/><path d="M7 4v16"/><path d="M17 4v16"/><path d="M2 9h5"/><path d="M2 14h5"/><path d="M17 9h5"/><path d="M17 14h5"/></svg></span><h2>Studio Modes</h2></div>
+    <div class="hint" style="margin-top:-2px;margin-bottom:10px">Bigger builds — craft a reusable artist, a whole project, a video concept, or brand &amp; cinematic music.</div>
+    <details class="collapse"><summary>Artist Persona Creator</summary><div class="body">
+    <label class="fld">Artist name</label><input type="text" id="pcName" placeholder="the persona’s name">
+    <label class="fld" style="margin-top:8px">Role / lane</label>
+    <input type="text" id="pcLane" placeholder="e.g. melodic street storyteller">
+    <label class="fld" style="margin-top:8px">Vocal identity</label>
+    <input type="text" id="pcVocal" placeholder="e.g. smooth, gravelly, deadpan">
+    <label class="fld" style="margin-top:8px">Genre blend</label>
+    <input type="text" id="pcGenre" placeholder="e.g. boom bap + cinematic soul">
+    <label class="fld" style="margin-top:8px">Personality / themes</label>
+    <textarea id="pcThemes" style="min-height:48px" placeholder="what they rap about, attitude"></textarea>
+    <label class="fld" style="margin-top:8px">Do not use</label>
+    <input type="text" id="pcAvoid" placeholder="optional">
+    <button class="btn green sm" id="pcBtn" style="margin-top:10px;width:100%">Build persona</button>
+    <div id="pcStatus"></div><div id="pcOut"></div>
+    </div></details>
+    <details class="collapse" style="margin-top:6px"><summary>Album / EP Creator</summary><div class="body">
+    <label class="fld">Project title</label><input type="text" id="alTitle" placeholder="the project name">
+    <label class="fld" style="margin-top:8px">Artist</label>
+    <input type="text" id="alArtist" placeholder="who it’s by">
+    <label class="fld" style="margin-top:8px">Type</label>
+    <select id="alType"></select>
+    <label class="fld" style="margin-top:8px">How many tracks</label>
+    <input type="number" id="alTracks" placeholder="e.g. 8">
+    <label class="fld" style="margin-top:8px">Core theme</label>
+    <textarea id="alTheme" style="min-height:48px" placeholder="the through-line / story"></textarea>
+    <label class="fld" style="margin-top:8px">Sound palette</label>
+    <input type="text" id="alSound" placeholder="e.g. cinematic boom bap, warm analog">
+    <label class="fld" style="margin-top:8px">Avoid</label>
+    <input type="text" id="alAvoid" placeholder="optional">
+    <button class="btn green sm" id="alBtn" style="margin-top:10px;width:100%">Build project</button>
+    <div id="alStatus"></div><div id="alOut"></div>
+    </div></details>
+    <details class="collapse" style="margin-top:6px"><summary>Music Video Concept</summary><div class="body">
+    <label class="fld">Base on a saved song</label><select id="mvSong"></select>
+    <label class="fld" style="margin-top:8px">Premise / idea</label>
+    <textarea id="mvIdea" style="min-height:48px" placeholder="the visual idea (or leave blank to derive from the song)"></textarea>
+    <label class="fld" style="margin-top:8px">Location</label>
+    <input type="text" id="mvLoc" placeholder="optional">
+    <label class="fld" style="margin-top:8px">Performance style</label>
+    <input type="text" id="mvPerf" placeholder="optional">
+    <button class="btn green sm" id="mvBtn" style="margin-top:10px;width:100%">Build concept</button>
+    <div id="mvStatus"></div><div id="mvOut"></div>
+    </div></details>
+    <details class="collapse" style="margin-top:6px"><summary>Brand / Cinematic</summary><div class="body">
+    <label class="fld">Mode</label><select id="bcMode"></select>
+    <label class="fld" style="margin-top:8px">Brand / product / scene</label>
+    <input type="text" id="bcSubject" placeholder="what it’s for">
+    <label class="fld" style="margin-top:8px">Slogan / key detail</label>
+    <input type="text" id="bcDetail" placeholder="optional">
+    <label class="fld" style="margin-top:8px">Length</label>
+    <select id="bcLen"></select>
+    <label class="fld" style="margin-top:8px">Platform</label>
+    <input type="text" id="bcPlat" placeholder="optional">
+    <button class="btn green sm" id="bcBtn" style="margin-top:10px;width:100%">Build</button>
+    <div id="bcStatus"></div><div id="bcOut"></div>
+    </div></details>
+  </div>
 </section>
 <section class="view" id="view-settings">
   <div class="slatehead"><span class="num">⚙</span><h2>Setup</h2><span class="tag">Keys &amp; Models</span></div>
@@ -615,7 +675,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.4 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.5 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1970,6 +2030,7 @@ function renderSuno(){
   renderRapTech();
   renderRhyme();
   renderLyricLab();
+  renderStudioModes();
   renderSpecialist();
   renderSunoSuggest();
   renderSunoProjects();
@@ -2373,6 +2434,78 @@ async function genLyrics(){
     if(r.note)h+=sunoCard("Note",r.note);
     $("lyrOut").innerHTML=h;bindSunoCopies();st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Lyrics ready</div>';
   }catch(e){st.innerHTML='<div class="statusline" style="color:var(--red)">\u2717 '+esc(e.message)+'</div>';}
+}
+
+function sv(id){const e=$(id);return e?(e.value||"").trim():"";}
+function renderStudioModes(){
+  const mv=$("mvSong");
+  if(mv){const ps=S.sunoProjects||[];mv.innerHTML='<option value="">\u2014 describe below \u2014</option>'+ps.map(p=>'<option value="'+p.id+'">'+esc(p.title||"Untitled")+'</option>').join("");}
+  const at=$("alType");if(at&&!at.dataset.built){at.innerHTML=["Album","EP"].map(x=>'<option>'+x+'</option>').join("");at.dataset.built="1";}
+  const bm=$("bcMode");if(bm&&!bm.dataset.built){bm.innerHTML=["Brand Anthem","Commercial Jingle","Cinematic Soundtrack","Trailer Music","Character Theme"].map(x=>'<option>'+x+'</option>').join("");bm.dataset.built="1";}
+  const bl=$("bcLen");if(bl&&!bl.dataset.built){bl.innerHTML=["15 seconds","30 seconds","Full length","Loop-friendly"].map(x=>'<option>'+x+'</option>').join("");bl.dataset.built="1";}
+  if($("pcBtn"))$("pcBtn").onclick=genPersona;
+  if($("alBtn"))$("alBtn").onclick=genAlbum;
+  if($("mvBtn"))$("mvBtn").onclick=genVideo;
+  if($("bcBtn"))$("bcBtn").onclick=genBrand;
+}
+function spinOn(id,msg){const st=$(id);if(st)st.innerHTML='<div class="statusline"><span class="rec"></span>'+msg+'</div>';}
+function spinOk(id,msg){const st=$(id);if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 '+msg+'</div>';}
+function spinErr(id,e){const st=$(id);if(st)st.innerHTML='<div class="statusline" style="color:var(--red)">\u2717 '+esc(e.message||e)+'</div>';}
+function needKey(){if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return false;}return true;}
+async function genPersona(){
+  if(!needKey())return;
+  const name=sv("pcName");if(!name){toast("Give the persona a name.",true);return;}
+  spinOn("pcStatus","Building the persona\u2026");$("pcOut").innerHTML="";
+  const sys="You are an artist persona creator for the deadpan cannabis-culture brand Chiefin' Season / Stoneralia. Build one coherent, reusable artist identity. Never name living artists or producers (translate any reference into descriptive traits). Return JSON ONLY: {\"positioning\":\"\",\"profile\":\"\",\"vocal\":\"\",\"musical\":\"\",\"lyrical\":\"\",\"production\":\"\",\"visual\":\"\",\"audience\":\"\",\"sunoProfile\":\"\",\"consistency\":\"\"}.";
+  const usr="ARTIST NAME: "+name+"\nROLE / LANE: "+sv("pcLane")+"\nVOCAL IDENTITY: "+sv("pcVocal")+"\nGENRE BLEND: "+sv("pcGenre")+"\nPERSONALITY / THEMES: "+sv("pcThemes")+"\nDO NOT USE: "+sv("pcAvoid")+"\nBuild the persona now.";
+  try{const r=parseJSON(await llmRun(sys,usr));
+    let h=sunoCard("Positioning",r.positioning||"")+sunoCard("Artist Profile",r.profile||"")+sunoCard("Vocal Identity",r.vocal||"")+sunoCard("Musical Identity",r.musical||"")+sunoCard("Lyrical Identity",r.lyrical||"")+sunoCard("Production Identity",r.production||"")+sunoCard("Visual Identity",r.visual||"")+sunoCard("Audience",r.audience||"")+sunoCard("Reusable Suno Artist Profile",r.sunoProfile||"")+sunoCard("Consistency Lock",r.consistency||"");
+    h+='<button class="btn ghost sm" id="pcUseArtist" style="margin-top:10px;width:100%">Use \"'+esc(name)+'\" as Artist / Persona</button>';
+    $("pcOut").innerHTML=h;bindSunoCopies();spinOk("pcStatus","Persona ready");
+    if($("pcUseArtist"))$("pcUseArtist").onclick=()=>{const ar=$("sunoArtist");if(ar){ar.value=name;toast("Set as Artist / Persona.");}};
+  }catch(e){spinErr("pcStatus",e);}
+}
+async function genAlbum(){
+  if(!needKey())return;
+  const title=sv("alTitle");if(!title){toast("Give the project a title.",true);return;}
+  spinOn("alStatus","Architecting the project\u2026");$("alOut").innerHTML="";
+  const sys="You are an album/EP concept architect for the deadpan cannabis-culture brand Chiefin' Season / Stoneralia. Build a cohesive project with a real arc. Never name living artists (translate refs to traits). Return JSON ONLY: {\"positioning\":\"\",\"summary\":\"\",\"sonic\":\"\",\"arc\":\"\",\"tracklist\":[{\"title\":\"\",\"genre\":\"\",\"purpose\":\"\",\"concept\":\"\"}],\"continuity\":\"\",\"singles\":\"\",\"consistency\":\"\"}.";
+  const usr="PROJECT TITLE: "+title+"\nARTIST: "+sv("alArtist")+"\nTYPE: "+sv("alType")+"\nTRACK COUNT: "+(sv("alTracks")||"pick a fitting number")+"\nCORE THEME: "+sv("alTheme")+"\nSOUND PALETTE: "+sv("alSound")+"\nAVOID: "+sv("alAvoid")+"\nBuild the project now.";
+  try{const r=parseJSON(await llmRun(sys,usr));
+    const tl=(r.tracklist||[]).map((t,i)=>(i+1)+". "+(t.title||"Untitled")+"  \u2014  "+(t.genre||"")+(t.purpose?"  |  "+t.purpose:"")+(t.concept?"\n     "+t.concept:"")).join("\n");
+    let h=sunoCard("Positioning",r.positioning||"")+sunoCard("Concept",r.summary||"")+sunoCard("Sonic Identity",r.sonic||"")+sunoCard("Emotional Arc",r.arc||"")+sunoCard("Tracklist",tl||"\u2014")+sunoCard("Continuity Rules",r.continuity||"")+sunoCard("Recommended Singles",r.singles||"")+sunoCard("Reusable Consistency Prompt",r.consistency||"");
+    $("alOut").innerHTML=h;bindSunoCopies();spinOk("alStatus","Project ready");
+  }catch(e){spinErr("alStatus",e);}
+}
+async function genVideo(){
+  if(!needKey())return;
+  const pj=(S.sunoProjects||[]).find(x=>x.id===sv("mvSong"));
+  const idea=sv("mvIdea");if(!pj&&!idea){toast("Pick a song or describe the idea.",true);return;}
+  spinOn("mvStatus","Directing the concept\u2026");$("mvOut").innerHTML="";
+  const sys="You are a music-video concept director for the deadpan cannabis-culture brand Chiefin' Season / Stoneralia. Build a vivid, shootable concept. Return JSON ONLY: {\"premise\":\"\",\"location\":\"\",\"performance\":\"\",\"wardrobe\":\"\",\"camera\":\"\",\"motifs\":\"\",\"progression\":\"\",\"editing\":\"\",\"brand\":\"\",\"thumbnail\":\"\"}.";
+  let usr="";if(pj)usr+="SONG: "+(pj.title||"")+" \u2014 "+(pj.optimizedStyle||pj.originalStyle||"")+"\n";
+  usr+="IDEA / PREMISE: "+(idea||"derive from the song")+"\nLOCATION: "+sv("mvLoc")+"\nPERFORMANCE STYLE: "+sv("mvPerf")+"\nBuild the concept now.";
+  try{const r=parseJSON(await llmRun(sys,usr));
+    let h=sunoCard("Visual Premise",r.premise||"")+sunoCard("Location",r.location||"")+sunoCard("Performance Style",r.performance||"")+sunoCard("Wardrobe",r.wardrobe||"")+sunoCard("Camera Energy",r.camera||"")+sunoCard("Visual Motifs",r.motifs||"")+sunoCard("Scene Progression",r.progression||"")+sunoCard("Editing Rhythm",r.editing||"")+sunoCard("Brand Integration",r.brand||"")+sunoCard("Thumbnail Concept",r.thumbnail||"");
+    $("mvOut").innerHTML=h;bindSunoCopies();spinOk("mvStatus","Concept ready");
+  }catch(e){spinErr("mvStatus",e);}
+}
+async function genBrand(){
+  if(!needKey())return;
+  const subj=sv("bcSubject");if(!subj){toast("Name the brand, product, or scene.",true);return;}
+  const mode=sv("bcMode")||"Brand Anthem";
+  spinOn("bcStatus","Composing "+mode+"\u2026");$("bcOut").innerHTML="";
+  const sys="You are a brand, commercial, and cinematic music creator for the deadpan cannabis-culture brand Chiefin' Season / Stoneralia. concise suno prompt MAX 200 chars; never name living artists (translate refs to traits); keep it platform-safe. Return JSON ONLY: {\"concept\":\"\",\"shortVersion\":\"\",\"longVersion\":\"\",\"instrumental\":\"\",\"suno\":\"\",\"note\":\"\"}.";
+  const usr="MODE: "+mode+"\nSUBJECT (brand / product / scene): "+subj+"\nSLOGAN / KEY DETAIL: "+sv("bcDetail")+"\nLENGTH: "+sv("bcLen")+"\nPLATFORM: "+sv("bcPlat")+"\nCompose now.";
+  try{const r=parseJSON(await llmRun(sys,usr));
+    let h=sunoCard("Concept",r.concept||"");
+    if(r.shortVersion)h+=sunoCard("Short Version",r.shortVersion);
+    if(r.longVersion)h+=sunoCard("Full Version",r.longVersion);
+    if(r.instrumental)h+=sunoCard("Instrumental Alternative",r.instrumental);
+    h+=sunoField("Concise Suno Prompt",r.suno||"",200);
+    if(r.note)h+=sunoCard("Note",r.note);
+    $("bcOut").innerHTML=h;bindSunoCopies();spinOk("bcStatus",mode+" ready");
+  }catch(e){spinErr("bcStatus",e);}
 }
 async function buildSuno(){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}

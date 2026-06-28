@@ -223,6 +223,66 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 
 <!-- ===== PRE-ROLL (storyboard) ===== -->
 <section class="view" id="view-board">
+  <div class="card">
+    <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:30px;height:30px;display:block"><rect x="2" y="7" width="20" height="13" rx="1"/><path d="M2 7l4-4h4l-4 4"/><path d="M10 3h4l-4 4"/><path d="M18 3l-4 4"/></svg></span><h2>Cinematic Storyboard Creator</h2></div>
+    <div class="hint" style="margin-top:-2px;margin-bottom:10px">Turn scripts, scenes, songs, ads, and ideas into production-ready visual sequences.</div>
+    <details class="collapse" open><summary>Project &amp; Mode</summary><div class="body">
+    <label class="fld">Storyboard title</label><input type="text" id="csbTitle" placeholder="optional">
+    <label class="fld" style="margin-top:8px">Starter preset</label><select id="csbPreset"></select>
+    <label class="fld" style="margin-top:8px">Creator Category</label>
+    <select id="csbCat"></select>
+    <label class="fld" style="margin-top:8px">Creator Mode</label>
+    <select id="csbMode"></select>
+    <label class="fld" style="margin-top:8px">Intended use</label>
+    <select id="csbUse"></select>
+    <div id="csbSuggestRow" style="margin-top:8px"><button class="btn ghost sm" id="csbSuggest" style="flex:0">✨ Suggest setup</button></div>
+    </div></details>
+    <details class="collapse" style="margin-top:6px"><summary>Story</summary><div class="body">
+    <label class="fld">Logline</label><input type="text" id="csbLogline" placeholder="one-line summary">
+    <label class="fld" style="margin-top:8px">Scene concept / description</label>
+    <textarea id="csbConcept" style="min-height:70px" placeholder="what happens — paste a script, scene, brief, lyrics, or idea"></textarea>
+    <label class="fld" style="margin-top:8px">Required story beats</label>
+    <textarea id="csbBeats" style="min-height:48px" placeholder="optional — beats to hit, one per line"></textarea>
+    <label class="fld" style="margin-top:8px">Elements to avoid</label>
+    <input type="text" id="csbAvoid" placeholder="optional">
+    <label class="fld" style="margin-top:8px">Style references</label>
+    <input type="text" id="csbStyleRefs" placeholder="optional films/scenes/directors — translated to traits, never copied">
+    </div></details>
+    <details class="collapse" style="margin-top:6px"><summary>Characters &amp; Sets</summary><div class="body">
+    <label class="fld">Cast (tap to add)</label><div class="tokenchips" id="csbCast"></div>
+    <label class="fld" style="margin-top:8px">Set / location</label>
+    <select id="csbSetSel"></select>
+    <label class="fld" style="margin-top:6px">Or a temporary location</label>
+    <input type="text" id="csbTempLoc" placeholder="optional">
+    <label class="fld" style="margin-top:8px">Chieff presence</label>
+    <select id="csbChieff"></select>
+    </div></details>
+    <details class="collapse" style="margin-top:6px"><summary>Format &amp; Timing</summary><div class="body">
+    <label class="fld">Story format</label>
+    <select id="csbFormat"></select>
+    <label class="fld" style="margin-top:8px">Panel count</label>
+    <select id="csbPanels"></select>
+    <label class="fld" style="margin-top:8px">Runtime</label>
+    <select id="csbRuntime"></select>
+    <label class="fld" style="margin-top:8px">Aspect ratio</label>
+    <select id="csbAspect"></select>
+    </div></details>
+    <details class="collapse" style="margin-top:6px"><summary>Visual &amp; Audio</summary><div class="body">
+    <label class="fld">Story treatment</label>
+    <select id="csbTreat"></select>
+    <label class="fld" style="margin-top:8px">Camera &amp; structure</label>
+    <select id="csbCamera"></select>
+    <label class="fld" style="margin-top:8px">Dialogue mode</label>
+    <select id="csbDialogue"></select>
+    <label class="fld" style="margin-top:8px">Audio mode</label>
+    <select id="csbAudio"></select>
+    <label class="fld" style="margin-top:8px">Ending type</label>
+    <select id="csbEnding"></select>
+    </div></details>
+    <button class="btn green" id="csbBtn" style="margin-top:12px;width:100%">&#10022; Build storyboard</button>
+    <div id="csbStatus"></div><div id="csbOut"></div>
+    <details class="collapse" style="margin-top:12px"><summary>Saved storyboards</summary><div class="body"><div id="csbProjects"></div></div></details>
+  </div>
   <div class="slatehead"><span class="num">06</span><h2>Pre-Roll</h2><span class="tag">Storyboard · GPT Image-2</span></div>
   <div class="hint" style="margin-bottom:14px">Pick a board style, script in → one-click board out. The frames sheet also lets you pull keepers as full shots → Seedance 2.0 prompt.</div>
   <span class="steptag">Step 1 · The script</span>
@@ -675,7 +735,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.5 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.7 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -690,7 +750,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
 let S=load();
@@ -791,6 +851,8 @@ function go(name){
   if(name==="story")renderShots();
   if(name==="studio")renderRefs();
   if(name==="board")renderBoardChars();
+  if(name==="board")renderCSB();
+  if(name==="board"&&S.csb&&S.csb.work)csbRenderWork();
   if(name==="episodes")renderEpisodes();
   if(name==="cloudtoons")renderCloudtoons();
   if(name==="comics")renderComics();
@@ -2506,6 +2568,199 @@ async function genBrand(){
     if(r.note)h+=sunoCard("Note",r.note);
     $("bcOut").innerHTML=h;bindSunoCopies();spinOk("bcStatus",mode+" ready");
   }catch(e){spinErr("bcStatus",e);}
+}
+
+const CSB_CATS=["Auto / Recommend", "Film & Narrative", "Short-Form & Social", "Silent Comedy & Cartoon", "Advertising & Brand", "Music & Performance", "Superhero, Villain & Action", "Documentary, News & Genre", "AI Production & Previsualization", "Storyboard Review & Optimization"],CSB_MODES={"Film & Narrative": ["Cinematic Storyboard Creator", "Film Storyboard Creator", "Shot-by-Shot Storyboard Creator", "Frame-Order Storyboard Creator", "Dialogue Scene Storyboard Creator", "No-Dialogue Storyboard Creator", "Emotional Short-Film Storyboard Creator", "Emotional Beat Storyboard Creator", "Mystery Storyboard Creator", "Horror-Suspense Storyboard Creator", "Serialized Episode Storyboard Creator", "Cliffhanger Storyboard Creator"], "Short-Form & Social": ["4-Panel Storyboard Creator", "6-Panel Storyboard Creator", "9-Panel Storyboard Creator", "12-Panel Storyboard Creator", "15-Second Storyboard Creator", "30-Second Storyboard Creator", "60-Second Storyboard Creator", "Vertical Video Storyboard Creator", "Horizontal Film Storyboard Creator", "Square Social Storyboard Creator", "Looping Storyboard Creator", "Thumbnail Frame Creator", "Poster Frame Creator"], "Silent Comedy & Cartoon": ["Silent Comedy Storyboard Creator", "Physical Comedy Storyboard Creator", "Cartoon Box Storyboard Creator", "Absurdist Storyboard Creator", "Visual Gag Storyboard Creator", "Action Comedy Storyboard Creator", "No-Dialogue Action Storyboard Creator"], "Advertising & Brand": ["Commercial Storyboard Creator", "Cinematic Product Ad Storyboard Creator", "UGC Ad Storyboard Creator", "Fake Commercial Storyboard Creator", "Infomercial Storyboard Creator", "Brand Trailer Storyboard Creator", "Product Drop Storyboard Creator", "Streetwear Lookbook Storyboard Creator"], "Music & Performance": ["Music Video Storyboard Creator", "Performance Video Storyboard Creator", "Narrative Music Video Storyboard Creator", "Visualizer Storyboard Creator", "Lyric Video Storyboard Creator", "Beat-Synced Storyboard Creator", "Editing Rhythm Storyboard Creator"], "Superhero, Villain & Action": ["Superhero Storyboard Creator", "Villain Reveal Storyboard Creator", "Transformation Storyboard Creator", "Choreographed Fight Storyboard Creator", "One-vs-Many Storyboard Creator", "Boss Battle Storyboard Creator", "Chase Scene Storyboard Creator", "One-Shot Storyboard Creator", "Long-Take Storyboard Creator", "Shot Geography Storyboard Creator"], "Documentary, News & Genre": ["Mockumentary Storyboard Creator", "News Broadcast Storyboard Creator", "Camera Movement Storyboard Creator", "Transition Storyboard Creator"], "AI Production & Previsualization": ["AI-Ready Storyboard Prompt Creator", "Image-to-Video Storyboard Creator", "Keyframe Storyboard Creator", "Dense Storyboard Creator", "Storyboard-to-Animatic Creator", "Production Storyboard Creator"], "Storyboard Review & Optimization": ["Storyboard Prompt Optimizer", "Storyboard Variation Creator", "Storyboard Continuity Checker"]},CSB_USE=["Auto", "Film", "Short Film", "Pilot", "Web Series", "Episode", "TikTok", "Instagram Reel", "YouTube Short", "YouTube Video", "Commercial", "Product Advertisement", "Brand Trailer", "Music Video", "Visualizer", "Lyric Video", "Comic Sequence", "Motion Comic", "Superhero Scene", "Fight Scene", "Character Reveal", "Villain Reveal", "Silent Comedy", "Fake Commercial", "Mockumentary", "News Broadcast", "Animatic", "Previsualization", "Other"],CSB_FMT=["Auto", "Shot-by-Shot", "Frame Order", "Comic Panels", "Cinematic Keyframes", "Dense Animation Frames", "Animatic Plan", "Production Storyboard", "Social Carousel", "Single-Panel Sequence", "Split-Screen Sequence"],CSB_PAN=["Auto", "1", "3", "4", "6", "8", "9", "10", "12", "15", "16", "18", "24"],CSB_RUN=["Auto", "5 seconds", "8 seconds", "10 seconds", "15 seconds", "20 seconds", "30 seconds", "45 seconds", "60 seconds", "90 seconds", "2 minutes", "3 minutes", "5 minutes"],CSB_ASP=["Auto", "9:16 Vertical", "16:9 Widescreen", "1:1 Square", "4:5 Social Portrait", "2.39:1 Cinematic", "1.85:1 Theatrical", "4:3 Retro"],CSB_TRE=["Auto", "Cinematic", "Grounded Realism", "Premium Commercial", "Silent Comedy", "Physical Comedy", "Absurdist Comedy", "Deadpan Comedy", "Cartoon Box", "Comic-Book Impact", "Anime Clarity", "Heroic Spectacle", "Villain Suspense", "Emotional Drama", "Mockumentary", "News Broadcast", "Horror Suspense", "Mystery", "Dreamlike", "Psychedelic", "Retro", "VHS", "Public Access Television", "Gritty 16mm", "Polished Digital"],CSB_CAM=["Auto", "Traditional Coverage", "Locked-Off Wide", "Full-Body Comedy Coverage", "Shot-Reverse-Shot", "Handheld Documentary", "Stabilized Tracking", "One-Shot / No Cuts", "Long Take", "Circular Camera", "Overhead Geography", "Slow Push-In", "Slow Pullback", "Fast Kinetic Coverage", "Beat-Synchronized Editing", "Security Camera", "Bodycam / Found Footage", "Drone Establishing", "Comic-Panel Framing", "Mixed Cinematic Coverage"],CSB_DIA=["Auto", "No Dialogue", "Dialogue", "Minimal Dialogue", "Voiceover", "Narration Cards", "Intertitles", "Song Lyrics", "Diegetic Background Speech"],CSB_AUD=["Auto", "No Audio Plan", "Diegetic Sound Only", "Sound Effects", "Music Only", "Music and Sound Effects", "Dialogue and Sound", "Full Sound Design"],CSB_END=["Auto", "Resolution", "Visual Punchline", "Deadpan Reaction", "Loop Back to Opening", "Cliffhanger", "Product Hero Shot", "Brand Logo Moment", "Hero Pose", "Villain Reveal", "Emotional Hold", "Smash Cut", "Freeze Frame", "Hard Stop", "Fade Out", "Open Ending"],CSB_CHF=["Auto", "Always Beside Him", "Background Spectator", "Appears at Key Moments", "Punchline Appearance", "Helper", "Mischievous Helper", "Silent Judge"],CSB_PRESETS=[{"name": "Stoneralia Silent Comedy", "cat": "Silent Comedy & Cartoon", "mode": "Silent Comedy Storyboard Creator", "format": "Frame Order", "panels": "12", "runtime": "15 seconds", "aspect": "9:16 Vertical", "dialogue": "No Dialogue", "treatment": "Silent Comedy", "ending": "Visual Punchline", "chieff": "Background Spectator", "beats": "visual hook / tiny problem / first attempt / failure / escalation / Chieff observes / false solution / larger chaos / truth becomes visible / realization / dignity recovery / final visual button"}, {"name": "Everyday Stoner & Chieff", "cat": "Silent Comedy & Cartoon", "mode": "Physical Comedy Storyboard Creator", "aspect": "9:16 Vertical", "dialogue": "No Dialogue", "treatment": "Physical Comedy", "ending": "Deadpan Reaction", "chieff": "Background Spectator", "beats": "Everyday Stoner hits a human problem; Chieff silently observes, helps, judges, or becomes the final punchline"}, {"name": "Chiefin' Season Product Drop", "cat": "Advertising & Brand", "mode": "Product Drop Storyboard Creator", "runtime": "30 seconds", "aspect": "9:16 Vertical", "treatment": "Premium Commercial", "dialogue": "Minimal Dialogue", "ending": "Product Hero Shot", "beats": "teaser / logo or detail / full product reveal / macro fabric shot / model movement / lifestyle scene / secondary detail / product hero shot / drop message"}, {"name": "Chiefico Brazski Music Video", "cat": "Music & Performance", "mode": "Music Video Storyboard Creator", "aspect": "16:9 Widescreen", "treatment": "Cinematic", "dialogue": "Song Lyrics", "ending": "Emotional Hold", "beats": "visual motif / artist reveal / performance / wardrobe detail / narrative cutaway / chorus expansion / second environment / bridge breakdown / final performance peak / closing image"}, {"name": "HitFire Hero Reveal", "cat": "Superhero, Villain & Action", "mode": "Superhero Storyboard Creator", "aspect": "2.39:1 Cinematic", "treatment": "Heroic Spectacle", "ending": "Hero Pose", "beats": "city establishing shot / danger / hero reveal / power trigger / transformation / emblem ignition / hero landing / reaction / first heroic action / final pose"}, {"name": "Grinderjaw Villain Reveal", "cat": "Superhero, Villain & Action", "mode": "Villain Reveal Storyboard Creator", "aspect": "2.39:1 Cinematic", "treatment": "Villain Suspense", "ending": "Villain Reveal", "beats": "calm warehouse / mechanical sound / sparks / heavy boots / gauntlet detail / jaw glow / silhouette / full reveal / opponent reaction / threat pose"}, {"name": "Herbal Crusader Boss Battle", "cat": "Superhero, Villain & Action", "mode": "Boss Battle Storyboard Creator", "format": "Production Storyboard", "panels": "12", "treatment": "Comic-Book Impact", "ending": "Cliffhanger", "beats": "battleground / hero entrance / villain entrance / first attack / dodge / counter / villain power shift / hero knocked back / recovery / weakness discovery / signature clash / final impact or cliffhanger"}, {"name": "Stoneralia Fake Commercial", "cat": "Advertising & Brand", "mode": "Fake Commercial Storyboard Creator", "aspect": "9:16 Vertical", "treatment": "Absurdist Comedy", "ending": "Visual Punchline", "beats": "ridiculous problem / dramatic suffering / product reveal / product demonstration / testimonial / unexpected side effect / product glamour shot / absurd ending"}];
+
+function csbS(){if(!S.csb)S.csb={};return S.csb;}
+function csbSel(id,key,opts){const el=$(id);if(!el)return;const cur=csbS()[key]||opts[0];el.innerHTML=opts.map(o=>'<option'+(cur===o?' selected':'')+'>'+esc(o)+'</option>').join("");el.value=cur;el.onchange=()=>{csbS()[key]=el.value;save();if(id==="csbCat")renderCSB();};}
+function csbModeOpts(){const cat=csbS().cat||"Auto / Recommend";let m=["Auto / Recommend"];if(cat==="Auto / Recommend"){Object.keys(CSB_MODES).forEach(k=>{m=m.concat(CSB_MODES[k]);});}else if(CSB_MODES[cat]){m=m.concat(CSB_MODES[cat]);}return m;}
+function csbText(id,key){const el=$(id);if(!el)return;el.value=csbS()[key]||"";el.oninput=()=>{csbS()[key]=el.value;save();};}
+function renderCSB(){
+  const c=csbS();
+  csbSel("csbCat","cat",CSB_CATS);
+  const mo=$("csbMode");if(mo){const opts=csbModeOpts();if(opts.indexOf(c.mode)<0)c.mode="Auto / Recommend";mo.innerHTML=opts.map(o=>'<option'+(c.mode===o?' selected':'')+'>'+esc(o)+'</option>').join("");mo.value=c.mode;mo.onchange=()=>{c.mode=mo.value;save();};}
+  csbSel("csbUse","use",CSB_USE);csbSel("csbFormat","format",CSB_FMT);csbSel("csbPanels","panels",CSB_PAN);csbSel("csbRuntime","runtime",CSB_RUN);csbSel("csbAspect","aspect",CSB_ASP);csbSel("csbTreat","treatment",CSB_TRE);csbSel("csbCamera","camera",CSB_CAM);csbSel("csbDialogue","dialogue",CSB_DIA);csbSel("csbAudio","audio",CSB_AUD);csbSel("csbEnding","ending",CSB_END);csbSel("csbChieff","chieff",CSB_CHF);
+  csbText("csbTitle","title");csbText("csbLogline","logline");csbText("csbConcept","concept");csbText("csbBeats","beats");csbText("csbAvoid","avoid");csbText("csbStyleRefs","styleRefs");csbText("csbTempLoc","tempLoc");
+  const pr=$("csbPreset");if(pr&&!pr.dataset.built){pr.innerHTML='<option value="">\u2014 starter preset \u2014</option>'+CSB_PRESETS.map((p,i)=>'<option value="'+i+'">'+esc(p.name)+'</option>').join("");pr.dataset.built="1";pr.onchange=()=>{if(pr.value!=="")csbApplyPreset(CSB_PRESETS[+pr.value]);pr.value="";};}
+  const cw=$("csbCast");if(cw){const list=S.cast||[];cw.innerHTML=list.length?"":'<div class="hint">No saved Cast yet.</div>';if(!c.castIds)c.castIds=[];list.forEach(p=>{const ch=document.createElement("span");ch.className="chip"+(c.castIds.indexOf(p.id)>=0?" on":"");ch.textContent=p.name;ch.addEventListener("click",()=>{const i=c.castIds.indexOf(p.id);if(i>=0)c.castIds.splice(i,1);else c.castIds.push(p.id);save();ch.classList.toggle("on");});cw.appendChild(ch);});}
+  const ss=$("csbSetSel");if(ss){const sets=S.sets||[];ss.innerHTML='<option value="">\u2014 none / type a location below \u2014</option>'+sets.map(x=>'<option value="'+x.id+'"'+(c.setId===x.id?' selected':'')+'>'+esc(x.name)+'</option>').join("");ss.value=c.setId||"";ss.onchange=()=>{c.setId=ss.value;save();};}
+  if($("csbBtn"))$("csbBtn").onclick=genCSB;
+  if($("csbSuggest"))$("csbSuggest").onclick=csbSuggest;
+  renderCSBProjects();
+}
+function csbApplyPreset(p){const c=csbS();["cat","mode","format","panels","runtime","aspect","dialogue","treatment","ending","chieff","use"].forEach(k=>{if(p[k])c[k]=p[k];});if(p.beats){const cur=(c.beats||"").trim();c.beats=cur?cur+"\n"+p.beats:p.beats;}save();renderCSB();toast("Preset loaded \u2014 every field stays editable.");}
+function csbConflicts(){const c=csbS(),C=[];const pan=parseInt(c.panels,10);
+  if(pan>=18&&/^(5|8|10) seconds/.test(c.runtime))C.push(c.panels+" panels in "+c.runtime+" is extremely fast.");
+  if(pan&&pan<=4&&/minutes/.test(c.runtime))C.push("Only "+c.panels+" panels for "+c.runtime+" \u2014 very sparse.");
+  if((/Silent Comedy/.test(c.mode)||c.treatment==="Silent Comedy")&&c.dialogue==="Dialogue")C.push("Silent Comedy with full Dialogue mode \u2014 consider No Dialogue.");
+  return C;}
+function csbCtx(){const c=csbS();
+  const cast=(S.cast||[]).filter(x=>(c.castIds||[]).indexOf(x.id)>=0).map(x=>x.name+(x.identity?(" ["+x.identity+"]"):"")+(x.role?(" - "+x.role):"")).join("; ");
+  let setName="";const st=(S.sets||[]).find(x=>x.id===c.setId);if(st)setName=st.name+(st.desc?(" \u2014 "+st.desc):(st.brief?(" \u2014 "+st.brief):""));else setName=c.tempLoc||"";
+  return {cast,setName};}
+function csbPaint(r){
+  let h="";
+  const c=csbS();
+  let sum="Title: "+(c.title||"\u2014")+"\nCreator: "+(c.cat||"Auto")+" / "+(c.mode||"Auto")+"\nIntended use: "+(c.use||"Auto")+"\nFormat: "+(c.format||"Auto")+" | Panels: "+(c.panels||"Auto")+" | Runtime: "+(c.runtime||"Auto")+" | Aspect: "+(c.aspect||"Auto")+"\nTreatment: "+(c.treatment||"Auto")+" | Camera: "+(c.camera||"Auto")+"\nDialogue: "+(c.dialogue||"Auto")+" | Audio: "+(c.audio||"Auto")+" | Ending: "+(c.ending||"Auto");
+  if(r.summary)sum+="\n\n"+r.summary;
+  h+=sunoCard("Story Summary",sum);
+  if(r.beats)h+=sunoCard("Story Beat Outline",r.beats);
+  (r.frames||[]).forEach(f=>{
+    let d="Beat: "+(f.beat||"")+"\nShot: "+(f.shot||"")+"  |  Angle: "+(f.angle||"")+"  |  Move: "+(f.move||"")+"\nAction: "+(f.action||"")+"\nExpression: "+(f.expression||"")+"  |  Body: "+(f.body||"")+"\nPosition: "+(f.position||"")+"  |  Screen dir: "+(f.screenDir||"")+"\nLocation: "+(f.location||"")+"\nProps: "+(f.props||"")+"\nLighting: "+(f.lighting||"")+"  |  Composition: "+(f.composition||"")+"\nDialogue: "+(f.dialogue||"")+"\nAudio: "+(f.audio||"")+"\nTiming: "+(f.start||"")+" \u2192 "+(f.end||"")+"  ("+(f.duration||"")+")\nTransition in: "+(f.transIn||"")+"  |  out: "+(f.transOut||"")+"\nContinuity: "+(f.continuity||"")+(f.production?"\nProduction: "+f.production:"");
+    h+='<div class="card" style="margin-top:10px;background:rgba(255,255,255,.02)"><div style="font-weight:800;font-family:var(--slate)">Frame '+(f.n||"")+(f.title?' \u2014 '+esc(f.title):'')+'</div><div class="promptbox" style="margin-top:6px">'+esc(d)+'</div></div>';
+    h+=sunoCard("Frame "+(f.n||"")+" image prompt",f.imagePrompt||"");
+    h+=sunoCard("Frame "+(f.n||"")+" video prompt",f.videoPrompt||"");
+    if(f.negative)h+=sunoCard("Frame "+(f.n||"")+" negative / avoid",f.negative);
+  });
+  const cc=r.continuity||{};
+  if(cc.character||cc.set||cc.camera||cc.prop||cc.audio)h+=sunoCard("Continuity Bible","CHARACTER: "+(cc.character||"\u2014")+"\n\nSET: "+(cc.set||"\u2014")+"\n\nCAMERA: "+(cc.camera||"\u2014")+"\n\nPROPS: "+(cc.prop||"\u2014")+"\n\nAUDIO: "+(cc.audio||"\u2014"));
+  if((r.shotList||[]).length){const sl=r.shotList.map((x,i)=>(x.n||i+1)+". "+[x.type,x.angle,x.move,x.char,x.action,x.set,x.audio,x.duration,x.priority].filter(Boolean).join("  |  ")).join("\n");h+=sunoCard("Shot List",sl);}
+  if(r.thumbnail)h+=sunoCard("Thumbnail Frame",r.thumbnail);
+  if(r.poster)h+=sunoCard("Poster Frame",r.poster);
+  h+='<button class="btn green sm" id="csbSaveBtn" style="margin-top:12px;width:100%">\u2295 Save storyboard</button>';
+  if($("csbOut")){$("csbOut").innerHTML=h;bindSunoCopies();if($("csbSaveBtn"))$("csbSaveBtn").onclick=csbSaveProject;}
+}
+let CSB_LAST=null;
+async function genCSB(){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const c=csbS();const concept=(c.concept||c.logline||"").trim();
+  if(!concept&&!(c.beats||"").trim()){toast("Add a logline, concept, or beats first.",true);return;}
+  const cf=csbConflicts();if(cf.length){if(!confirm("Heads up \u2014 possible conflicts:\n\n- "+cf.join("\n- ")+"\n\nBuild anyway?")){return;}}
+  const x=csbCtx();
+  const st=$("csbStatus");if(st)st.innerHTML='<div class="statusline"><span class="rec"></span>Boarding the sequence\u2026</div>';if($("csbOut"))$("csbOut").innerHTML="";
+  const sys="You are a cinematic storyboard director for the deadpan cannabis-culture universe Chiefin' Season / Stoneralia. Build a production-ready storyboard. RULES: respect the separated controls. If Dialogue Mode is No Dialogue (or a Silent Comedy mode/treatment), do NOT invent spoken dialogue \u2014 tell it through action, props, expressions, body language, visual cause-and-effect. Lock each character's appearance and wardrobe identically across every frame. Use the given Set/location; never swap it for a generic one. Never reproduce protected franchises or real artists \u2014 translate any style reference into descriptive visual traits. Make the number of frames match the Panel Count (if Auto, choose a fitting count for the runtime). Each frame needs a copy-ready image prompt and a copy-ready video prompt. Return JSON ONLY: {\"summary\":\"\",\"beats\":\"\",\"frames\":[{\"n\":1,\"title\":\"\",\"beat\":\"\",\"shot\":\"\",\"angle\":\"\",\"move\":\"\",\"action\":\"\",\"expression\":\"\",\"body\":\"\",\"position\":\"\",\"screenDir\":\"\",\"location\":\"\",\"props\":\"\",\"lighting\":\"\",\"composition\":\"\",\"dialogue\":\"\",\"audio\":\"\",\"start\":\"\",\"end\":\"\",\"duration\":\"\",\"transIn\":\"\",\"transOut\":\"\",\"continuity\":\"\",\"imagePrompt\":\"\",\"videoPrompt\":\"\",\"negative\":\"\",\"production\":\"\"}],\"continuity\":{\"character\":\"\",\"set\":\"\",\"camera\":\"\",\"prop\":\"\",\"audio\":\"\"},\"shotList\":[{\"n\":1,\"type\":\"\",\"angle\":\"\",\"move\":\"\",\"char\":\"\",\"action\":\"\",\"set\":\"\",\"audio\":\"\",\"duration\":\"\",\"priority\":\"\"}],\"thumbnail\":\"\",\"poster\":\"\"}.";
+  let usr="CREATOR CATEGORY: "+(c.cat||"Auto")+"\nCREATOR MODE: "+(c.mode||"Auto")+"\nINTENDED USE: "+(c.use||"Auto")+"\nSTORY FORMAT: "+(c.format||"Auto")+"\nPANEL COUNT: "+(c.panels||"Auto")+"\nRUNTIME: "+(c.runtime||"Auto")+"\nASPECT RATIO: "+(c.aspect||"Auto")+"\nTREATMENT: "+(c.treatment||"Auto")+"\nCAMERA & STRUCTURE: "+(c.camera||"Auto")+"\nDIALOGUE MODE: "+(c.dialogue||"Auto")+"\nAUDIO MODE: "+(c.audio||"Auto")+"\nENDING TYPE: "+(c.ending||"Auto")+"\n";
+  if(c.title)usr+="TITLE: "+c.title+"\n";
+  if(c.logline)usr+="LOGLINE: "+c.logline+"\n";
+  if(concept)usr+="CONCEPT / SCENE:\n"+concept+"\n";
+  if((c.beats||"").trim())usr+="REQUIRED STORY BEATS:\n"+c.beats+"\n";
+  if((c.avoid||"").trim())usr+="AVOID:\n"+c.avoid+"\n";
+  if(x.cast)usr+="CAST (lock these appearances): "+x.cast+"\n";
+  if(x.setName)usr+="SET / LOCATION (use this exactly): "+x.setName+"\n";
+  if(c.chieff&&c.chieff!=="Auto")usr+="CHIEFF PRESENCE: "+c.chieff+"\n";
+  if((c.styleRefs||"").trim())usr+="STYLE REFERENCES (translate to descriptive traits, do not copy protected material): "+c.styleRefs+"\n";
+  usr+="Build the storyboard now.";
+  try{const r=parseJSON(await llmRun(sys,usr));S.csb.work=csbNorm(r);CSB_EDIT=new Set();save();csbRenderWork();if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Storyboard ready</div>';}
+  catch(e){if(st)st.innerHTML='<div class="statusline" style="color:var(--red)">\u2717 '+esc(e.message)+'</div>';}
+}
+async function csbSuggest(){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const c=csbS();const concept=(c.concept||c.logline||c.beats||"").trim();if(!concept){toast("Add a concept first.",true);return;}
+  toast("Thinking\u2026");
+  const sys="Recommend storyboard setup for this concept. Return JSON ONLY: {\"cat\":\"\",\"mode\":\"\",\"panels\":\"\",\"runtime\":\"\",\"aspect\":\"\",\"treatment\":\"\",\"why\":\"\"}. Use values from common storyboard taxonomy.";
+  try{const r=parseJSON(await llmRun(sys,"CONCEPT: "+concept));
+    ["cat","mode","panels","runtime","aspect","treatment"].forEach(k=>{if(r[k]&&(!c[k]||c[k]==="Auto"||c[k]==="Auto / Recommend"))c[k]=r[k];});
+    save();renderCSB();toast(r.why?("Suggested: "+r.why):"Setup suggested.");
+  }catch(e){toast("Suggest failed.",true);}
+}
+function csbSaveProject(){
+  if(!(S.csb&&S.csb.work)){toast("Build a storyboard first.",true);return;}
+  if(!S.csb.projects)S.csb.projects=[];
+  const c=csbS();const snap={};["cat","mode","use","format","panels","runtime","aspect","treatment","camera","dialogue","audio","ending","chieff","title","logline","concept","beats","avoid","styleRefs","castIds","setId","tempLoc"].forEach(k=>snap[k]=Array.isArray(c[k])?c[k].slice():c[k]);
+  S.csb.projects.unshift({id:uid(),title:c.title||"Untitled board",cfg:snap,result:S.csb.work,createdAt:Date.now()});
+  save();renderCSBProjects();toast("Storyboard saved.");
+}
+function renderCSBProjects(){
+  const box=$("csbProjects");if(!box)return;const list=(S.csb&&S.csb.projects)||[];
+  if(!list.length){box.innerHTML='<div class="hint">No saved storyboards yet.</div>';return;}
+  box.innerHTML="";
+  list.forEach(pj=>{const d=document.createElement("div");d.className="card";d.style.cursor="pointer";d.style.marginTop="6px";
+    d.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><div style="font-weight:800;font-family:var(--slate)">'+esc(pj.title||"Untitled")+'</div><button class="x" style="position:static;flex:0 0 auto">\u2715</button></div><div class="hint" style="margin-top:2px">'+esc((pj.cfg&&pj.cfg.mode)||"")+'</div>';
+    d.querySelector(".x").addEventListener("click",e=>{e.stopPropagation();if(confirm("Delete this storyboard?")){S.csb.projects=S.csb.projects.filter(z=>z.id!==pj.id);save();renderCSBProjects();}});
+    d.addEventListener("click",()=>{const cfg=pj.cfg||{};Object.keys(cfg).forEach(k=>{S.csb[k]=Array.isArray(cfg[k])?cfg[k].slice():cfg[k];});S.csb.work=csbNorm(JSON.parse(JSON.stringify(pj.result)));CSB_EDIT=new Set();save();renderCSB();csbRenderWork();if($("csbStatus"))$("csbStatus").innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Loaded saved storyboard</div>';window.scrollTo(0,0);toast("Storyboard loaded.");});
+    box.appendChild(d);});
+}
+
+let CSB_EDIT=new Set();
+function csbNorm(r){if(!r)return r;if(!r.frames)r.frames=[];r.frames.forEach((f,i)=>{if(!f.id)f.id=uid();if(typeof f.locked!=="boolean")f.locked=false;f.n=i+1;});if(typeof r.thumbId!=="string")r.thumbId="";if(typeof r.posterId!=="string")r.posterId="";return r;}
+function csbRenumber(){const w=S.csb&&S.csb.work;if(!w)return;(w.frames||[]).forEach((f,i)=>f.n=i+1);}
+function csbFieldEdit(fid,field,val){const w=S.csb&&S.csb.work;if(!w)return;const f=(w.frames||[]).find(x=>x.id===fid);if(f){f[field]=val;save();}}
+function csbFrameAct(act,fid){
+  const w=S.csb&&S.csb.work;if(!w)return;const fs=w.frames;const i=fs.findIndex(f=>f.id===fid);if(i<0)return;
+  if(act==="up"&&i>0){const t=fs[i-1];fs[i-1]=fs[i];fs[i]=t;}
+  else if(act==="down"&&i<fs.length-1){const t=fs[i+1];fs[i+1]=fs[i];fs[i]=t;}
+  else if(act==="lock"){fs[i].locked=!fs[i].locked;}
+  else if(act==="dup"){const c=JSON.parse(JSON.stringify(fs[i]));c.id=uid();c.locked=false;fs.splice(i+1,0,c);}
+  else if(act==="ins"){fs.splice(i+1,0,{id:uid(),locked:false,title:"New frame",beat:"",shot:"",angle:"",move:"",action:"",expression:"",body:"",position:"",screenDir:"",location:"",props:"",lighting:"",composition:"",dialogue:"",audio:"",start:"",end:"",duration:"",transIn:"",transOut:"",continuity:"",imagePrompt:"",videoPrompt:"",negative:"",production:""});}
+  else if(act==="del"){if(!confirm("Delete frame "+fs[i].n+"?"))return;CSB_EDIT.delete(fid);fs.splice(i,1);}
+  else if(act==="edit"){if(CSB_EDIT.has(fid))CSB_EDIT.delete(fid);else CSB_EDIT.add(fid);}
+  else if(act==="thumb"){w.thumbId=(w.thumbId===fid?"":fid);}
+  else if(act==="poster"){w.posterId=(w.posterId===fid?"":fid);}
+  csbRenumber();save();csbRenderWork();
+}
+function csbFrameCtrls(f,w,ed){
+  return '<div class="row" style="gap:4px;flex-wrap:wrap;margin-top:6px">'
+  +'<button class="btn ghost sm" data-fa="up" data-fid="'+f.id+'" style="flex:0;padding:6px 9px">\u2191</button>'
+  +'<button class="btn ghost sm" data-fa="down" data-fid="'+f.id+'" style="flex:0;padding:6px 9px">\u2193</button>'
+  +'<button class="btn ghost sm" data-fa="lock" data-fid="'+f.id+'" style="flex:0;padding:6px 9px">'+(f.locked?"\ud83d\udd13":"\ud83d\udd12")+'</button>'
+  +'<button class="btn ghost sm" data-fa="edit" data-fid="'+f.id+'" style="flex:0;padding:6px 9px">'+(ed?"\u2713 Done":"\u270e Edit")+'</button>'
+  +'<button class="btn ghost sm" data-fa="dup" data-fid="'+f.id+'" style="flex:0;padding:6px 9px">\u2398</button>'
+  +'<button class="btn ghost sm" data-fa="ins" data-fid="'+f.id+'" style="flex:0;padding:6px 9px">+after</button>'
+  +'<button class="btn ghost sm" data-fa="thumb" data-fid="'+f.id+'" style="flex:0;padding:6px 9px">'+(w.thumbId===f.id?"\u2605":"\u2606")+'</button>'
+  +'<button class="btn ghost sm" data-fa="poster" data-fid="'+f.id+'" style="flex:0;padding:6px 9px">'+(w.posterId===f.id?"\u25c6":"\u25c7")+'</button>'
+  +'<button class="btn ghost sm" data-fa="del" data-fid="'+f.id+'" style="flex:0;padding:6px 9px;color:var(--red)">\u2715</button>'
+  +'</div>';
+}
+const CSB_FE=[["title","Title",0],["beat","Story beat",0],["shot","Shot type",0],["angle","Camera angle",0],["move","Camera movement",0],["action","Action",1],["expression","Expression",0],["body","Body language",0],["position","Position",0],["screenDir","Screen direction",0],["location","Location",0],["props","Props",0],["lighting","Lighting",0],["composition","Composition",0],["dialogue","Dialogue",0],["audio","Audio cue",0],["start","Start",0],["end","End",0],["duration","Duration",0],["transIn","Transition in",0],["transOut","Transition out",0],["continuity","Continuity",1],["imagePrompt","Image prompt",1],["videoPrompt","Video prompt",1],["negative","Negative / avoid",1],["production","Production notes",1]];
+function csbFrameEditForm(f){
+  let h='<div style="margin-top:8px">';
+  CSB_FE.forEach(fe=>{const k=fe[0],lab=fe[1],multi=fe[2];const v=esc(f[k]||"");
+    h+='<label class="fld" style="margin-top:6px">'+lab+'</label>';
+    h+=multi?('<textarea data-ff="'+k+'" data-fid="'+f.id+'" style="min-height:44px">'+v+'</textarea>'):('<input type="text" data-ff="'+k+'" data-fid="'+f.id+'" value="'+v+'">');
+  });
+  h+='</div>';return h;
+}
+function csbFrameRead(f){
+  const d="Beat: "+(f.beat||"")+"\nShot: "+(f.shot||"")+"  |  Angle: "+(f.angle||"")+"  |  Move: "+(f.move||"")+"\nAction: "+(f.action||"")+"\nExpression: "+(f.expression||"")+"  |  Body: "+(f.body||"")+"\nPosition: "+(f.position||"")+"  |  Screen dir: "+(f.screenDir||"")+"\nLocation: "+(f.location||"")+"\nProps: "+(f.props||"")+"\nLighting: "+(f.lighting||"")+"  |  Composition: "+(f.composition||"")+"\nDialogue: "+(f.dialogue||"")+"\nAudio: "+(f.audio||"")+"\nTiming: "+(f.start||"")+" \u2192 "+(f.end||"")+"  ("+(f.duration||"")+")\nTransition in: "+(f.transIn||"")+"  |  out: "+(f.transOut||"")+"\nContinuity: "+(f.continuity||"")+(f.production?"\nProduction: "+f.production:"");
+  let h='<div class="promptbox" style="margin-top:6px">'+esc(d)+'</div>';
+  h+=sunoCard("Image prompt",f.imagePrompt||"");
+  h+=sunoCard("Video prompt",f.videoPrompt||"");
+  if(f.negative)h+=sunoCard("Negative / avoid",f.negative);
+  return h;
+}
+function csbRenderWork(){
+  const box=$("csbOut");if(!box)return;const w=S.csb&&S.csb.work;if(!w){box.innerHTML="";return;}
+  const c=csbS();
+  let sum="Title: "+(c.title||"\u2014")+"\nCreator: "+(c.cat||"Auto")+" / "+(c.mode||"Auto")+"\nIntended use: "+(c.use||"Auto")+"\nFormat: "+(c.format||"Auto")+" | Panels: "+(c.panels||"Auto")+" | Runtime: "+(c.runtime||"Auto")+" | Aspect: "+(c.aspect||"Auto")+"\nTreatment: "+(c.treatment||"Auto")+" | Camera: "+(c.camera||"Auto")+"\nDialogue: "+(c.dialogue||"Auto")+" | Audio: "+(c.audio||"Auto")+" | Ending: "+(c.ending||"Auto");
+  if(w.summary)sum+="\n\n"+w.summary;
+  let h=sunoCard("Story Summary",sum);
+  if(w.beats)h+=sunoCard("Story Beat Outline",w.beats);
+  const nLock=(w.frames||[]).filter(f=>f.locked).length;
+  h+='<div class="row" style="gap:6px;flex-wrap:wrap;margin-top:10px"><button class="btn ghost sm" id="csbRegenBtn" style="flex:0">\u21bb Regenerate unlocked'+(nLock?" ("+nLock+" locked)":"")+'</button><button class="btn ghost sm" id="csbAddBtn" style="flex:0">+ Add frame</button></div>';
+  (w.frames||[]).forEach(f=>{
+    const ed=CSB_EDIT.has(f.id);
+    h+='<div class="card" style="margin-top:10px;background:rgba(255,255,255,.02)'+(f.locked?";border-color:var(--bud)":"")+'">';
+    h+='<div style="font-weight:800;font-family:var(--slate)">Frame '+(f.n||"")+(f.title?' \u2014 '+esc(f.title):'')+(f.locked?' \ud83d\udd12':'')+(w.thumbId===f.id?' \u2605':'')+(w.posterId===f.id?' \u25c6':'')+'</div>';
+    h+=csbFrameCtrls(f,w,ed);
+    h+=ed?csbFrameEditForm(f):csbFrameRead(f);
+    h+='</div>';
+  });
+  const cc=w.continuity||{};
+  if(cc.character||cc.set||cc.camera||cc.prop||cc.audio)h+=sunoCard("Continuity Bible","CHARACTER: "+(cc.character||"\u2014")+"\n\nSET: "+(cc.set||"\u2014")+"\n\nCAMERA: "+(cc.camera||"\u2014")+"\n\nPROPS: "+(cc.prop||"\u2014")+"\n\nAUDIO: "+(cc.audio||"\u2014"));
+  if((w.shotList||[]).length){const sl=w.shotList.map((x,i)=>(x.n||i+1)+". "+[x.type,x.angle,x.move,x.char,x.action,x.set,x.audio,x.duration,x.priority].filter(Boolean).join("  |  ")).join("\n");h+=sunoCard("Shot List",sl);}
+  const tf=(w.frames||[]).find(f=>f.id===w.thumbId);const pf=(w.frames||[]).find(f=>f.id===w.posterId);
+  if(tf||w.thumbnail)h+=sunoCard("Thumbnail Frame",(tf?("Frame "+tf.n+" \u2014 "+(tf.title||"")+"\n"):"")+(w.thumbnail||""));
+  if(pf||w.poster)h+=sunoCard("Poster Frame",(pf?("Frame "+pf.n+" \u2014 "+(pf.title||"")+"\n"):"")+(w.poster||""));
+  h+='<button class="btn green sm" id="csbSaveBtn" style="margin-top:12px;width:100%">\u2295 Save storyboard (keeps your edits)</button>';
+  box.innerHTML=h;bindSunoCopies();
+  box.onclick=e=>{const b=e.target.closest&&e.target.closest("[data-fa]");if(b){csbFrameAct(b.getAttribute("data-fa"),b.getAttribute("data-fid"));}};
+  box.oninput=e=>{const t=e.target;if(t&&t.dataset&&t.dataset.ff)csbFieldEdit(t.dataset.fid,t.dataset.ff,t.value);};
+  if($("csbRegenBtn"))$("csbRegenBtn").onclick=csbRegenUnlocked;
+  if($("csbAddBtn"))$("csbAddBtn").onclick=()=>{const wf=S.csb.work;if(!wf)return;wf.frames.push({id:uid(),locked:false,title:"New frame",beat:"",shot:"",angle:"",move:"",action:"",expression:"",body:"",position:"",screenDir:"",location:"",props:"",lighting:"",composition:"",dialogue:"",audio:"",start:"",end:"",duration:"",transIn:"",transOut:"",continuity:"",imagePrompt:"",videoPrompt:"",negative:"",production:""});csbRenumber();save();csbRenderWork();};
+  if($("csbSaveBtn"))$("csbSaveBtn").onclick=csbSaveProject;
+}
+async function csbRegenUnlocked(){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const w=S.csb&&S.csb.work;if(!w||!(w.frames||[]).length){toast("Build a storyboard first.",true);return;}
+  const c=csbS();const st=$("csbStatus");if(st)st.innerHTML='<div class="statusline"><span class="rec"></span>Regenerating unlocked frames\u2026</div>';
+  const list=w.frames.map(f=>f.n+". "+(f.locked?"[LOCKED \u2014 keep identical] ":"[REGENERATE] ")+(f.title||"")+" | beat: "+(f.beat||"")+" | action: "+(f.action||"")).join("\n");
+  const sys="You revise a storyboard. Return the FULL frames array in the SAME order and SAME length. For frames marked [LOCKED] keep them identical. For frames marked [REGENERATE], create fresh, stronger shot choices, action, and prompts that still fit the surrounding frames and the project. Respect dialogue mode (no invented dialogue if No Dialogue). Return JSON ONLY: {\"frames\":[{\"n\":1,\"title\":\"\",\"beat\":\"\",\"shot\":\"\",\"angle\":\"\",\"move\":\"\",\"action\":\"\",\"expression\":\"\",\"body\":\"\",\"position\":\"\",\"screenDir\":\"\",\"location\":\"\",\"props\":\"\",\"lighting\":\"\",\"composition\":\"\",\"dialogue\":\"\",\"audio\":\"\",\"start\":\"\",\"end\":\"\",\"duration\":\"\",\"transIn\":\"\",\"transOut\":\"\",\"continuity\":\"\",\"imagePrompt\":\"\",\"videoPrompt\":\"\",\"negative\":\"\",\"production\":\"\"}]}.";
+  const usr="PROJECT: "+(c.mode||"Auto")+" | treatment "+(c.treatment||"Auto")+" | dialogue "+(c.dialogue||"Auto")+" | aspect "+(c.aspect||"Auto")+"\nCONCEPT: "+((c.concept||c.logline||"")||"\u2014")+"\n\nCURRENT FRAMES:\n"+list+"\n\nReturn the full revised frames array.";
+  try{const r=parseJSON(await llmRun(sys,usr));const got=r.frames||[];
+    w.frames=w.frames.map((f,i)=>{if(f.locked)return f;const g=got[i]||got.find(x=>(x.n||0)===f.n);if(!g)return f;g.id=f.id;g.locked=false;return g;});
+    csbRenumber();save();csbRenderWork();if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Unlocked frames regenerated</div>';
+  }catch(e){if(st)st.innerHTML='<div class="statusline" style="color:var(--red)">\u2717 '+esc(e.message)+'</div>';}
 }
 async function buildSuno(){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}

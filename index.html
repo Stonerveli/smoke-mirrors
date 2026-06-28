@@ -14,14 +14,14 @@
 <meta name="apple-mobile-web-app-title" content="Smoke & Mirrors">
 <style>
 :root{
-  --black:#0a0a0a;--panel:#141414;--panel-2:#1c1c1c;--line:#2a2a2a;
+  --black:#000;--panel:#141414;--panel-2:#1c1c1c;--line:#2a2a2a;
   --bone:#ECE6D8;--bone-dim:#9a958a;--bud:#8FA45C;--bud-deep:#6f8245;
   --gold:#C9A227;--red:#B8392B;--radius:4px;
   --slate:'Arial Narrow','Helvetica Neue',Helvetica,Arial,sans-serif;
   --mono:ui-monospace,'SF Mono','Cascadia Mono',Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;background:var(--black);color:var(--bone);font-family:var(--mono);font-size:15px;line-height:1.45}
+html,body{margin:0;padding:0;color-scheme:dark;background:var(--black);color:var(--bone);font-family:var(--mono);font-size:15px;line-height:1.45}
 body{min-height:100vh;padding-bottom:86px}
 body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.04;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
@@ -45,10 +45,13 @@ main{padding:6px 16px 20px;max-width:1100px;margin:0 auto}
 label.fld{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim);margin:0 0 6px}
 input[type=text],input[type=password],textarea,select{width:100%;background:var(--black);border:1px solid var(--line);color:var(--bone);border-radius:var(--radius);padding:10px 11px;outline:none}
 input:focus,textarea:focus,select:focus{border-color:var(--bud)}
+  select{font-size:13px;color-scheme:dark}
+  select option{background:#000;color:var(--bone);font-size:13px}
+  select optgroup{background:#000;color:var(--bone-dim);font-weight:700}
 textarea{resize:vertical;min-height:70px;line-height:1.5}
 .row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}
 .btn{background:var(--bone);color:var(--black);border:none;border-radius:var(--radius);padding:11px 16px;font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;transition:.15s}
-.btn:hover{background:#fff}.btn:active{transform:translateY(1px)}
+.btn:hover{background:var(--bone)}.btn:active{transform:translateY(1px)}
 .btn.green{background:var(--bud);color:#0a0a0a}.btn.green:hover{background:var(--bud-deep);color:var(--bone)}
 .btn.ghost{background:transparent;color:var(--bone);border:1px solid var(--line)}.btn.ghost:hover{border-color:var(--bud);color:var(--bud)}
 .btn.sm{padding:7px 11px;font-size:11px}
@@ -154,7 +157,8 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
   <button data-go="studio"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21c-3 0-5-2.2-5-5 0-3.2 2.4-6.2 5-8 2.6 1.8 5 4.8 5 8 0 2.8-2 5-5 5z'/><path d='M12 12v6.5'/><path d='M12 8V5'/><path d='M12 6.6c-1.3 0-2.2-.8-2.5-2 1.4-.1 2.3.7 2.5 2z'/><path d='M12 6c1.1-.3 1.7-1.2 1.7-2.4-1.2.1-1.9 1-1.7 2.4z'/></svg></span>Studio</button>
   <button data-go="board"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='7.5' height='7.5' rx='1'/><rect x='13.5' y='3' width='7.5' height='7.5' rx='1'/><rect x='3' y='13.5' width='7.5' height='7.5' rx='1'/><rect x='13.5' y='13.5' width='7.5' height='7.5' rx='1'/></svg></span>Pre-Roll</button>
   <button data-go="story"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20l1-4L17 4l3 3L8 19z'/><path d='M14 6l3 3'/></svg></span>Story</button>
-  <button data-go="media"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 17V4l10-2v13'/><circle cx='6.5' cy='17.5' r='2.8'/><circle cx='16.5' cy='15.5' r='2.8'/></svg></span>Media</button>
+  <button data-go="smg"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg></span>SMG</button>
+<button data-go="media"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 5 6 9H2v6h4l5 4z'/><path d='M15.5 8.5a5 5 0 0 1 0 7'/><path d='M19 4.5a9 9 0 0 1 0 15'/></svg></span>Media</button>
   <button data-go="reel"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></svg></span>Cut</button>
   <button data-go="settings"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1'/></svg></span>Setup</button>
 </nav>
@@ -450,16 +454,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <button class="btn green" id="sfxBtn" style="margin-top:10px;width:100%">&#128266; Make sound</button>
     <div id="sfxStatus"></div><div class="result-wrap" id="sfxResult"></div>
   </div>
-  <div class="card">
-    <label class="fld">Suno prompt builder — copy-paste ready</label>
-    <textarea id="sunoScene" style="min-height:58px" placeholder="Scene / vibe / mood / story the song scores"></textarea>
-    <label class="row" style="margin-top:10px;align-items:center;gap:8px"><input type="checkbox" id="sunoInstrumental" style="width:auto;flex:0"> Instrumental — no vocals</label>
-    <label class="fld" style="margin-top:10px">Your genres — tap a few (less is more)</label>
-    <div class="tokenchips" id="sunoGenreChips"></div>
-    <div class="row" style="margin-top:8px"><input type="text" id="genreInput" placeholder="add your own genre…"><button class="btn ghost sm" id="genreAdd" style="flex:0">+ Save</button></div>
-    <button class="btn green" id="sunoBtn" style="margin-top:10px;width:100%">&#10022; Build Suno prompt</button>
-    <div id="sunoStatus"></div><div id="sunoOut"></div>
-  </div>
+  
 </section>
 
 <!-- ===== EPISODES ===== -->
@@ -487,6 +482,36 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 <section class="view" id="view-comics">
   <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style="width:30px;height:30px;display:block"><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span><h2>Comics</h2><span class="tag">Strips · Far Side</span></div>
   <div id="comicBody"></div>
+</section>
+<section class="view" id="view-smg">
+  <div class="card">
+    <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:30px;height:30px;display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span><h2>SMG</h2><span class="tag">Stoneralia Music Group</span></div>
+    <div class="hint" style="margin-top:-2px;margin-bottom:10px">Build songs, artist identities, soundtracks, and production-ready Suno prompts.</div>
+    <label class="fld">Quick Start Preset</label>
+    <select id="sunoPreset"></select>
+    <div id="sunoPresetCard"></div>
+    <label class="fld" style="margin-top:12px">Creator Mode</label>
+    <select id="sunoCreator"></select>
+    <label class="fld" style="margin-top:12px">Song Title</label>
+    <input type="text" id="sunoTitle" placeholder="optional">
+    <label class="fld" style="margin-top:10px">Artist / Persona</label>
+    <select id="sunoArtistCast"></select>
+    <input type="text" id="sunoArtist" placeholder="optional — type a persona, or pick a Cast member above" style="margin-top:6px">
+    <label class="fld" style="margin-top:10px">Core Concept / Scene</label>
+    <textarea id="sunoScene" style="min-height:58px" placeholder="Scene / vibe / mood / story the song scores"></textarea>
+    <label class="fld" style="margin-top:10px">Intended Use</label>
+    <select id="sunoUse"></select>
+    <div id="sunoSuggest"></div>
+    <label class="row" style="margin-top:10px;align-items:center;gap:8px"><input type="checkbox" id="sunoInstrumental" style="width:auto;flex:0"> Instrumental — no vocals</label>
+    <details class="collapse" style="margin-top:10px"><summary>Genres — tap a few (less is more)</summary><div class="body">
+    <div class="tokenchips" id="sunoGenreChips"></div>
+    <div class="row" style="margin-top:8px"><input type="text" id="genreInput" placeholder="add your own genre…"><button class="btn ghost sm" id="genreAdd" style="flex:0">+ Save</button></div>
+    </div></details>
+    <details class="collapse" style="margin-top:10px"><summary>Advanced controls</summary><div class="body"><div id="sunoAdv"></div></div></details>
+    <button class="btn green" id="sunoBtn" style="margin-top:12px;width:100%">&#10022; Build Suno package</button>
+    <div id="sunoStatus"></div><div id="sunoOut"></div>
+    <details class="collapse" style="margin-top:12px"><summary>Saved song projects</summary><div class="body"><div id="sunoProjects"></div></div></details>
+  </div>
 </section>
 <section class="view" id="view-settings">
   <div class="slatehead"><span class="num">⚙</span><h2>Setup</h2><span class="tag">Keys &amp; Models</span></div>
@@ -528,10 +553,11 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
       <button class="btn sm ghost" id="importAll">⬆ Import backup</button>
       <button class="btn sm danger" id="wipeAll" style="flex:0">Wipe all</button>
     </div>
+    <div class="hint" id="storageMeter" style="margin-top:8px"></div>
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v8.6 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.0 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -546,7 +572,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
 let S=load();
@@ -654,6 +680,8 @@ function go(name){
   if(name==="cast")renderCast();
   if(name==="sets")renderSets();
   if(name==="media")renderMedia();
+  if(name==="smg")renderMedia();
+  if(name==="settings")updateStorageMeter();
   window.scrollTo(0,0);
 }
 
@@ -1749,15 +1777,232 @@ function setNote(it){if(!it)return "";let t=" Location: "+it.name+(it.vibe?" —
 
 /* ===== Media House ===== */
 const SUNO_GENRES=["afro-jazz drill","gnawa funk","afro-rock ambient dub","Japanese boogie","drill and bass gnawa","drill-breakbeat","Japanese jungle","ambient techno afroswing","afrobeat","p-funk","p-funk cloud rap","afrobeat garage","dirty south boom bap","boogie","afrobeat new jack swing","psychedelic acid trance","caribbean","boogie caribbean","hip hop dubstep","afrobeat rockabilly","psychedelic cabaret","house reggae","pacific reggae afrobeat","afrobeat swing","lo-fi afro house","drum and bass swing","boom bap p-funk","Arabic reggae","New Orleans house","afro-jazz carnatic","riddim","old school hip hop","trip hop","gangster rap"];
+const SUNO_USE=["Standalone Single","Album Track","EP Track","Character Theme","Hero Theme","Villain Theme","Film Soundtrack","Episode Soundtrack","Fight Scene","Trailer","Commercial","Brand Anthem","Product Drop","Comedy Song","Social Media Clip","Music Video","Visualizer","Background Cue","Other"];
+const SUNO_CREATOR_MODES=[
+["General Song Development",["Auto / Recommend","Suno Music Prompt Specialist","Song Concept Creator","Style Prompt Creator","Prompt Optimization Creator","Prompt Variations Creator","Reference Translation Creator","Song Structure Creator","Production Prompt Creator"]],
+["Genre & Sound Design",["Genre Architect","Hybrid Genre Creator","Era Sound Creator","Regional Sound Creator","Experimental Sound Creator","Analog Texture Creator","Modern Digital Creator","Mix and Master Direction Creator"]],
+["Vocals & Songwriting",["Artist Persona Creator","Vocal Direction Creator","Rap Flow Creator","Hook Creator","Verse Structure Creator","Lyric Direction Creator","Melody Creator","Harmony Creator","Story Song Creator","Punchline Rap Creator"]],
+["Mood & Purpose",["Mood Creator","Emotional Song Creator","Motivational Anthem Creator","Spiritual Song Creator","Love Song Creator","Breakup Song Creator","Comedy Story Song Creator","Cannabis-Adjacent Music Creator"]],
+["Cinematic & Brand Music",["Cinematic Music Creator","Soundtrack Creator","Character Theme Creator","Hero Theme Creator","Villain Theme Creator","Brand Anthem Creator","Commercial Jingle Creator","Trailer Music Creator","Music Video Concept Creator"]],
+["Project Development",["Album Concept Creator","EP Creator","Tracklist Creator","Album Continuity Creator","Artist Consistency Creator"]],
+["Alternate Versions",["Remix Creator","Acoustic Version Creator","Live Performance Creator","Radio Edit Creator","Extended Version Creator","Clean Version Creator"]]
+];
+const SUNO_PRESETS=[
+{id:"premium-cinematic-boom-bap",name:"Premium Cinematic Boom Bap",category:"Cinematic Hip-Hop",bpm:"",genres:["hip hop","boom bap","cinematic soul","west coast"],
+description:"Your signature style. Cinematic, confident, floaty boom bap with strong storytelling and modern textures. High viral potential.",
+bestFor:"High-quality cinematic hip-hop, storytelling, viral potential",
+performanceTags:"confident floaty, talk-sung, layered, immediate high-impact",
+viralTips:"Strong first 3 seconds plus cinematic atmosphere works very well for immediate listener retention.",
+stylePrompt:"upbeat energetic celebratory high-impact hip-hop, Timbaland Dr. Dre Scott Storch production, Nas Rick Ross Nipsey Hussle style confident male vocals, hard-hitting boom bap drums with swing, funky basslines, staccato piano hits, vaporwave-style ambient textures, smooth West Coast synth melodies, bounce-heavy rhythm, crisp snares, percussive vocal accents, confident floaty cinematic, stacks wealth and wisdom through smoke, immediate high-impact groove in first 3 seconds, viral hook potential",
+lyricsStructure:"[Intro - Immediate attention-grabbing groove with ambient texture]\n[Verse 1 - Confident floaty conversational flow]\n[Pre-Chorus - Energy rising]\n[Chorus - High-impact, layered, celebratory]\n[Verse 2]\n[Chorus]\n[Bridge - Atmospheric drop, breathy vocals]\n[Final Chorus - Bigger, maximum groove]\n[Outro - Fade with main hook and ambient texture]",
+mapping:"Primary Genre: Hip-Hop\nSecondary Genres: Boom Bap, Cinematic Soul, West Coast Synth Influence\nMood: Confident, Celebratory, Luxurious, Cinematic\nEnergy: High\nGroove: Swinging, Bouncy\nVocal Configuration: Male Rapper or Singer-Rapper\nVocal Texture: Confident, Smooth, Gravelly\nDelivery: Conversational, Melodic, Controlled\nDynamic Arc: Immediate High Energy with Atmospheric Bridge and Bigger Final Chorus",
+isSystemPreset:true,version:1},
+
+{id:"classic-golden-era-boom-bap",name:"Classic Golden Era Boom Bap",category:"Classic Hip-Hop",bpm:"90 BPM",genres:["boom bap","old school hip hop","jazz rap","east coast"],
+description:"Raw, authentic 1990s New York boom bap with dusty drums and jazzy samples. Great for a classic hip-hop feel.",
+bestFor:"Raw authentic boom bap, head-nod tracks, underground vibe",
+performanceTags:"gritty, conversational, raw",
+viralTips:"Use a recognizable opening sample texture and establish the drum pocket immediately.",
+stylePrompt:"90s NYC boom bap, dusty SP-1200 MPC drums with swing, chopped jazz piano samples, vinyl crackle, walking upright bass, gritty confident male rap vocals, head-nod groove, Pete Rock influence, raw authentic feel, 90 BPM, warm analog mix",
+lyricsStructure:"[Intro - Dusty sample loop + vinyl crackle]\n[Verse 1 - Gritty conversational rap]\n[Chorus - Catchy hook with swing]\n[Verse 2]\n[Chorus]\n[Bridge - Stripped sample focus]\n[Final Chorus]\n[Outro - Fade with main sample]",
+mapping:"Primary Genre: Boom Bap\nEra: 1990s\nRegional Influence: New York / East Coast\nMood: Gritty, Confident, Nostalgic\nTempo: 90 BPM\nGroove: Swinging, Head-Nod\nVocal Configuration: Male Rapper\nDelivery: Conversational, Pocket-Focused\nInstrumentation: Dusty Drums, Jazz Piano, Upright Bass, Vinyl Texture\nProduction Texture: Warm, Raw, Analog",
+isSystemPreset:true,version:1},
+
+{id:"uk-drill",name:"UK Drill",category:"Drill",bpm:"142 BPM",genres:["uk drill","drill"],
+description:"Dark, aggressive, high-momentum UK drill. Strong for intense, menacing, and fast-moving tracks.",
+bestFor:"Dark moody drill, aggressive energy, high-momentum tracks",
+performanceTags:"aggressive, triplet flow, menacing",
+viralTips:"Begin with the main dark motif and bass movement instead of using a long atmospheric intro.",
+stylePrompt:"UK drill, sliding 808 bass, dark minor key piano melody, syncopated rolling hi-hats, aggressive triplet flow, menacing cold atmosphere, London street sound, 142 BPM, immediate dark energy from bar one, high momentum",
+lyricsStructure:"[Intro - Dark piano + sliding 808 tease]\n[Verse 1 - Aggressive triplet flow]\n[Chorus - Repetitive high-impact hook]\n[Verse 2 - Flow switch]\n[Chorus]\n[Bridge - Atmospheric drop]\n[Final Chorus - Bigger energy]\n[Outro - Haunting piano + bass fade]",
+mapping:"Primary Genre: UK Drill\nRegional Influence: UK\nMood: Dark, Menacing, Aggressive, Cold\nTempo: 142 BPM\nGroove: Syncopated, Driving\nVocal Configuration: Rapper\nDelivery: Aggressive, Triplet Flow, Flow Switches\nInstrumentation: Sliding 808, Dark Piano, Rolling Hi-Hats\nDynamic Arc: Immediate Energy with Atmospheric Mid-Song Drop",
+isSystemPreset:true,version:1},
+
+{id:"boom-trap-hybrid",name:"Boom-Trap Hybrid",category:"Hybrid Hip-Hop",bpm:"95 BPM",genres:["boom bap","trap","hip hop"],
+description:"Modern bounce with classic boom bap swing. A strong hybrid for contemporary energy with familiar hip-hop rhythm.",
+bestFor:"Modern bouncy hip-hop with classic swing, viral energy",
+performanceTags:"confident, bounce-heavy, layered",
+viralTips:"Lead with the central bounce and make the chorus rhythm identifiable during the opening seconds.",
+stylePrompt:"boom bap swing meets modern trap, hard-hitting drums with bounce, deep 808s, funky basslines, crisp snares, upbeat celebratory energy, confident rap flow, vaporwave ambient textures, immediate groove in first 3 seconds, 95 BPM with trap bounce feel",
+lyricsStructure:"[Intro - Strong bounce groove hit]\n[Verse 1 - Confident conversational]\n[Chorus - High-impact bounce hook]\n[Verse 2]\n[Chorus]\n[Bridge - Atmospheric trap drop]\n[Final Chorus - Maximum bounce]\n[Outro]",
+mapping:"Primary Genre: Hip-Hop\nSecondary Genres: Boom Bap, Trap\nGenre Relationship: Balanced Fusion\nMood: Confident, Upbeat, Celebratory\nTempo: 95 BPM\nGroove: Swinging, Bouncy\nVocal Configuration: Rapper\nDelivery: Confident, Conversational\nProduction Texture: Modern, Layered, Atmospheric",
+isSystemPreset:true,version:1},
+
+{id:"high-energy-club-banger",name:"High-Energy Club Banger",category:"Club / Trap",bpm:"140 BPM",genres:["trap","club","festival trap"],
+description:"Festival and club-ready high-energy trap banger.",
+bestFor:"Club, festival, high-rotation energetic tracks",
+performanceTags:"high-energy, bouncy, explosive",
+viralTips:"Avoid a slow introduction. Establish the bass, rhythm, or hook during the opening moments.",
+stylePrompt:"high-energy club trap banger, hard 808 sub-bass, rapid hi-hat rolls, punchy snare, bouncy energetic groove, melodic or aggressive rap vocals, festival-ready energy, immediate bounce and impact, 140 BPM",
+lyricsStructure:"[Intro - Immediate heavy bounce drop]\n[Verse 1]\n[Pre-Chorus - Build]\n[Chorus - Explosive high-energy hook]\n[Verse 2]\n[Chorus]\n[Bridge - Breakdown]\n[Final Chorus - Peak energy]\n[Outro]",
+mapping:"Primary Genre: Trap\nIntended Use: Club, Festival, High-Energy Single\nMood: Explosive, Confident, Energetic\nTempo: 140 BPM\nGroove: Bouncy, Driving\nVocal Configuration: Rapper or Singer-Rapper\nDelivery: Aggressive or Melodic\nInstrumentation: Hard 808, Rapid Hi-Hats, Punchy Snare\nDynamic Arc: Immediate Drop, Build, Breakdown, Peak Final Chorus",
+isSystemPreset:true,version:1},
+
+{id:"cinematic-korean-boom-bap",name:"Cinematic Korean Boom Bap",category:"Korean Hip-Hop",bpm:"",genres:["korean hip hop","boom bap","cinematic"],
+description:"Melodic, emotional, cinematic Korean hip-hop with a boom bap foundation.",
+bestFor:"Storytelling, emotional, cinematic K-hip-hop",
+performanceTags:"reflective, melodic, conversational, emotional, atmospheric",
+viralTips:"Use a recognizable melodic phrase early and let the chorus deliver a stronger emotional lift.",
+stylePrompt:"cinematic Korean hip-hop, boom bap drums with swing, warm analog textures, atmospheric pads, smooth melodic rap delivery, emotional and introspective male vocals, storytelling energy, subtle Korean melodic influence, vaporwave ambient textures, confident but reflective",
+lyricsStructure:"[Intro - Atmospheric pads + dusty groove]\n[Verse 1 - Reflective, conversational melodic rap]\n[Pre-Chorus - Emotional build]\n[Chorus - Melodic hook with feeling]\n[Verse 2 - Deeper storytelling]\n[Chorus]\n[Bridge - Stripped atmospheric moment]\n[Final Chorus - Bigger emotional peak]\n[Outro - Fade with ambient texture]",
+mapping:"Primary Genre: Korean Hip-Hop\nSecondary Genre: Boom Bap\nMood: Reflective, Emotional, Cinematic, Atmospheric\nGroove: Swinging\nVocal Configuration: Male Singer-Rapper\nVocal Texture: Smooth, Emotional\nDelivery: Melodic, Conversational, Storytelling\nInstrumentation: Boom Bap Drums, Atmospheric Pads, Analog Texture\nDynamic Arc: Gradual Emotional Build",
+isSystemPreset:true,version:1},
+
+{id:"modern-k-rap-trap",name:"Modern K-Rap Trap",category:"Korean Hip-Hop / Trap",bpm:"",genres:["korean hip hop","trap","melodic rap"],
+description:"Catchy, stylish modern Korean rap with trap bounce and melodic hooks.",
+bestFor:"Catchy modern K-rap, stylish and melodic tracks",
+performanceTags:"melodic, stylish, confident, catchy, layered",
+viralTips:"Introduce a melodic fragment or chorus phrase during the first three seconds.",
+stylePrompt:"modern Korean hip-hop trap, bouncy 808s, crisp hi-hats, melodic rap flow mixed with singing hooks, confident and stylish male vocals, atmospheric synths, emotional but cocky energy, Korean melodic influence, immediate catchy hook in first 3 seconds",
+lyricsStructure:"[Intro - Strong bouncy groove + melodic tease]\n[Verse 1 - Stylish melodic rap]\n[Pre-Chorus - Build to hook]\n[Chorus - Catchy melodic hook]\n[Verse 2 - Flow switch]\n[Chorus]\n[Bridge - Atmospheric drop with ad-libs]\n[Final Chorus - Bigger and more layered]\n[Outro - Fade with main hook]",
+mapping:"Primary Genre: Korean Hip-Hop\nSecondary Genre: Trap\nMood: Stylish, Confident, Catchy, Emotional\nGroove: Bouncy\nVocal Configuration: Male Singer-Rapper\nDelivery: Melodic Rap, Confident, Flow Switches\nInstrumentation: Bouncy 808, Crisp Hi-Hats, Atmospheric Synths\nDynamic Arc: Hook-First with Layered Final Chorus",
+isSystemPreset:true,version:1},
+
+{id:"atmospheric-k-drill-hybrid",name:"Atmospheric K-Drill Hybrid",category:"Korean Hip-Hop / Drill",bpm:"140 BPM",genres:["korean drill","drill","cinematic trap"],
+description:"Dark, cinematic Korean drill with melodic elements.",
+bestFor:"Dark moody cinematic drill with Korean influence",
+performanceTags:"aggressive melodic, cold, atmospheric, stylish",
+viralTips:"Use a dark melodic motif immediately and keep the hook concise and repeatable.",
+stylePrompt:"atmospheric Korean drill hybrid, sliding 808s, dark minor piano and synth textures, aggressive but melodic rap delivery, cold cinematic atmosphere, emotional undertone, Korean melodic influence, menacing yet stylish, 140 BPM",
+lyricsStructure:"[Intro - Dark atmospheric piano + sliding 808]\n[Verse 1 - Aggressive melodic flow]\n[Chorus - Repetitive moody hook]\n[Verse 2 - Darker storytelling]\n[Chorus]\n[Bridge - Stripped cinematic moment]\n[Final Chorus - Bigger intensity]\n[Outro - Haunting fade with piano]",
+mapping:"Primary Genre: Korean Drill\nSecondary Genres: Korean Hip-Hop, Cinematic Trap\nMood: Cold, Dark, Menacing, Emotional, Stylish\nTempo: 140 BPM\nVocal Configuration: Rapper or Singer-Rapper\nDelivery: Aggressive, Melodic\nInstrumentation: Sliding 808, Dark Piano, Synth Texture\nDynamic Arc: Immediate Dark Energy with Larger Final Chorus",
+isSystemPreset:true,version:1},
+
+{id:"lofi-jazzy-korean-hip-hop",name:"Lo-Fi Jazzy Korean Hip-Hop",category:"Lo-Fi Korean Hip-Hop",bpm:"",genres:["lo-fi hip hop","korean hip hop","jazz rap","boom bap"],
+description:"Chill, jazzy, introspective Korean hip-hop with warm textures.",
+bestFor:"Chill, reflective, jazzy Korean hip-hop",
+performanceTags:"calm, introspective, melodic, conversational, warm",
+viralTips:"Lead with the most memorable jazz chord, piano phrase, or vocal line rather than a long ambient fade-in.",
+stylePrompt:"lo-fi jazzy Korean hip-hop, dusty boom bap drums, warm jazz piano samples, vinyl crackle, smooth melodic rap, introspective and calm male vocals, subtle Korean melodic phrasing, cozy atmospheric textures, reflective storytelling, warm analog feel, relaxed but groovy",
+lyricsStructure:"[Intro - Warm jazz piano + dusty drums]\n[Verse 1 - Calm conversational melodic rap]\n[Chorus - Smooth melodic hook]\n[Verse 2 - Deeper reflection]\n[Chorus]\n[Bridge - Stripped jazzy moment]\n[Final Chorus - Warm and full]\n[Outro - Gentle fade with piano]",
+mapping:"Primary Genre: Lo-Fi Hip-Hop\nSecondary Genres: Korean Hip-Hop, Jazz Rap, Boom Bap\nMood: Calm, Introspective, Warm, Reflective\nEnergy: Low to Medium\nGroove: Laid-Back\nVocal Configuration: Male Singer-Rapper\nDelivery: Calm, Conversational, Melodic\nInstrumentation: Jazz Piano, Dusty Drums, Vinyl Texture\nProduction Texture: Warm, Analog, Lo-Fi, Cozy",
+isSystemPreset:true,version:1},
+
+{id:"emotional-cinematic-k-rap",name:"Emotional Cinematic K-Rap",category:"Korean Hip-Hop / Cinematic",bpm:"",genres:["korean hip hop","cinematic hip hop","melodic rap"],
+description:"Deep, emotional, cinematic Korean hip-hop focused on storytelling.",
+bestFor:"Emotional storytelling, cinematic K-rap",
+performanceTags:"emotional, vulnerable, melodic, storytelling, powerful",
+viralTips:"Establish the emotional motif or chorus melody early, then let the verses deepen the story.",
+stylePrompt:"emotional cinematic Korean hip-hop, atmospheric production, warm pads, subtle boom bap swing, highly melodic and emotional rap delivery, vulnerable yet confident male vocals, strong storytelling, Korean melodic influence, cinematic textures, immediate emotional hook in first 3 seconds",
+lyricsStructure:"[Intro - Cinematic atmospheric intro]\n[Verse 1 - Emotional storytelling rap]\n[Pre-Chorus - Rising emotion]\n[Chorus - Powerful melodic hook]\n[Verse 2 - Deeper narrative]\n[Chorus]\n[Bridge - Stripped vulnerable moment]\n[Final Chorus - Emotional peak]\n[Outro - Fade with main melody]",
+mapping:"Primary Genre: Korean Hip-Hop\nSecondary Genres: Cinematic Hip-Hop, Melodic Rap\nMood: Emotional, Vulnerable, Powerful, Cinematic\nVocal Configuration: Male Singer-Rapper\nVocal Texture: Emotional, Warm, Powerful\nDelivery: Melodic, Vulnerable, Storytelling\nInstrumentation: Warm Pads, Boom Bap Drums, Cinematic Texture\nDynamic Arc: Gradual Emotional Build to Major Final Chorus",
+isSystemPreset:true,version:1}
+];
+let SUNO_LAST=null;
+function sunoPreset(id){return SUNO_PRESETS.find(p=>p.id===id)||null;}
+function sunoDraft(){if(!S.sunoDraft)S.sunoDraft={preset:"",creator:"Auto / Recommend",use:"Standalone Single"};return S.sunoDraft;}
+function sunoCopyText(t){navigator.clipboard.writeText(t).then(()=>toast("Copied.")).catch(()=>toast("Copy failed.",true));}
+function sunoCard(label,val){return '<label class="fld" style="margin-top:12px">'+label+'</label><div class="promptbox" id="sf_'+label.replace(/\W/g,'')+'">'+esc(val)+'</div><button class="btn ghost sm sunocopy" data-t="'+label.replace(/\W/g,'')+'" style="margin-top:6px">&#10696; Copy '+label+'</button>';}
+function renderSuno(){
+  const d=sunoDraft();
+  const ps=$("sunoPreset");
+  if(ps){ if(!ps.dataset.built){ let o='<option value="">Custom / No Preset</option>'; SUNO_PRESETS.forEach(p=>{o+='<option value="'+p.id+'">'+esc(p.name)+'</option>';}); ps.innerHTML=o; ps.dataset.built="1"; }
+    ps.value=d.preset||""; ps.onchange=()=>{d.preset=ps.value;save();renderSuno();}; }
+  const cs=$("sunoCreator");
+  if(cs){ if(!cs.dataset.built){ let o=""; SUNO_CREATOR_MODES.forEach(g=>{o+='<optgroup label="'+esc(g[0])+'">';g[1].forEach(m=>{o+='<option>'+esc(m)+'</option>';});o+='</optgroup>';}); cs.innerHTML=o; cs.dataset.built="1"; }
+    cs.value=d.creator||"Auto / Recommend"; cs.onchange=()=>{d.creator=cs.value;save();}; }
+  const us=$("sunoUse");
+  if(us){ if(!us.dataset.built){ us.innerHTML=SUNO_USE.map(u=>'<option>'+esc(u)+'</option>').join(""); us.dataset.built="1"; }
+    us.value=d.use||"Standalone Single"; us.onchange=()=>{d.use=us.value;save();}; }
+  const ac=$("sunoArtistCast");
+  if(ac){ let o='<option value="">\u2014 or pick a Cast member \u2014</option>'; (S.cast||[]).forEach(c=>{o+='<option value="'+esc(c.name)+'">'+esc(c.name)+'</option>';}); ac.innerHTML=o; ac.value=""; ac.onchange=()=>{const ar=$("sunoArtist");if(ac.value&&ar)ar.value=ac.value;}; }
+  renderSunoPresetCard();
+  renderSunoAdv();
+  renderSunoSuggest();
+  renderSunoProjects();
+}
+function renderSunoPresetCard(){
+  const box=$("sunoPresetCard"); if(!box)return;
+  const p=sunoPreset(sunoDraft().preset);
+  if(!p){box.innerHTML="";return;}
+  let h='<div class="card" style="margin-top:8px;background:rgba(255,255,255,.02)">';
+  h+='<div style="font-weight:800;font-family:var(--slate)">'+esc(p.name)+' <span class="tag">'+esc(p.category)+'</span></div>';
+  h+='<div class="hint" style="margin-top:6px">'+esc(p.description)+'</div>';
+  h+='<div style="margin-top:8px;font-size:13px"><b>Best for:</b> '+esc(p.bestFor)+'</div>';
+  h+='<div style="margin-top:4px;font-size:13px"><b>Tags:</b> <span style="color:var(--bud)">'+esc(p.performanceTags)+'</span></div>';
+  if(p.bpm)h+='<div style="margin-top:4px;font-size:13px"><b>Tempo:</b> '+esc(p.bpm)+'</div>';
+  h+='<div style="margin-top:4px;font-size:13px"><b>Viral tip:</b> '+esc(p.viralTips)+'</div>';
+  h+='<details class="collapse" style="margin-top:8px"><summary>Style prompt preview</summary><div class="body"><div class="promptbox">'+esc(p.stylePrompt)+'</div></div></details>';
+  h+='<details class="collapse" style="margin-top:6px"><summary>Lyrics structure</summary><div class="body"><div class="promptbox">'+esc(p.lyricsStructure)+'</div></div></details>';
+  h+='<details class="collapse" style="margin-top:6px"><summary>Recommended settings</summary><div class="body"><div class="promptbox">'+esc(p.mapping)+'</div></div></details>';
+  h+='<div class="row" style="margin-top:10px;flex-wrap:wrap;gap:6px">';
+  h+='<button class="btn green sm" id="sunoApply" style="flex:0">Use preset</button>';
+  h+='<button class="btn ghost sm" id="sunoCopyStyle" style="flex:0">&#10696; Style</button>';
+  h+='<button class="btn ghost sm" id="sunoCopyLyr" style="flex:0">&#10696; Lyrics</button>';
+  h+='<button class="btn ghost sm" id="sunoResetPreset" style="flex:0">Reset</button>';
+  h+='</div></div>';
+  box.innerHTML=h;
+  $("sunoApply").onclick=()=>sunoApplyPreset(p);
+  $("sunoCopyStyle").onclick=()=>sunoCopyText(p.stylePrompt);
+  $("sunoCopyLyr").onclick=()=>sunoCopyText(p.lyricsStructure);
+  $("sunoResetPreset").onclick=()=>{sunoDraft().preset="";save();renderSuno();toast("Back to Custom / No Preset.");};
+}
+function sunoApplyPreset(p){
+  if(!S.customGenres)S.customGenres=[];
+  (p.genres||[]).forEach(g=>{ if(!S.customGenres.includes(g)&&!SUNO_GENRES.includes(g))S.customGenres.push(g); if(typeof sunoGenres!=="undefined")sunoGenres.add(g); });
+  save(); renderMedia();
+  toast("Preset loaded \u2014 genres added, your typed fields stay untouched.");
+}
+function sunoPaintOutputs(o){
+  let h="";
+  let bp="Title: "+(o.title||"\u2014")+"\nArtist/Persona: "+(o.artist||"\u2014")+"\nPreset: "+(o.presetName||"Custom / No Preset")+"\nCreator Mode: "+(o.creator||"\u2014")+"\nIntended Use: "+(o.use||"\u2014")+"\nConcept: "+(o.concept||"\u2014")+"\nGenres: "+((o.genres||[]).join(", ")||"\u2014")+"\nInstrumental: "+(o.instrumental?"Yes":"No");
+  h+=sunoCard("Song Blueprint",bp);
+  if(o.originalStyle)h+=sunoCard("Original Preset Style Prompt",o.originalStyle);
+  h+=sunoField("Optimized Suno Style Prompt",o.optimizedStyle||"",200);
+  if(o.detailed)h+=sunoCard("Detailed Suno Prompt",o.detailed);
+  h+=sunoCard("Lyrics Structure",o.lyricsStructure||"");
+  if(!o.instrumental&&o.vocal)h+=sunoCard("Vocal Direction",o.vocal);
+  if(o.translatedTraits)h+=sunoCard("Reference Translation",o.translatedTraits);
+  h+='<button class="btn green sm" id="sunoSaveProj" style="margin-top:12px;width:100%">\u2295 Save song project</button>';
+  if($("sunoOut")){$("sunoOut").innerHTML=h;bindSunoCopies();if($("sunoSaveProj"))$("sunoSaveProj").onclick=sunoSaveProject;}
+}
+function sunoSaveProject(){
+  if(!SUNO_LAST){toast("Build a package first.",true);return;}
+  if(!S.sunoProjects)S.sunoProjects=[];
+  S.sunoProjects.unshift(Object.assign({id:uid()},SUNO_LAST));
+  save();renderSunoProjects();toast("Song project saved.");
+}
+function renderSunoProjects(){
+  const box=$("sunoProjects");if(!box)return;
+  const list=S.sunoProjects||[];
+  if(!list.length){box.innerHTML='<div class="hint">No saved songs yet.</div>';return;}
+  box.innerHTML="";
+  list.forEach(pj=>{const d=document.createElement("div");d.className="card";d.style.cursor="pointer";d.style.marginTop="6px";
+    d.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><div style="font-weight:800;font-family:var(--slate)">'+esc(pj.title||"Untitled song")+'</div><button class="x" style="position:static;flex:0 0 auto">\u2715</button></div><div class="hint" style="margin-top:2px">'+esc(pj.presetName||"Custom")+' \u00b7 '+esc(pj.use||"")+'</div>';
+    d.querySelector(".x").addEventListener("click",e=>{e.stopPropagation();if(confirm("Delete this song project?")){S.sunoProjects=(S.sunoProjects||[]).filter(x=>x.id!==pj.id);save();renderSunoProjects();}});
+    d.addEventListener("click",()=>sunoLoadProject(pj));
+    box.appendChild(d);});
+}
+function sunoLoadProject(pj){
+  const d=sunoDraft();d.preset=pj.preset||"";d.creator=pj.creator||"Auto / Recommend";d.use=pj.use||"Standalone Single";save();
+  if(typeof sunoGenres!=="undefined"){sunoGenres.clear();(pj.genres||[]).forEach(g=>sunoGenres.add(g));}
+  S.sunoAdv=pj.adv?JSON.parse(JSON.stringify(pj.adv)):{};
+  renderMedia();
+  if($("sunoTitle"))$("sunoTitle").value=pj.title||"";
+  if($("sunoArtist"))$("sunoArtist").value=pj.artist||"";
+  if($("sunoScene"))$("sunoScene").value=pj.concept||"";
+  if($("sunoInstrumental"))$("sunoInstrumental").checked=!!pj.instrumental;
+  SUNO_LAST=Object.assign({},pj);
+  sunoPaintOutputs(pj);
+  if($("sunoStatus"))$("sunoStatus").innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Loaded saved song \u2014 edit and rebuild any time</div>';
+  window.scrollTo(0,0);toast("Song loaded.");
+}
+function updateStorageMeter(){
+  const el=$("storageMeter");if(!el)return;
+  let bytes=0;try{bytes=new Blob([localStorage.getItem(LS)||""]).size;}catch(e){bytes=(localStorage.getItem(LS)||"").length;}
+  const kb=(bytes/1024).toFixed(0);const pct=Math.min(100,(bytes/(5*1024*1024))*100).toFixed(1);
+  el.innerHTML="Storage used: ~"+kb+" KB ("+pct+"% of the browser's ~5 MB). Text &amp; song projects are tiny \u2014 uploaded image refs are the heavy part. Generated finals are saved as links, so download anything you want to keep.";
+}
+
 let sunoGenres=new Set();
 function bindMedia(){
   if($("banterBtn"))$("banterBtn").addEventListener("click",writeBanter);
   if($("voiceNarr"))$("voiceNarr").addEventListener("click",()=>voiceLine($("narratorLine").value,"Narrator"));
   if($("voiceChief"))$("voiceChief").addEventListener("click",()=>voiceLine($("chieffLine").value,"Inner Chieff"));
   if($("ttsBtn"))$("ttsBtn").addEventListener("click",()=>voiceLine($("ttsText").value,$("ttsType").value));
-  if($("lipBtn"))$("lipBtn").addEventListener("click",genLipsync);
-  if($("sfxBtn"))$("sfxBtn").addEventListener("click",genSfx);
-  if($("sunoBtn"))$("sunoBtn").addEventListener("click",buildSuno);
+  if($("lipBtn"))$("lipBtn").onclick=genLipsync;
+  if($("sfxBtn"))$("sfxBtn").onclick=genSfx;
+  if($("sunoBtn"))$("sunoBtn").onclick=buildSuno;
   if($("genreAdd"))$("genreAdd").addEventListener("click",()=>{const g=$("genreInput").value.trim();if(!g)return;if(!S.customGenres)S.customGenres=[];if(!S.customGenres.includes(g)&&!SUNO_GENRES.includes(g))S.customGenres.push(g);$("genreInput").value="";save();renderMedia();toast("Genre saved.");});
   if($("lsFace"))$("lsFace").addEventListener("change",()=>{const v=$("lsFace").value;if(v==="__upload"){$("lipFaceFile").click();$("lsFace").value="";}else if(v==="__url"){const u=window.prompt("Paste a face image URL:");if(u&&/^https?:\/\//.test(u)){extraFaces.push({src:u.trim(),label:"URL face "+(extraFaces.length+1)});renderMedia();$("lsFace").value=u.trim();}else{$("lsFace").value="";}}});
   if($("lipFaceFile"))$("lipFaceFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const src=await resizeImage(f,1024,0.85);extraFaces.push({src,label:"Uploaded face "+(extraFaces.length+1)});renderMedia();$("lsFace").value=src;}catch(err){toast("Could not read that.",true);}e.target.value="";});
@@ -1771,6 +2016,7 @@ async function testMedia(model,input,outId){
   catch(e){r.innerHTML='✗ '+esc(e.message||"failed")+' — try another model.';r.style.color="var(--red)";}
 }
 function renderMedia(){
+  renderSuno();
   const fw=$("lsFace");if(fw){const cur=fw.value;fw.innerHTML='<option value="">— pick a face —</option>';S.cast.filter(c=>c.src).forEach(c=>{const o=document.createElement("option");o.value=c.src;o.textContent=c.name;fw.appendChild(o);});extraFaces.forEach(f=>{const o=document.createElement("option");o.value=f.src;o.textContent=f.label;fw.appendChild(o);});["__upload","__url"].forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=k==="__upload"?"⬆ Upload a face…":"🔗 Paste image URL…";fw.appendChild(o);});fw.value=cur;}
   const aw=$("lsAudio");if(aw){const cur=aw.value;aw.innerHTML='<option value="">— pick an audio —</option>';S.reel.filter(r=>r.type==="audio").slice(0,20).forEach(r=>{const o=document.createElement("option");o.value=r.url;o.textContent=(r.prompt||"audio").slice(0,38);aw.appendChild(o);});const u=document.createElement("option");u.value="__url";u.textContent="Paste audio URL…";aw.appendChild(u);aw.value=cur;}
   const gw=$("sunoGenreChips");if(gw){gw.innerHTML="";const all=SUNO_GENRES.concat(S.customGenres||[]);all.forEach((gname,idx)=>{const custom=idx>=SUNO_GENRES.length;const ch=document.createElement("span");ch.className="chip"+(sunoGenres.has(gname)?" on":"");ch.textContent=gname;ch.addEventListener("click",()=>{sunoGenres.has(gname)?sunoGenres.delete(gname):sunoGenres.add(gname);renderMedia();});if(custom){const x=document.createElement("span");x.textContent=" ✕";x.style.opacity=".55";x.addEventListener("click",e=>{e.stopPropagation();S.customGenres=(S.customGenres||[]).filter(g=>g!==gname);sunoGenres.delete(gname);save();renderMedia();});ch.appendChild(x);}gw.appendChild(ch);});}
@@ -1817,16 +2063,122 @@ async function genSfx(){
     st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Saved to The Cut</div>';$("sfxResult").innerHTML='<audio src="'+m.url+'" controls style="width:100%"></audio>';
   }catch(e){st.innerHTML='<div class="statusline" style="color:var(--red)">✗ '+esc(e.message)+'</div>';}
 }
+
+const SUNO_OPT={
+genreRel:["Dominant Primary Genre","Balanced Fusion","Subtle Secondary Influence","Genre Switch Mid-Song","Experimental Blend"],
+energy:["Very Low","Low","Medium","High","Very High","Dynamic / Evolving"],
+tempo:["Slow","Midtempo","Fast","Variable","Exact BPM","BPM Range"],
+groove:["Straight","Swinging","Laid-Back","Behind the Beat","Driving","Syncopated","Bouncy","Stomping","Loose Live Feel","Mechanical","Half-Time","Double-Time"],
+vocalConfig:["Male Lead","Female Lead","Male Rapper","Female Rapper","Singer-Rapper","Duet","Group Vocals","Choir","Character Voice","Instrumental","Spoken Elements"],
+vocalTexture:["Smooth","Raspy","Gravelly","Warm","Airy","Powerful","Intimate","Soulful","Clean","Raw","Youthful","Mature","Theatrical","Deadpan","Menacing","Playful","Melodic"],
+delivery:["Controlled","Aggressive","Conversational","Emotional","Restrained","Confident","Melodic","Rhythmically Dense","Punchline-Heavy","Storytelling","Rapid","Laid-Back","Call-and-Response","Spoken-Sung"],
+rapFlow:["Pocket-Focused","Punchline-Heavy","Storytelling","Dense Internal Rhymes","Conversational","Aggressive","Melodic Rap","Stop-and-Start","Double-Time Sections","Flow Switches","Minimal and Direct"],
+drums:["Punchy Hip-Hop Drums","Boom-Bap Drums","Trap Drums","Live Drum Kit","Funk Drums","Rock Drums","Electronic Drums","Industrial Percussion","Orchestral Percussion","Hand Percussion","Caribbean Percussion","Sparse Percussion","Heavy Toms","Drum Machine"],
+bass:["Deep Sub Bass","808 Bass","Live Electric Bass","Funk Bass","Upright Bass","Synth Bass","Distorted Bass","Reggae Bass","Cinematic Low Brass Bass","Minimal Bass"],
+keys:["Grand Piano","Dark Piano","Electric Piano","Organ","Gospel Organ","Analog Synth","Digital Synth","Atmospheric Pads","Arpeggiated Synth","Lead Synth","Bell Tones"],
+guitars:["Clean Electric Guitar","Distorted Electric Guitar","Acoustic Guitar","Funk Guitar","Wah Guitar","Reggae Guitar","Psychedelic Guitar","Ambient Guitar"],
+orchestral:["Strings","Low Strings","Brass","Low Brass","Woodwinds","Choir","Cinematic Orchestra","Solo Violin","Solo Cello"],
+textures:["Vinyl Texture","Tape Saturation","Room Ambience","Mechanical Texture","Metallic Impacts","Smoke-Like Atmosphere","Field Recordings","Crowd Ambience","Turntable Scratches","Vocal Chops","Sample-Like Texture","Sound-Design Transitions"],
+production:["Warm","Gritty","Polished","Raw","Analog","Digital","Cinematic","Spacious","Intimate","Lo-Fi","High-Fidelity","Distorted","Psychedelic","Minimal","Dense","Luxurious","Underground","Live-Room"],
+mix:["Vocal-Forward","Drum-Forward","Bass-Heavy","Wide Stereo","Tight and Centered","Warm Low End","Crisp High End","Dark Tonal Balance","Airy Tonal Balance","Aggressive Compression","Natural Dynamics","Radio-Polished","Raw Demo Feel","Cinematic Width"],
+dynamicArc:["Consistent Energy","Gradual Build","Immediate High Energy","Verse-to-Chorus Lift","Slow Burn to Major Finale","Alternating Calm and Intense","Mid-Song Beat Switch","False Ending and Return","Breakdown Before Final Chorus","Cinematic Rise and Resolution"],
+contentLevel:["Clean","Mostly Clean","Mature but Non-Explicit","Explicit","Brand-Safe","Platform-Safe"],
+negatives:["No EDM Drop","No Excessive Autotune","No Chipmunk Vocals","No Overly Bright Pop Production","No Cheesy Guitar Solo","No Generic Trap Hi-Hats","No Excessive Vocal Runs","No Spoken Intro","No Long Intro","No Choir","No Rock Elements","No Pop Chorus","No Abrupt Genre Switch","No Lo-Fi Texture","No Comedy","No Explicit Lyrics","No Fade-Out","Avoid Repetitive Verses","Avoid Overcrowded Arrangement"]
+};
+function sunoAdv(){if(!S.sunoAdv)S.sunoAdv={};return S.sunoAdv;}
+function advVal(k){return sunoAdv()[k]||"";}
+function advArr(k){const a=sunoAdv();if(!Array.isArray(a[k]))a[k]=[];return a[k];}
+function renderSunoAdv(){
+  const box=$("sunoAdv");if(!box)return;
+  const sel=(k,label,opts)=>'<label class="fld" style="margin-top:10px">'+label+'</label><select data-advk="'+k+'"><option value="">Auto / \u2014</option>'+opts.map(x=>'<option'+(advVal(k)===x?' selected':'')+'>'+esc(x)+'</option>').join("")+'</select>';
+  const txt=(k,label,ph)=>'<label class="fld" style="margin-top:10px">'+label+'</label><input type="text" data-advt="'+k+'" value="'+esc(advVal(k))+'" placeholder="'+ph+'">';
+  const chips=(k,label,opts)=>{const on=advArr(k);return '<label class="fld" style="margin-top:10px">'+label+'</label><div class="tokenchips">'+opts.map(x=>'<span class="chip'+(on.indexOf(x)>=0?" on":"")+'" data-advc="'+k+'" data-v="'+esc(x)+'">'+esc(x)+'</span>').join("")+'</div>';};
+  let h="";
+  h+='<details class="collapse"><summary>Genre &amp; DNA</summary><div class="body">'+txt("primaryGenre","Primary Genre","optional")+txt("secondaryGenre","Secondary / Blend","optional")+sel("genreRel","Genre Relationship",SUNO_OPT.genreRel)+txt("era","Era / Period","optional")+txt("region","Regional Influence","optional")+'</div></details>';
+  h+='<details class="collapse" style="margin-top:6px"><summary>Mood / Energy / Tempo</summary><div class="body">'+txt("mood","Mood(s)","optional")+sel("energy","Energy",SUNO_OPT.energy)+sel("tempoMode","Tempo",SUNO_OPT.tempo)+txt("bpm","Exact BPM / range","optional")+sel("groove","Groove",SUNO_OPT.groove)+'</div></details>';
+  h+='<details class="collapse" style="margin-top:6px"><summary>Vocals</summary><div class="body">'+sel("vocalConfig","Vocal Configuration",SUNO_OPT.vocalConfig)+sel("vocalTexture","Vocal Texture",SUNO_OPT.vocalTexture)+sel("delivery","Delivery",SUNO_OPT.delivery)+sel("rapFlow","Rap Flow",SUNO_OPT.rapFlow)+'</div></details>';
+  h+='<details class="collapse" style="margin-top:6px"><summary>Instrumentation</summary><div class="body">'+chips("drums","Drums &amp; Percussion",SUNO_OPT.drums)+chips("bass","Bass",SUNO_OPT.bass)+chips("keys","Keys &amp; Synths",SUNO_OPT.keys)+chips("guitars","Guitars",SUNO_OPT.guitars)+chips("orchestral","Orchestral",SUNO_OPT.orchestral)+chips("textures","Textures",SUNO_OPT.textures)+'</div></details>';
+  h+='<details class="collapse" style="margin-top:6px"><summary>Production &amp; Mix</summary><div class="body">'+sel("productionTexture","Production Texture",SUNO_OPT.production)+sel("mixDir","Mix Direction",SUNO_OPT.mix)+'</div></details>';
+  h+='<details class="collapse" style="margin-top:6px"><summary>Dynamic Arc &amp; Negatives</summary><div class="body">'+sel("dynamicArc","Dynamic Arc",SUNO_OPT.dynamicArc)+sel("contentLevel","Content Level",SUNO_OPT.contentLevel)+chips("negatives","Negative Direction \u2014 things to avoid",SUNO_OPT.negatives)+'</div></details>';
+  box.innerHTML=h;
+  box.onchange=e=>{const t=e.target;if(t.dataset&&t.dataset.advk){sunoAdv()[t.dataset.advk]=t.value;save();}};
+  box.oninput=e=>{const t=e.target;if(t.dataset&&t.dataset.advt){sunoAdv()[t.dataset.advt]=t.value;save();}};
+  box.onclick=e=>{const t=e.target;if(t.dataset&&t.dataset.advc){const k=t.dataset.advc,v=t.dataset.v,a=advArr(k),i=a.indexOf(v);if(i>=0)a.splice(i,1);else a.push(v);save();t.classList.toggle("on");}};
+}
+function sunoAdvSummary(){
+  const a=sunoAdv(),L=[],add=(lbl,v)=>{if(v&&v.length)L.push(lbl+": "+(Array.isArray(v)?v.join(", "):v));};
+  add("Primary genre",a.primaryGenre);add("Secondary/blend",a.secondaryGenre);add("Genre relationship",a.genreRel);add("Era",a.era);add("Region",a.region);
+  add("Mood",a.mood);add("Energy",a.energy);add("Tempo",a.tempoMode);add("BPM",a.bpm);add("Groove",a.groove);
+  add("Vocal config",a.vocalConfig);add("Vocal texture",a.vocalTexture);add("Delivery",a.delivery);add("Rap flow",a.rapFlow);
+  add("Drums",a.drums);add("Bass",a.bass);add("Keys/synths",a.keys);add("Guitars",a.guitars);add("Orchestral",a.orchestral);add("Textures",a.textures);
+  add("Production texture",a.productionTexture);add("Mix",a.mixDir);add("Dynamic arc",a.dynamicArc);add("Content level",a.contentLevel);add("Negative direction (AVOID)",a.negatives);
+  return L.join("\n");
+}
+function sunoConflicts(instrumental){
+  const a=sunoAdv(),C=[],neg=a.negatives||[],has=(arr,v)=>arr&&arr.indexOf(v)>=0;
+  if(instrumental&&a.vocalConfig&&a.vocalConfig!=="Instrumental")C.push("Instrumental is ON but Vocal Configuration is "+a.vocalConfig+".");
+  if(neg.indexOf("No Choir")>=0&&(a.vocalConfig==="Choir"||has(a.orchestral,"Choir")))C.push("Negative says No Choir but Choir is selected.");
+  if(neg.indexOf("No Lo-Fi Texture")>=0&&(a.productionTexture==="Lo-Fi"||has(a.textures,"Vinyl Texture")))C.push("Negative says No Lo-Fi but a lo-fi/vinyl texture is selected.");
+  if(neg.indexOf("No Explicit Lyrics")>=0&&a.contentLevel==="Explicit")C.push("Negative says No Explicit but Content Level is Explicit.");
+  if(neg.indexOf("No Rock Elements")>=0&&has(a.guitars,"Distorted Electric Guitar"))C.push("Negative says No Rock but distorted electric guitar is selected.");
+  if(neg.indexOf("No Fade-Out")>=0&&SUNO_LAST&&/Fade Out/i.test(SUNO_LAST.lyricsStructure||""))C.push("Negative says No Fade-Out but the structure ends in a fade.");
+  if(a.tempoMode==="Slow"&&a.bpm&&parseInt(a.bpm,10)>=120)C.push("Tempo is Slow but BPM is "+a.bpm+".");
+  return C;
+}
+async function sunoSuggest(kind){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const d=sunoDraft(),p=sunoPreset(d.preset);
+  const ctx="Brand: Chiefin Season / Stoneralia (deadpan cannabis-culture, cinematic). Preset: "+(p?p.name:"none")+". Concept: "+(($("sunoScene")&&$("sunoScene").value.trim())||"n/a")+". Genres: "+((typeof sunoGenres!=="undefined"?[...sunoGenres]:[]).join(", ")||"n/a")+".";
+  let ask="",apply=null;
+  if(kind==="title"){ask="Suggest ONE short brand-flavored song title. Return JSON {\"value\":\"\"}.";apply=v=>{const el=$("sunoTitle");if(el){if(el.value.trim()&&!confirm("Replace your title with: "+v+" ?"))return;el.value=v;toast("Title set.");}};}
+  else if(kind==="blend"){ask="Suggest a tasteful 2-genre blend that fits. Return JSON {\"value\":\"primary + secondary\"}.";apply=v=>{const parts=(v||"").split("+");sunoAdv().primaryGenre=(parts[0]||"").trim();sunoAdv().secondaryGenre=(parts[1]||"").trim();save();renderSunoAdv();toast("Genre blend filled.");};}
+  else if(kind==="sound"){ask="Suggest a concise sound direction (mood, groove, key instruments) under 200 chars, original (translate any artist ref to traits). Return JSON {\"value\":\"\"}.";apply=v=>{if($("sunoOut")){$("sunoOut").innerHTML=sunoCard("Suggested Sound",v)+($("sunoOut").innerHTML||"");bindSunoCopies();}toast("Idea ready.");};}
+  else if(kind==="vocal"){ask="Suggest a short vocal direction. Return JSON {\"value\":\"\"}.";apply=v=>{if($("sunoOut")){$("sunoOut").innerHTML=sunoCard("Suggested Vocal Direction",v)+($("sunoOut").innerHTML||"");bindSunoCopies();}toast("Idea ready.");};}
+  else if(kind==="neg"){ask="Suggest 3-5 relevant negative-direction tags for this song from common Suno pitfalls. Return JSON {\"items\":[]}.";}
+  toast("Thinking\u2026");
+  try{const txt=await llmRun("You suggest Suno music fields. "+ctx+" Be concise, brand-aware, original. Return JSON only.",ask);const r=parseJSON(txt);
+    if(kind==="neg"){const a=advArr("negatives");(r.items||[]).forEach(x=>{if(a.indexOf(x)<0)a.push(x);});save();renderSunoAdv();toast("Negative tags added.");return;}
+    if(apply)apply(r.value||"");
+  }catch(e){toast("Suggest failed.",true);}
+}
+function renderSunoSuggest(){
+  const box=$("sunoSuggest");if(!box)return;
+  box.innerHTML='<div class="row" style="flex-wrap:wrap;gap:6px;margin-top:10px">'
+   +'<button class="btn ghost sm" data-sg="title" style="flex:0">\u2728 Title</button>'
+   +'<button class="btn ghost sm" data-sg="blend" style="flex:0">\u2728 Genre blend</button>'
+   +'<button class="btn ghost sm" data-sg="sound" style="flex:0">\u2728 The sound</button>'
+   +'<button class="btn ghost sm" data-sg="vocal" style="flex:0">\u2728 Vocal</button>'
+   +'<button class="btn ghost sm" data-sg="neg" style="flex:0">\u2728 Negatives</button>'
+   +'</div>';
+  box.onclick=e=>{const t=e.target.closest("[data-sg]");if(t)sunoSuggest(t.dataset.sg);};
+}
 async function buildSuno(){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
-  const st=$("sunoStatus");st.innerHTML='<div class="statusline"><span class="rec"></span>Writing the Suno package…</div>';$("sunoOut").innerHTML="";
-  const instrumental=$("sunoInstrumental")&&$("sunoInstrumental").checked;let scene=$("sunoScene").value.trim();const picked=[...sunoGenres];if(instrumental)scene=(scene||"instrumental piece")+" — INSTRUMENTAL ONLY: no vocals or sung words; the Style Prompt MUST include the word 'instrumental'; the Lyrics Prompt must contain ONLY structural tags like [Intro] [Instrumental Interlude] [Break] [Percussion Break] [Outro] with no lyrics.";
-  const sys="You are a Suno prompt engineer for the user's cannabis-culture universes (Chiefin' Season / Stoneralia, The High Crusader / THC, super-strain heroes) — deadpan, dark-comedic, cinematic. Produce a ready-to-paste Suno package. STRICT RULES: (1) Style Prompt MAX 200 characters, comma-separated genre + mood + key instruments + vocal style, less-is-more — do not overload. (2) Lyrics Prompt MAX 3000 characters using section tags [Intro][Verse][Pre-Chorus][Chorus][Bridge][Outro] etc; background singers in (parentheses); performance meta-tags like [Rap Verse] or [Sad Verse] used SPARINGLY. (3) Title short and brand-flavored. Match the scene's mood and the brand's dry voice. Return JSON only: {\"title\":\"\",\"style\":\"\",\"lyrics\":\"\"}.";
-  const usr="SCENE / VIBE: "+(scene||"Chieff strolls through Stoneralia, unbothered, the world bending around him")+"\nPreferred genres (blend tastefully, do not cram): "+(picked.join(", ")||"pick what fits")+"\nWrite the Suno package now.";
-  try{const txt=await llmRun(sys,usr);const d=parseJSON(txt);
-    let h=sunoField("Title",d.title||"",80)+sunoField("Style Prompt",d.style||"",200)+sunoField("Lyrics Prompt",d.lyrics||"",3000);
-    $("sunoOut").innerHTML=h;st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Ready to paste straight into Suno</div>';bindSunoCopies();
-  }catch(e){st.innerHTML='<div class="statusline" style="color:var(--red)">✗ '+esc(e.message)+'</div>';}
+  const d=sunoDraft();const p=sunoPreset(d.preset);
+  const st=$("sunoStatus");st.innerHTML='<div class="statusline"><span class="rec"></span>Writing the Suno package\u2026</div>';$("sunoOut").innerHTML="";
+  const instrumental=$("sunoInstrumental")&&$("sunoInstrumental").checked;
+  const title=($("sunoTitle")&&$("sunoTitle").value.trim())||"";
+  const artist=($("sunoArtist")&&$("sunoArtist").value.trim())||"";
+  let scene=$("sunoScene")?$("sunoScene").value.trim():"";
+  const use=d.use||"Standalone Single";const creator=d.creator||"Auto / Recommend";
+  const picked=(typeof sunoGenres!=="undefined")?[...sunoGenres]:[];
+  const baseStyle=p?p.stylePrompt:"";const baseLyrics=p?p.lyricsStructure:"";
+  const sys="You are the Suno Music Prompt Specialist for the user\u2019s cannabis-culture universes (Chiefin\u2019 Season / Stoneralia) \u2014 deadpan, dark-comedic, cinematic, brand-aware. Produce a production-ready Suno package. RULES: (1) optimizedStyle MAX 200 chars, comma-separated genre+mood+key instruments+vocal style, less-is-more, no keyword soup. (2) If a base style prompt is supplied, keep its musical intent but improve clarity. (3) REFERENCE TRANSLATION: never name living artists or producers in the output; translate any artist/producer reference into descriptive musical traits (example: Timbaland/Dr Dre/Scott Storch -> syncopated percussive production, West Coast drum weight, dramatic piano motifs, crisp rhythmic accents, polished cinematic low end; Nas/Rick Ross/Nipsey Hussle -> thoughtful conversational storytelling, deep confident delivery, calm motivational authority, measured streetwise cadence). Put what you translated in translatedTraits; empty string if none. (4) detailed = fuller multi-line direction covering genre, blend, mood, tempo, groove, vocals, instrumentation, production texture, mix, structure, dynamic arc, hook, and any negatives. (5) lyricsStructure = section tags only like [Intro][Verse][Chorus][Bridge][Outro], NO actual lyrics; if a base lyrics structure is supplied, refine it. (6) vocal = short vocal-direction note; empty string if instrumental. (7) title short and brand-flavored. Return JSON ONLY: {\"title\":\"\",\"optimizedStyle\":\"\",\"detailed\":\"\",\"lyricsStructure\":\"\",\"vocal\":\"\",\"translatedTraits\":\"\"}.";
+  let usr="CREATOR MODE FOCUS: "+creator+"\nINTENDED USE: "+use+"\n";
+  if(title)usr+="SONG TITLE: "+title+"\n";
+  if(artist)usr+="ARTIST / PERSONA: "+artist+"\n";
+  usr+="CORE CONCEPT / SCENE: "+(scene||"Chieff moves through Stoneralia, unbothered, the world bending around him")+"\n";
+  usr+="PREFERRED GENRES (blend tastefully, do not cram): "+(picked.join(", ")||"pick what fits")+"\n";
+  if(p)usr+="QUICK START PRESET: "+p.name+"\nBASE STYLE PROMPT (translate refs, refine): "+baseStyle+"\nBASE LYRICS STRUCTURE (refine): "+baseLyrics+"\n";
+  if(instrumental)usr+="INSTRUMENTAL ONLY: no vocals; optimizedStyle MUST include the word instrumental; lyricsStructure = structural tags only.\n";
+  const _adv=sunoAdvSummary();if(_adv)usr+="ADVANCED DIRECTION:\n"+_adv+"\n";
+  usr+="Write the package now.";
+  const _conf=sunoConflicts(instrumental);if(_conf.length){if(!confirm("Heads up \u2014 possible conflicts:\n\n- "+_conf.join("\n- ")+"\n\nBuild anyway?")){st.innerHTML="";return;}}
+  try{const txt=await llmRun(sys,usr);const r=parseJSON(txt);
+    SUNO_LAST={title:r.title||title,artist:artist,preset:p?p.id:"",presetName:p?p.name:"Custom / No Preset",creator:creator,use:use,concept:scene,genres:picked,instrumental:instrumental,originalStyle:baseStyle,optimizedStyle:r.optimizedStyle||"",detailed:r.detailed||"",lyricsStructure:r.lyricsStructure||baseLyrics||"",vocal:r.vocal||"",translatedTraits:r.translatedTraits||"",adv:JSON.parse(JSON.stringify(sunoAdv())),createdAt:Date.now()};
+    sunoPaintOutputs(SUNO_LAST);
+    st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Ready to paste into Suno</div>';
+  }catch(e){st.innerHTML='<div class="statusline" style="color:var(--red)">\u2717 '+esc(e.message)+'</div>';}
 }
 function sunoField(label,val,limit){const over=val.length>limit;return '<label class="fld" style="margin-top:12px">'+label+' <span class="hint" style="color:'+(over?'var(--red)':'var(--bone-dim)')+'">('+val.length+'/'+limit+' chars)</span></label><div class="promptbox" id="sf_'+label.replace(/\W/g,'')+'">'+esc(val)+'</div><button class="btn ghost sm sunocopy" data-t="'+label.replace(/\W/g,'')+'" style="margin-top:6px">⧉ Copy '+label+'</button>';}
 function bindSunoCopies(){document.querySelectorAll(".sunocopy").forEach(b=>b.addEventListener("click",()=>{const el=$("sf_"+b.dataset.t);if(el)navigator.clipboard.writeText(el.textContent).then(()=>toast("Copied.")).catch(()=>toast("Copy failed.",true));}));}

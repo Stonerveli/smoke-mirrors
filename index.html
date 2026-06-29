@@ -153,7 +153,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 <body>
 <div class="appwrap">
 <nav>
-  <button class="grp" data-grp-sel="create"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l2.4 6.1L21 11.5l-6.6 2.4L12 21l-2.4-7.1L3 11.5l6.6-2.4z'/></svg></span>Create</button>
+  <button class="grp" data-grp-sel="create"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l2.4 6.1L21 11.5l-6.6 2.4L12 21l-2.4-7.1L3 11.5l6.6-2.4z'/></svg></span>Media House</button>
   <button class="grp" data-grp-sel="universe"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M3 12h18'/><path d='M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18'/></svg></span>Universe</button>
   <button class="grp" data-grp-sel="library"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 7l8-4 8 4-8 4z'/><path d='M4 12l8 4 8-4'/><path d='M4 17l8 4 8-4'/></svg></span>Library</button>
   <button class="grp" data-grp-sel="setup"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1'/></svg></span>Setup</button>
@@ -170,6 +170,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button data-go="board"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='7.5' height='7.5' rx='1'/><rect x='13.5' y='3' width='7.5' height='7.5' rx='1'/><rect x='3' y='13.5' width='7.5' height='7.5' rx='1'/><rect x='13.5' y='13.5' width='7.5' height='7.5' rx='1'/></svg></span>Pre-Roll</button>
   <button data-go="story"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20l1-4L17 4l3 3L8 19z'/><path d='M14 6l3 3'/></svg></span>Story</button>
   <button data-go="media"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 5 6 9H2v6h4l5 4z'/><path d='M15.5 8.5a5 5 0 0 1 0 7'/><path d='M19 4.5a9 9 0 0 1 0 15'/></svg></span>Media</button>
+  <button data-go="songvid"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M10 9l5 3-5 3z'/></svg></span>Song→Video</button>
   <button data-go="reel"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></svg></span>Cut</button>
   <button data-go="projects"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/></svg></span>Projects</button>
   <button data-go="settings"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1'/></svg></span>Setup</button>
@@ -181,6 +182,35 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 </header>
 <main>
 <div class="subtabs" id="subtabs"></div>
+
+<section class="view" id="view-songvid">
+  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M10 9l5 3-5 3z'/></svg></span><h2>Song → Video</h2><span class="tag">Lip-sync</span></div>
+  <div class="hint" style="margin-bottom:12px">Drop in a song (or just the hook), pick who performs it, and fal lip-syncs them to the audio. Two routes:<br>• <b>Perform it</b> — a character <b>image</b> mouths the track. Needs a mouth, so use <b>Haze</b>, a mouthed cast member, or a real face. <b>Chief is mouthless</b> — for a Chief music video, generate Seedance clips to the beat in the Video station and assemble them in <b>The Cut</b>.<br>• <b>Sync to a clip</b> — feed an existing <b>video</b> + the song and the mouth re-syncs (handles music).</div>
+  <label class="fld">1 · Your song</label>
+  <input type="file" id="svAudio" accept="audio/*">
+  <div id="svAudioInfo" class="hint" style="margin-top:6px"></div>
+  <div id="svAudioPrev" style="margin-top:6px"></div>
+  <label class="fld" style="margin-top:14px">2 · How</label>
+  <select id="svMode">
+    <option value="perform">Perform it — lip-sync a character image (VEED Fabric)</option>
+    <option value="syncvid">Sync to a video clip — handles music (Sync Lipsync)</option>
+  </select>
+  <div id="svPerform" style="margin-top:10px">
+    <label class="fld">Character image — needs a mouth</label>
+    <input type="file" id="svImg" accept="image/*">
+    <div id="svImgInfo" class="hint" style="margin-top:6px"></div>
+  </div>
+  <div id="svSync" style="margin-top:10px;display:none">
+    <label class="fld">Base video clip</label>
+    <input type="file" id="svVid" accept="video/*">
+    <div id="svVidInfo" class="hint" style="margin-top:6px"></div>
+  </div>
+  <div id="svCost" class="hint" style="margin-top:10px"></div>
+  <button class="btn green" id="svGen" style="width:100%;padding:13px;margin-top:10px">▶ Generate video</button>
+  <div id="svStatus" style="margin-top:10px"></div>
+  <div class="result-wrap" id="svResult" style="margin-top:10px"></div>
+  <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="svSaveProjBtn" style="flex:0">+ Save to drop</button></div>
+</section>
 
 <!-- ===== STUDIO ===== -->
 <section class="view active" id="view-studio">
@@ -814,7 +844,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.17 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.18 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -830,7 +860,7 @@ const blank={
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
   cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",
-  projects:[],activeProject:"",navGroup:"create",
+  projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
 let S=load();
@@ -922,8 +952,56 @@ const BOARD_ADJ=["smoke atmosphere","hotbox haze","thick fog","rain atmosphere",
 
 /* nav */
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
+var SV={audio:"",audioName:"",audioDur:0,img:"",imgName:"",vid:"",vidName:""};
+function svFile(file,cb){var r=new FileReader();r.onload=function(){cb(r.result);};r.readAsDataURL(file);}
+function svCostLine(){
+  if(!SV.audio)return "";
+  var mode=(S.songvid&&S.songvid.mode)||"perform";var d=SV.audioDur||0;var line="";
+  if(mode==="perform"){line="VEED Fabric · ≈"+Math.round(d)+"s → est $"+(d*0.08).toFixed(2)+"–$"+(d*0.15).toFixed(2);}
+  else{line="Sync Lipsync · ≈"+Math.round(d)+"s → est $"+(d/60*0.70).toFixed(2);}
+  if(d>60)line+=" · ⚠ over ~60s gets pricey — trim to a hook";
+  return line;
+}
+function svRefresh(){
+  var ai=$("svAudioInfo");if(ai)ai.innerHTML=SV.audio?("✓ "+esc(SV.audioName)+(SV.audioDur?(" · "+Math.round(SV.audioDur)+"s"):"")):"";
+  var ii=$("svImgInfo");if(ii)ii.innerHTML=SV.img?("✓ "+esc(SV.imgName)):"";
+  var vi=$("svVidInfo");if(vi)vi.innerHTML=SV.vid?("✓ "+esc(SV.vidName)):"";
+  var c=$("svCost");if(c)c.innerHTML=svCostLine();
+}
+function svSetMode(m){
+  if(!S.songvid)S.songvid={mode:"perform",lastUrl:"",lastName:""};S.songvid.mode=m;save();
+  var p=$("svPerform"),sy=$("svSync");if(p)p.style.display=(m==="perform")?"":"none";if(sy)sy.style.display=(m==="syncvid")?"":"none";
+  svRefresh();
+}
+async function svGenerate(){
+  if(!SV.audio){toast("Upload a song first.",true);return;}
+  var mode=(S.songvid&&S.songvid.mode)||"perform";var model,input;
+  if(mode==="perform"){if(!SV.img){toast("Add a character image (with a mouth).",true);return;}model="veed/fabric-1.0";input={image_url:SV.img,audio_url:SV.audio};}
+  else{if(!SV.vid){toast("Add a base video clip.",true);return;}model="fal-ai/sync-lipsync";input={video_url:SV.vid,audio_url:SV.audio};}
+  var st=$("svStatus");if(st)st.innerHTML='<div class="statusline"><span class="rec"></span>Syncing to the song… this can take a minute</div>';
+  var rw=$("svResult");if(rw)rw.innerHTML="";var gb=$("svGen");if(gb)gb.disabled=true;
+  try{
+    var out=await falRun(model,input,function(a,b){});
+    var m=extractMedia(out);if(!m)throw new Error("no video came back");
+    if(!S.songvid)S.songvid={mode:mode};S.songvid.lastUrl=m.url;S.songvid.lastName=SV.audioName||"Song video";save();
+    if(S.reel){S.reel.unshift({id:uid(),type:"video",url:m.url,prompt:"Song video — "+(SV.audioName||""),ts:Date.now()});save();}
+    if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">✓ Saved to The Cut</div>';
+    if(rw)rw.innerHTML='<video src="'+m.url+'" controls playsinline></video>';
+  }catch(e){if(st)st.innerHTML='<div class="statusline" style="color:var(--red)">✗ '+esc(e.message)+'</div>';}
+  if(gb)gb.disabled=false;
+}
+/* song video */
+(function(){
+  var a=$("svAudio");if(a)a.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;SV.audioName=f.name;svFile(f,function(d){SV.audio=d;var au=document.createElement("audio");au.preload="metadata";au.onloadedmetadata=function(){SV.audioDur=au.duration||0;svRefresh();};au.src=d;var pv=$("svAudioPrev");if(pv)pv.innerHTML='<audio src="'+d+'" controls style="width:100%"></audio>';svRefresh();});});
+  var im=$("svImg");if(im)im.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;SV.imgName=f.name;svFile(f,function(d){SV.img=d;svRefresh();});});
+  var vd=$("svVid");if(vd)vd.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;SV.vidName=f.name;svFile(f,function(d){SV.vid=d;svRefresh();});});
+  var ms=$("svMode");if(ms){ms.value=(S.songvid&&S.songvid.mode)||"perform";ms.addEventListener("change",function(){svSetMode(ms.value);});}
+  var g=$("svGen");if(g)g.addEventListener("click",svGenerate);
+  var sp=$("svSaveProjBtn");if(sp)sp.addEventListener("click",function(){if(!S.songvid||!S.songvid.lastUrl){toast("Generate a video first.",true);return;}projAttach("video",S.songvid.lastName||"Song video",S.songvid.lastUrl);});
+  svSetMode((S.songvid&&S.songvid.mode)||"perform");
+})();
 var CUR_VIEW="episodes";
-const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",cast:"universe",sets:"universe",projects:"library",stash:"library",settings:"setup"};
+const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",cast:"universe",sets:"universe",projects:"library",stash:"library",settings:"setup"};
 const GROUP_FIRST={create:"smg",universe:"cast",library:"projects",setup:"settings"};
 function navLabel(v){var b=document.querySelector('nav button[data-go="'+v+'"]');if(b){var t=(b.textContent||"").trim();if(t)return t;}return v;}
 function renderSubTabs(){

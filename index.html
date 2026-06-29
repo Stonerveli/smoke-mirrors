@@ -723,6 +723,20 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <div id="llmResult" class="statusline" style="display:none"></div>
     <div class="hint" style="margin-top:10px">Powers the Stylist, Direct-this-shot, viral pitches, shot breakdowns, Set ideas &amp; the Suno builder — via <code>fal-ai/any-llm</code>. Tap Test before relying on a model.</div>
   </div>
+  <div class="card">
+    <label class="fld">Brain provider</label>
+    <div class="tokenchips" id="brainProv"></div>
+    <div id="openaiBlock" style="display:none">
+      <label class="fld" style="margin-top:10px">OpenAI API key</label>
+      <input type="password" id="openaiKey" placeholder="sk-…">
+      <label class="fld" style="margin-top:10px">OpenAI model</label>
+      <input type="text" id="openaiModel" placeholder="gpt-4o-mini">
+      <div class="row" style="margin-top:10px"><button class="btn green sm" id="openaiSave">Save</button><button class="btn ghost sm" id="openaiTest">Test</button></div>
+      <div id="openaiResult" class="statusline" style="display:none"></div>
+      <div class="hint" style="margin-top:8px">Use a pay-as-you-go OpenAI <b>API</b> key from <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a> — this is separate from your ChatGPT login/subscription. Good picks: <code>gpt-4o-mini</code> (cheap), <code>gpt-4o</code>, <code>gpt-4.1-mini</code>, <code>gpt-4.1</code>. Stored only in this browser.</div>
+    </div>
+    <div class="hint" style="margin-top:8px">Pick which brain powers everything — SMG, Lyric Lab, CSB, Fight, and all writers. fal runs any model on your fal key; OpenAI runs on your own OpenAI API key.</div>
+  </div>
   <details class="collapse"><summary>Models in play</summary><div class="body">
     <p><b>Image</b> — <code>nano-banana-2</code>, <code>nano-banana-pro</code>, <code>gpt-image-2</code><br>
     <b>Image + Gear</b> — the <code>/edit</code> versions (take reference images)<br>
@@ -741,7 +755,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.10 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.11 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -751,7 +765,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 "use strict";
 const LS="smokemirrors_v1";
 const blank={
-  apiKey:"",llmModel:"google/gemini-2.5-flash",station:"image",
+  apiKey:"",llmModel:"google/gemini-2.5-flash",llmProvider:"fal",openaiKey:"",openaiModel:"gpt-4o-mini",station:"image",
   picked:{image:"fal-ai/nano-banana-2",edit:"fal-ai/nano-banana-2/edit",video:"bytedance/seedance-2.0/reference-to-video",audio:"fal-ai/elevenlabs/sound-effects"},
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
@@ -888,6 +902,17 @@ $("testKey").addEventListener("click",async()=>{
   }catch(e){r.innerHTML='✗ Network blocked the call. If opened from disk, try hosting it.';r.style.color="var(--red)";}
 });
 
+/* openai brain */
+(function(){
+  const prov=$("brainProv");
+  function renderProv(){if(!prov)return;const cur=S.llmProvider||"fal";prov.innerHTML=[["fal","fal (any model)"],["openai","OpenAI (ChatGPT API)"]].map(o=>'<span class="chip'+(cur===o[0]?" on":"")+'" data-prov="'+o[0]+'">'+o[1]+'</span>').join("");const ob=$("openaiBlock");if(ob)ob.style.display=(cur==="openai")?"block":"none";}
+  if(prov)prov.onclick=function(e){const t=e.target;if(t&&t.dataset&&t.dataset.prov){S.llmProvider=t.dataset.prov;save();renderProv();toast("Brain set to "+(t.dataset.prov==="openai"?"OpenAI":"fal")+".");}};
+  if($("openaiKey"))$("openaiKey").value=S.openaiKey||"";
+  if($("openaiModel"))$("openaiModel").value=S.openaiModel||"gpt-4o-mini";
+  if($("openaiSave"))$("openaiSave").addEventListener("click",function(){S.openaiKey=($("openaiKey").value||"").trim();S.openaiModel=($("openaiModel").value||"").trim()||"gpt-4o-mini";save();toast(S.openaiKey?"OpenAI saved.":"OpenAI key cleared.");});
+  if($("openaiTest"))$("openaiTest").addEventListener("click",async function(){const r=$("openaiResult"),key=($("openaiKey").value||"").trim();if(!key){toast("Paste your OpenAI API key first.",true);return;}r.style.display="flex";r.innerHTML='<span class="rec"></span>Testing\u2026';try{const res=await fetch("https://api.openai.com/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},body:JSON.stringify({model:($("openaiModel").value||"gpt-4o-mini").trim(),messages:[{role:"user",content:"reply OK"}]})});const j=await res.json();if(!res.ok||j.error){r.innerHTML='\u2717 '+(((j.error&&j.error.message)||("OpenAI "+res.status))+"").slice(0,120);r.style.color="var(--red)";return;}r.innerHTML='\u2713 Connected. OpenAI works.';r.style.color="var(--bud)";S.openaiKey=key;S.openaiModel=($("openaiModel").value||"gpt-4o-mini").trim();save();}catch(e){r.innerHTML='\u2717 Network/CORS blocked the call.';r.style.color="var(--red)";}});
+  renderProv();
+})();
 /* fal */
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 async function falRun(modelId,input,onStatus){
@@ -919,7 +944,20 @@ function extractMedia(out){
   if(found){const t=/\.(mp4|webm|mov)/i.test(found)?"video":/\.(mp3|wav|ogg)/i.test(found)?"audio":"image";return{type:t,url:found};}
   return null;
 }
+async function openaiRun(systemPrompt,userPrompt){
+  if(!S.openaiKey)throw new Error("Add your OpenAI API key in Setup (Brain provider \u2192 OpenAI).");
+  const body={model:S.openaiModel||"gpt-4o-mini",messages:[]};
+  if(systemPrompt)body.messages.push({role:"system",content:systemPrompt});
+  body.messages.push({role:"user",content:userPrompt});
+  let res;try{res=await fetch("https://api.openai.com/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+S.openaiKey},body:JSON.stringify(body)});}catch(e){throw new Error("OpenAI call blocked (network/CORS).");}
+  const j=await res.json();
+  if(!res.ok||j.error)throw new Error("OpenAI: "+(((j.error&&j.error.message)||res.status)+"").slice(0,140));
+  const txt=(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||"";
+  if(!txt)throw new Error("OpenAI returned nothing \u2014 try another model in Setup.");
+  return txt;
+}
 async function llmRun(systemPrompt,userPrompt){
+  if((S.llmProvider||"fal")==="openai")return await openaiRun(systemPrompt,userPrompt);
   const input={model:S.llmModel,prompt:userPrompt};
   if(systemPrompt)input.system_prompt=systemPrompt;
   const out=await falRun("fal-ai/any-llm",input,null);

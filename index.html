@@ -172,6 +172,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 .fr-tick{color:var(--bud);font-size:14px;width:16px;display:inline-block;text-align:center}
 .recbox{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px;background:var(--panel)}
 .sesstat{font-family:var(--mono);font-size:10px;color:var(--bone-dim);letter-spacing:.04em;margin-left:8px;white-space:nowrap}
+@media(max-width:760px){nav button.grp{flex:1 1 0;min-width:0;justify-content:center}}
 </style>
 </head>
 <body>
@@ -887,7 +888,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.22 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.24 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1264,12 +1265,21 @@ function renderProjects(){
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 var SESS={renders:0};
 function updateSessStat(){var e=$("sessStat");if(!e)return;e.textContent=SESS.renders>0?("\u25a3 "+SESS.renders+" this session"):"";}
+var LAST_ACTION=null;
+function retryLast(){if(typeof LAST_ACTION==="function"){LAST_ACTION();}else{toast("Nothing to retry.",true);}}
 async function falRun(modelId,input,onStatus){
   if(!S.apiKey)throw new Error("No fal key — add one in Setup.");
   const H={"Authorization":"Key "+S.apiKey,"Content-Type":"application/json"};
-  const sub=await fetch("https://queue.fal.run/"+modelId,{method:"POST",headers:H,body:JSON.stringify(input)});
-  if(!sub.ok){let d="";try{d=await res2text(sub);}catch(e){}
+  var sub,att=0;
+  while(true){att++;
+    try{sub=await fetch("https://queue.fal.run/"+modelId,{method:"POST",headers:H,body:JSON.stringify(input)});}
+    catch(netErr){if(att<3){if(onStatus)onStatus("RETRYING",att);await sleep(1500*att);continue;}throw new Error("Network hiccup reaching fal — check your connection and retry.");}
+    if(sub.ok)break;
     if(sub.status===401||sub.status===403)throw new Error("Key rejected — check it in Setup.");
+    if((sub.status===429||sub.status>=500)&&att<3){if(onStatus)onStatus("RETRYING",att);await sleep(1800*att);continue;}
+    let d="";try{d=await res2text(sub);}catch(e){}
+    if(sub.status===429)throw new Error("fal is rate-limiting — wait a few seconds and retry.");
+    if(sub.status>=500)throw new Error("fal had a server hiccup — give it a moment and retry.");
     throw new Error("fal "+sub.status+(d?": "+d:""));}
   const j=await sub.json();if((modelId||"").indexOf("any-llm")<0){SESS.renders++;updateSessStat();}const statusUrl=j.status_url,responseUrl=j.response_url;
   if(!statusUrl){if(j.images||j.video||j.audio||j.output)return j;throw new Error("Unexpected fal response.");}
@@ -2543,6 +2553,23 @@ function sunoVibeOptimize(){
     if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Optimized to the vibe'+(changes?(" \u2014 "+esc(changes)):"")+'</div>';
   });
 }
+function vibeOptimizeBox(outId,statusId,label){
+  var el=$(outId);if(!el)return;
+  var clone=el.cloneNode(true);try{clone.querySelectorAll("button,.vibeopt").forEach(function(n){n.remove();});}catch(e){}
+  var txt=(clone.innerText||clone.textContent||"").trim();
+  if(!txt){toast("Generate something first.",true);return;}
+  var st=statusId?$(statusId):null;
+  if(st)st.innerHTML='<div class="statusline"><span class="rec"></span>Optimizing for the vibe\u2026</div>';
+  vibeOptimize(txt,label||"concept",function(opt,changes){
+    if(opt===null){if(st)st.innerHTML='<div class="statusline" style="color:var(--red)">\u2717 Optimize failed</div>';return;}
+    try{el.querySelectorAll(".vibeopt").forEach(function(n){n.remove();});}catch(e){}
+    el.insertAdjacentHTML("beforeend",'<div class="vibeopt">'+sunoCard("Optimized for the vibe",opt)+(changes?'<div class="hint" style="margin-top:4px">\u2713 '+esc(changes)+'</div>':'')+'</div>');
+    bindSunoCopies();
+    if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Optimized to the vibe</div>';
+    var last=el.querySelector(".vibeopt");if(last&&last.scrollIntoView)last.scrollIntoView({behavior:"smooth",block:"nearest"});
+  });
+}
+document.addEventListener("click",function(e){var b=(e.target&&e.target.closest)?e.target.closest("[data-vibe]"):null;if(b){var p=(b.getAttribute("data-vibe")||"").split("|");vibeOptimizeBox(p[0],p[1]||"",p[2]||"concept");}});
 function sunoPaintOutputs(o){
   let h="";
   let bp="Title: "+(o.title||"\u2014")+"\nArtist/Persona: "+(o.artist||"\u2014")+"\nPreset: "+(o.presetName||"Custom / No Preset")+"\nCreator Mode: "+(o.creator||"\u2014")+"\nIntended Use: "+(o.use||"\u2014")+"\nConcept: "+(o.concept||"\u2014")+"\nGenres: "+((o.genres||[]).join(", ")||"\u2014")+"\nInstrumental: "+(o.instrumental?"Yes":"No");
@@ -2981,9 +3008,10 @@ function renderStudioModes(){
 }
 function spinOn(id,msg){const st=$(id);if(st)st.innerHTML='<div class="statusline"><span class="rec"></span>'+msg+'</div>';}
 function spinOk(id,msg){const st=$(id);if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 '+msg+'</div>';}
-function spinErr(id,e){const st=$(id);if(st)st.innerHTML='<div class="statusline" style="color:var(--red)">\u2717 '+esc(e.message||e)+'</div>';}
+function spinErr(id,e){const st=$(id);if(st)st.innerHTML='<div class="statusline" style="color:var(--red)">\u2717 '+esc(e.message||e)+(LAST_ACTION?' <button class="btn ghost sm" onclick="retryLast()" style="margin-left:8px;flex:0">\u21bb Retry</button>':'')+'</div>';}
 function needKey(){if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return false;}return true;}
 async function genPersona(){
+  LAST_ACTION=genPersona;
   const llmRun=(s,u)=>_llmRun(s,u,"suno");
   if(!needKey())return;
   const name=sv("pcName");if(!name){toast("Give the persona a name.",true);return;}
@@ -2993,11 +3021,12 @@ async function genPersona(){
   try{const r=parseJSON(await llmRun(sys,usr));
     let h=sunoCard("Positioning",r.positioning||"")+sunoCard("Artist Profile",r.profile||"")+sunoCard("Vocal Identity",r.vocal||"")+sunoCard("Musical Identity",r.musical||"")+sunoCard("Lyrical Identity",r.lyrical||"")+sunoCard("Production Identity",r.production||"")+sunoCard("Visual Identity",r.visual||"")+sunoCard("Audience",r.audience||"")+sunoCard("Reusable Suno Artist Profile",r.sunoProfile||"")+sunoCard("Consistency Lock",r.consistency||"");
     h+='<button class="btn ghost sm" id="pcUseArtist" style="margin-top:10px;width:100%">Use \"'+esc(name)+'\" as Artist / Persona</button>';
-    $("pcOut").innerHTML=h;bindSunoCopies();spinOk("pcStatus","Persona ready");
+    h+='<button class="btn ghost sm" data-vibe="pcOut|pcStatus|artist persona" style="margin-top:8px;width:100%">\u27f3 Optimize for the vibe</button>';$("pcOut").innerHTML=h;bindSunoCopies();spinOk("pcStatus","Persona ready");
     if($("pcUseArtist"))$("pcUseArtist").onclick=()=>{const ar=$("sunoArtist");if(ar){ar.value=name;toast("Set as Artist / Persona.");}};
   }catch(e){spinErr("pcStatus",e);}
 }
 async function genAlbum(){
+  LAST_ACTION=genAlbum;
   const llmRun=(s,u)=>_llmRun(s,u,"suno");
   if(!needKey())return;
   const title=sv("alTitle");if(!title){toast("Give the project a title.",true);return;}
@@ -3007,10 +3036,11 @@ async function genAlbum(){
   try{const r=parseJSON(await llmRun(sys,usr));
     const tl=(r.tracklist||[]).map((t,i)=>(i+1)+". "+(t.title||"Untitled")+"  \u2014  "+(t.genre||"")+(t.purpose?"  |  "+t.purpose:"")+(t.concept?"\n     "+t.concept:"")).join("\n");
     let h=sunoCard("Positioning",r.positioning||"")+sunoCard("Concept",r.summary||"")+sunoCard("Sonic Identity",r.sonic||"")+sunoCard("Emotional Arc",r.arc||"")+sunoCard("Tracklist",tl||"\u2014")+sunoCard("Continuity Rules",r.continuity||"")+sunoCard("Recommended Singles",r.singles||"")+sunoCard("Reusable Consistency Prompt",r.consistency||"");
-    $("alOut").innerHTML=h;bindSunoCopies();spinOk("alStatus","Project ready");
+    h+='<button class="btn ghost sm" data-vibe="alOut|alStatus|album / EP concept" style="margin-top:8px;width:100%">\u27f3 Optimize for the vibe</button>';$("alOut").innerHTML=h;bindSunoCopies();spinOk("alStatus","Project ready");
   }catch(e){spinErr("alStatus",e);}
 }
 async function genVideo(){
+  LAST_ACTION=genVideo;
   const llmRun=(s,u)=>_llmRun(s,u,"suno");
   if(!needKey())return;
   const pj=(S.sunoProjects||[]).find(x=>x.id===sv("mvSong"));
@@ -3021,10 +3051,11 @@ async function genVideo(){
   usr+="IDEA / PREMISE: "+(idea||"derive from the song")+"\nLOCATION: "+sv("mvLoc")+"\nPERFORMANCE STYLE: "+sv("mvPerf")+"\nBuild the concept now.";
   try{const r=parseJSON(await llmRun(sys,usr));
     let h=sunoCard("Visual Premise",r.premise||"")+sunoCard("Location",r.location||"")+sunoCard("Performance Style",r.performance||"")+sunoCard("Wardrobe",r.wardrobe||"")+sunoCard("Camera Energy",r.camera||"")+sunoCard("Visual Motifs",r.motifs||"")+sunoCard("Scene Progression",r.progression||"")+sunoCard("Editing Rhythm",r.editing||"")+sunoCard("Brand Integration",r.brand||"")+sunoCard("Thumbnail Concept",r.thumbnail||"");
-    $("mvOut").innerHTML=h;bindSunoCopies();spinOk("mvStatus","Concept ready");
+    h+='<button class="btn ghost sm" data-vibe="mvOut|mvStatus|music video concept" style="margin-top:8px;width:100%">\u27f3 Optimize for the vibe</button>';$("mvOut").innerHTML=h;bindSunoCopies();spinOk("mvStatus","Concept ready");
   }catch(e){spinErr("mvStatus",e);}
 }
 async function genBrand(){
+  LAST_ACTION=genBrand;
   const llmRun=(s,u)=>_llmRun(s,u,"suno");
   if(!needKey())return;
   const subj=sv("bcSubject");if(!subj){toast("Name the brand, product, or scene.",true);return;}
@@ -3039,7 +3070,7 @@ async function genBrand(){
     if(r.instrumental)h+=sunoCard("Instrumental Alternative",r.instrumental);
     h+=sunoField("Concise Suno Prompt",r.suno||"",200);
     if(r.note)h+=sunoCard("Note",r.note);
-    $("bcOut").innerHTML=h;bindSunoCopies();spinOk("bcStatus",mode+" ready");
+    h+='<button class="btn ghost sm" data-vibe="bcOut|bcStatus|brand piece" style="margin-top:8px;width:100%">\u27f3 Optimize for the vibe</button>';$("bcOut").innerHTML=h;bindSunoCopies();spinOk("bcStatus",mode+" ready");
   }catch(e){spinErr("bcStatus",e);}
 }
 

@@ -161,6 +161,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
   <button data-go="story"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20l1-4L17 4l3 3L8 19z'/><path d='M14 6l3 3'/></svg></span>Story</button>
   <button data-go="media"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 5 6 9H2v6h4l5 4z'/><path d='M15.5 8.5a5 5 0 0 1 0 7'/><path d='M19 4.5a9 9 0 0 1 0 15'/></svg></span>Media</button>
   <button data-go="reel"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></svg></span>Cut</button>
+  <button data-go="projects"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/></svg></span>Projects</button>
   <button data-go="settings"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1'/></svg></span>Setup</button>
 </nav>
 <div class="layout">
@@ -515,6 +516,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <details class="collapse" style="margin-top:8px"><summary>Song structure</summary><div class="body"><div id="sunoStruct"></div></div></details>
     <button class="btn green" id="sunoBtn" style="margin-top:12px;width:100%">&#10022; Build Suno package</button>
     <button class="btn ghost sm" id="sunoSaveAsPreset" style="margin-top:8px;width:100%">★ Save current as my preset</button>
+    <div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn ghost sm" id="sunoSaveProjBtn" style="flex:1">+ Save to drop</button><button class="btn ghost sm" id="sunoToCsbBtn" style="flex:1">→ Storyboard this</button></div>
     <div id="sunoStatus"></div><div id="sunoOut"></div>
     <details class="collapse" style="margin-top:12px"><summary>Saved song projects</summary><div class="body"><div id="sunoProjects"></div></div></details>
   </div>
@@ -697,6 +699,10 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <details class="collapse" style="margin-top:12px"><summary>Saved storyboards</summary><div class="body"><div id="csbProjects"></div></div></details>
   </div>
 </section>
+<section class="view" id="view-projects">
+  <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/></svg></span><h2>Projects</h2><span class="tag">your drop spine</span></div>
+  <div id="projWrap"></div>
+</section>
 <section class="view" id="view-settings">
   <div class="slatehead"><span class="num">⚙</span><h2>Setup</h2><span class="tag">Keys &amp; Models</span></div>
   <div class="card">
@@ -762,6 +768,22 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <div class="hint" style="margin-top:4px">★ Claude Sonnet 4.5 — best continuity &amp; canon critic.</div>
     <button class="btn ghost sm" id="taskReset" style="margin-top:12px">↺ Reset to recommended</button>
   </div>
+  <div class="card">
+    <label class="fld">Backup &amp; restore</label>
+    <div class="hint" style="margin-top:-2px;margin-bottom:10px">Everything you make lives in <b>this browser only</b>. Export a backup you can keep safe or re-open on another device — do it often, and before you ever clear your browser.</div>
+    <div class="row" style="gap:8px;flex-wrap:wrap">
+      <button class="btn green sm" id="smExportBtn">⬇ Export backup file</button>
+      <button class="btn ghost sm" id="smCopyBtn">⧉ Copy to clipboard</button>
+    </div>
+    <label class="fld" style="margin-top:14px">Restore from a backup</label>
+    <input type="file" id="smImportFile" accept="application/json,.json" style="margin-top:4px;color:var(--bone-dim)">
+    <button class="btn ghost sm" id="smImportBtn" style="margin-top:8px">⬆ Restore from file</button>
+    <details class="collapse" style="margin-top:10px"><summary>Or paste backup text</summary><div class="body">
+      <textarea id="smPasteBox" placeholder="Paste the contents of a backup here…" style="min-height:90px"></textarea>
+      <button class="btn ghost sm" id="smPasteBtn" style="margin-top:8px">⬆ Restore from text</button>
+    </div></details>
+    <div class="hint" style="margin-top:10px;color:var(--red)">Restoring replaces everything currently in the app. Export first if you’re unsure.</div>
+  </div>
   <details class="collapse"><summary>Models in play</summary><div class="body">
     <p><b>Image</b> — <code>nano-banana-2</code>, <code>nano-banana-pro</code>, <code>gpt-image-2</code><br>
     <b>Image + Gear</b> — the <code>/edit</code> versions (take reference images)<br>
@@ -780,7 +802,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.13 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.15 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -796,6 +818,7 @@ const blank={
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
   cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",
+  projects:[],activeProject:"",
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
 let S=load();
@@ -906,6 +929,7 @@ function go(name){
   if(name==="sets")renderSets();
   if(name==="media")renderMedia();
   if(name==="smg")renderMedia();
+  if(name==="projects")renderProjects();
   if(name==="settings")updateStorageMeter();
   window.scrollTo(0,0);
 }
@@ -927,6 +951,87 @@ $("testKey").addEventListener("click",async()=>{
   }catch(e){r.innerHTML='✗ Network blocked the call. If opened from disk, try hosting it.';r.style.color="var(--red)";}
 });
 
+function smStamp(){var d=new Date(),p=function(n){return(n<10?"0":"")+n;};return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+"-"+p(d.getHours())+p(d.getMinutes());}
+function smExport(){try{var blob=new Blob([JSON.stringify(S)],{type:"application/json"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="smoke-mirrors-backup-"+smStamp()+".json";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(url);a.remove();},1000);toast("Backup downloaded.");}catch(e){toast("Export failed: "+(e.message||e),true);}}
+function smFallbackCopy(t){try{var ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.focus();ta.select();document.execCommand("copy");ta.remove();toast("Backup copied.");}catch(e){toast("Couldn\u2019t copy \u2014 use Export instead.",true);}}
+function smCopyBackup(){var data=JSON.stringify(S);try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(data).then(function(){toast("Backup copied to clipboard.");},function(){smFallbackCopy(data);});}else{smFallbackCopy(data);}}catch(e){smFallbackCopy(data);}}
+function smRestore(text){var parsed;try{parsed=JSON.parse(text);}catch(e){toast("That isn\u2019t valid backup text.",true);return;}if(!parsed||typeof parsed!=="object"||Array.isArray(parsed)){toast("That isn\u2019t a Smoke & Mirrors backup.",true);return;}var known=["cast","sets","csb","board","apiKey","comics","episodes","fight","sunoStruct","taskBrains"],ok=false,i;for(i=0;i<known.length;i++){if(known[i] in parsed){ok=true;break;}}if(!ok&&!confirm("This doesn\u2019t look like a Smoke & Mirrors backup. Import it anyway?"))return;if(!confirm("Restore this backup? It replaces everything currently in the app."))return;try{localStorage.setItem(LS,JSON.stringify(parsed));toast("Restored \u2014 reloading\u2026");setTimeout(function(){location.reload();},700);}catch(e){toast("Restore failed (storage full?): "+(e.message||e),true);}}
+function smImportFile(file){if(!file)return;var reader=new FileReader();reader.onload=function(){smRestore(String(reader.result||""));};reader.onerror=function(){toast("Couldn\u2019t read that file.",true);};reader.readAsText(file);}
+function projActive(){return (S.projects||[]).find(function(p){return p.id===S.activeProject;})||null;}
+function projCreate(name,concept){var p={id:uid(),name:(name||"New Drop").trim()||"New Drop",concept:(concept||"").trim(),created:Date.now(),updated:Date.now(),items:[]};if(!S.projects)S.projects=[];S.projects.unshift(p);S.activeProject=p.id;save();return p;}
+function projAttach(type,title,content){var p=projActive();if(!p){p=projCreate("New Drop","");toast("Started \u201cNew Drop\u201d \u2014 rename it in Projects.");}p.items.unshift({id:uid(),type:type,title:(title||type),content:(content||""),created:Date.now()});p.updated=Date.now();save();toast("Saved to "+p.name+".");var v=$("view-projects");if(v&&v.classList.contains("active"))renderProjects();return true;}
+function projDelete(id){var p=(S.projects||[]).find(function(x){return x.id===id;});if(!p)return;if(!confirm("Delete \u201c"+p.name+"\u201d and its "+(p.items||[]).length+" item(s)? Can\u2019t be undone."))return;S.projects=(S.projects||[]).filter(function(x){return x.id!==id;});if(S.activeProject===id)S.activeProject=(S.projects[0]&&S.projects[0].id)||"";save();renderProjects();toast("Project deleted.");}
+function projSetActive(id){S.activeProject=id;save();renderProjects();var p=projActive();toast(p?("Active: "+p.name):"No active project.");}
+function projItemDel(pid,iid){var p=(S.projects||[]).find(function(x){return x.id===pid;});if(!p)return;p.items=(p.items||[]).filter(function(i){return i.id!==iid;});p.updated=Date.now();save();renderProjects();}
+function projGrab(kind){
+  var type,title,content;
+  if(kind==="storyboard"){var w=S.csb&&S.csb.work;if(!w||!(w.frames||[]).length){toast("No storyboard built yet (CSB tab).",true);return;}type="storyboard";title=(S.csb.title||"Storyboard");content=(w.summary?w.summary+"\n\n":"")+w.frames.map(function(f){return f.n+". "+(f.title||"")+(f.shot?" ["+f.shot+"]":"")+": "+(f.action||"");}).join("\n");}
+  else if(kind==="song"){var el=$("sunoOut");var t=el?(el.innerText||el.textContent||"").trim():"";if(!t){toast("No song package built yet (SMG tab).",true);return;}type="song";title=($("sunoTitle")&&$("sunoTitle").value.trim())||"Song";content=t;}
+  else if(kind==="comic"){var c=(typeof curComic==="function")?curComic():null;if(!c){toast("Open a comic first (Comics tab).",true);return;}type="comic";title=(c.title||"Comic");content=(c.script||c.idea||"");if(!content&&c.panels)content=(c.panels||[]).map(function(p,i){return (i+1)+". "+(p.caption||p.text||p.action||"");}).join("\n");}
+  else if(kind==="preroll"){var sc=(S.board&&S.board.script||"").trim();var u=(S.board&&S.board.lastUrl||"");if(!sc&&!u){toast("Nothing in Pre-Roll yet.",true);return;}type="images";title="Pre-Roll";content=sc+(u?("\n\n[last image] "+u):"");}
+  else if(kind==="fight"){var f=S.fight;if(!f){toast("Fight Lab unavailable.",true);return;}var parts=[];if(f.scenario&&f.scenario!=="auto")parts.push("Scenario: "+f.scenario);var hero=f.hero&&S.cast.find(function(x){return x.id===f.hero;});var vil=f.villain&&S.cast.find(function(x){return x.id===f.villain;});if(hero)parts.push("Hero: "+hero.name);if(vil)parts.push("Villain: "+vil.name);if(f.styleRefs)parts.push("Notes: "+f.styleRefs);if(!parts.length){toast("Set up a fight first (Fight tab).",true);return;}type="fight";title="Fight scene";content=parts.join("\n");}
+  if(type)projAttach(type,title,content);
+}
+function sunoToCsb(){var el=$("sunoOut");var t=el?(el.innerText||"").trim():"";var title=($("sunoTitle")&&$("sunoTitle").value.trim())||"";if(!t&&!title){toast("Build a song first.",true);return;}if(S.csb){S.csb.concept=(title?("Song: "+title+"\n"):"")+t.slice(0,240);save();}go("csb");if(typeof renderCSB==="function")renderCSB();toast("Sent to CSB \u2014 concept prefilled. Build the storyboard.");}
+async function projCaption(){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
+  var p=projActive();if(!p){toast("Make a project active first.",true);return;}
+  if(!S.apiKey&&(S.llmProvider!=="openai")){toast("Add your fal key in Setup.",true);go("settings");return;}
+  var box=$("projCapOut");if(box)box.innerHTML='<div class="statusline"><span class="rec"></span>Writing the drop caption\u2026</div>';
+  var items=(p.items||[]).map(function(i){return i.type+": "+i.title;}).join("; ");
+  var sys="You write short, dry, premium social captions for the cannabis-culture streetwear brand Chiefin' Season / Stoneralia. Voice: deadpan, confident, understated, never corny, never overhyped. Keep it platform-safe (no explicit drug sales). Return JSON ONLY: {\"caption\":\"\",\"alt\":\"\",\"hashtags\":[\"\"]}. caption = 1-3 lines. alt = a punchier one-liner. 6-12 on-brand hashtags.";
+  var usr="PROJECT: "+(p.name||"")+"\nCONCEPT: "+(p.concept||"")+"\nINCLUDES: "+(items||"\u2014")+"\nWrite the drop caption.";
+  try{var r=parseJSON(await llmRun(sys,usr));
+    var tags=(r.hashtags||[]).map(function(h){return h&&h[0]==="#"?h:"#"+h;}).join(" ");
+    var h=sunoCard("Drop Caption",r.caption||"\u2014");if(r.alt)h+=sunoCard("Alt one-liner",r.alt);if(tags)h+=sunoCard("Hashtags",tags);
+    if(box){box.innerHTML=h;bindSunoCopies();}
+    projAttach("caption","Drop caption",(r.caption||"")+(r.alt?("\n\nAlt: "+r.alt):"")+(tags?("\n\n"+tags):""));
+  }catch(e){if(box)box.innerHTML='<div class="statusline" style="color:var(--red)">\u2717 '+esc(e.message)+'</div>';}
+}
+function renderProjects(){
+  var wrap=$("projWrap");if(!wrap)return;
+  var ps=S.projects||[];var act=projActive();var BD="1px solid rgba(255,255,255,.08)";
+  var h='<div class="card"><label class="fld">New project / drop</label><div class="row" style="gap:8px"><input type="text" id="projNewName" placeholder="e.g. Drop 02 \u2014 Peace &amp; Pull" style="flex:1"><button class="btn green sm" id="projNewBtn" style="flex:0">+ Create</button></div><div class="hint" style="margin-top:6px">A project threads one idea across the studio \u2014 song, storyboard, comic, fight, images, caption \u2014 all in one place. Build in any tab, then pull it in here.</div></div>';
+  if(act){
+    h+='<div class="card" style="border-color:var(--bud)">';
+    h+='<div class="row" style="justify-content:space-between;align-items:center"><div style="color:var(--bud);font-weight:800;font-size:15px">\u25c9 '+esc(act.name)+'</div><div class="row" style="gap:6px"><button class="btn ghost sm" id="projRenameBtn" style="flex:0">Rename</button><button class="btn ghost sm" id="projExportBtn" style="flex:0">\u2b07 Export</button></div></div>';
+    h+='<label class="fld" style="margin-top:10px">Concept / logline</label><textarea id="projConcept" placeholder="What\u2019s this drop about?" style="min-height:60px">'+esc(act.concept||"")+'</textarea>';
+    h+='<label class="fld" style="margin-top:12px">Pull your current work into this drop</label><div class="row" style="gap:6px;flex-wrap:wrap;margin-top:2px"><button class="btn ghost sm" data-grab="storyboard" style="flex:0">+ Storyboard</button><button class="btn ghost sm" data-grab="song" style="flex:0">+ Song</button><button class="btn ghost sm" data-grab="comic" style="flex:0">+ Comic</button><button class="btn ghost sm" data-grab="fight" style="flex:0">+ Fight</button><button class="btn ghost sm" data-grab="preroll" style="flex:0">+ Pre-Roll</button></div>';
+    h+='<label class="fld" style="margin-top:14px">In this drop ('+(act.items||[]).length+')</label>';
+    if(!(act.items||[]).length)h+='<div class="hint">Nothing yet. Build something in any tab, then pull it in above.</div>';
+    else (act.items||[]).forEach(function(it){h+='<div class="card" style="padding:10px;margin-top:8px"><div class="row" style="justify-content:space-between;align-items:center"><span class="tag">'+esc(it.type)+'</span><div class="row" style="gap:6px"><button class="btn ghost sm" data-open="'+esc(it.type)+'" style="flex:0">\u2197 Open</button><button class="btn ghost sm" data-copy="'+it.id+'" style="flex:0">\u29c9</button><button class="btn ghost sm" data-del="'+it.id+'" style="flex:0">\u2715</button></div></div><div style="font-weight:700;margin-top:4px">'+esc(it.title)+'</div><div class="promptbox" style="margin-top:6px;max-height:120px;overflow:auto;white-space:pre-wrap">'+esc((it.content||"").slice(0,600))+((it.content||"").length>600?"\u2026":"")+'</div></div>';});
+    h+='<label class="fld" style="margin-top:14px">Finish the drop</label><button class="btn green sm" id="projCapBtn" style="flex:0">\u270d Generate drop caption</button><div id="projCapOut" style="margin-top:8px"></div>';
+    h+='<div class="row" style="margin-top:14px"><button class="btn danger sm" id="projDelBtn" style="flex:0">Delete this project</button></div>';
+    h+='</div>';
+  }
+  if(ps.length){h+='<div class="card"><label class="fld">All projects</label>';ps.forEach(function(p){var on=act&&p.id===act.id;h+='<div class="row" style="justify-content:space-between;align-items:center;padding:9px 0;border-top:'+BD+'"><div><span style="font-weight:700">'+(on?"\u25c9 ":"")+esc(p.name)+'</span> <span class="hint" style="display:inline">\u00b7 '+(p.items||[]).length+' item(s)</span></div>'+(on?'<span class="tag">active</span>':'<button class="btn ghost sm" data-actp="'+p.id+'" style="flex:0">Make active</button>')+'</div>';});h+='</div>';}
+  wrap.innerHTML=h;
+  if($("projNewBtn"))$("projNewBtn").onclick=function(){var n=($("projNewName")&&$("projNewName").value||"").trim();if(!n){toast("Name it first.",true);return;}projCreate(n,"");renderProjects();};
+  if($("projConcept"))$("projConcept").onchange=function(){var p=projActive();if(p){p.concept=this.value;p.updated=Date.now();save();}};
+  if($("projRenameBtn"))$("projRenameBtn").onclick=function(){var p=projActive();if(!p)return;var n=prompt("Rename project:",p.name);if(n&&n.trim()){p.name=n.trim();p.updated=Date.now();save();renderProjects();}};
+  if($("projDelBtn"))$("projDelBtn").onclick=function(){var p=projActive();if(p)projDelete(p.id);};
+  if($("projCapBtn"))$("projCapBtn").onclick=projCaption;
+  if($("projExportBtn"))$("projExportBtn").onclick=function(){var p=projActive();if(!p)return;try{var blob=new Blob([JSON.stringify(p,null,2)],{type:"application/json"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="project-"+(p.name||"drop").replace(/[^a-z0-9]+/gi,"-").toLowerCase()+".json";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(url);a.remove();},800);toast("Project exported.");}catch(e){toast("Export failed.",true);}};
+  wrap.querySelectorAll("[data-grab]").forEach(function(b){b.onclick=function(){projGrab(b.getAttribute("data-grab"));};});
+  wrap.querySelectorAll("[data-actp]").forEach(function(b){b.onclick=function(){projSetActive(b.getAttribute("data-actp"));};});
+  wrap.querySelectorAll("[data-del]").forEach(function(b){b.onclick=function(){var p=projActive();if(p)projItemDel(p.id,b.getAttribute("data-del"));};});
+  wrap.querySelectorAll("[data-open]").forEach(function(b){b.onclick=function(){var map={song:"smg",storyboard:"csb",comic:"comics",fight:"fight",images:"board",caption:"projects"};go(map[b.getAttribute("data-open")]||"projects");};});
+  wrap.querySelectorAll("[data-copy]").forEach(function(b){b.onclick=function(){var p=projActive();if(!p)return;var it=(p.items||[]).find(function(x){return x.id===b.getAttribute("data-copy");});if(it&&navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(it.content||"").then(function(){toast("Copied.");},function(){toast("Copy failed.",true);});else toast("Copy not supported here.",true);};});
+}
+/* project spine */
+(function(){
+  var b;
+  if((b=$("sunoSaveProjBtn")))b.addEventListener("click",function(){projGrab("song");});
+  if((b=$("sunoToCsbBtn")))b.addEventListener("click",sunoToCsb);
+})();
+/* backup restore */
+(function(){
+  var b;
+  if((b=$("smExportBtn")))b.addEventListener("click",smExport);
+  if((b=$("smCopyBtn")))b.addEventListener("click",smCopyBackup);
+  if((b=$("smImportBtn")))b.addEventListener("click",function(){var f=$("smImportFile");if(f&&f.files&&f.files[0])smImportFile(f.files[0]);else toast("Choose a backup file first.",true);});
+  if((b=$("smPasteBtn")))b.addEventListener("click",function(){var t=($("smPasteBox")?$("smPasteBox").value:"").trim();if(!t){toast("Paste backup text first.",true);return;}smRestore(t);});
+})();
 /* openai brain */
 (function(){
   const BRAINS=[["default","Default (global pick)"],["fal:anthropic/claude-sonnet-4.5","Claude Sonnet 4.5 (fal)"],["fal:google/gemini-2.5-pro","Gemini 2.5 Pro (fal)"],["fal:google/gemini-2.5-flash","Gemini 2.5 Flash (fal, cheap)"],["openai:gpt-4o-mini","GPT-4o-mini (cheapest)"],["openai:gpt-4.1-mini","GPT-4.1-mini (cheap)"],["openai:gpt-4o","GPT-4o (mid)"],["openai:gpt-5","GPT-5"],["openai:gpt-5.2","GPT-5.2"],["openai:gpt-5.5","GPT-5.5 (premium)"]];
@@ -2824,7 +2929,7 @@ function csbRenderWork(){
   let h=sunoCard("Story Summary",sum);
   if(w.beats)h+=sunoCard("Story Beat Outline",w.beats);
   const nLock=(w.frames||[]).filter(f=>f.locked).length;
-  h+='<div class="row" style="gap:6px;flex-wrap:wrap;margin-top:10px"><button class="btn ghost sm" id="csbRegenBtn" style="flex:0">\u21bb Regenerate unlocked'+(nLock?" ("+nLock+" locked)":"")+'</button><button class="btn ghost sm" id="csbAddBtn" style="flex:0">+ Add frame</button><button class="btn ghost sm" id="csbTimeBtn" style="flex:0">\u23f1 Recalc timing</button><button class="btn ghost sm" id="csbSheetBtn" style="flex:0">\u25a6 Combined sheet</button><button class="btn ghost sm" id="csbContBtn" style="flex:0">\u2713 Continuity check</button><button class="btn ghost sm" id="csbVarBtn" style="flex:0">\u29c9 Variation</button><button class="btn ghost sm" id="csbPrerollBtn" style="flex:0">\u2192 Pre-Roll script</button><button class="btn ghost sm" id="csbFightBtn" style="flex:0">\u2192 Fight Lab</button><button class="btn ghost sm" id="csbComicBtn" style="flex:0">\u2192 Comic</button></div><div id="csbToolOut"></div>';
+  h+='<div class="row" style="gap:6px;flex-wrap:wrap;margin-top:10px"><button class="btn ghost sm" id="csbRegenBtn" style="flex:0">\u21bb Regenerate unlocked'+(nLock?" ("+nLock+" locked)":"")+'</button><button class="btn ghost sm" id="csbAddBtn" style="flex:0">+ Add frame</button><button class="btn ghost sm" id="csbTimeBtn" style="flex:0">\u23f1 Recalc timing</button><button class="btn ghost sm" id="csbSheetBtn" style="flex:0">\u25a6 Combined sheet</button><button class="btn ghost sm" id="csbContBtn" style="flex:0">\u2713 Continuity check</button><button class="btn ghost sm" id="csbVarBtn" style="flex:0">\u29c9 Variation</button><button class="btn ghost sm" id="csbPrerollBtn" style="flex:0">\u2192 Pre-Roll script</button><button class="btn ghost sm" id="csbFightBtn" style="flex:0">\u2192 Fight Lab</button><button class="btn ghost sm" id="csbComicBtn" style="flex:0">\u2192 Comic</button><button class="btn ghost sm" id="csbSaveProjBtn" style="flex:0">+ Save to drop</button></div><div id="csbToolOut"></div>';
   (w.frames||[]).forEach(f=>{
     const ed=CSB_EDIT.has(f.id);
     h+='<div class="card" style="margin-top:10px;background:rgba(255,255,255,.02)'+(f.locked?";border-color:var(--bud)":"")+'">';
@@ -2852,6 +2957,7 @@ function csbRenderWork(){
   if($("csbPrerollBtn"))$("csbPrerollBtn").onclick=csbToPreRoll;
   if($("csbFightBtn"))$("csbFightBtn").onclick=csbToFight;
   if($("csbComicBtn"))$("csbComicBtn").onclick=csbToComic;
+  if($("csbSaveProjBtn"))$("csbSaveProjBtn").onclick=function(){projGrab("storyboard");};
   if($("csbSaveBtn"))$("csbSaveBtn").onclick=csbSaveProject;
 }
 async function csbRegenUnlocked(){

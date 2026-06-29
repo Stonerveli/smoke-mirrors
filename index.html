@@ -142,11 +142,21 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 .csheet .cs-card{background:#141414;border-top:1px solid var(--line);width:100%;padding:16px 16px 28px;border-radius:16px 16px 0 0}
 .csheet .cs-title{font-family:var(--slate);font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:13px;margin-bottom:12px}
 .csheet .cs-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+nav button[data-go]{display:none}
+nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(0 0 6px var(--bud))}
+.subtabs{position:sticky;top:0;z-index:55;display:flex;gap:6px;overflow-x:auto;background:var(--black);padding:9px 10px;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch}
+.subtabs::-webkit-scrollbar{display:none}
+.subtabs button{flex:0 0 auto;background:none;border:1px solid var(--line);color:var(--bone-dim);padding:6px 13px;border-radius:999px;font-size:12.5px;white-space:nowrap;letter-spacing:.02em}
+.subtabs button.on{color:var(--bud);border-color:var(--bud);background:rgba(255,255,255,.04)}
 </style>
 </head>
 <body>
 <div class="appwrap">
 <nav>
+  <button class="grp" data-grp-sel="create"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l2.4 6.1L21 11.5l-6.6 2.4L12 21l-2.4-7.1L3 11.5l6.6-2.4z'/></svg></span>Create</button>
+  <button class="grp" data-grp-sel="universe"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M3 12h18'/><path d='M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18'/></svg></span>Universe</button>
+  <button class="grp" data-grp-sel="library"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 7l8-4 8 4-8 4z'/><path d='M4 12l8 4 8-4'/><path d='M4 17l8 4 8-4'/></svg></span>Library</button>
+  <button class="grp" data-grp-sel="setup"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1'/></svg></span>Setup</button>
   <button data-go="cloudtoons"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 17h11a3.5 3.5 0 0 0 .5-6.97A5 5 0 0 0 8 8.5 3.5 3.5 0 0 0 6 17z'/></svg></span>Cloudtoons</button>
   <button data-go="comics"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span>Comics</button>
   <button data-go="fight"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M13 2 4.5 13.5H11l-1 8.5 9.5-12.5H12z'/></svg></span>Fight</button>
@@ -170,6 +180,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
   <div class="keystat"><span class="dot" id="keydot"></span><span id="keytxt">No key</span></div>
 </header>
 <main>
+<div class="subtabs" id="subtabs"></div>
 
 <!-- ===== STUDIO ===== -->
 <section class="view active" id="view-studio">
@@ -252,6 +263,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
   <button class="btn green" id="boardGen" data-cost="openai/gpt-image-2" style="width:100%;padding:13px">▦ Generate storyboard</button>
   <div id="boardStatus"></div>
   <div class="result-wrap" id="boardResult"></div>
+  <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="boardSaveProjBtn" style="flex:0">+ Save to drop</button></div>
   <div id="boardAfter" style="display:none">
     <span class="steptag">Step 2 · Approve</span>
     <div class="row"><button class="btn ghost" id="boardReroll">↺ Generate once more</button><span class="hint" style="flex:2;align-self:center">Or tweak the chips above and regenerate the whole board.</span></div>
@@ -480,7 +492,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 </section>
 
 <!-- ===== SETUP ===== -->
-<section class="view" id="view-fight"><div class="wrap" id="fightBody"></div></section>
+<section class="view" id="view-fight"><div class="wrap" id="fightBody"></div><div class="row" style="margin-top:10px;padding:0 2px"><button class="btn ghost sm" id="fightSaveProjBtn" style="flex:0">+ Save to drop</button></div></section>
 <section class="view" id="view-comics">
   <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style="width:30px;height:30px;display:block"><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span><h2>Comics</h2><span class="tag">Strips · Dank Side</span></div>
   <div id="comicBody"></div>
@@ -802,7 +814,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.15 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.17 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -818,7 +830,7 @@ const blank={
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
   cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",
-  projects:[],activeProject:"",
+  projects:[],activeProject:"",navGroup:"create",
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
 let S=load();
@@ -910,7 +922,24 @@ const BOARD_ADJ=["smoke atmosphere","hotbox haze","thick fog","rain atmosphere",
 
 /* nav */
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
+var CUR_VIEW="episodes";
+const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",cast:"universe",sets:"universe",projects:"library",stash:"library",settings:"setup"};
+const GROUP_FIRST={create:"smg",universe:"cast",library:"projects",setup:"settings"};
+function navLabel(v){var b=document.querySelector('nav button[data-go="'+v+'"]');if(b){var t=(b.textContent||"").trim();if(t)return t;}return v;}
+function renderSubTabs(){
+  var host=$("subtabs");if(!host)return;var g=S.navGroup||"create";
+  var ordered=[];document.querySelectorAll('nav button[data-go]').forEach(function(b){if(VIEW_GROUP[b.dataset.go]===g)ordered.push(b.dataset.go);});
+  if(ordered.length<=1){host.style.display="none";host.innerHTML="";return;}
+  host.style.display="flex";
+  host.innerHTML=ordered.map(function(v){return '<button data-sub="'+v+'"'+(v===CUR_VIEW?' class="on"':'')+'>'+navLabel(v)+'</button>';}).join("");
+  host.querySelectorAll('[data-sub]').forEach(function(b){b.onclick=function(){go(b.getAttribute("data-sub"));};});
+}
+function renderNav(){var g=S.navGroup||"create";document.querySelectorAll('nav button.grp').forEach(function(b){b.classList.toggle("on",b.getAttribute("data-grp-sel")===g);});renderSubTabs();}
+function navGroupTo(grp){if(VIEW_GROUP[CUR_VIEW]===grp){S.navGroup=grp;save();renderNav();}else{go(GROUP_FIRST[grp]||"episodes");}}
+/* nav groups */
+(function(){document.querySelectorAll('nav button.grp').forEach(function(b){b.addEventListener("click",function(){navGroupTo(b.getAttribute("data-grp-sel"));});});renderNav();})();
 function go(name){
+  CUR_VIEW=name;
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
   $("view-"+name).classList.add("active");
   document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.go===name));
@@ -931,6 +960,8 @@ function go(name){
   if(name==="smg")renderMedia();
   if(name==="projects")renderProjects();
   if(name==="settings")updateStorageMeter();
+  if(VIEW_GROUP[name])S.navGroup=VIEW_GROUP[name];
+  renderNav();
   window.scrollTo(0,0);
 }
 
@@ -1023,6 +1054,8 @@ function renderProjects(){
   var b;
   if((b=$("sunoSaveProjBtn")))b.addEventListener("click",function(){projGrab("song");});
   if((b=$("sunoToCsbBtn")))b.addEventListener("click",sunoToCsb);
+  if((b=$("boardSaveProjBtn")))b.addEventListener("click",function(){projGrab("preroll");});
+  if((b=$("fightSaveProjBtn")))b.addEventListener("click",function(){projGrab("fight");});
 })();
 /* backup restore */
 (function(){
@@ -3750,7 +3783,7 @@ async function genComic(){
 }
 function renderComicView(comic){
   const host=$("comicBody");if(!host)return;
-  let h='<button class="btn sm ghost" id="comicBack" style="margin-bottom:12px">← All comics</button>';
+  let h='<button class="btn sm ghost" id="comicBack" style="margin-bottom:12px">← All comics</button><button class="btn ghost sm" id="comicSaveProjBtn" style="margin-bottom:12px;margin-left:8px">+ Save to drop</button>';
   h+='<div class="card"><input type="text" id="comicTitle" value="'+esc(comic.title||"")+'" placeholder="comic title" style="font-family:var(--slate);font-weight:800"><div class="hint" style="margin-top:4px">'+esc((COMIC_KINDS[comic.kind]||{}).label||"")+' · '+esc((COMIC_LOOKS[comic.look]||{}).label||"")+'</div></div>';
   h+='<div class="row"><button class="btn green" id="comicRenderAll" data-cost="edit" style="flex:1">▦ Draw all panels</button><button class="btn ghost" id="comicExport" style="flex:0">⧉ Export</button></div><div id="comicAllStatus" style="margin-top:6px"></div>';
   comic.panels.forEach(p=>{
@@ -3763,6 +3796,7 @@ function renderComicView(comic){
   });
   host.innerHTML=h;
   $("comicBack").addEventListener("click",()=>{S.curComic=null;save();renderComics();});
+  if($("comicSaveProjBtn"))$("comicSaveProjBtn").onclick=function(){projGrab("comic");};
   $("comicTitle").addEventListener("input",e=>{comic.title=e.target.value;save();});
   $("comicRenderAll").addEventListener("click",renderAllPanels);
   $("comicExport").addEventListener("click",exportComic);

@@ -749,10 +749,18 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
   </div>
   <div class="card">
     <label class="fld">Per-task brain routing</label>
-    <div class="hint" style="margin-top:-2px;margin-bottom:8px">Give each kind of job its own brain. “Default” uses your global pick above — e.g. lyrics on GPT-5, Suno prompts on Gemini Flash.</div>
+    <div class="hint" style="margin-top:-2px;margin-bottom:10px">Each job runs on the brain that’s best for it — already set to the recommended pick (★). “Default” just follows your global brain above. Change any of them anytime.</div>
     <label class="fld">Lyrics — Lyric Lab</label><select id="taskLyrics" data-task="lyrics"></select>
-    <label class="fld" style="margin-top:8px">Suno prompts &amp; music — SMG</label><select id="taskSuno" data-task="suno"></select>
-    <label class="fld" style="margin-top:8px">Storyboards — CSB</label><select id="taskStoryboard" data-task="storyboard"></select>
+    <div class="hint" style="margin-top:4px">★ Claude Sonnet 4.5 — best voice &amp; deadpan tone, needs the least cleanup.</div>
+    <label class="fld" style="margin-top:10px">Suno prompts &amp; music — SMG</label><select id="taskSuno" data-task="suno"></select>
+    <div class="hint" style="margin-top:4px">★ Gemini 2.5 Flash — cheap &amp; fast for structured tags. Iterate all day.</div>
+    <label class="fld" style="margin-top:10px">Storyboards — CSB &amp; cloudtoons</label><select id="taskStoryboard" data-task="storyboard"></select>
+    <div class="hint" style="margin-top:4px">★ GPT-5 — tightest plot logic &amp; structure across frames.</div>
+    <label class="fld" style="margin-top:10px">Ideas &amp; scripts — episodes, comics, cloudtoons, fight beats, pre-roll</label><select id="taskIdeas" data-task="ideas"></select>
+    <div class="hint" style="margin-top:4px">★ Claude Sonnet 4.5 — voice-first scripts &amp; dialogue.</div>
+    <label class="fld" style="margin-top:10px">Continuity / canon check — CSB</label><select id="taskContinuity" data-task="continuity"></select>
+    <div class="hint" style="margin-top:4px">★ Claude Sonnet 4.5 — best continuity &amp; canon critic.</div>
+    <button class="btn ghost sm" id="taskReset" style="margin-top:12px">↺ Reset to recommended</button>
   </div>
   <details class="collapse"><summary>Models in play</summary><div class="body">
     <p><b>Image</b> — <code>nano-banana-2</code>, <code>nano-banana-pro</code>, <code>gpt-image-2</code><br>
@@ -772,7 +780,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.12 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.13 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -782,7 +790,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 "use strict";
 const LS="smokemirrors_v1";
 const blank={
-  apiKey:"",llmModel:"google/gemini-2.5-flash",llmProvider:"fal",openaiKey:"",openaiModel:"gpt-4o-mini",taskBrains:{},station:"image",
+  apiKey:"",llmModel:"google/gemini-2.5-flash",llmProvider:"fal",openaiKey:"",openaiModel:"gpt-4o-mini",taskBrains:{lyrics:"fal:anthropic/claude-sonnet-4.5",suno:"fal:google/gemini-2.5-flash",storyboard:"openai:gpt-5",ideas:"fal:anthropic/claude-sonnet-4.5",continuity:"fal:anthropic/claude-sonnet-4.5"},station:"image",
   picked:{image:"fal-ai/nano-banana-2",edit:"fal-ai/nano-banana-2/edit",video:"bytedance/seedance-2.0/reference-to-video",audio:"fal-ai/elevenlabs/sound-effects"},
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
@@ -921,7 +929,8 @@ $("testKey").addEventListener("click",async()=>{
 
 /* openai brain */
 (function(){
-  const BRAINS=[["default","Default (global pick)"],["fal:anthropic/claude-sonnet-4.5","Claude Sonnet 4.5 (fal)"],["fal:google/gemini-2.5-pro","Gemini 2.5 Pro (fal)"],["fal:google/gemini-2.5-flash","Gemini 2.5 Flash (fal, cheap)"],["openai:gpt-4o-mini","GPT-4o-mini (cheapest)"],["openai:gpt-4.1-mini","GPT-4.1-mini (cheap)"],["openai:gpt-5","GPT-5"],["openai:gpt-5.2","GPT-5.2"],["openai:gpt-5.5","GPT-5.5 (premium)"]];
+  const BRAINS=[["default","Default (global pick)"],["fal:anthropic/claude-sonnet-4.5","Claude Sonnet 4.5 (fal)"],["fal:google/gemini-2.5-pro","Gemini 2.5 Pro (fal)"],["fal:google/gemini-2.5-flash","Gemini 2.5 Flash (fal, cheap)"],["openai:gpt-4o-mini","GPT-4o-mini (cheapest)"],["openai:gpt-4.1-mini","GPT-4.1-mini (cheap)"],["openai:gpt-4o","GPT-4o (mid)"],["openai:gpt-5","GPT-5"],["openai:gpt-5.2","GPT-5.2"],["openai:gpt-5.5","GPT-5.5 (premium)"]];
+  const REC={lyrics:"fal:anthropic/claude-sonnet-4.5",suno:"fal:google/gemini-2.5-flash",storyboard:"openai:gpt-5",ideas:"fal:anthropic/claude-sonnet-4.5",continuity:"fal:anthropic/claude-sonnet-4.5"};
   const OAI_COST={"gpt-4o-mini":"Cheapest \u2014 ~$0.15 / $0.60 per 1M tokens. Well under 0.1\u00a2 per call.","gpt-4.1-mini":"Cheap & sharp \u2014 ~$0.40 / $1.60 per 1M. A fraction of a cent per call.","gpt-4o":"Mid \u2014 ~$2.50 / $10 per 1M. Around 1\u00a2 per call.","gpt-5":"Strong reasoning \u2014 ~$1.25 / $10 per 1M. About 1\u00a2 per call, a touch slower.","gpt-5.2":"Stronger \u2014 $1.75 / $14 per 1M. Roughly 1\u20132\u00a2 per call.","gpt-5.5":"Newest, premium \u2014 $5 / $30 per 1M. Roughly 3\u20135\u00a2 per call. Save it for heavy lifting."};
   const KNOWN=["gpt-4o-mini","gpt-4.1-mini","gpt-4o","gpt-5","gpt-5.2","gpt-5.5"];
   const prov=$("brainProv");
@@ -936,8 +945,9 @@ $("testKey").addEventListener("click",async()=>{
   loadModel();
   if($("openaiSave"))$("openaiSave").addEventListener("click",function(){S.openaiKey=($("openaiKey").value||"").trim();save();toast(S.openaiKey?"OpenAI saved.":"OpenAI key cleared.");});
   if($("openaiTest"))$("openaiTest").addEventListener("click",async function(){const r=$("openaiResult"),key=($("openaiKey").value||"").trim();if(!key){toast("Paste your OpenAI API key first.",true);return;}r.style.display="flex";r.innerHTML='<span class="rec"></span>Testing\u2026';try{const res=await fetch("https://api.openai.com/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},body:JSON.stringify({model:S.openaiModel||"gpt-4o-mini",messages:[{role:"user",content:"reply OK"}]})});const j=await res.json();if(!res.ok||j.error){r.innerHTML='\u2717 '+(((j.error&&j.error.message)||("OpenAI "+res.status))+"").slice(0,120);r.style.color="var(--red)";return;}r.innerHTML='\u2713 Connected. OpenAI works.';r.style.color="var(--bud)";S.openaiKey=key;save();}catch(e){r.innerHTML='\u2717 Network/CORS blocked the call.';r.style.color="var(--red)";}});
-  function fillTask(id){const el=$(id);if(!el)return;const task=el.getAttribute("data-task");const cur=(S.taskBrains&&S.taskBrains[task])||"default";el.innerHTML=BRAINS.map(b=>'<option value="'+b[0]+'"'+(cur===b[0]?" selected":"")+'>'+b[1]+'</option>').join("");el.value=cur;el.onchange=function(){if(!S.taskBrains)S.taskBrains={};S.taskBrains[task]=el.value;save();toast("Routing saved.");};}
-  fillTask("taskLyrics");fillTask("taskSuno");fillTask("taskStoryboard");
+  function fillTask(id){const el=$(id);if(!el)return;const task=el.getAttribute("data-task");const rec=REC[task];const cur=(S.taskBrains&&S.taskBrains[task])||rec||"default";el.innerHTML=BRAINS.map(function(b){var lbl=(b[0]===rec?"\u2605 ":"")+b[1];return '<option value="'+b[0]+'"'+(cur===b[0]?" selected":"")+'>'+lbl+'</option>';}).join("");el.value=cur;el.onchange=function(){if(!S.taskBrains)S.taskBrains={};S.taskBrains[task]=el.value;save();toast("Routing saved.");};}
+  ["taskLyrics","taskSuno","taskStoryboard","taskIdeas","taskContinuity"].forEach(fillTask);
+  if($("taskReset"))$("taskReset").addEventListener("click",function(){S.taskBrains=Object.assign({},REC);save();["taskLyrics","taskSuno","taskStoryboard","taskIdeas","taskContinuity"].forEach(fillTask);toast("All tasks reset to recommended.");});
   renderProv();
 })();
 /* fal */
@@ -2883,7 +2893,7 @@ function csbToPreRoll(){
   const ta=$("boardScript");if(ta)ta.value=sheet.trim();if(S.board)S.board.script=sheet.trim();save();toast("Sent to the Pre-Roll script box below \u2014 lock characters, then Generate storyboard.");
 }
 async function csbContinuityCheck(){
-  const llmRun=(s,u)=>_llmRun(s,u,"storyboard");
+  const llmRun=(s,u)=>_llmRun(s,u,"continuity");
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const w=S.csb&&S.csb.work;if(!w||!(w.frames||[]).length){toast("Build a storyboard first.",true);return;}
   const box=$("csbToolOut");if(box)box.innerHTML='<div class="statusline"><span class="rec"></span>Checking continuity\u2026</div>';
@@ -3068,6 +3078,7 @@ function renderEpisodes(){
     d.addEventListener("click",()=>{S.currentEp=ep.id;renderEpisodes();});host.appendChild(d);});
 }
 function renderEpEditor(){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   const ep=curEp();if(!ep){S.currentEp=null;renderEpisodes();return;}
   let h='<button class="btn sm ghost" id="epBack" style="margin-bottom:12px">← All episodes</button>';
   h+='<div class="card"><label class="fld">Episode title</label><input type="text" id="epTitle" value="'+esc(ep.title)+'" placeholder="EP 001 — This Ain’t Hitting">';
@@ -3091,6 +3102,7 @@ function renderEpEditor(){
   $("epEditor").innerHTML=h;bindEpEditor(ep);
 }
 function bindEpEditor(ep){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   $("epBack").addEventListener("click",()=>{S.currentEp=null;renderEpisodes();});
   $("epTitle").addEventListener("input",e=>{ep.title=e.target.value;save();});
   const cc=$("epCreator");cc.innerHTML="";Object.keys(CREATOR_TYPES).forEach(k=>{const c=document.createElement("span");c.className="chip"+(ep.creatorType===k?" on":"");c.textContent=CREATOR_TYPES[k].label;c.addEventListener("click",()=>{ep.creatorType=k;if(CREATOR_TYPES[k].look)ep.look=CREATOR_TYPES[k].look;save();renderEpEditor();});cc.appendChild(c);});
@@ -3125,6 +3137,7 @@ function bindEpEditor(ep){
   }
 }
 async function recommendField(which){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   const ep=curEp();if(!ep)return;if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const st=$(which==="logline"?"loglineStatus":"grandStatus");st.innerHTML=spinner("Thinking…");
   const usr=(which==="logline"?"Propose ONE killer logline (a single sentence) for this episode. ":"Propose ONE Grand Expectation — the big promise / payoff the audience should feel by the end (1-2 sentences). ")+"TITLE: "+(ep.title||"(untitled)")+"\n"+epContext(ep)+"\nReturn only the line — no quotes, no preamble.";
@@ -3132,6 +3145,7 @@ async function recommendField(which){
   catch(e){st.innerHTML=errLine(e);}
 }
 async function makeItOurs(){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   const ep=curEp();if(!ep)return;if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const st=$("epGenStatus");st.innerHTML=spinner("Making it ours…");
   const usr="Pitch an ORIGINAL episode concept true to the universe and brand. No live trends — use proven viral structure and the Stoneralia Law. Give a title, a logline, and a grand expectation. "+epContext(ep)+"\nReturn JSON only: {\"title\":\"\",\"logline\":\"\",\"grand\":\"\"}.";
@@ -3139,6 +3153,7 @@ async function makeItOurs(){
   catch(e){st.innerHTML=errLine(e);}
 }
 async function genScript(){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   const ep=curEp();if(!ep)return;if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const ct=CREATOR_TYPES[ep.creatorType]||CREATOR_TYPES.shorts;
   const st=$("epGenStatus");st.innerHTML=spinner("Writing the episode…");
@@ -3158,10 +3173,12 @@ async function genScript(){
   }catch(e){st.innerHTML=errLine(e);}
 }
 async function optimizePass(ep){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   const sys=writerSys(ep)+" You are now the SCRIPT DOCTOR: do a ruthless review-and-optimize pass — sharpen the hook, tighten every beat, strengthen the twist, fix continuity, raise production value to trillion-dollar taste, keep the voice. Return JSON only: {\"outline\":\"\",\"script\":\"\",\"note\":\"one short line: what you improved\"}.";
   try{return parseJSON(await llmRun(sys,"Optimize this episode.\nOUTLINE:\n"+(ep.outline||"")+"\n\nSCRIPT:\n"+(ep.script||"")));}catch(e){return null;}
 }
 async function makeCinematic(){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   const ep=curEp();if(!ep)return;if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   if(!ep.script){toast("Generate a script first.",true);return;}
   const st=$("epCineStatus");st.innerHTML=spinner("Applying the trillion-dollar pass…");
@@ -3226,6 +3243,7 @@ function matchSceneRefs(ep,s){
   return {items,note};
 }
 async function breakIntoScenes(){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   const ep=curEp();if(!ep)return;if(!ep.script){toast("Generate a script first.",true);return;}
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const ct=CREATOR_TYPES[ep.creatorType]||CREATOR_TYPES.shorts;
@@ -3270,6 +3288,7 @@ function renderSceneBoard(ep){
   host.querySelectorAll("button[data-lock]").forEach(b=>b.addEventListener("click",()=>{const s=ep.scenes.find(x=>x.id===b.dataset.lock);if(!s)return;if(!s.lockRefs)s.lockRefs=[];const i=s.lockRefs.indexOf(b.dataset.aid);if(i>-1)s.lockRefs.splice(i,1);else s.lockRefs.push(b.dataset.aid);save();renderSceneBoard(ep);}));
 }
 async function createStoryboard(sid){
+  const llmRun=(s,u)=>_llmRun(s,u,"storyboard");
   const ep=curEp();if(!ep)return;const s=ep.scenes.find(x=>x.id===sid);if(!s)return;
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const ct=CREATOR_TYPES[ep.creatorType]||CREATOR_TYPES.shorts;
@@ -3320,6 +3339,7 @@ const FIGHT_MECHANICS_TXT="Draw from the fight-mechanics vocabulary: stance, ope
 const FIGHT_CAMERAS_TXT="Vary the camera across beats: wide master, medium combat, low-angle hero, low-angle villain, over-the-shoulder strike, side tracking, circular dolly, whip pan, impact close-up, slow-motion impact, insert detail, overhead geography, final freeze pose.";
 const FIGHT_NEG="Brand-safe action: impact, sparks, smoke, dust and cracked concrete sell the power. No gore, no excessive blood, no dismemberment, no real brand logos, no copyrighted characters, no on-screen text, subtitles or speech bubbles. Diegetic impact sound only \u2014 hits, footsteps, fabric, sparks, breath \u2014 never music.";
 async function fightChoreograph(){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   const ep=curEp();if(!ep)return;if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const A=S.cast.find(c=>c.id===$("fcA").value),B=S.cast.find(c=>c.id===$("fcB").value);
   if(!A||!B||A.id===B.id){toast("Pick two different characters.",true);return;}
@@ -3400,6 +3420,7 @@ function renderCloudtoons(){
   else{list.innerHTML="";toons.forEach(ep=>{const d=document.createElement("div");d.className="card";d.style.cursor="pointer";d.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><div style="font-weight:800;font-family:var(--slate)">'+esc(ep.title||"Untitled toon")+'</div><button class="x" style="position:static;flex:0 0 auto">✕</button></div><div class="hint" style="margin-top:2px">'+esc((CT_SEASONS.find(s=>s.key===ep.season)||{}).label||"")+(ep.script?" · scripted":" · draft")+'</div>'+(ep.logline?'<div style="font-size:13px;margin-top:4px">'+esc(ep.logline)+'</div>':'');d.querySelector(".x").addEventListener("click",e=>{e.stopPropagation();if(confirm("Delete this Cloudtoon? The season generator can always make it again — nothing is lost.")){if(ep.hiddenChieff&&ep.sightingNo&&S.chieffSightings>0)S.chieffSightings=Math.max(0,S.chieffSightings-1);S.episodes=(S.episodes||[]).filter(x=>x.id!==ep.id);if(S.currentEp===ep.id)S.currentEp=null;save();renderCloudtoons();}});d.addEventListener("click",()=>{S.currentEp=ep.id;go("episodes");renderEpisodes();});list.appendChild(d);});}
 }
 async function genCloudtoon(){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const law=curLaw();const season=CT_SEASONS.find(s=>s.key===(S.ctSeason||"hidden"))||CT_SEASONS[0];
   const st=$("ctGenStatus");st.innerHTML=spinner("Dreaming up a Cloudtoon…");
@@ -3595,6 +3616,7 @@ function renderComics(){
     d.addEventListener("click",()=>{S.curComic=c.id;save();renderComics();});list.appendChild(d);});}
 }
 async function suggestComicIdea(){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   if(!S.apiKey){toast("Add your fal key in Setup for AI suggestions.",true);return;}
   const st=$("comicIdeaStatus");st.innerHTML=spinner("Thinking up a gag…");
   const lead=S.cast.find(c=>c.id===($("comicLead")?$("comicLead").value:""));const set=S.sets.find(x=>x.id===($("comicSet")?$("comicSet").value:""));
@@ -3604,6 +3626,7 @@ async function suggestComicIdea(){
   catch(e){st.innerHTML=errLine(e);}
 }
 async function genComic(){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const kind=$("comicKind").value,look=$("comicLook").value,leadId=$("comicLead").value,setId=$("comicSet").value,idea=$("comicIdea").value.trim();
   const ko=COMIC_KINDS[kind]||COMIC_KINDS.strip3;const single=ko.panels===1;
@@ -3709,6 +3732,7 @@ function openLightbox(src,isVideo){
 }
 function initLightbox(){if(document._lbInit)return;document._lbInit=true;document.addEventListener("click",function(e){const t=e.target;if(t&&t.classList&&t.classList.contains("zoomable")){e.stopPropagation();openLightbox(t.getAttribute("src")||t.src,t.tagName==="VIDEO");}});}
 async function writeBoardScript(){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const ta=$("boardScript");const seed=((ta&&ta.value)||"").trim();
   if(!seed){toast("Type a logline or quick idea first \u2014 I'll expand it into a shot-by-shot script.",true);if(ta)ta.focus();return;}

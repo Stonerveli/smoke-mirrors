@@ -151,6 +151,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
   <button data-go="comics"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span>Comics</button>
   <button data-go="fight"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M13 2 4.5 13.5H11l-1 8.5 9.5-12.5H12z'/></svg></span>Fight</button>
 <button data-go="smg"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg></span>SMG</button>
+  <button data-go="csb"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='7' height='7' rx='1'/><rect x='14' y='3' width='7' height='7' rx='1'/><rect x='3' y='14' width='7' height='7' rx='1'/><rect x='14' y='14' width='7' height='7' rx='1'/></svg></span>CSB</button>
   <button data-go="episodes" class="on"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2.5' y='7.5' width='13' height='12' rx='2'/><path d='M7.5 7.5V5.5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2'/></svg></span>Episodes</button>
   <button data-go="cast"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='3.5'/><path d='M5.5 20a6.5 6.5 0 0 1 13 0'/><path d='M14.8 9.3l3.6-.6'/><circle cx='18.7' cy='8.6' r='.8' fill='currentColor' stroke='none'/><path d='M18.9 7.3c.7-.5.2-1.2.6-1.9'/></svg></span>Cast</button>
   <button data-go="sets"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M3 15l5-4 4 3 3-2 6 5'/><circle cx='8' cy='9' r='1.3'/></svg></span>Sets</button>
@@ -223,66 +224,6 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 
 <!-- ===== PRE-ROLL (storyboard) ===== -->
 <section class="view" id="view-board">
-  <div class="card">
-    <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:30px;height:30px;display:block"><rect x="2" y="7" width="20" height="13" rx="1"/><path d="M2 7l4-4h4l-4 4"/><path d="M10 3h4l-4 4"/><path d="M18 3l-4 4"/></svg></span><h2>Cinematic Storyboard Creator</h2></div>
-    <div class="hint" style="margin-top:-2px;margin-bottom:10px">Turn scripts, scenes, songs, ads, and ideas into production-ready visual sequences.</div>
-    <details class="collapse" open><summary>Project &amp; Mode</summary><div class="body">
-    <label class="fld">Storyboard title</label><input type="text" id="csbTitle" placeholder="optional">
-    <label class="fld" style="margin-top:8px">Starter preset</label><select id="csbPreset"></select>
-    <label class="fld" style="margin-top:8px">Creator Category</label>
-    <select id="csbCat"></select>
-    <label class="fld" style="margin-top:8px">Creator Mode</label>
-    <select id="csbMode"></select>
-    <label class="fld" style="margin-top:8px">Intended use</label>
-    <select id="csbUse"></select>
-    <div id="csbSuggestRow" style="margin-top:8px"><button class="btn ghost sm" id="csbSuggest" style="flex:0">✨ Suggest setup</button></div>
-    </div></details>
-    <details class="collapse" style="margin-top:6px"><summary>Story</summary><div class="body">
-    <label class="fld">Logline</label><input type="text" id="csbLogline" placeholder="one-line summary">
-    <label class="fld" style="margin-top:8px">Scene concept / description</label>
-    <textarea id="csbConcept" style="min-height:70px" placeholder="what happens — paste a script, scene, brief, lyrics, or idea"></textarea>
-    <label class="fld" style="margin-top:8px">Required story beats</label>
-    <textarea id="csbBeats" style="min-height:48px" placeholder="optional — beats to hit, one per line"></textarea>
-    <label class="fld" style="margin-top:8px">Elements to avoid</label>
-    <input type="text" id="csbAvoid" placeholder="optional">
-    <label class="fld" style="margin-top:8px">Style references</label>
-    <input type="text" id="csbStyleRefs" placeholder="optional films/scenes/directors — translated to traits, never copied">
-    </div></details>
-    <details class="collapse" style="margin-top:6px"><summary>Characters &amp; Sets</summary><div class="body">
-    <label class="fld">Cast (tap to add)</label><div class="tokenchips" id="csbCast"></div>
-    <label class="fld" style="margin-top:8px">Set / location</label>
-    <select id="csbSetSel"></select>
-    <label class="fld" style="margin-top:6px">Or a temporary location</label>
-    <input type="text" id="csbTempLoc" placeholder="optional">
-    <label class="fld" style="margin-top:8px">Chieff presence</label>
-    <select id="csbChieff"></select>
-    </div></details>
-    <details class="collapse" style="margin-top:6px"><summary>Format &amp; Timing</summary><div class="body">
-    <label class="fld">Story format</label>
-    <select id="csbFormat"></select>
-    <label class="fld" style="margin-top:8px">Panel count</label>
-    <select id="csbPanels"></select>
-    <label class="fld" style="margin-top:8px">Runtime</label>
-    <select id="csbRuntime"></select>
-    <label class="fld" style="margin-top:8px">Aspect ratio</label>
-    <select id="csbAspect"></select>
-    </div></details>
-    <details class="collapse" style="margin-top:6px"><summary>Visual &amp; Audio</summary><div class="body">
-    <label class="fld">Story treatment</label>
-    <select id="csbTreat"></select>
-    <label class="fld" style="margin-top:8px">Camera &amp; structure</label>
-    <select id="csbCamera"></select>
-    <label class="fld" style="margin-top:8px">Dialogue mode</label>
-    <select id="csbDialogue"></select>
-    <label class="fld" style="margin-top:8px">Audio mode</label>
-    <select id="csbAudio"></select>
-    <label class="fld" style="margin-top:8px">Ending type</label>
-    <select id="csbEnding"></select>
-    </div></details>
-    <button class="btn green" id="csbBtn" style="margin-top:12px;width:100%">&#10022; Build storyboard</button>
-    <div id="csbStatus"></div><div id="csbOut"></div>
-    <details class="collapse" style="margin-top:12px"><summary>Saved storyboards</summary><div class="body"><div id="csbProjects"></div></div></details>
-  </div>
   <div class="slatehead"><span class="num">06</span><h2>Pre-Roll</h2><span class="tag">Storyboard · GPT Image-2</span></div>
   <div class="hint" style="margin-bottom:14px">Pick a board style, script in → one-click board out. The frames sheet also lets you pull keepers as full shots → Seedance 2.0 prompt.</div>
   <span class="steptag">Step 1 · The script</span>
@@ -540,12 +481,12 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
 <!-- ===== SETUP ===== -->
 <section class="view" id="view-fight"><div class="wrap" id="fightBody"></div></section>
 <section class="view" id="view-comics">
-  <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style="width:30px;height:30px;display:block"><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span><h2>Comics</h2><span class="tag">Strips · Far Side</span></div>
+  <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style="width:30px;height:30px;display:block"><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span><h2>Comics</h2><span class="tag">Strips · Dank Side</span></div>
   <div id="comicBody"></div>
 </section>
 <section class="view" id="view-smg">
+  <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:30px;height:30px;display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span><h2>SMG</h2><span class="tag">Stoneralia Music Group</span></div>
   <div class="card">
-    <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:30px;height:30px;display:block"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span><h2>SMG</h2><span class="tag">Stoneralia Music Group</span></div>
     <div class="hint" style="margin-top:-2px;margin-bottom:10px">Build songs, artist identities, soundtracks, and production-ready Suno prompts.</div>
     <label class="fld">Quick Start Preset</label>
     <select id="sunoPreset"></select>
@@ -694,6 +635,68 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     </div></details>
   </div>
 </section>
+<section class="view" id="view-csb">
+  <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:30px;height:30px;display:block"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><h2>CSB</h2><span class="tag">Cinematic Stonerboards</span></div>
+  <div class="card">
+    <div class="hint" style="margin-top:-2px;margin-bottom:10px">Turn scripts, scenes, songs, ads, and ideas into production-ready visual sequences.</div>
+    <details class="collapse" open><summary>Project &amp; Mode</summary><div class="body">
+    <label class="fld">Storyboard title</label><input type="text" id="csbTitle" placeholder="optional">
+    <label class="fld" style="margin-top:8px">Starter preset</label><select id="csbPreset"></select>
+    <label class="fld" style="margin-top:8px">Creator Category</label>
+    <select id="csbCat"></select>
+    <label class="fld" style="margin-top:8px">Creator Mode</label>
+    <select id="csbMode"></select>
+    <label class="fld" style="margin-top:8px">Intended use</label>
+    <select id="csbUse"></select>
+    <div id="csbSuggestRow" style="margin-top:8px"><button class="btn ghost sm" id="csbSuggest" style="flex:0">✨ Suggest setup</button></div>
+    </div></details>
+    <details class="collapse" style="margin-top:6px"><summary>Story</summary><div class="body">
+    <label class="fld">Logline</label><input type="text" id="csbLogline" placeholder="one-line summary">
+    <label class="fld" style="margin-top:8px">Scene concept / description</label>
+    <textarea id="csbConcept" style="min-height:70px" placeholder="what happens — paste a script, scene, brief, lyrics, or idea"></textarea>
+    <label class="fld" style="margin-top:8px">Required story beats</label>
+    <textarea id="csbBeats" style="min-height:48px" placeholder="optional — beats to hit, one per line"></textarea>
+    <label class="fld" style="margin-top:8px">Elements to avoid</label>
+    <input type="text" id="csbAvoid" placeholder="optional">
+    <label class="fld" style="margin-top:8px">Style references</label>
+    <input type="text" id="csbStyleRefs" placeholder="optional films/scenes/directors — translated to traits, never copied">
+    </div></details>
+    <details class="collapse" style="margin-top:6px"><summary>Characters &amp; Sets</summary><div class="body">
+    <label class="fld">Cast (tap to add)</label><div class="tokenchips" id="csbCast"></div>
+    <label class="fld" style="margin-top:8px">Set / location</label>
+    <select id="csbSetSel"></select>
+    <label class="fld" style="margin-top:6px">Or a temporary location</label>
+    <input type="text" id="csbTempLoc" placeholder="optional">
+    <label class="fld" style="margin-top:8px">Chieff presence</label>
+    <select id="csbChieff"></select>
+    </div></details>
+    <details class="collapse" style="margin-top:6px"><summary>Format &amp; Timing</summary><div class="body">
+    <label class="fld">Story format</label>
+    <select id="csbFormat"></select>
+    <label class="fld" style="margin-top:8px">Panel count</label>
+    <select id="csbPanels"></select>
+    <label class="fld" style="margin-top:8px">Runtime</label>
+    <select id="csbRuntime"></select>
+    <label class="fld" style="margin-top:8px">Aspect ratio</label>
+    <select id="csbAspect"></select>
+    </div></details>
+    <details class="collapse" style="margin-top:6px"><summary>Visual &amp; Audio</summary><div class="body">
+    <label class="fld">Story treatment</label>
+    <select id="csbTreat"></select>
+    <label class="fld" style="margin-top:8px">Camera &amp; structure</label>
+    <select id="csbCamera"></select>
+    <label class="fld" style="margin-top:8px">Dialogue mode</label>
+    <select id="csbDialogue"></select>
+    <label class="fld" style="margin-top:8px">Audio mode</label>
+    <select id="csbAudio"></select>
+    <label class="fld" style="margin-top:8px">Ending type</label>
+    <select id="csbEnding"></select>
+    </div></details>
+    <button class="btn green" id="csbBtn" style="margin-top:12px;width:100%">&#10022; Build storyboard</button>
+    <div id="csbStatus"></div><div id="csbOut"></div>
+    <details class="collapse" style="margin-top:12px"><summary>Saved storyboards</summary><div class="body"><div id="csbProjects"></div></div></details>
+  </div>
+</section>
 <section class="view" id="view-settings">
   <div class="slatehead"><span class="num">⚙</span><h2>Setup</h2><span class="tag">Keys &amp; Models</span></div>
   <div class="card">
@@ -738,7 +741,7 @@ nav button.on{color:var(--bud)}nav button.on .ic{filter:drop-shadow(0 0 6px var(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.9 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="hint" style="text-align:center;margin-top:18px">Smoke &amp; Mirrors v9.10 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -854,8 +857,8 @@ function go(name){
   if(name==="story")renderShots();
   if(name==="studio")renderRefs();
   if(name==="board")renderBoardChars();
-  if(name==="board")renderCSB();
-  if(name==="board"&&S.csb&&S.csb.work)csbRenderWork();
+  if(name==="csb")renderCSB();
+  if(name==="csb"&&S.csb&&S.csb.work)csbRenderWork();
   if(name==="episodes")renderEpisodes();
   if(name==="cloudtoons")renderCloudtoons();
   if(name==="comics")renderComics();

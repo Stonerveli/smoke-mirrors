@@ -920,7 +920,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.26 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.27 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1055,6 +1055,41 @@ function renderCanon(){
 }
 /* canon */
 (function(){var n=$("canonNotes");if(n)n.addEventListener("change",function(){if(!S.canon)S.canon={notes:""};S.canon.notes=n.value;save();toast("Canon notes saved.");});})();
+async function csbVibeApply(){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  var w=S.csb&&S.csb.work;if(!w||!w.frames||!w.frames.length){toast("Build a storyboard first.",true);return;}
+  var st=$("csbStatus");if(st)st.innerHTML='<div class="statusline"><span class="rec"></span>Optimizing the storyboard for the vibe\u2026</div>';
+  var F=["title","beat","action","expression","dialogue"];
+  var payload=w.frames.map(function(f){var o={n:f.n,locked:!!f.locked};F.forEach(function(k){o[k]=f[k]||"";});return o;});
+  var sys="You are the show-runner and editor for Chiefin' Season / Stoneralia. Optimize each storyboard frame's narrative text (title, beat, action, expression, dialogue) so it is sharper, more cinematic and on-vibe \u2014 deadpan, premium, cannabis-adjacent, platform-safe \u2014 WITHOUT changing the number of frames, their order, the shot/camera/timing, or the core meaning. If a frame has locked=true, return its text UNCHANGED. Keep dialogue brief and in character. Return JSON ONLY: {\"frames\":[{\"n\":1,\"title\":\"\",\"beat\":\"\",\"action\":\"\",\"expression\":\"\",\"dialogue\":\"\"}],\"changes\":\"one short line\"}.";
+  var usr=vibeCtx()+"\n\nFRAMES (JSON):\n"+JSON.stringify(payload)+"\n\nReturn every frame in order by n.";
+  try{
+    var r=parseJSON(await llmRun(sys,usr));
+    var byN={};(r.frames||[]).forEach(function(fr){if(fr&&fr.n!=null)byN[fr.n]=fr;});
+    var applied=0;
+    w.frames.forEach(function(f){if(f.locked)return;var fr=byN[f.n];if(!fr)return;var hit=false;F.forEach(function(k){if(typeof fr[k]==="string"&&fr[k].trim()&&fr[k]!==f[k]){f[k]=fr[k];hit=true;}});if(hit)applied++;});
+    save();csbRenderWork();
+    var s2=$("csbStatus");if(s2)s2.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Optimized '+applied+' frame'+(applied===1?"":"s")+' to the vibe'+(r.changes?(" \u2014 "+esc(r.changes)):"")+'</div>';
+  }catch(e){var s3=$("csbStatus");if(s3)s3.innerHTML='<div class="statusline" style="color:var(--red)">\u2717 '+esc(e.message)+'</div>';}
+}
+async function comicVibeApply(){
+  const llmRun=(s,u)=>_llmRun(s,u,"ideas");
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  var c=(typeof curComic==="function")?curComic():null;if(!c||!c.panels||!c.panels.length){toast("Open a comic with panels first.",true);return;}
+  var st=$("comicAllStatus");if(st)st.innerHTML='<div class="statusline"><span class="rec"></span>Optimizing the comic for the vibe\u2026</div>';
+  var payload=c.panels.map(function(p){return {n:p.n,caption:p.caption||"",visual:p.visual||""};});
+  var sys="You are the show-runner and editor for Chiefin' Season / Stoneralia. Optimize each comic panel so it is sharper and on-vibe \u2014 deadpan, premium, cannabis-adjacent, platform-safe. For caption: tighten the readable line, keep it brief and in voice. For visual: keep it concrete and shootable (same subjects, composition and action) but more vivid and on-brand. Do NOT change the number of panels or their order. Return JSON ONLY: {\"panels\":[{\"n\":1,\"caption\":\"\",\"visual\":\"\"}],\"changes\":\"one short line\"}.";
+  var usr=vibeCtx()+"\n\nTITLE: "+(c.title||"")+"\nPANELS (JSON):\n"+JSON.stringify(payload)+"\n\nReturn every panel in order by n.";
+  try{
+    var r=parseJSON(await llmRun(sys,usr));
+    var byN={};(r.panels||[]).forEach(function(p){if(p&&p.n!=null)byN[p.n]=p;});
+    var applied=0;
+    c.panels.forEach(function(p){var np=byN[p.n];if(!np)return;var hit=false;["caption","visual"].forEach(function(k){if(typeof np[k]==="string"&&np[k].trim()&&np[k]!==p[k]){p[k]=np[k];hit=true;}});if(hit)applied++;});
+    save();renderComics();
+    var s2=$("comicAllStatus");if(s2)s2.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Optimized '+applied+' panel'+(applied===1?"":"s")+' to the vibe'+(r.changes?(" \u2014 "+esc(r.changes)):"")+'</div>';
+  }catch(e){var s3=$("comicAllStatus");if(s3)s3.innerHTML='<div class="statusline" style="color:var(--red)">\u2717 '+esc(e.message)+'</div>';}
+}
 function assetCollect(){
   var out=[];
   (S.reel||[]).forEach(function(r){if(r&&r.url)out.push({url:r.url,type:(r.type==="video"?"video":(r.type==="audio"?"audio":"image")),label:r.prompt||"Clip",src:"The Cut",ts:r.ts||0});});
@@ -3284,7 +3319,7 @@ function csbRenderWork(){
   let h=sunoCard("Story Summary",sum);
   if(w.beats)h+=sunoCard("Story Beat Outline",w.beats);
   const nLock=(w.frames||[]).filter(f=>f.locked).length;
-  h+='<div class="row" style="gap:6px;flex-wrap:wrap;margin-top:10px"><button class="btn ghost sm" id="csbRegenBtn" style="flex:0">\u21bb Regenerate unlocked'+(nLock?" ("+nLock+" locked)":"")+'</button><button class="btn ghost sm" id="csbAddBtn" style="flex:0">+ Add frame</button><button class="btn ghost sm" id="csbTimeBtn" style="flex:0">\u23f1 Recalc timing</button><button class="btn ghost sm" id="csbSheetBtn" style="flex:0">\u25a6 Combined sheet</button><button class="btn ghost sm" id="csbContBtn" style="flex:0">\u2713 Continuity check</button><button class="btn ghost sm" id="csbVarBtn" style="flex:0">\u29c9 Variation</button><button class="btn ghost sm" id="csbPrerollBtn" style="flex:0">\u2192 Pre-Roll script</button><button class="btn ghost sm" id="csbFightBtn" style="flex:0">\u2192 Fight Lab</button><button class="btn ghost sm" id="csbComicBtn" style="flex:0">\u2192 Comic</button><button class="btn ghost sm" id="csbSaveProjBtn" style="flex:0">+ Save to drop</button><button class="btn ghost sm" data-vibe="csbOut|csbStatus|storyboard" style="flex:0">\u27f3 Optimize for the vibe</button></div><div id="csbToolOut"></div>';
+  h+='<div class="row" style="gap:6px;flex-wrap:wrap;margin-top:10px"><button class="btn ghost sm" id="csbRegenBtn" style="flex:0">\u21bb Regenerate unlocked'+(nLock?" ("+nLock+" locked)":"")+'</button><button class="btn ghost sm" id="csbAddBtn" style="flex:0">+ Add frame</button><button class="btn ghost sm" id="csbTimeBtn" style="flex:0">\u23f1 Recalc timing</button><button class="btn ghost sm" id="csbSheetBtn" style="flex:0">\u25a6 Combined sheet</button><button class="btn ghost sm" id="csbContBtn" style="flex:0">\u2713 Continuity check</button><button class="btn ghost sm" id="csbVarBtn" style="flex:0">\u29c9 Variation</button><button class="btn ghost sm" id="csbPrerollBtn" style="flex:0">\u2192 Pre-Roll script</button><button class="btn ghost sm" id="csbFightBtn" style="flex:0">\u2192 Fight Lab</button><button class="btn ghost sm" id="csbComicBtn" style="flex:0">\u2192 Comic</button><button class="btn ghost sm" id="csbSaveProjBtn" style="flex:0">+ Save to drop</button><button class="btn ghost sm" id="csbVibeBtn" style="flex:0">\u27f3 Optimize for the vibe</button></div><div id="csbToolOut"></div>';
   (w.frames||[]).forEach(f=>{
     const ed=CSB_EDIT.has(f.id);
     h+='<div class="card" style="margin-top:10px;background:rgba(255,255,255,.02)'+(f.locked?";border-color:var(--bud)":"")+'">';
@@ -3313,6 +3348,7 @@ function csbRenderWork(){
   if($("csbFightBtn"))$("csbFightBtn").onclick=csbToFight;
   if($("csbComicBtn"))$("csbComicBtn").onclick=csbToComic;
   if($("csbSaveProjBtn"))$("csbSaveProjBtn").onclick=function(){projGrab("storyboard");};
+  if($("csbVibeBtn"))$("csbVibeBtn").onclick=csbVibeApply;
   if($("csbSaveBtn"))$("csbSaveBtn").onclick=csbSaveProject;
 }
 async function csbRegenUnlocked(){
@@ -4105,7 +4141,7 @@ async function genComic(){
 }
 function renderComicView(comic){
   const host=$("comicBody");if(!host)return;
-  let h='<button class="btn sm ghost" id="comicBack" style="margin-bottom:12px">← All comics</button><button class="btn ghost sm" id="comicSaveProjBtn" style="margin-bottom:12px;margin-left:8px">+ Save to drop</button><button class="btn ghost sm" data-vibe="comicBody|comicAllStatus|comic" style="margin-bottom:12px;margin-left:8px">\u27f3 Optimize for the vibe</button>';
+  let h='<button class="btn sm ghost" id="comicBack" style="margin-bottom:12px">← All comics</button><button class="btn ghost sm" id="comicSaveProjBtn" style="margin-bottom:12px;margin-left:8px">+ Save to drop</button><button class="btn ghost sm" id="comicVibeBtn" style="margin-bottom:12px;margin-left:8px">\u27f3 Optimize for the vibe</button>';
   h+='<div class="card"><input type="text" id="comicTitle" value="'+esc(comic.title||"")+'" placeholder="comic title" style="font-family:var(--slate);font-weight:800"><div class="hint" style="margin-top:4px">'+esc((COMIC_KINDS[comic.kind]||{}).label||"")+' · '+esc((COMIC_LOOKS[comic.look]||{}).label||"")+'</div></div>';
   h+='<div class="row"><button class="btn green" id="comicRenderAll" data-cost="edit" style="flex:1">▦ Draw all panels</button><button class="btn ghost" id="comicExport" style="flex:0">⧉ Export</button></div><div id="comicAllStatus" style="margin-top:6px"></div>';
   comic.panels.forEach(p=>{
@@ -4119,6 +4155,7 @@ function renderComicView(comic){
   host.innerHTML=h;
   $("comicBack").addEventListener("click",()=>{S.curComic=null;save();renderComics();});
   if($("comicSaveProjBtn"))$("comicSaveProjBtn").onclick=function(){projGrab("comic");};
+  if($("comicVibeBtn"))$("comicVibeBtn").onclick=comicVibeApply;
   $("comicTitle").addEventListener("input",e=>{comic.title=e.target.value;save();});
   $("comicRenderAll").addEventListener("click",renderAllPanels);
   $("comicExport").addEventListener("click",exportComic);

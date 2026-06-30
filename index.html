@@ -203,6 +203,11 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 .flowrow.done .flowlbl{color:var(--bone-dim)}
 .flowrow.next .flowlbl{font-weight:700}
 .flowok{font-size:10px;color:var(--bone-dim);margin-left:auto;text-transform:uppercase;letter-spacing:.05em}
+.tonewrap{display:flex;flex-direction:column;gap:3px}
+.tonecat{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--bone-dim);margin-top:7px}
+.tonerow{display:flex;flex-wrap:wrap;gap:6px}
+.tonechip{background:none;border:1px solid var(--line);color:var(--bone-dim);padding:5px 11px;border-radius:999px;font-size:12px;white-space:nowrap}
+.tonechip.on{color:var(--bud);border-color:var(--bud);background:rgba(124,154,107,.09)}
 </style>
 </head>
 <body>
@@ -636,6 +641,8 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <div id="sunoPresetCard"></div>
     <label class="fld" style="margin-top:12px">Creator Mode</label>
     <select id="sunoCreator"></select>
+    <label class="fld" style="margin-top:10px">Vocal Tones &amp; Textures <span class="hint" style="text-transform:none;letter-spacing:0">— combine any, stacks with Creator Mode</span></label>
+    <div id="sunoTones" class="tonewrap"></div>
     <label class="fld" style="margin-top:12px">Song Title</label>
     <input type="text" id="sunoTitle" placeholder="optional">
     <label class="fld" style="margin-top:10px">Artist / Persona</label>
@@ -949,7 +956,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.29 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.30 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -2537,113 +2544,53 @@ const SUNO_CREATOR_MODES=[
 ["Alternate Versions",["Remix Creator","Acoustic Version Creator","Live Performance Creator","Radio Edit Creator","Extended Version Creator","Clean Version Creator"]]
 ];
 const SUNO_PRESETS=[
-{id:"premium-cinematic-boom-bap",name:"Premium Cinematic Boom Bap",category:"Cinematic Hip-Hop",bpm:"",genres:["hip hop","boom bap","cinematic soul","west coast"],
-description:"Your signature style. Cinematic, confident, floaty boom bap with strong storytelling and modern textures. High viral potential.",
-bestFor:"High-quality cinematic hip-hop, storytelling, viral potential",
-performanceTags:"confident floaty, talk-sung, layered, immediate high-impact",
-viralTips:"Strong first 3 seconds plus cinematic atmosphere works very well for immediate listener retention.",
-stylePrompt:"upbeat energetic celebratory high-impact hip-hop, Timbaland Dr. Dre Scott Storch production, Nas Rick Ross Nipsey Hussle style confident male vocals, hard-hitting boom bap drums with swing, funky basslines, staccato piano hits, vaporwave-style ambient textures, smooth West Coast synth melodies, bounce-heavy rhythm, crisp snares, percussive vocal accents, confident floaty cinematic, stacks wealth and wisdom through smoke, immediate high-impact groove in first 3 seconds, viral hook potential",
-lyricsStructure:"[Intro - Immediate attention-grabbing groove with ambient texture]\n[Verse 1 - Confident floaty conversational flow]\n[Pre-Chorus - Energy rising]\n[Chorus - High-impact, layered, celebratory]\n[Verse 2]\n[Chorus]\n[Bridge - Atmospheric drop, breathy vocals]\n[Final Chorus - Bigger, maximum groove]\n[Outro - Fade with main hook and ambient texture]",
-mapping:"Primary Genre: Hip-Hop\nSecondary Genres: Boom Bap, Cinematic Soul, West Coast Synth Influence\nMood: Confident, Celebratory, Luxurious, Cinematic\nEnergy: High\nGroove: Swinging, Bouncy\nVocal Configuration: Male Rapper or Singer-Rapper\nVocal Texture: Confident, Smooth, Gravelly\nDelivery: Conversational, Melodic, Controlled\nDynamic Arc: Immediate High Energy with Atmospheric Bridge and Bigger Final Chorus",
-isSystemPreset:true,version:1},
-
-{id:"classic-golden-era-boom-bap",name:"Classic Golden Era Boom Bap",category:"Classic Hip-Hop",bpm:"90 BPM",genres:["boom bap","old school hip hop","jazz rap","east coast"],
-description:"Raw, authentic 1990s New York boom bap with dusty drums and jazzy samples. Great for a classic hip-hop feel.",
-bestFor:"Raw authentic boom bap, head-nod tracks, underground vibe",
-performanceTags:"gritty, conversational, raw",
-viralTips:"Use a recognizable opening sample texture and establish the drum pocket immediately.",
-stylePrompt:"90s NYC boom bap, dusty SP-1200 MPC drums with swing, chopped jazz piano samples, vinyl crackle, walking upright bass, gritty confident male rap vocals, head-nod groove, Pete Rock influence, raw authentic feel, 90 BPM, warm analog mix",
-lyricsStructure:"[Intro - Dusty sample loop + vinyl crackle]\n[Verse 1 - Gritty conversational rap]\n[Chorus - Catchy hook with swing]\n[Verse 2]\n[Chorus]\n[Bridge - Stripped sample focus]\n[Final Chorus]\n[Outro - Fade with main sample]",
-mapping:"Primary Genre: Boom Bap\nEra: 1990s\nRegional Influence: New York / East Coast\nMood: Gritty, Confident, Nostalgic\nTempo: 90 BPM\nGroove: Swinging, Head-Nod\nVocal Configuration: Male Rapper\nDelivery: Conversational, Pocket-Focused\nInstrumentation: Dusty Drums, Jazz Piano, Upright Bass, Vinyl Texture\nProduction Texture: Warm, Raw, Analog",
-isSystemPreset:true,version:1},
-
-{id:"uk-drill",name:"UK Drill",category:"Drill",bpm:"142 BPM",genres:["uk drill","drill"],
-description:"Dark, aggressive, high-momentum UK drill. Strong for intense, menacing, and fast-moving tracks.",
-bestFor:"Dark moody drill, aggressive energy, high-momentum tracks",
-performanceTags:"aggressive, triplet flow, menacing",
-viralTips:"Begin with the main dark motif and bass movement instead of using a long atmospheric intro.",
-stylePrompt:"UK drill, sliding 808 bass, dark minor key piano melody, syncopated rolling hi-hats, aggressive triplet flow, menacing cold atmosphere, London street sound, 142 BPM, immediate dark energy from bar one, high momentum",
-lyricsStructure:"[Intro - Dark piano + sliding 808 tease]\n[Verse 1 - Aggressive triplet flow]\n[Chorus - Repetitive high-impact hook]\n[Verse 2 - Flow switch]\n[Chorus]\n[Bridge - Atmospheric drop]\n[Final Chorus - Bigger energy]\n[Outro - Haunting piano + bass fade]",
-mapping:"Primary Genre: UK Drill\nRegional Influence: UK\nMood: Dark, Menacing, Aggressive, Cold\nTempo: 142 BPM\nGroove: Syncopated, Driving\nVocal Configuration: Rapper\nDelivery: Aggressive, Triplet Flow, Flow Switches\nInstrumentation: Sliding 808, Dark Piano, Rolling Hi-Hats\nDynamic Arc: Immediate Energy with Atmospheric Mid-Song Drop",
-isSystemPreset:true,version:1},
-
-{id:"boom-trap-hybrid",name:"Boom-Trap Hybrid",category:"Hybrid Hip-Hop",bpm:"95 BPM",genres:["boom bap","trap","hip hop"],
-description:"Modern bounce with classic boom bap swing. A strong hybrid for contemporary energy with familiar hip-hop rhythm.",
-bestFor:"Modern bouncy hip-hop with classic swing, viral energy",
-performanceTags:"confident, bounce-heavy, layered",
-viralTips:"Lead with the central bounce and make the chorus rhythm identifiable during the opening seconds.",
-stylePrompt:"boom bap swing meets modern trap, hard-hitting drums with bounce, deep 808s, funky basslines, crisp snares, upbeat celebratory energy, confident rap flow, vaporwave ambient textures, immediate groove in first 3 seconds, 95 BPM with trap bounce feel",
-lyricsStructure:"[Intro - Strong bounce groove hit]\n[Verse 1 - Confident conversational]\n[Chorus - High-impact bounce hook]\n[Verse 2]\n[Chorus]\n[Bridge - Atmospheric trap drop]\n[Final Chorus - Maximum bounce]\n[Outro]",
-mapping:"Primary Genre: Hip-Hop\nSecondary Genres: Boom Bap, Trap\nGenre Relationship: Balanced Fusion\nMood: Confident, Upbeat, Celebratory\nTempo: 95 BPM\nGroove: Swinging, Bouncy\nVocal Configuration: Rapper\nDelivery: Confident, Conversational\nProduction Texture: Modern, Layered, Atmospheric",
-isSystemPreset:true,version:1},
-
-{id:"high-energy-club-banger",name:"High-Energy Club Banger",category:"Club / Trap",bpm:"140 BPM",genres:["trap","club","festival trap"],
-description:"Festival and club-ready high-energy trap banger.",
-bestFor:"Club, festival, high-rotation energetic tracks",
-performanceTags:"high-energy, bouncy, explosive",
-viralTips:"Avoid a slow introduction. Establish the bass, rhythm, or hook during the opening moments.",
-stylePrompt:"high-energy club trap banger, hard 808 sub-bass, rapid hi-hat rolls, punchy snare, bouncy energetic groove, melodic or aggressive rap vocals, festival-ready energy, immediate bounce and impact, 140 BPM",
-lyricsStructure:"[Intro - Immediate heavy bounce drop]\n[Verse 1]\n[Pre-Chorus - Build]\n[Chorus - Explosive high-energy hook]\n[Verse 2]\n[Chorus]\n[Bridge - Breakdown]\n[Final Chorus - Peak energy]\n[Outro]",
-mapping:"Primary Genre: Trap\nIntended Use: Club, Festival, High-Energy Single\nMood: Explosive, Confident, Energetic\nTempo: 140 BPM\nGroove: Bouncy, Driving\nVocal Configuration: Rapper or Singer-Rapper\nDelivery: Aggressive or Melodic\nInstrumentation: Hard 808, Rapid Hi-Hats, Punchy Snare\nDynamic Arc: Immediate Drop, Build, Breakdown, Peak Final Chorus",
-isSystemPreset:true,version:1},
-
-{id:"cinematic-korean-boom-bap",name:"Cinematic Korean Boom Bap",category:"Korean Hip-Hop",bpm:"",genres:["korean hip hop","boom bap","cinematic"],
-description:"Melodic, emotional, cinematic Korean hip-hop with a boom bap foundation.",
-bestFor:"Storytelling, emotional, cinematic K-hip-hop",
-performanceTags:"reflective, melodic, conversational, emotional, atmospheric",
-viralTips:"Use a recognizable melodic phrase early and let the chorus deliver a stronger emotional lift.",
-stylePrompt:"cinematic Korean hip-hop, boom bap drums with swing, warm analog textures, atmospheric pads, smooth melodic rap delivery, emotional and introspective male vocals, storytelling energy, subtle Korean melodic influence, vaporwave ambient textures, confident but reflective",
-lyricsStructure:"[Intro - Atmospheric pads + dusty groove]\n[Verse 1 - Reflective, conversational melodic rap]\n[Pre-Chorus - Emotional build]\n[Chorus - Melodic hook with feeling]\n[Verse 2 - Deeper storytelling]\n[Chorus]\n[Bridge - Stripped atmospheric moment]\n[Final Chorus - Bigger emotional peak]\n[Outro - Fade with ambient texture]",
-mapping:"Primary Genre: Korean Hip-Hop\nSecondary Genre: Boom Bap\nMood: Reflective, Emotional, Cinematic, Atmospheric\nGroove: Swinging\nVocal Configuration: Male Singer-Rapper\nVocal Texture: Smooth, Emotional\nDelivery: Melodic, Conversational, Storytelling\nInstrumentation: Boom Bap Drums, Atmospheric Pads, Analog Texture\nDynamic Arc: Gradual Emotional Build",
-isSystemPreset:true,version:1},
-
-{id:"modern-k-rap-trap",name:"Modern K-Rap Trap",category:"Korean Hip-Hop / Trap",bpm:"",genres:["korean hip hop","trap","melodic rap"],
-description:"Catchy, stylish modern Korean rap with trap bounce and melodic hooks.",
-bestFor:"Catchy modern K-rap, stylish and melodic tracks",
-performanceTags:"melodic, stylish, confident, catchy, layered",
-viralTips:"Introduce a melodic fragment or chorus phrase during the first three seconds.",
-stylePrompt:"modern Korean hip-hop trap, bouncy 808s, crisp hi-hats, melodic rap flow mixed with singing hooks, confident and stylish male vocals, atmospheric synths, emotional but cocky energy, Korean melodic influence, immediate catchy hook in first 3 seconds",
-lyricsStructure:"[Intro - Strong bouncy groove + melodic tease]\n[Verse 1 - Stylish melodic rap]\n[Pre-Chorus - Build to hook]\n[Chorus - Catchy melodic hook]\n[Verse 2 - Flow switch]\n[Chorus]\n[Bridge - Atmospheric drop with ad-libs]\n[Final Chorus - Bigger and more layered]\n[Outro - Fade with main hook]",
-mapping:"Primary Genre: Korean Hip-Hop\nSecondary Genre: Trap\nMood: Stylish, Confident, Catchy, Emotional\nGroove: Bouncy\nVocal Configuration: Male Singer-Rapper\nDelivery: Melodic Rap, Confident, Flow Switches\nInstrumentation: Bouncy 808, Crisp Hi-Hats, Atmospheric Synths\nDynamic Arc: Hook-First with Layered Final Chorus",
-isSystemPreset:true,version:1},
-
-{id:"atmospheric-k-drill-hybrid",name:"Atmospheric K-Drill Hybrid",category:"Korean Hip-Hop / Drill",bpm:"140 BPM",genres:["korean drill","drill","cinematic trap"],
-description:"Dark, cinematic Korean drill with melodic elements.",
-bestFor:"Dark moody cinematic drill with Korean influence",
-performanceTags:"aggressive melodic, cold, atmospheric, stylish",
-viralTips:"Use a dark melodic motif immediately and keep the hook concise and repeatable.",
-stylePrompt:"atmospheric Korean drill hybrid, sliding 808s, dark minor piano and synth textures, aggressive but melodic rap delivery, cold cinematic atmosphere, emotional undertone, Korean melodic influence, menacing yet stylish, 140 BPM",
-lyricsStructure:"[Intro - Dark atmospheric piano + sliding 808]\n[Verse 1 - Aggressive melodic flow]\n[Chorus - Repetitive moody hook]\n[Verse 2 - Darker storytelling]\n[Chorus]\n[Bridge - Stripped cinematic moment]\n[Final Chorus - Bigger intensity]\n[Outro - Haunting fade with piano]",
-mapping:"Primary Genre: Korean Drill\nSecondary Genres: Korean Hip-Hop, Cinematic Trap\nMood: Cold, Dark, Menacing, Emotional, Stylish\nTempo: 140 BPM\nVocal Configuration: Rapper or Singer-Rapper\nDelivery: Aggressive, Melodic\nInstrumentation: Sliding 808, Dark Piano, Synth Texture\nDynamic Arc: Immediate Dark Energy with Larger Final Chorus",
-isSystemPreset:true,version:1},
-
-{id:"lofi-jazzy-korean-hip-hop",name:"Lo-Fi Jazzy Korean Hip-Hop",category:"Lo-Fi Korean Hip-Hop",bpm:"",genres:["lo-fi hip hop","korean hip hop","jazz rap","boom bap"],
-description:"Chill, jazzy, introspective Korean hip-hop with warm textures.",
-bestFor:"Chill, reflective, jazzy Korean hip-hop",
-performanceTags:"calm, introspective, melodic, conversational, warm",
-viralTips:"Lead with the most memorable jazz chord, piano phrase, or vocal line rather than a long ambient fade-in.",
-stylePrompt:"lo-fi jazzy Korean hip-hop, dusty boom bap drums, warm jazz piano samples, vinyl crackle, smooth melodic rap, introspective and calm male vocals, subtle Korean melodic phrasing, cozy atmospheric textures, reflective storytelling, warm analog feel, relaxed but groovy",
-lyricsStructure:"[Intro - Warm jazz piano + dusty drums]\n[Verse 1 - Calm conversational melodic rap]\n[Chorus - Smooth melodic hook]\n[Verse 2 - Deeper reflection]\n[Chorus]\n[Bridge - Stripped jazzy moment]\n[Final Chorus - Warm and full]\n[Outro - Gentle fade with piano]",
-mapping:"Primary Genre: Lo-Fi Hip-Hop\nSecondary Genres: Korean Hip-Hop, Jazz Rap, Boom Bap\nMood: Calm, Introspective, Warm, Reflective\nEnergy: Low to Medium\nGroove: Laid-Back\nVocal Configuration: Male Singer-Rapper\nDelivery: Calm, Conversational, Melodic\nInstrumentation: Jazz Piano, Dusty Drums, Vinyl Texture\nProduction Texture: Warm, Analog, Lo-Fi, Cozy",
-isSystemPreset:true,version:1},
-
-{id:"emotional-cinematic-k-rap",name:"Emotional Cinematic K-Rap",category:"Korean Hip-Hop / Cinematic",bpm:"",genres:["korean hip hop","cinematic hip hop","melodic rap"],
-description:"Deep, emotional, cinematic Korean hip-hop focused on storytelling.",
-bestFor:"Emotional storytelling, cinematic K-rap",
-performanceTags:"emotional, vulnerable, melodic, storytelling, powerful",
-viralTips:"Establish the emotional motif or chorus melody early, then let the verses deepen the story.",
-stylePrompt:"emotional cinematic Korean hip-hop, atmospheric production, warm pads, subtle boom bap swing, highly melodic and emotional rap delivery, vulnerable yet confident male vocals, strong storytelling, Korean melodic influence, cinematic textures, immediate emotional hook in first 3 seconds",
-lyricsStructure:"[Intro - Cinematic atmospheric intro]\n[Verse 1 - Emotional storytelling rap]\n[Pre-Chorus - Rising emotion]\n[Chorus - Powerful melodic hook]\n[Verse 2 - Deeper narrative]\n[Chorus]\n[Bridge - Stripped vulnerable moment]\n[Final Chorus - Emotional peak]\n[Outro - Fade with main melody]",
-mapping:"Primary Genre: Korean Hip-Hop\nSecondary Genres: Cinematic Hip-Hop, Melodic Rap\nMood: Emotional, Vulnerable, Powerful, Cinematic\nVocal Configuration: Male Singer-Rapper\nVocal Texture: Emotional, Warm, Powerful\nDelivery: Melodic, Vulnerable, Storytelling\nInstrumentation: Warm Pads, Boom Bap Drums, Cinematic Texture\nDynamic Arc: Gradual Emotional Build to Major Final Chorus",
-isSystemPreset:true,version:1}
+{"id":"premium-cinematic-boom-bap","name":"Premium Cinematic Boom Bap","category":"Cinematic Hip-Hop","bpm":"","genres":["hip hop","boom bap","cinematic soul"],"description":"Signature cinematic, confident, floaty boom bap with strong storytelling and modern textures. High viral potential.","bestFor":"Signature cinematic, confident, floaty boom bap with strong storytelling and modern textures. High viral potential.","performanceTags":"","viralTips":"","stylePrompt":"cinematic confident boom bap, hard swinging drums, funky bassline, staccato piano hits, vaporwave ambient textures, smooth west-coast synths, talk-sung confident male vocals, high-impact groove in first 3 seconds, wealth-and-wisdom-through-smoke mood","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Verse 3]\n[Outro]"},
+{"id":"classic-golden-era-boom-bap","name":"Classic Golden Era Boom Bap","category":"Boom Bap","bpm":"","genres":["hip hop","boom bap","90s"],"description":"90s golden-era boom bap with dusty soul loops and head-nod swing.","bestFor":"90s golden-era boom bap with dusty soul loops and head-nod swing.","performanceTags":"","viralTips":"","stylePrompt":"90s golden-era boom bap, dusty sampled soul loops, knocking kick and snare, vinyl crackle, jazzy horns, head-nod swing, confident lyrical male vocals, warm analog mix","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Verse 3]\n[Outro]"},
+{"id":"raw-street-boom-bap","name":"Raw Street Boom Bap","category":"Boom Bap","bpm":"","genres":["hip hop","boom bap","street"],"description":"Gritty, classic, no-frills boom bap.","bestFor":"Gritty, classic, no-frills boom bap.","performanceTags":"","viralTips":"","stylePrompt":"gritty raw boom bap, hard dusty drums, grimy bassline, minimal sample loop, no-frills street energy, aggressive confident male delivery, lo-fi grit","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Verse 3]\n[Outro]"},
+{"id":"storytelling-boom-bap","name":"Storytelling Boom Bap","category":"Boom Bap","bpm":"","genres":["hip hop","boom bap","storytelling"],"description":"Narrative-driven with strong imagery.","bestFor":"Narrative-driven with strong imagery.","performanceTags":"","viralTips":"","stylePrompt":"narrative storytelling boom bap, cinematic soul loop, mellow knocking drums, vivid imagery, measured conversational male delivery, reflective mood","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Verse 3]\n[Outro]"},
+{"id":"uk-drill","name":"UK Drill","category":"Drill","bpm":"","genres":["drill","uk drill"],"description":"Classic UK drill with sliding 808s and dark melodies.","bestFor":"Classic UK drill with sliding 808s and dark melodies.","performanceTags":"","viralTips":"","stylePrompt":"UK drill, sliding 808s, syncopated hi-hats, dark minor bell melody, menacing atmosphere, precise rhythmic British-cadence male flow","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Outro]"},
+{"id":"aggressive-brooklyn-drill","name":"Aggressive Brooklyn Drill","category":"Drill","bpm":"","genres":["drill","brooklyn drill"],"description":"Raw, raspy, commanding with heavy 808s.","bestFor":"Raw, raspy, commanding with heavy 808s.","performanceTags":"","viralTips":"","stylePrompt":"aggressive Brooklyn drill, heavy sliding 808s, hard kicks, menacing bell melody, raspy commanding male vocals, heavy ad-libs, raw bravado, club-friendly melodic hook","lyricsStructure":"[Intro]\n[Verse 1]\n[Melodic Hook]\n[Verse 2]\n[Melodic Hook]\n[Bridge]\n[Outro]"},
+{"id":"dark-atmospheric-drill","name":"Dark Atmospheric Drill","category":"Drill","bpm":"","genres":["drill","atmospheric"],"description":"Moody, intense, cinematic drill.","bestFor":"Moody, intense, cinematic drill.","performanceTags":"","viralTips":"","stylePrompt":"dark atmospheric drill, cavernous 808 slides, sparse cinematic pads, moody minor melody, intense menacing mood, cold precise male flow","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Outro]"},
+{"id":"dark-cinematic-drill","name":"Dark Cinematic Drill","category":"Drill","bpm":"","genres":["drill","cinematic"],"description":"Moody plus cinematic atmosphere.","bestFor":"Moody plus cinematic atmosphere.","performanceTags":"","viralTips":"","stylePrompt":"dark cinematic drill, orchestral tension strings over sliding 808s, filmic atmosphere, brooding mood, controlled menacing male delivery","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Outro]"},
+{"id":"boom-trap-hybrid","name":"Boom-Trap Hybrid","category":"Trap","bpm":"","genres":["trap","boom bap","hybrid"],"description":"Boom bap swing fused with trap drums.","bestFor":"Boom bap swing fused with trap drums.","performanceTags":"","viralTips":"","stylePrompt":"boom-trap hybrid, boom bap swing fused with trap hi-hats and rolling 808s, hard knock, modern bounce, confident male vocals","lyricsStructure":"[Intro]\n[Hook]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Hook]\n[Outro]"},
+{"id":"melodic-trap","name":"Melodic Trap","category":"Trap","bpm":"","genres":["trap","melodic"],"description":"Catchy hooks with modern trap bounce.","bestFor":"Catchy hooks with modern trap bounce.","performanceTags":"","viralTips":"","stylePrompt":"melodic trap, catchy sung-rap hooks, rolling 808s, airy synth melodies, modern bounce, autotuned melodic male vocals, earworm hook","lyricsStructure":"[Intro]\n[Hook]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Hook]\n[Outro]"},
+{"id":"high-energy-club-banger","name":"High-Energy Club Banger","category":"Club","bpm":"","genres":["trap","club","hype"],"description":"Festival-ready, booming, hype energy.","bestFor":"Festival-ready, booming, hype energy.","performanceTags":"","viralTips":"","stylePrompt":"high-energy club banger, booming 808s, festival synth stabs, hype chant hook, fast kinetic energy, commanding hype male vocals","lyricsStructure":"[Intro]\n[Build]\n[Hook]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Outro]"},
+{"id":"bouncy-club-energy","name":"Bouncy Club Energy","category":"Club","bpm":"","genres":["club","bounce"],"description":"Upbeat, club-ready, high-energy bounce.","bestFor":"Upbeat, club-ready, high-energy bounce.","performanceTags":"","viralTips":"","stylePrompt":"bouncy club energy, upbeat syncopated bassline, snappy claps, playful synths, danceable bounce, charismatic male vocals, party hook","lyricsStructure":"[Intro]\n[Build]\n[Hook]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Outro]"},
+{"id":"conversational-uk-drill-flow","name":"Conversational UK Drill Flow","category":"Drill","bpm":"","genres":["drill","uk drill","melodic"],"description":"Smooth, rhythmic, precise UK drill with melodic elements.","bestFor":"Smooth, rhythmic, precise UK drill with melodic elements.","performanceTags":"","viralTips":"","stylePrompt":"conversational UK drill, smooth precise rhythmic flow, melodic bell hooks, sliding 808s, relaxed pocketed British-cadence delivery, melodic accents","lyricsStructure":"[Intro]\n[Verse 1]\n[Melodic Hook]\n[Verse 2]\n[Melodic Hook]\n[Bridge]\n[Outro]"},
+{"id":"hypnotic-multi-syllable-flow","name":"Hypnotic Multi-Syllable Flow","category":"Lyrical","bpm":"","genres":["hip hop","lyrical"],"description":"Dense internal rhymes and multi-syllabic chaining.","bestFor":"Dense internal rhymes and multi-syllabic chaining.","performanceTags":"","viralTips":"","stylePrompt":"hypnotic multisyllabic rap, dense internal rhyme chains, looping minor melody, steady knocking drums, trance-like cadence, controlled rapid male flow","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Verse 3]\n[Outro]"},
+{"id":"cinematic-korean-boom-bap","name":"Cinematic Korean Boom Bap","category":"K-Hip-Hop","bpm":"","genres":["k-hip-hop","boom bap","cinematic"],"description":"Film-scored Korean boom bap, bilingual delivery.","bestFor":"Film-scored Korean boom bap, bilingual delivery.","performanceTags":"","viralTips":"","stylePrompt":"cinematic Korean hip-hop boom bap, lush film-score strings, mellow knocking drums, emotive piano, bilingual Korean-English male vocals, polished cinematic mood","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Verse 3]\n[Outro]"},
+{"id":"modern-k-rap-trap","name":"Modern K-Rap Trap","category":"K-Hip-Hop","bpm":"","genres":["k-hip-hop","trap"],"description":"Sleek modern Korean trap.","bestFor":"Sleek modern Korean trap.","performanceTags":"","viralTips":"","stylePrompt":"modern Korean trap, glossy synths, rolling 808s, crisp hats, melodic sung-rap, bilingual Korean-English vocals, sleek contemporary bounce","lyricsStructure":"[Intro]\n[Hook]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Hook]\n[Outro]"},
+{"id":"atmospheric-k-drill-hybrid","name":"Atmospheric K-Drill Hybrid","category":"K-Hip-Hop","bpm":"","genres":["k-hip-hop","drill"],"description":"Cool, atmospheric Korean drill hybrid.","bestFor":"Cool, atmospheric Korean drill hybrid.","performanceTags":"","viralTips":"","stylePrompt":"atmospheric Korean drill hybrid, sliding 808s, airy cinematic pads, moody bell melody, cool precise bilingual male flow","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Outro]"},
+{"id":"lo-fi-jazzy-korean-hip-hop","name":"Lo-Fi Jazzy Korean Hip-Hop","category":"K-Hip-Hop","bpm":"","genres":["k-hip-hop","lo-fi","jazz"],"description":"Chill, jazzy, lo-fi Korean hip-hop.","bestFor":"Chill, jazzy, lo-fi Korean hip-hop.","performanceTags":"","viralTips":"","stylePrompt":"lo-fi jazzy Korean hip-hop, dusty jazz keys, mellow swing drums, vinyl warmth, laid-back bilingual male vocals, chill reflective mood","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Outro]"},
+{"id":"emotional-cinematic-k-rap","name":"Emotional Cinematic K-Rap","category":"K-Hip-Hop","bpm":"","genres":["k-hip-hop","cinematic","emotional"],"description":"Heartfelt, sweeping, emotional Korean rap.","bestFor":"Heartfelt, sweeping, emotional Korean rap.","performanceTags":"","viralTips":"","stylePrompt":"emotional cinematic Korean rap, sweeping strings, soft piano, tender melodic hooks, heartfelt bilingual male vocals, dramatic emotive arc","lyricsStructure":"[Intro]\n[Verse 1]\n[Pre-Hook]\n[Hook]\n[Verse 2]\n[Pre-Hook]\n[Hook]\n[Bridge]\n[Outro]"},
+{"id":"behind-the-beat-groove","name":"Behind the Beat Groove","category":"Groove","bpm":"","genres":["hip hop","groove","jazz"],"description":"Laid-back but groovy.","bestFor":"Laid-back but groovy.","performanceTags":"","viralTips":"","stylePrompt":"behind-the-beat groove, relaxed pocket, lazy swung drums, warm bassline, smooth jazzy chords, laid-back conversational male delivery","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Verse 3]\n[Outro]"},
+{"id":"melodic-hook-heavy","name":"Melodic Hook Heavy","category":"Melodic","bpm":"","genres":["trap","melodic"],"description":"Strong, repeatable melodic hooks.","bestFor":"Strong, repeatable melodic hooks.","performanceTags":"","viralTips":"","stylePrompt":"melodic hook-heavy rap, big repeatable sung hooks, bright synth melody, bouncy 808s, catchy melodic male vocals, radio-ready","lyricsStructure":"[Intro]\n[Hook]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Hook]\n[Outro]"},
+{"id":"cinematic-immersive-storytelling","name":"Cinematic Immersive Storytelling","category":"Cinematic Hip-Hop","bpm":"","genres":["hip hop","cinematic","storytelling"],"description":"Film-like, vivid storytelling.","bestFor":"Film-like, vivid storytelling.","performanceTags":"","viralTips":"","stylePrompt":"cinematic immersive storytelling rap, filmic score, atmospheric soundscape, vivid scene-setting, measured narrative male delivery, dynamic emotional arc","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Verse 3]\n[Outro]"},
+{"id":"comedic-punchline-style","name":"Comedic Punchline Style","category":"Comedy Rap","bpm":"","genres":["hip hop","comedy"],"description":"Witty, humorous, exaggerated punchlines.","bestFor":"Witty, humorous, exaggerated punchlines.","performanceTags":"","viralTips":"","stylePrompt":"comedic punchline rap, playful bouncy beat, bright cartoonish accents, deadpan witty male delivery, exaggerated punchline timing, comedic ad-libs","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Verse 3]\n[Outro]"},
+{"id":"aggressive-multi-syllable-flow","name":"Aggressive Multi-Syllable Flow","category":"Lyrical","bpm":"","genres":["hip hop","lyrical","aggressive"],"description":"Forceful, dense, rapid-fire rhyme chains.","bestFor":"Forceful, dense, rapid-fire rhyme chains.","performanceTags":"","viralTips":"","stylePrompt":"aggressive multisyllabic rap, hard knocking drums, dark loop, rapid dense rhyme chains, forceful commanding male delivery, high intensity","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Verse 3]\n[Outro]"},
+{"id":"moody-atmospheric-boom-bap","name":"Moody Atmospheric Boom Bap","category":"Boom Bap","bpm":"","genres":["hip hop","boom bap","moody"],"description":"Smoky, late-night, reflective boom bap.","bestFor":"Smoky, late-night, reflective boom bap.","performanceTags":"","viralTips":"","stylePrompt":"moody atmospheric boom bap, hazy soul loop, soft knocking drums, smoky ambient texture, reflective low-key male delivery, late-night mood","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Verse 3]\n[Outro]"},
+{"id":"energetic-motivational-rap","name":"Energetic Motivational Rap","category":"Motivational","bpm":"","genres":["hip hop","motivational"],"description":"Anthemic, triumphant, hype motivation.","bestFor":"Anthemic, triumphant, hype motivation.","performanceTags":"","viralTips":"","stylePrompt":"energetic motivational rap, triumphant horns, driving drums, uplifting chords, hype confident male vocals, anthemic motivational hook","lyricsStructure":"[Intro]\n[Build]\n[Hook]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Outro]"},
+{"id":"dark-storytelling-drill","name":"Dark Storytelling Drill","category":"Drill","bpm":"","genres":["drill","storytelling"],"description":"Grim, narrative-driven drill.","bestFor":"Grim, narrative-driven drill.","performanceTags":"","viralTips":"","stylePrompt":"dark storytelling drill, sliding 808s, cinematic minor melody, grim narrative imagery, cold measured male flow, ominous mood","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Outro]"},
+{"id":"smooth-melodic-rap","name":"Smooth Melodic Rap","category":"Melodic","bpm":"","genres":["melodic rap","r&b"],"description":"Silky, warm, melodic sung-rap.","bestFor":"Silky, warm, melodic sung-rap.","performanceTags":"","viralTips":"","stylePrompt":"smooth melodic rap, silky R&B chords, mellow bounce, soft sung-rap hooks, warm melodic male vocals, laid-back romantic mood","lyricsStructure":"[Intro]\n[Verse 1]\n[Pre-Hook]\n[Hook]\n[Verse 2]\n[Pre-Hook]\n[Hook]\n[Bridge]\n[Outro]"},
+{"id":"raw-aggressive-drill","name":"Raw Aggressive Drill","category":"Drill","bpm":"","genres":["drill","aggressive"],"description":"Distorted, shouting, gritty drill.","bestFor":"Distorted, shouting, gritty drill.","performanceTags":"","viralTips":"","stylePrompt":"raw aggressive drill, distorted 808 slides, hard kicks, menacing minimal melody, raspy shouting male delivery, heavy ad-libs, gritty intensity","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Outro]"},
+{"id":"hypnotic-lo-fi-boom-bap","name":"Hypnotic Lo-Fi Boom Bap","category":"Lo-Fi","bpm":"","genres":["lo-fi","boom bap"],"description":"Looping, hazy, hypnotic lo-fi.","bestFor":"Looping, hazy, hypnotic lo-fi.","performanceTags":"","viralTips":"","stylePrompt":"hypnotic lo-fi boom bap, looping dusty sample, soft swung drums, vinyl crackle, mellow hypnotic groove, relaxed murmured male delivery","lyricsStructure":"[Intro]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Outro]"},
+{"id":"viral-hook-focused","name":"Viral Hook Focused","category":"Viral","bpm":"","genres":["trap","pop rap"],"description":"Instant, catchy, short-form-ready hook.","bestFor":"Instant, catchy, short-form-ready hook.","performanceTags":"","viralTips":"","stylePrompt":"viral hook-focused rap, instant catchy chant hook, punchy 808s, bright simple melody, high-energy charismatic male vocals, short-form ready, strong first 3 seconds","lyricsStructure":"[Intro]\n[Hook]\n[Verse 1]\n[Hook]\n[Verse 2]\n[Hook]\n[Bridge]\n[Hook]\n[Outro]"},
+{"id":"melodic-storytelling-flow","name":"Melodic Storytelling Flow","category":"Melodic","bpm":"","genres":["melodic rap","storytelling"],"description":"Emotional storytelling with smooth melodic delivery.","bestFor":"Emotional storytelling with smooth melodic delivery.","performanceTags":"","viralTips":"","stylePrompt":"melodic storytelling flow, emotive chord progression, gentle bounce, smooth sung-rap, heartfelt narrative male vocals, emotional melodic hooks","lyricsStructure":"[Intro]\n[Verse 1]\n[Pre-Hook]\n[Hook]\n[Verse 2]\n[Pre-Hook]\n[Hook]\n[Bridge]\n[Outro]"}
 ];
 let SUNO_LAST=null;
 function sunoPreset(id){return SUNO_PRESETS.find(p=>p.id===id)||(S.sunoUserPresets||[]).find(p=>p.id===id)||null;}
 function sunoDraft(){if(!S.sunoDraft)S.sunoDraft={preset:"",creator:"Auto / Recommend",use:"Standalone Single"};return S.sunoDraft;}
 function sunoCopyText(t){navigator.clipboard.writeText(t).then(()=>toast("Copied.")).catch(()=>toast("Copy failed.",true));}
 function sunoCard(label,val){return '<label class="fld" style="margin-top:12px">'+label+'</label><div class="promptbox" id="sf_'+label.replace(/\W/g,'')+'">'+esc(val)+'</div><button class="btn ghost sm sunocopy" data-t="'+label.replace(/\W/g,'')+'" style="margin-top:6px">&#10696; Copy '+label+'</button>';}
+const SUNO_TONES=[["Texture & Quality (the feel)", ["Raspy", "Gravelly", "Smoky", "Breathy", "Metallic", "Grape-velvet", "Whisper", "Growly / Distorted", "Raw / Unpolished"]], ["Tone & Resonance (the sound)", ["Resonant", "Nasally", "Brassy", "Orotund", "Strident", "Dark / Low Register", "Bright / Forward", "Soulful / Gritty"]], ["Pitch & Movement", ["Sibilant", "Staccato", "Melifluous", "Tremulous", "Deadpan / Monotone", "Falsetto / High Melodic", "Layered / Harmonized"]]];
+function renderSunoTones(){
+  var host=$("sunoTones");if(!host)return;if(!S.sunoTones)S.sunoTones=[];
+  host.innerHTML=SUNO_TONES.map(function(g){return '<div class="tonecat">'+esc(g[0])+'</div><div class="tonerow">'+g[1].map(function(t){var on=S.sunoTones.indexOf(t)>=0;return '<button type="button" class="tonechip'+(on?" on":"")+'" data-tone="'+esc(t)+'">'+esc(t)+'</button>';}).join("")+'</div>';}).join("");
+  host.querySelectorAll("[data-tone]").forEach(function(b){b.onclick=function(){var t=b.getAttribute("data-tone");var i=S.sunoTones.indexOf(t);if(i>=0)S.sunoTones.splice(i,1);else S.sunoTones.push(t);save();b.classList.toggle("on");};});
+}
 function renderSuno(){
   const d=sunoDraft();
+  renderSunoTones();
   const ps=$("sunoPreset");
   if(ps){ let o='<option value="">Custom / No Preset</option>'; SUNO_PRESETS.forEach(p=>{o+='<option value="'+p.id+'">'+esc(p.name)+'</option>';}); const ups=S.sunoUserPresets||[]; if(ups.length){o+='<optgroup label="My Presets">'+ups.map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join("")+'</optgroup>';} ps.innerHTML=o;
     ps.value=d.preset||""; ps.onchange=()=>{d.preset=ps.value;save();renderSuno();}; }
@@ -3535,6 +3482,7 @@ async function buildSuno(){
   usr+="CORE CONCEPT / SCENE: "+(scene||"Chieff moves through Stoneralia, unbothered, the world bending around him")+"\n";
   usr+="PREFERRED GENRES (blend tastefully, do not cram): "+(picked.join(", ")||"pick what fits")+"\n";
   if(p)usr+="QUICK START PRESET: "+p.name+"\nBASE STYLE PROMPT (translate refs, refine): "+baseStyle+"\nBASE LYRICS STRUCTURE (refine): "+baseLyrics+"\n";
+  if(S.sunoTones&&S.sunoTones.length)usr+="VOCAL TONES & TEXTURES (weave these into the vocal direction and performance notes; they combine): "+S.sunoTones.join(", ")+"\n";
   if(instrumental)usr+="INSTRUMENTAL ONLY: no vocals; optimizedStyle MUST include the word instrumental; lyricsStructure = structural tags only.\n";
   const _adv=sunoAdvSummary();if(_adv)usr+="ADVANCED DIRECTION:\n"+_adv+"\n";
   const _str=sunoStructText();if(_str)usr+="USE THIS EXACT SECTION STRUCTURE (output lyricsStructure as these tags in order, refine the notes):\n"+_str+"\n";

@@ -208,9 +208,16 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 .tonerow{display:flex;flex-wrap:wrap;gap:6px}
 .tonechip{background:none;border:1px solid var(--line);color:var(--bone-dim);padding:5px 11px;border-radius:999px;font-size:12px;white-space:nowrap}
 .tonechip.on{color:var(--bud);border-color:var(--bud);background:rgba(124,154,107,.09)}
+#splash{position:fixed;inset:0;z-index:99999;background:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .55s ease}
+#splash.gone{opacity:0;pointer-events:none}
+#splash .splash-logo{width:min(72vw,300px);height:auto;display:block;filter:drop-shadow(0 8px 30px rgba(0,0,0,.6));animation:splashpop .7s cubic-bezier(.2,.8,.2,1) both}
+#splash .splash-pulse{width:46px;height:3px;border-radius:3px;background:var(--bud);opacity:.7;animation:splashbar 1s ease-in-out infinite alternate}
+@keyframes splashpop{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:scale(1)}}
+@keyframes splashbar{from{transform:scaleX(.4);opacity:.4}to{transform:scaleX(1);opacity:.9}}
 </style>
 </head>
 <body>
+<div id="splash"><img class="splash-logo" alt="Smoke & Mirrors"><div class="splash-pulse"></div></div>
 <div class="appwrap">
 <nav>
   <button class="grp" data-grp-sel="create"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l2.4 6.1L21 11.5l-6.6 2.4L12 21l-2.4-7.1L3 11.5l6.6-2.4z'/></svg></span>Media House</button>
@@ -958,7 +965,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.31 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.32 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -4330,6 +4337,7 @@ function boot(){
   $("storyTitle").value=S.story.title;$("storyBody").value=S.story.body;
   $("boardScript").value=S.board.script;$("boardGrade").value=S.board.grade;$("boardGrid").value=S.board.grid;
   preloadCast();refreshKeyStat();renderStations();syncStation();renderBoardChars();renderStashFilter();buildLookControls();setupExtras();setupPickers();bindMedia();renderCast();renderSets();renderMedia();renderCastSet();renderEpisodes();renderCastFilter();renderCloudtoons();renderComics();if($("epNew"))$("epNew").addEventListener("click",newEpisode);go("episodes");if(S.llmModel==="anthropic/claude-sonnet-4.6"){S.llmModel="anthropic/claude-sonnet-4.5";save();}try{var _aiObs=new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(n){paintAIButtons(n);});});});_aiObs.observe(document.body,{childList:true,subtree:true});}catch(e){}paintAIButtons(document.body);initLightbox();
+  try{var _sp=$("splash");if(_sp){var _hl=document.querySelector("header .clap");var _si=_sp.querySelector(".splash-logo");if(_hl&&_si)_si.src=_hl.src;setTimeout(function(){_sp.classList.add("gone");setTimeout(function(){_sp.style.display="none";},650);},1100);}}catch(e){}
 }
 boot();
 </script>

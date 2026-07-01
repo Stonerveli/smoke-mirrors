@@ -241,6 +241,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button data-go="story"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20l1-4L17 4l3 3L8 19z'/><path d='M14 6l3 3'/></svg></span>Story</button>
   <button data-go="media"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 5 6 9H2v6h4l5 4z'/><path d='M15.5 8.5a5 5 0 0 1 0 7'/><path d='M19 4.5a9 9 0 0 1 0 15'/></svg></span>Media</button>
   <button data-go="songvid"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M10 9l5 3-5 3z'/></svg></span>Song→Video</button>
+  <button data-go="vo"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='3' width='6' height='11' rx='3'/><path d='M5 11a7 7 0 0 0 14 0'/><path d='M12 18v3'/></svg></span>Voiceover</button>
   <button data-go="reel"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></svg></span>Cut</button>
   <button data-go="projects"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/></svg></span>Projects</button>
   <button data-go="settings"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1'/></svg></span>Setup</button>
@@ -284,6 +285,11 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="svSaveProjBtn" style="flex:0">+ Save to drop</button></div>
 </section>
 
+<section class="view" id="view-vo">
+  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='3' width='6' height='11' rx='3'/><path d='M5 11a7 7 0 0 0 14 0'/><path d='M12 18v3'/></svg></span><h2>Voiceover</h2><span class="tag">Seed Audio 1.0</span></div>
+  <div class="hint" style="margin-bottom:12px">Character voices, narration and full audio scenes (dialogue + ambience + SFX in one pass) from ByteDance Seed Audio. Pick a preset voice or clone one from a clip, then write the line — describe who speaks, their emotion and accent for best results. <b>Chief is mouthless</b>, so use this for narration over his scenes or for other characters. Output auto-saves to The Cut and can be fed into Song→Video. English &amp; Chinese.</div>
+  <div id="voBody"></div>
+</section>
 <section class="view" id="view-assets">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='7' height='7' rx='1'/><rect x='14' y='3' width='7' height='7' rx='1'/><rect x='3' y='14' width='7' height='7' rx='1'/><rect x='14' y='14' width='7' height='7' rx='1'/></svg></span><h2>Assets</h2><span class="tag">Everything you've made</span></div>
   <div class="hint" style="margin-bottom:10px">Every image and video you generate — from The Cut, Comics, your Drops, Pre-Roll and The Stash — collects here automatically. Tap to zoom, grab the URL, or push it into the active drop.</div>
@@ -965,7 +971,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.34 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.36 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -980,7 +986,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -1221,6 +1227,7 @@ function renderAssets(){
   seg.forEach(function(b){b.classList.toggle("on",b.getAttribute("data-af")===(S.assetFilter||"all"));b.addEventListener("click",function(){S.assetFilter=b.getAttribute("data-af");save();seg.forEach(function(x){x.classList.toggle("on",x===b);});renderAssets();});});
 })();
 var SV={audio:"",audioName:"",audioDur:0,img:"",imgName:"",vid:"",vidName:""};
+var VOAUD={clip:"",name:""};
 function svFile(file,cb){var r=new FileReader();r.onload=function(){cb(r.result);};r.readAsDataURL(file);}
 function svCostLine(){
   if(!SV.audio)return "";
@@ -1269,7 +1276,7 @@ async function svGenerate(){
   svSetMode((S.songvid&&S.songvid.mode)||"perform");
 })();
 var CUR_VIEW="episodes";
-const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",canon:"universe",cast:"universe",sets:"universe",projects:"library",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
+const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",canon:"universe",cast:"universe",sets:"universe",projects:"library",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
 const GROUP_FIRST={create:"smg",universe:"canon",library:"pipeline",setup:"settings"};
 function navLabel(v){var b=document.querySelector('nav button[data-go="'+v+'"]');if(b){var t=(b.textContent||"").trim();if(t)return t;}return v;}
 function renderSubTabs(){
@@ -1299,6 +1306,7 @@ function go(name){
   if(name==="episodes")renderEpisodes();
   if(name==="cloudtoons")renderCloudtoons();
   if(name==="comics")renderComics();
+  if(name==="vo")renderVO();
   if(name==="fight")renderFight();
   if(name==="cast")renderCast();
   if(name==="sets")renderSets();
@@ -4132,6 +4140,69 @@ function comicNote(comic){
   const set=comic.setId?S.sets.find(x=>x.id===comic.setId):null;
   return (lead?identityNote([lead]):"")+(set?setNote(set):"");
 }
+const VO_VOICES=[["","\u2014 let the script describe the voice \u2014"],["__clone","Clone from my clip (@Audio1)"],["vivi_mixed_en_zh_ja_es_id","Vivi \u2014 versatile, multi-language"],["kian_en_zh","Kian \u2014 male"],["cedric_en_zh","Cedric \u2014 male, deep"],["magnus_en_zh","Magnus \u2014 male, bold"],["quentin_en_zh","Quentin \u2014 male"],["jean_en_zh","Jean \u2014 male"],["sophie_en_zh","Sophie \u2014 female"],["mabel_en_zh","Mabel \u2014 female"],["nadia_en_zh","Nadia \u2014 female"],["pearl_en_zh","Pearl \u2014 female"],["opal_en_zh","Opal \u2014 female"],["lyla_mixed_en_zh","Lyla \u2014 female, warm"],["corinne_mixed_en_zh","Corinne \u2014 female"],["esther_mixed_en_zh","Esther \u2014 female"],["mindy_en_es_id_pt_zh","Mindy \u2014 female, multi-language"]];
+const VO_CHARS=[
+ {l:"EveryStoner",t:'EveryStoner (male, late 20s, American accent, laid-back and slightly baked, deadpan and unhurried) says: "TYPE THE LINE HERE"'},
+ {l:"Haze",t:'Haze (female, confident, smooth, a little sly and playful) says: "TYPE THE LINE HERE"'},
+ {l:"Narrator",t:'Narrator (calm, cinematic, dry deadpan documentary tone) says: "TYPE THE LINE HERE"'},
+ {l:"Villain",t:'Grinderjaw (male, deep gravelly menacing voice, slow and heavy) says: "TYPE THE LINE HERE"'},
+ {l:"Hype ad",t:'Announcer (male, high-energy punchy commercial voice, confident) says: "TYPE THE LINE HERE"'},
+ {l:"Scene",t:'A late-night bodega. [door chime] EveryStoner (male, laid-back, deadpan): "Yo, one blunt and whatever that is." Cashier (female, bored, flat): "Card declined." [awkward silence, faint fridge hum]'}
+];
+function renderVO(){
+  var host=$("voBody");if(!host)return;if(!S.vo)S.vo={script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0};
+  var v=S.vo;
+  var h='<div class="card">';
+  h+='<label class="fld">Quick voice</label><div id="voChars" class="tonerow" style="margin:4px 0 10px"></div>';
+  h+='<label class="fld">Script / direction</label><textarea id="voScript" placeholder="Who speaks, their emotion + accent, then the line. e.g. EveryStoner (male, laid-back, deadpan): &quot;I only came in for a lighter.&quot;" style="min-height:110px">'+esc(v.script||"")+'</textarea>';
+  h+='<label class="fld" style="margin-top:10px">Voice</label><select id="voVoice">'+VO_VOICES.map(function(o){return '<option value="'+esc(o[0])+'"'+(v.voice===o[0]?" selected":"")+'>'+esc(o[1])+'</option>';}).join("")+'</select>';
+  h+='<div id="voCloneWrap" style="margin-top:8px;display:'+(v.voice==="__clone"?"block":"none")+'"><label class="fld">Reference clip (up to 30s) \u2014 the voice to clone</label><input type="file" id="voClip" accept="audio/*"><div id="voClipInfo" class="hint" style="margin-top:4px">'+(VOAUD.name?esc(VOAUD.name):"")+'</div></div>';
+  h+='<details style="margin-top:10px"><summary class="hint" style="cursor:pointer">Fine-tune (speed / pitch / format)</summary>';
+  h+='<label class="fld" style="margin-top:8px">Speed <span id="voSpeedV">'+(v.speed||1).toFixed(1)+'\u00d7</span></label><input type="range" id="voSpeed" min="0.5" max="2" step="0.1" value="'+(v.speed||1)+'">';
+  h+='<label class="fld" style="margin-top:8px">Pitch <span id="voPitchV">'+(v.pitch||0)+'</span> semitones</label><input type="range" id="voPitch" min="-12" max="12" step="1" value="'+(v.pitch||0)+'">';
+  h+='<label class="fld" style="margin-top:8px">Format</label><select id="voFmt"><option value="mp3"'+(v.format==="mp3"?" selected":"")+'>MP3</option><option value="wav"'+(v.format==="wav"?" selected":"")+'>WAV</option></select></details>';
+  h+='<div class="hint" style="margin-top:10px">\u2248 $0.075 per minute of audio \u00b7 up to ~2 min per pass.</div>';
+  h+='<button class="btn green" id="voGen" style="width:100%;padding:13px;margin-top:8px">\u25b6 Generate voiceover</button><div id="voStatus" style="margin-top:8px"></div><div id="voResult" style="margin-top:8px"></div>';
+  h+='</div>';
+  host.innerHTML=h;
+  var ch=$("voChars");if(ch){ch.innerHTML=VO_CHARS.map(function(c,i){return '<button type="button" class="tonechip" data-vc="'+i+'">'+esc(c.l)+'</button>';}).join("");ch.querySelectorAll("[data-vc]").forEach(function(b){b.addEventListener("click",function(){var c=VO_CHARS[+b.getAttribute("data-vc")];if($("voScript")){$("voScript").value=c.t;S.vo.script=c.t;save();}});});}
+  if($("voScript"))$("voScript").addEventListener("input",function(e){S.vo.script=e.target.value;save();});
+  if($("voVoice"))$("voVoice").addEventListener("change",function(e){S.vo.voice=e.target.value;save();var w=$("voCloneWrap");if(w)w.style.display=(e.target.value==="__clone")?"block":"none";});
+  if($("voClip"))$("voClip").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;svFile(f,function(d){VOAUD.clip=d;VOAUD.name=f.name;if($("voClipInfo"))$("voClipInfo").textContent=f.name;});});
+  if($("voSpeed"))$("voSpeed").addEventListener("input",function(e){S.vo.speed=parseFloat(e.target.value);save();if($("voSpeedV"))$("voSpeedV").textContent=S.vo.speed.toFixed(1)+"\u00d7";});
+  if($("voPitch"))$("voPitch").addEventListener("input",function(e){S.vo.pitch=parseInt(e.target.value,10);save();if($("voPitchV"))$("voPitchV").textContent=S.vo.pitch;});
+  if($("voFmt"))$("voFmt").addEventListener("change",function(e){S.vo.format=e.target.value;save();});
+  if($("voGen"))$("voGen").addEventListener("click",genVO);
+  if(v.lastUrl)voPaint(v.lastUrl,v.lastDur);
+}
+function voPaint(url,dur){
+  var r=$("voResult");if(!r)return;
+  r.innerHTML='<audio controls src="'+esc(url)+'" style="width:100%"></audio>'+(dur?'<div class="hint" style="margin-top:4px">'+dur+'s \u00b7 saved to The Cut</div>':'<div class="hint" style="margin-top:4px">saved to The Cut</div>')+'<div class="row" style="margin-top:8px"><button class="btn ghost sm" id="voSaveProj" style="flex:1">+ Save to drop</button><button class="btn ghost sm" id="voCopy" style="flex:1">\u29c9 Copy URL</button></div>';
+  if($("voSaveProj"))$("voSaveProj").addEventListener("click",function(){if(!S.vo.lastUrl){toast("Generate a voiceover first.",true);return;}projAttach("audio",S.vo.lastName||"Voiceover",S.vo.lastUrl);});
+  if($("voCopy"))$("voCopy").addEventListener("click",function(){navigator.clipboard.writeText(S.vo.lastUrl).then(function(){toast("Audio URL copied.");}).catch(function(){toast("Copy failed.",true);});});
+}
+async function genVO(){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  var script=($("voScript")?$("voScript").value:"").trim();
+  if(!script){toast("Write the script / line first.",true);return;}
+  var voice=$("voVoice")?$("voVoice").value:"";
+  var speed=$("voSpeed")?parseFloat($("voSpeed").value):1;
+  var pitch=$("voPitch")?parseInt($("voPitch").value,10):0;
+  var fmt=$("voFmt")?$("voFmt").value:"mp3";
+  var input={prompt:script,speed:speed,pitch:pitch,output_format:fmt};
+  if(voice==="__clone"){if(!VOAUD.clip){toast("Upload a reference clip to clone, or pick a preset voice.",true);return;}input.audio_urls=[VOAUD.clip];}
+  else if(voice){input.voice=voice;}
+  var st=$("voStatus");if(st)st.innerHTML=spinner("Generating voiceover\u2026");
+  try{
+    var o=await falRun("bytedance/seed-audio-1.0",input,function(s2,t){if(st)st.innerHTML=spinner("Generating voiceover\u2026 ("+t+")");});
+    var m=extractMedia(o);var url=(m&&m.url)||(o&&o.audio&&o.audio.url);if(!url)throw new Error("No audio came back.");
+    var dur=(o&&o.audio&&o.audio.duration)||0;
+    var label=script.slice(0,60);
+    S.vo.lastUrl=url;S.vo.lastName="VO \u2014 "+label;S.vo.lastDur=dur;
+    S.reel.unshift({id:uid(),type:"audio",url:url,prompt:"VO \u2014 "+label,ts:Date.now()});save();
+    if(st)st.innerHTML="";voPaint(url,dur);toast("Voiceover generated + saved to The Cut.");
+  }catch(e){if(st)st.innerHTML=errLine(e);}
+}
 const COMIC_TWISTS=["the cashier turns out to be his plug's mom","the bag he grabbed is full of oregano","he has a full existential crisis over which chips are 'the real him'","the security camera is just a smoke detector and he has been performing for a light","his card finally works but he is holding the blunt out in plain sight","the guy he owes money to just wants to split it and call it even","he answers every question with a 20-second delay and total sincerity","he counts his change three times and somehow it is less each time","the drink he grabbed expired before he was old enough to buy it","Chief is silently watching from the chip rack the entire time","he confidently walks straight into the closed automatic door","he has already eaten half of what he is trying to pay for"];
 const COMIC_SPARKS=[
  {l:"Classic Bodega Fail",s:"EveryStoner is buying a single blunt and a drink at the 24-hour bodega",p:"his card keeps declining while the line grows behind him"},
@@ -4202,7 +4273,7 @@ async function genComic(){
   try{
     const d=parseJSON(await llmRun(sys,usr));const ps=(d.panels||[]).slice(0,ko.panels);
     if(!ps.length)throw new Error("No panels came back.");
-    const comic={id:uid(),title:d.title||idea||"Untitled comic",kind,look,leadId,setId,idea,panels:ps.map((p,i)=>({id:uid(),n:i+1,caption:p.caption||"",visual:p.visual||"",url:""})),ts:Date.now()};
+    const comic={id:uid(),title:d.title||idea||"Untitled comic",kind,look,leadId,setId,idea,panels:ps.map((p,i)=>({id:uid(),n:i+1,caption:p.caption||"",visual:p.visual||"",url:""})),seed:Math.floor(Math.random()*1e9),ts:Date.now()};
     S.comics.unshift(comic);S.curComic=comic.id;save();renderComics();toast("Comic written — draw the panels.");
   }catch(e){st.innerHTML=errLine(e);}
 }
@@ -4210,7 +4281,7 @@ function renderComicView(comic){
   const host=$("comicBody");if(!host)return;
   let h='<button class="btn sm ghost" id="comicBack" style="margin-bottom:12px">← All comics</button><button class="btn ghost sm" id="comicSaveProjBtn" style="margin-bottom:12px;margin-left:8px">+ Save to drop</button><button class="btn ghost sm" id="comicVibeBtn" style="margin-bottom:12px;margin-left:8px">\u27f3 Optimize for the vibe</button>';
   h+='<div class="card"><input type="text" id="comicTitle" value="'+esc(comic.title||"")+'" placeholder="comic title" style="font-family:var(--slate);font-weight:800"><div class="hint" style="margin-top:4px">'+esc((COMIC_KINDS[comic.kind]||{}).label||"")+' · '+esc((COMIC_LOOKS[comic.look]||{}).label||"")+'</div></div>';
-  h+='<div class="row"><button class="btn green" id="comicRenderAll" data-cost="edit" style="flex:1">▦ Draw all panels</button><button class="btn ghost" id="comicExport" style="flex:0">⧉ Export</button></div><div id="comicAllStatus" style="margin-top:6px"></div>';
+  h+='<div class="row"><button class="btn green" id="comicRenderAll" data-cost="edit" style="flex:1">▦ Draw all panels</button><button class="btn ghost sm" id="comicReseed" style="flex:0">↻ Style</button><button class="btn ghost" id="comicExport" style="flex:0">⧉ Export</button></div><div class="hint" style="margin-top:6px;text-transform:none;letter-spacing:0">🔒 Style + character locked across all panels. Tap ↻ Style for a fresh look, then redraw.</div><div id="comicAllStatus" style="margin-top:6px"></div>';
   comic.panels.forEach(p=>{
     h+='<div class="card" style="border-left:3px solid var(--bud)"><div style="font-weight:800;font-family:var(--slate)">Panel '+p.n+'</div>';
     h+='<div data-pout="'+p.id+'" style="margin-top:8px"></div>';
@@ -4225,6 +4296,7 @@ function renderComicView(comic){
   if($("comicVibeBtn"))$("comicVibeBtn").onclick=comicVibeApply;
   $("comicTitle").addEventListener("input",e=>{comic.title=e.target.value;save();});
   $("comicRenderAll").addEventListener("click",renderAllPanels);
+  if($("comicReseed"))$("comicReseed").onclick=function(){comic.seed=Math.floor(Math.random()*1e9);save();toast("New art style locked — redraw panels to apply.");};
   $("comicExport").addEventListener("click",exportComic);
   host.querySelectorAll("[data-pcap]").forEach(i=>i.addEventListener("input",()=>{const p=comic.panels.find(x=>x.id===i.dataset.pcap);if(p){p.caption=i.value;save();}}));
   host.querySelectorAll("[data-pvis]").forEach(t=>t.addEventListener("input",()=>{const p=comic.panels.find(x=>x.id===t.dataset.pvis);if(p){p.visual=t.value;save();}}));
@@ -4234,12 +4306,13 @@ async function renderComicImage(pid){
   const comic=curComic();if(!comic)return;const pan=comic.panels.find(p=>p.id===pid);if(!pan)return;
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   const look=COMIC_LOOKS[comic.look]||COMIC_LOOKS.toon;
+  if(comic.seed==null){comic.seed=Math.floor(Math.random()*1e9);save();}
   const out=document.querySelector('[data-pout="'+pid+'"]');if(out)out.innerHTML=spinner("Drawing panel "+pan.n+"…");
   const refs=comicRefs(comic);const hasRefs=refs.length>0;
-  const prompt=(pan.visual||pan.caption||"comic panel")+"\n\nStyle: "+look.style+". A single comic panel, clean readable composition, strong silhouette."+comicNote(comic)+" Do not render any caption or speech text in the image (it appears beneath the panel).";
+  const prompt=(pan.visual||pan.caption||"comic panel")+"\n\nStyle: "+look.style+". A single comic panel, clean readable composition, strong silhouette. Keep the character's face, outfit, proportions, colour palette, line weight and art style IDENTICAL to the reference in every panel of this strip — same world, same drawing hand."+comicNote(comic)+" Do not render any caption or speech text in the image (it appears beneath the panel).";
   const model=hasRefs?(S.picked.edit||"fal-ai/nano-banana-pro/edit"):(S.picked.image||"fal-ai/nano-banana-pro");
   const ar=comic.kind==="single"?"1:1":"4:5";
-  const input={prompt};Object.assign(input,sizeFor(model,ar));if(hasRefs)input.image_urls=refs;withRes(model,input);
+  const input={prompt};Object.assign(input,sizeFor(model,ar));if(hasRefs)input.image_urls=refs;withRes(model,input);if(comic.seed!=null)input.seed=comic.seed;
   try{
     const o=await falRun(model,input,(s,t)=>{if(out)out.innerHTML=spinner("Drawing panel "+pan.n+"… ("+t+")");});
     const m=extractMedia(o);if(!m)throw new Error("No image came back.");

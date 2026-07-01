@@ -965,7 +965,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.33 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.34 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -980,7 +980,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -4132,6 +4132,21 @@ function comicNote(comic){
   const set=comic.setId?S.sets.find(x=>x.id===comic.setId):null;
   return (lead?identityNote([lead]):"")+(set?setNote(set):"");
 }
+const COMIC_TWISTS=["the cashier turns out to be his plug's mom","the bag he grabbed is full of oregano","he has a full existential crisis over which chips are 'the real him'","the security camera is just a smoke detector and he has been performing for a light","his card finally works but he is holding the blunt out in plain sight","the guy he owes money to just wants to split it and call it even","he answers every question with a 20-second delay and total sincerity","he counts his change three times and somehow it is less each time","the drink he grabbed expired before he was old enough to buy it","Chief is silently watching from the chip rack the entire time","he confidently walks straight into the closed automatic door","he has already eaten half of what he is trying to pay for"];
+const COMIC_SPARKS=[
+ {l:"Classic Bodega Fail",s:"EveryStoner is buying a single blunt and a drink at the 24-hour bodega",p:"his card keeps declining while the line grows behind him"},
+ {l:"Munchies Disaster",s:"3AM, EveryStoner hits the bodega with the munchies",p:"he wants everything but only has $2 and some lint"},
+ {l:"Act Normal",s:"EveryStoner is baked and trying to look stone-cold sober at the counter",p:"the cashier keeps asking simple questions he cannot process"},
+ {l:"One More Hit",s:"EveryStoner told himself just one more hit before the store run",p:"now he is far too high to handle basic human interaction"},
+ {l:"Owe Money",s:"EveryStoner walks into the bodega and freezes mid-step",p:"the guy behind the counter is someone he owes money to"},
+ {l:"Paranoia Spiral",s:"EveryStoner clocks the bodega security camera",p:"he is convinced it is watching only him and starts spiraling"},
+ {l:"Wrong Bag",s:"EveryStoner grabs his order and bounces out the door",p:"it is the wrong bag and the contents make no sense"},
+ {l:"Chip Aisle Crisis",s:"EveryStoner just wants one bag of chips",p:"too many options trigger a full existential meltdown in the aisle"}
+];
+function comicPickRand(a){return a[Math.floor(Math.random()*a.length)];}
+function comicSaveIdea3(){S.comicIdea3={setup:($("cbSetup")?$("cbSetup").value:""),problem:($("cbProblem")?$("cbProblem").value:""),twist:($("cbTwist")?$("cbTwist").value:"")};save();}
+function comicApplySpark(sp){if($("cbSetup"))$("cbSetup").value=sp.s;if($("cbProblem"))$("cbProblem").value=sp.p;if($("cbTwist"))$("cbTwist").value=comicPickRand(COMIC_TWISTS);comicSaveIdea3();}
+function comicDice(){comicApplySpark(comicPickRand(COMIC_SPARKS));}
 function renderComics(){
   const host=$("comicBody");if(!host)return;
   const cc=curComic();if(cc){renderComicView(cc);return;}
@@ -4140,7 +4155,7 @@ function renderComics(){
   h+='<label class="fld" style="margin-top:10px">Look</label><select id="comicLook"></select>';h+='<label class="fld" style="margin-top:10px">Comedy mechanic</label><select id="comicMechanic"></select>';h+='<label class="fld" style="margin-top:10px">Resolution</label><select id="comicRes"><option value="1K">1K · standard</option><option value="2K">2K · sharper</option><option value="4K">4K · 2× price</option></select>';
   h+='<label class="fld" style="margin-top:10px">Lead character</label><select id="comicLead"></select>';
   h+='<label class="fld" style="margin-top:10px">Location</label><select id="comicSet"></select>';
-  h+='<label class="fld" style="margin-top:10px">Idea</label><div class="row"><input type="text" id="comicIdea" placeholder="the gag / situation (or leave blank)"><button class="btn ghost sm" id="comicIdeaBtn" style="flex:0">✦</button></div><div id="comicIdeaStatus"></div>';
+  h+='<label class="fld" style="margin-top:12px">Idea builder</label>';h+='<div class="hint" style="margin:0 0 6px;text-transform:none;letter-spacing:0">Tap a spark to auto-fill, or write your own. Setup alone works — problem &amp; twist sharpen the joke.</div>';h+='<div id="comicSparks" class="tonerow" style="margin-bottom:8px"></div>';h+='<input type="text" id="cbSetup" placeholder="Setup — what is happening? (e.g. EveryStoner buys one blunt at 3AM)">';h+='<input type="text" id="cbProblem" placeholder="Going wrong — the goal or the problem (optional)" style="margin-top:6px">';h+='<input type="text" id="cbTwist" placeholder="Twist — the funny turn (optional; where the joke lives)" style="margin-top:6px">';h+='<div class="row" style="margin-top:8px"><button class="btn ghost sm" id="comicDice" style="flex:1">🎲 Surprise me</button><button class="btn ghost sm" id="comicIdeaBtn" style="flex:1">✦ AI gag</button></div><div id="comicIdeaStatus"></div>';
   h+='<button class="btn green" id="comicGen" style="margin-top:12px;width:100%">✦ Generate comic</button><div id="comicGenStatus"></div></div>';
   h+='<div style="margin-top:16px"><div class="hint">Your comics</div><div id="comicList" style="margin-top:8px"></div></div>';
   host.innerHTML=h;
@@ -4150,6 +4165,13 @@ function renderComics(){
   const se=$("comicSet");se.innerHTML='<option value="">— none —</option>'+S.sets.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join("");se.value=S.comicSet||"";se.addEventListener("change",e=>{S.comicSet=e.target.value;save();});
   $("comicIdeaBtn").addEventListener("click",suggestComicIdea);
   $("comicGen").addEventListener("click",genComic);
+  if(!S.comicIdea3)S.comicIdea3={setup:"",problem:"",twist:""};
+  if($("cbSetup"))$("cbSetup").value=S.comicIdea3.setup||"";
+  if($("cbProblem"))$("cbProblem").value=S.comicIdea3.problem||"";
+  if($("cbTwist"))$("cbTwist").value=S.comicIdea3.twist||"";
+  var _sh=$("comicSparks");if(_sh){_sh.innerHTML=COMIC_SPARKS.map(function(sp,i){return '<button type="button" class="tonechip" data-spark="'+i+'">'+esc(sp.l)+'</button>';}).join("");_sh.querySelectorAll("[data-spark]").forEach(function(b){b.addEventListener("click",function(){comicApplySpark(COMIC_SPARKS[+b.getAttribute("data-spark")]);});});}
+  ["cbSetup","cbProblem","cbTwist"].forEach(function(id){var el=$(id);if(el)el.addEventListener("input",comicSaveIdea3);});
+  if($("comicDice"))$("comicDice").addEventListener("click",comicDice);
   const list=$("comicList");
   if(!S.comics.length)list.innerHTML='<div class="hint">None yet — generate your first comic above.</div>';
   else{list.innerHTML="";S.comics.forEach(c=>{const d=document.createElement("div");d.className="card";d.style.cursor="pointer";const drawn=c.panels.filter(p=>p.url).length;
@@ -4162,15 +4184,15 @@ async function suggestComicIdea(){
   if(!S.apiKey){toast("Add your fal key in Setup for AI suggestions.",true);return;}
   const st=$("comicIdeaStatus");st.innerHTML=spinner("Thinking up a gag…");
   const lead=S.cast.find(c=>c.id===($("comicLead")?$("comicLead").value:""));const set=S.sets.find(x=>x.id===($("comicSet")?$("comicSet").value:""));
-  const sys=STONERALIA_LAW+" "+VOICE_DNA+" Pitch ONE deadpan, visual comic gag — Far Side energy, the kind that lands in one read.";
-  const usr=(lead?"LEAD: "+lead.name+"\n":"")+(set?"LOCATION: "+set.name+(set.props&&set.props.length?" (recurring: "+set.props.map(p=>p.name).join(", ")+")":"")+"\n":"")+"Give one short comic idea (1 sentence). Return only the line, no quotes.";
-  try{const txt=(await llmRun(sys,usr)).trim().replace(/^["']|["']$/g,"");if($("comicIdea"))$("comicIdea").value=txt;st.innerHTML="";}
+  const sys=STONERALIA_LAW+" "+VOICE_DNA+" Pitch ONE deadpan stoner-comedy gag as three beats — everyday chaos, bodega energy, Far Side timing.";
+  const usr=(lead?"LEAD: "+lead.name+"\n":"")+(set?"LOCATION: "+set.name+"\n":"")+"Return JSON only: {\"setup\":\"one line, what is happening\",\"problem\":\"the goal or what is going wrong\",\"twist\":\"the funny turn, where the joke lives\"}. Keep each line short and dry.";
+  try{const d=parseJSON(await llmRun(sys,usr));if($("cbSetup"))$("cbSetup").value=d.setup||"";if($("cbProblem"))$("cbProblem").value=d.problem||"";if($("cbTwist"))$("cbTwist").value=d.twist||"";S.comicIdea3={setup:d.setup||"",problem:d.problem||"",twist:d.twist||""};save();st.innerHTML="";}
   catch(e){st.innerHTML=errLine(e);}
 }
 async function genComic(){
   const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
-  const kind=$("comicKind").value,look=$("comicLook").value,leadId=$("comicLead").value,setId=$("comicSet").value,idea=$("comicIdea").value.trim();
+  const kind=$("comicKind").value,look=$("comicLook").value,leadId=$("comicLead").value,setId=$("comicSet").value;var _cbS=($("cbSetup")?$("cbSetup").value:"").trim(),_cbP=($("cbProblem")?$("cbProblem").value:"").trim(),_cbT=($("cbTwist")?$("cbTwist").value:"").trim();var idea=[_cbS?"Setup: "+_cbS:"",_cbP?"Going wrong: "+_cbP:"",_cbT?"Twist: "+_cbT:""].filter(Boolean).join(". ");
   const ko=COMIC_KINDS[kind]||COMIC_KINDS.strip3;const single=ko.panels===1;
   const cmech=COMEDY_MECHANICS.find(m=>m.n===S.comicMechanic)||null;const st=$("comicGenStatus");st.innerHTML=spinner("Writing the comic…");
   const lead=leadId?S.cast.find(c=>c.id===leadId):null;const set=setId?S.sets.find(x=>x.id===setId):null;

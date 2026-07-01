@@ -965,7 +965,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.32 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.33 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -4337,7 +4337,7 @@ function boot(){
   $("storyTitle").value=S.story.title;$("storyBody").value=S.story.body;
   $("boardScript").value=S.board.script;$("boardGrade").value=S.board.grade;$("boardGrid").value=S.board.grid;
   preloadCast();refreshKeyStat();renderStations();syncStation();renderBoardChars();renderStashFilter();buildLookControls();setupExtras();setupPickers();bindMedia();renderCast();renderSets();renderMedia();renderCastSet();renderEpisodes();renderCastFilter();renderCloudtoons();renderComics();if($("epNew"))$("epNew").addEventListener("click",newEpisode);go("episodes");if(S.llmModel==="anthropic/claude-sonnet-4.6"){S.llmModel="anthropic/claude-sonnet-4.5";save();}try{var _aiObs=new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(n){paintAIButtons(n);});});});_aiObs.observe(document.body,{childList:true,subtree:true});}catch(e){}paintAIButtons(document.body);initLightbox();
-  try{var _sp=$("splash");if(_sp){var _hl=document.querySelector("header .clap");var _si=_sp.querySelector(".splash-logo");if(_hl&&_si)_si.src=_hl.src;setTimeout(function(){_sp.classList.add("gone");setTimeout(function(){_sp.style.display="none";},650);},1100);}}catch(e){}
+  try{var _sp=$("splash");if(_sp){var _hl=document.querySelector('link[rel="apple-touch-icon"]')||document.querySelector('link[rel="icon"]');var _si=_sp.querySelector(".splash-logo");if(_hl&&_si)_si.src=_hl.href;setTimeout(function(){_sp.classList.add("gone");setTimeout(function(){_sp.style.display="none";},650);},1100);}}catch(e){}
 }
 boot();
 </script>

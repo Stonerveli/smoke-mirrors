@@ -228,7 +228,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button data-go="comics"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span>Comics</button>
   <button data-go="fight"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M13 2 4.5 13.5H11l-1 8.5 9.5-12.5H12z'/></svg></span>Fight</button>
 <button data-go="smg"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg></span>SMG</button>
-  <button data-go="songvid"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M10 9l5 3-5 3z'/></svg></span>Song→Video</button>
+  <button data-go="songvid"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M10 9l5 3-5 3z'/></svg></span>Lip-Sync</button>
   <button data-go="csb"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='7' height='7' rx='1'/><rect x='14' y='3' width='7' height='7' rx='1'/><rect x='3' y='14' width='7' height='7' rx='1'/><rect x='14' y='14' width='7' height='7' rx='1'/></svg></span>CSB</button>
   <button data-go="vo"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='3' width='6' height='11' rx='3'/><path d='M5 11a7 7 0 0 0 14 0'/><path d='M12 18v3'/></svg></span>Voiceover</button>
   <button data-go="episodes" class="on"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2.5' y='7.5' width='13' height='12' rx='2'/><path d='M7.5 7.5V5.5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2'/></svg></span>Episodes</button>
@@ -257,12 +257,14 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 <div id="firstRun" class="firstrun" style="display:none"><div class="fr-head"><b>Get set up</b><button id="frDismiss" title="Dismiss">✕</button></div><div class="hint" style="margin:-2px 0 8px">Three quick steps to start making. Tap any to jump there.</div><div id="frSteps"></div></div>
 
 <section class="view" id="view-songvid">
-  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M10 9l5 3-5 3z'/></svg></span><h2>Song → Video</h2><span class="tag">Lip-sync</span></div>
-  <div class="hint" style="margin-bottom:12px">Drop in a song (or just the hook), pick who performs it, and fal lip-syncs them to the audio. Two routes:<br>• <b>Perform it</b> — a character <b>image</b> mouths the track. Needs a mouth, so use <b>Haze</b>, a mouthed cast member, or a real face. <b>Chief is mouthless</b> — for a Chief music video, generate Seedance clips to the beat in the Video station and assemble them in <b>The Cut</b>.<br>• <b>Sync to a clip</b> — feed an existing <b>video</b> + the song and the mouth re-syncs (handles music).</div>
+  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M10 9l5 3-5 3z'/></svg></span><h2>Lip-Sync</h2><span class="tag">Audio → video</span></div>
+  <div class="hint" style="margin-bottom:12px">Drop in a song, a voiceover, or just the hook, pick who performs it, and fal lip-syncs them to the audio. Two routes:<br>• <b>Perform it</b> — a character <b>image</b> mouths the track. Needs a mouth, so use <b>Haze</b>, a mouthed cast member, or a real face. <b>Chief is mouthless</b> — for a Chief music video, generate Seedance clips to the beat in the Video station and assemble them in <b>The Cut</b>.<br>• <b>Sync to a clip</b> — feed an existing <b>video</b> + the song and the mouth re-syncs (handles music).</div>
   <label class="fld">1 · Your song</label>
   <input type="file" id="svAudio" accept="audio/*">
   <div id="svAudioInfo" class="hint" style="margin-top:6px"></div>
   <div id="svAudioPrev" style="margin-top:6px"></div>
+  <button class="btn ghost sm" id="svFromCut" style="margin-top:6px">♪ Pick from The Cut</button>
+  <div id="svCutPick"></div>
   <label class="fld" style="margin-top:14px">2 · How</label>
   <select id="svMode">
     <option value="perform">Perform it — lip-sync a character image (VEED Fabric)</option>
@@ -287,7 +289,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 
 <section class="view" id="view-vo">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='3' width='6' height='11' rx='3'/><path d='M5 11a7 7 0 0 0 14 0'/><path d='M12 18v3'/></svg></span><h2>Voiceover</h2><span class="tag">Seed Audio 1.0</span></div>
-  <div class="hint" style="margin-bottom:12px">Character voices, narration and full audio scenes (dialogue + ambience + SFX in one pass) from ByteDance Seed Audio. Pick a preset voice or clone one from a clip, then write the line — describe who speaks, their emotion and accent for best results. <b>Chief is mouthless</b>, so use this for narration over his scenes or for other characters. Output auto-saves to The Cut and can be fed into Song→Video. English &amp; Chinese.</div>
+  <div class="hint" style="margin-bottom:12px">Character voices, narration and full audio scenes (dialogue + ambience + SFX in one pass) from ByteDance Seed Audio. Pick a preset voice or clone one from a clip, then write the line — describe who speaks, their emotion and accent for best results. <b>Chief is mouthless</b>, so use this for narration over his scenes or for other characters. Output auto-saves to The Cut and can be fed into Lip-Sync. English &amp; Chinese.</div>
   <div id="voBody"></div>
 </section>
 <section class="view" id="view-assets">
@@ -971,7 +973,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.37 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.38 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1270,6 +1272,7 @@ async function svGenerate(){
   var a=$("svAudio");if(a)a.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;SV.audioName=f.name;svFile(f,function(d){SV.audio=d;var au=document.createElement("audio");au.preload="metadata";au.onloadedmetadata=function(){SV.audioDur=au.duration||0;svRefresh();};au.src=d;var pv=$("svAudioPrev");if(pv)pv.innerHTML='<audio src="'+d+'" controls style="width:100%"></audio>';svRefresh();});});
   var im=$("svImg");if(im)im.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;SV.imgName=f.name;svFile(f,function(d){SV.img=d;svRefresh();});});
   var vd=$("svVid");if(vd)vd.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;SV.vidName=f.name;svFile(f,function(d){SV.vid=d;svRefresh();});});
+  var fc=$("svFromCut");if(fc)fc.addEventListener("click",svPickFromCut);
   var ms=$("svMode");if(ms){ms.value=(S.songvid&&S.songvid.mode)||"perform";ms.addEventListener("change",function(){svSetMode(ms.value);});}
   var g=$("svGen");if(g)g.addEventListener("click",svGenerate);
   var sp=$("svSaveProjBtn");if(sp)sp.addEventListener("click",function(){if(!S.songvid||!S.songvid.lastUrl){toast("Generate a video first.",true);return;}projAttach("video",S.songvid.lastName||"Song video",S.songvid.lastUrl);});
@@ -4177,9 +4180,10 @@ function renderVO(){
 }
 function voPaint(url,dur){
   var r=$("voResult");if(!r)return;
-  r.innerHTML='<audio controls src="'+esc(url)+'" style="width:100%"></audio>'+(dur?'<div class="hint" style="margin-top:4px">'+dur+'s \u00b7 saved to The Cut</div>':'<div class="hint" style="margin-top:4px">saved to The Cut</div>')+'<div class="row" style="margin-top:8px"><button class="btn ghost sm" id="voSaveProj" style="flex:1">+ Save to drop</button><button class="btn ghost sm" id="voCopy" style="flex:1">\u29c9 Copy URL</button></div>';
+  r.innerHTML='<audio controls src="'+esc(url)+'" style="width:100%"></audio>'+(dur?'<div class="hint" style="margin-top:4px">'+dur+'s \u00b7 saved to The Cut</div>':'<div class="hint" style="margin-top:4px">saved to The Cut</div>')+'<button class="btn ghost sm" id="voToLS" style="width:100%;margin-top:8px">🎬 Send to Lip-Sync</button><div class="row" style="margin-top:6px"><button class="btn ghost sm" id="voSaveProj" style="flex:1">+ Save to drop</button><button class="btn ghost sm" id="voCopy" style="flex:1">\u29c9 Copy URL</button></div>';
   if($("voSaveProj"))$("voSaveProj").addEventListener("click",function(){if(!S.vo.lastUrl){toast("Generate a voiceover first.",true);return;}projAttach("audio",S.vo.lastName||"Voiceover",S.vo.lastUrl);});
   if($("voCopy"))$("voCopy").addEventListener("click",function(){navigator.clipboard.writeText(S.vo.lastUrl).then(function(){toast("Audio URL copied.");}).catch(function(){toast("Copy failed.",true);});});
+  if($("voToLS"))$("voToLS").addEventListener("click",voToLipsync);
 }
 async function genVO(){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
@@ -4202,6 +4206,21 @@ async function genVO(){
     S.reel.unshift({id:uid(),type:"audio",url:url,prompt:"VO \u2014 "+label,ts:Date.now()});save();
     if(st)st.innerHTML="";voPaint(url,dur);toast("Voiceover generated + saved to The Cut.");
   }catch(e){if(st)st.innerHTML=errLine(e);}
+}
+function voToLipsync(){
+  if(!S.vo||!S.vo.lastUrl){toast("Generate a voiceover first.",true);return;}
+  SV.audio=S.vo.lastUrl;SV.audioName=S.vo.lastName||"Voiceover";SV.audioDur=S.vo.lastDur||0;
+  var pv=$("svAudioPrev");if(pv)pv.innerHTML='<audio src="'+esc(SV.audio)+'" controls style="width:100%"></audio>';
+  if(typeof svRefresh==="function")svRefresh();
+  go("songvid");
+  toast("Voiceover loaded into Lip-Sync \u2014 pick who performs it.");
+}
+function svPickFromCut(){
+  var box=$("svCutPick");if(!box)return;
+  var auds=(S.reel||[]).filter(function(x){return x.type==="audio";});
+  if(!auds.length){box.innerHTML='<div class="hint" style="margin-top:6px">No audio in The Cut yet \u2014 make a Voiceover, or add a rendered song to The Cut first.</div>';return;}
+  box.innerHTML='<div class="hint" style="margin:6px 0 4px">Tap one to load:</div>'+auds.map(function(a){return '<button type="button" class="btn ghost sm" data-cut="'+esc(a.url)+'" data-cn="'+esc(a.prompt||"audio")+'" style="width:100%;text-align:left;margin-bottom:4px">\u266a '+esc((a.prompt||"audio").slice(0,48))+'</button>';}).join("");
+  box.querySelectorAll("[data-cut]").forEach(function(b){b.addEventListener("click",function(){SV.audio=b.getAttribute("data-cut");SV.audioName=b.getAttribute("data-cn")||"Audio";SV.audioDur=0;var pv=$("svAudioPrev");if(pv)pv.innerHTML='<audio src="'+esc(SV.audio)+'" controls style="width:100%"></audio>';if(typeof svRefresh==="function")svRefresh();box.innerHTML="";toast("Loaded from The Cut.");});});
 }
 const COMIC_TWISTS=["the cashier turns out to be his plug's mom","the bag he grabbed is full of oregano","he has a full existential crisis over which chips are 'the real him'","the security camera is just a smoke detector and he has been performing for a light","his card finally works but he is holding the blunt out in plain sight","the guy he owes money to just wants to split it and call it even","he answers every question with a 20-second delay and total sincerity","he counts his change three times and somehow it is less each time","the drink he grabbed expired before he was old enough to buy it","Chief is silently watching from the chip rack the entire time","he confidently walks straight into the closed automatic door","he has already eaten half of what he is trying to pay for"];
 const COMIC_SPARKS=[

@@ -227,7 +227,8 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button data-go="cloudtoons"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 17h11a3.5 3.5 0 0 0 .5-6.97A5 5 0 0 0 8 8.5 3.5 3.5 0 0 0 6 17z'/></svg></span>Cloudtoons</button>
   <button data-go="comics"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span>Comics</button>
   <button data-go="fight"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M13 2 4.5 13.5H11l-1 8.5 9.5-12.5H12z'/></svg></span>Fight</button>
-<button data-go="smg"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg></span>SMG</button>
+<button data-go="vibe"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4z'/><path d='M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z'/></svg></span>Vibe</button>
+  <button data-go="smg"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg></span>SMG</button>
   <button data-go="songvid"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M10 9l5 3-5 3z'/></svg></span>Lip-Sync</button>
   <button data-go="csb"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='7' height='7' rx='1'/><rect x='14' y='3' width='7' height='7' rx='1'/><rect x='3' y='14' width='7' height='7' rx='1'/><rect x='14' y='14' width='7' height='7' rx='1'/></svg></span>CSB</button>
   <button data-go="vo"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='3' width='6' height='11' rx='3'/><path d='M5 11a7 7 0 0 0 14 0'/><path d='M12 18v3'/></svg></span>Voiceover</button>
@@ -287,6 +288,11 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="svSaveProjBtn" style="flex:0">+ Save to drop</button></div>
 </section>
 
+<section class="view" id="view-vibe">
+  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4z'/><path d='M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z'/></svg></span><h2>Vibe Builder</h2><span class="tag">Describe it · paste it · JSON</span></div>
+  <div class="hint" style="margin-bottom:12px">Describe what you want, paste an existing prompt, or paste / upload JSON — the Vibe Builder turns it into a structured workflow, validates it, previews it, and loads it into the right tool. Save any setup to the Library and reuse it forever.</div>
+  <div id="vibeBody"></div>
+</section>
 <section class="view" id="view-vo">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='3' width='6' height='11' rx='3'/><path d='M5 11a7 7 0 0 0 14 0'/><path d='M12 18v3'/></svg></span><h2>Voiceover</h2><span class="tag">Seed Audio 1.0</span></div>
   <div class="hint" style="margin-bottom:12px">Character voices, narration and full audio scenes (dialogue + ambience + SFX in one pass) from ByteDance Seed Audio. Pick a preset voice or clone one from a clip, then write the line — describe who speaks, their emotion and accent for best results. <b>Chief is mouthless</b>, so use this for narration over his scenes or for other characters. Output auto-saves to The Cut and can be fed into Lip-Sync. English &amp; Chinese.</div>
@@ -973,7 +979,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.39 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.40 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -988,7 +994,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -1279,7 +1285,7 @@ async function svGenerate(){
   svSetMode((S.songvid&&S.songvid.mode)||"perform");
 })();
 var CUR_VIEW="episodes";
-const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",canon:"universe",cast:"universe",sets:"universe",projects:"library",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
+const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",canon:"universe",cast:"universe",sets:"universe",projects:"library",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
 const GROUP_FIRST={create:"smg",universe:"canon",library:"pipeline",setup:"settings"};
 function navLabel(v){var b=document.querySelector('nav button[data-go="'+v+'"]');if(b){var t=(b.textContent||"").trim();if(t)return t;}return v;}
 function renderSubTabs(){
@@ -1310,6 +1316,7 @@ function go(name){
   if(name==="cloudtoons")renderCloudtoons();
   if(name==="comics")renderComics();
   if(name==="vo")renderVO();
+  if(name==="vibe")renderVibe();
   if(name==="fight")renderFight();
   if(name==="cast")renderCast();
   if(name==="sets")renderSets();
@@ -4151,6 +4158,196 @@ function comicNote(comic){
   const set=comic.setId?S.sets.find(x=>x.id===comic.setId):null;
   return (lead?identityNote([lead]):"")+(set?setNote(set):"");
 }
+function vibeSetDom(map,st,fillOnly){Object.keys(map).forEach(function(k){var el=$(map[k]);if(!el||st[k]==null)return;if(fillOnly&&el.value)return;el.value=st[k]+"";});}
+function vibeReadDom(map){var o={};Object.keys(map).forEach(function(k){var el=$(map[k]);o[k]=el?el.value:"";});return o;}
+const VIBE_TOOLS={
+ comic:{name:"Comic Strip",view:"comics",desc:"1-6 panel Stoneralia comic; either an idea (setup/problem/twist) or full panels[]",detect:"comic, panel, strip, gag",
+  schema:{required:[],fields:{title:{t:"string"},mode:{t:"enum",v:["silent","dialogue"]},panels_count:{t:"number",min:1,max:6},look:{t:"enum",v:["toon","inked"]},setup:{t:"string"},problem:{t:"string"},twist:{t:"string"},panels:{t:"array"}}},
+  example:{mode:"silent",panels_count:6,setup:"EveryStoner buys one blunt at 3AM",problem:"his card keeps declining while the line grows",twist:""},
+  hasContent:function(){var i=S.comicIdea3||{};return !!(i.setup||i.problem||i.twist);},
+  exportNow:function(){var i=S.comicIdea3||{};return {mode:S.comicMode||"silent",look:S.comicLook||"toon",setup:i.setup||"",problem:i.problem||"",twist:i.twist||""};},
+  apply:function(st,fillOnly){
+    if(Array.isArray(st.panels)&&st.panels.length){var ps=st.panels.slice(0,6);var n=ps.length;var kind=n===1?"single":(n<=3?"strip3":(n<=4?"strip4":"strip6"));
+      var comic={id:uid(),title:st.title||"Vibe comic",kind:kind,look:(st.look==="inked"?"inked":(S.comicLook||"toon")),leadId:S.comicLead||"",setId:S.comicSet||"",idea:"",mode:(st.mode==="dialogue"?"dialogue":"silent"),panels:ps.map(function(p,i){return {id:uid(),n:i+1,caption:(p.caption||"")+"",dialogue:(p.dialogue||"")+"",visual:(p.visual||"")+"",url:""};}),seed:Math.floor(Math.random()*1e9),ts:Date.now()};
+      S.comics.unshift(comic);S.curComic=comic.id;save();go("comics");return;}
+    if(st.mode&&!fillOnly)S.comicMode=(st.mode==="dialogue"?"dialogue":"silent");
+    if(st.panels_count){var n2=+st.panels_count;if(n2>=1)S.comicKind=n2===1?"single":(n2<=3?"strip3":(n2<=4?"strip4":"strip6"));}
+    if(st.look&&!fillOnly&&(st.look==="toon"||st.look==="inked"))S.comicLook=st.look;
+    var i3=S.comicIdea3||{setup:"",problem:"",twist:""};["setup","problem","twist"].forEach(function(k){if(st[k]!=null&&(!fillOnly||!i3[k]))i3[k]=st[k]+"";});S.comicIdea3=i3;S.curComic=null;save();go("comics");
+    vibeSetDom({setup:"cbSetup",problem:"cbProblem",twist:"cbTwist"},i3,false);
+    if($("comicMode"))$("comicMode").value=S.comicMode||"silent";if($("comicKind"))$("comicKind").value=S.comicKind||"strip3";if($("comicLook"))$("comicLook").value=S.comicLook||"toon";}},
+ board:{name:"Storyboard (Pre-Roll)",view:"board",desc:"storyboard / pre-viz board from a script or logline",detect:"storyboard, board, shots, pre-viz, scene list",
+  schema:{required:["script"],fields:{script:{t:"string"},style:{t:"enum",v:["frames","pitchbible","action9","comic6"]},title:{t:"string"},palette:{t:"string"}}},
+  example:{script:"Chief vs Grinderjaw on a rooftop, 9 beats, no dialogue, ends crashing through an AC unit",style:"action9",title:"Rooftop"},
+  _map:{script:"boardScript",style:"boardStyle",title:"boardTitle",palette:"boardPalette"},
+  hasContent:function(){var el=$("boardScript");return !!(el&&el.value);},
+  exportNow:function(){return vibeReadDom(this._map);},
+  apply:function(st,fillOnly){vibeSetDom(this._map,st,fillOnly);go("board");}},
+ smg:{name:"SMG \u2014 Song Maker",view:"smg",desc:"song concept: title, scene/vibe the song scores, artist persona(s)",detect:"song, suno, track, anthem, hook, lyrics",
+  schema:{required:["scene"],fields:{title:{t:"string"},scene:{t:"string"},artist:{t:"string"},artist2:{t:"string"}}},
+  example:{title:"Quiet Elevation",scene:"cinematic Brooklyn stoner anthem, triumphant but reflective, boom bap",artist:"Chieff"},
+  _map:{title:"sunoTitle",scene:"sunoScene",artist:"sunoArtist",artist2:"sunoArtist2"},
+  hasContent:function(){var el=$("sunoScene");return !!(el&&el.value);},
+  exportNow:function(){return vibeReadDom(this._map);},
+  apply:function(st,fillOnly){vibeSetDom(this._map,st,fillOnly);go("smg");}},
+ vo:{name:"Voiceover",view:"vo",desc:"speech / narration / audio scene generation",detect:"voiceover, narration, voice, speech, tts, says",
+  schema:{required:["script"],fields:{script:{t:"string"},voice:{t:"string"},speed:{t:"number",min:0.5,max:2},pitch:{t:"number",min:-12,max:12},format:{t:"enum",v:["mp3","wav"]}}},
+  example:{script:"Narrator (calm, dry deadpan): The bodega never sleeps. Neither does he.",voice:"",speed:1,pitch:0,format:"mp3"},
+  hasContent:function(){return !!(S.vo&&S.vo.script);},
+  exportNow:function(){var v=S.vo||{};return {script:v.script||"",voice:v.voice||"",speed:v.speed||1,pitch:v.pitch||0,format:v.format||"mp3"};},
+  apply:function(st,fillOnly){if(!S.vo)S.vo={script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0};
+    if(st.script!=null&&(!fillOnly||!S.vo.script))S.vo.script=st.script+"";
+    if(st.voice!=null&&!fillOnly)S.vo.voice=st.voice+"";
+    if(st.speed!=null)S.vo.speed=Math.max(0.5,Math.min(2,+st.speed||1));
+    if(st.pitch!=null)S.vo.pitch=Math.max(-12,Math.min(12,Math.round(+st.pitch||0)));
+    if(st.format==="wav"||st.format==="mp3")S.vo.format=st.format;
+    save();go("vo");}},
+ studio:{name:"Image Studio",view:"studio",desc:"single image generation prompt",detect:"image, picture, photo, poster, render, shot of",
+  schema:{required:["prompt"],fields:{prompt:{t:"string"},model:{t:"string"}}},
+  example:{prompt:"Canonical Toy Chief on a bodega rooftop at dusk, cinematic, brand palette"},
+  hasContent:function(){var el=$("prompt");return !!(el&&el.value);},
+  exportNow:function(){var el=$("prompt");var m=$("modelSelect");return {prompt:el?el.value:"",model:m?m.value:""};},
+  apply:function(st,fillOnly){var el=$("prompt");if(el&&st.prompt!=null&&(!fillOnly||!el.value))el.value=st.prompt+"";
+    if(st.model){var m=$("modelSelect");if(m){for(var i=0;i<m.options.length;i++){if(m.options[i].value===st.model){m.value=st.model;break;}}}}
+    go("studio");}}
+};
+function vibeEnvelope(tool,settings,srcMode,req,assumptions){return {app_schema_version:"1.0",workflow_id:uid(),workflow_name:"",tool_id:tool,created_at:new Date().toISOString(),source_mode:srcMode||"describe",user_request:req||"",settings:settings||{},assumptions:assumptions||[],validation:{status:"pending",errors:[],warnings:[]}};}
+function vibeParse(txt){
+  if(!txt||!txt.trim())return {err:"The editor is empty \u2014 nothing to read yet."};
+  try{return {obj:JSON.parse(txt)};}
+  catch(e){var m=/position (\d+)/.exec(e.message||"");var line=1;if(m){var upto=txt.slice(0,+m[1]);line=upto.split("\n").length;}
+    try{var o2=parseJSON(txt);return {obj:o2,warn:"JSON had formatting issues near line "+line+" \u2014 auto-repaired. Tap Format to clean it up."};}
+    catch(e2){return {err:"JSON syntax error near line "+line+": "+(e.message||"unreadable JSON")+". Fix the highlighted spot \u2014 your text was NOT cleared."};}}}
+function vibeValidate(o){
+  var errors=[],warnings=[];
+  if(!o||typeof o!=="object")return {status:"invalid",errors:["Not a JSON object."],warnings:[]};
+  var tid=o.tool_id||o.tool;var st=o.settings&&typeof o.settings==="object"?o.settings:null;
+  if(!tid)errors.push("Missing tool_id \u2014 which tool is this for? (comic, board, smg, vo, studio)");
+  else if(!VIBE_TOOLS[tid])errors.push("Unknown tool_id \""+tid+"\". Supported: "+Object.keys(VIBE_TOOLS).join(", ")+".");
+  if(!st){errors.push("Missing settings object \u2014 the tool-specific fields live in settings:{}.");}
+  if(tid&&VIBE_TOOLS[tid]&&st){var sc=VIBE_TOOLS[tid].schema;
+    sc.required.forEach(function(k){if(st[k]==null||st[k]==="")errors.push("Required field missing: settings."+k);});
+    Object.keys(st).forEach(function(k){var f=sc.fields[k];
+      if(!f){warnings.push("Unknown field settings."+k+" \u2014 it will be ignored by this tool.");return;}
+      var v=st[k];
+      if(f.t==="string"&&typeof v!=="string")errors.push("settings."+k+" should be text.");
+      if(f.t==="number"&&(typeof v!=="number"||isNaN(v)))errors.push("settings."+k+" should be a number.");
+      if(f.t==="number"&&typeof v==="number"){if(f.min!=null&&v<f.min)errors.push("settings."+k+" must be at least "+f.min+".");if(f.max!=null&&v>f.max)errors.push("settings."+k+" must be at most "+f.max+".");}
+      if(f.t==="array"&&!Array.isArray(v))errors.push("settings."+k+" should be a list [].");
+      if(f.t==="enum"&&v!=null&&f.v.indexOf(v)<0)errors.push("settings."+k+" must be one of: "+f.v.join(" | ")+".");});}
+  if(o.app_schema_version&&o.app_schema_version!=="1.0")warnings.push("Made with schema v"+o.app_schema_version+" \u2014 this app reads v1.0; fields it doesn\u2019t know are kept but ignored.");
+  var status=errors.length?"invalid":(warnings.length?"warnings":"valid");
+  if(o.validation){o.validation.status=status;o.validation.errors=errors;o.validation.warnings=warnings;}
+  return {status:status,errors:errors,warnings:warnings};}
+function vibeStatusPaint(v){var el=$("vibeStatus");if(!el)return;
+  if(v.status==="valid")el.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Valid \u2014 ready to preview or apply</div>';
+  else{var h="";if(v.errors.length)h+='<div class="statusline" style="color:var(--red)">\u2715 '+v.errors.map(esc).join("<br>\u2715 ")+"</div>";
+    if(v.warnings.length)h+='<div class="statusline" style="color:var(--bone-dim)">\u26a0 '+v.warnings.map(esc).join("<br>\u26a0 ")+"</div>";
+    el.innerHTML=h||"";}}
+function vibeAssumePaint(list){var el=$("vibeAssume");if(!el)return;
+  if(!list||!list.length){el.innerHTML="";return;}
+  el.innerHTML='<div class="card" style="border-left:3px solid var(--bud)"><div style="font-weight:800;font-family:var(--slate)">Assumptions I made</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">Edit the JSON if any of these are wrong.</div><ul style="margin:8px 0 0 18px;padding:0;font-size:13px">'+list.map(function(a){return "<li style=\"margin-bottom:4px\">"+esc(typeof a==="string"?a:JSON.stringify(a))+"</li>";}).join("")+"</ul></div>";}
+async function vibeGenerate(){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  var input=($("vibeIn")?$("vibeIn").value:"").trim();var mode=S.vibe.mode||"describe";
+  if(mode==="json"){var t=$("vibeJson");if(t&&input){t.value=input;S.vibe.json=input;save();}vibeValidateBtn();return;}
+  if(!input){toast("Describe what you want (or paste a prompt) first.",true);return;}
+  var st=$("vibeGenStatus");if(st)st.innerHTML=spinner("Building the workflow\u2026");
+  var compact={};Object.keys(VIBE_TOOLS).forEach(function(k){var T=VIBE_TOOLS[k];compact[k]={name:T.name,desc:T.desc,detect:T.detect,required:T.schema.required,fields:Object.keys(T.schema.fields).map(function(f){var d=T.schema.fields[f];return f+":"+d.t+(d.v?"("+d.v.join("|")+")":"");}),example:T.example};});
+  var forced=(S.vibe.tool&&S.vibe.tool!=="auto")?S.vibe.tool:"";
+  var sys="You convert creative requests into ONE strict JSON workflow envelope for an app. TOOL REGISTRY: "+JSON.stringify(compact)+". Return ONLY raw JSON (no markdown, no commentary): {\"app_schema_version\":\"1.0\",\"tool_id\":\"\",\"workflow_name\":\"short name\",\"settings\":{},\"assumptions\":[]}. RULES: pick the single best tool_id"+(forced?" \u2014 the user FORCED tool_id="+forced:"")+"; put ONLY that tool\u2019s schema fields inside settings with correct types; extract every explicit instruction; preserve named characters, brands, locations and props exactly; infer missing values conservatively and record EVERY inferred value as a plain-language sentence in assumptions (including why you picked the tool); never invent extra details; never change an explicit user instruction.";
+  var usr=(mode==="prompt"?"Convert this existing prompt into a workflow:\n":"Request:\n")+input;
+  try{
+    var d=parseJSON(await _llmRun(sys,usr,"ideas"));
+    if(!d||!d.tool_id||!VIBE_TOOLS[d.tool_id])throw new Error("Could not match that to a tool \u2014 pick the tool manually and try again.");
+    var env=vibeEnvelope(d.tool_id,d.settings||{},mode,input,Array.isArray(d.assumptions)?d.assumptions:[]);
+    env.workflow_name=d.workflow_name||"";
+    var v=vibeValidate(env);
+    var t2=$("vibeJson");if(t2)t2.value=JSON.stringify(env,null,2);S.vibe.json=t2?t2.value:"";S.vibe.tool=env.tool_id;save();
+    var sel=$("vibeTool");if(sel)sel.value=env.tool_id;
+    var tag=$("vibeToolTag");if(tag)tag.textContent="detected: "+VIBE_TOOLS[env.tool_id].name;
+    vibeStatusPaint(v);vibeAssumePaint(env.assumptions);if(st)st.innerHTML="";
+    toast(v.status==="invalid"?"Workflow built \u2014 fix the flagged fields.":"Workflow built \u2014 preview or apply.");
+  }catch(e){if(st)st.innerHTML=errLine(e);}}
+function vibeValidateBtn(){var r=vibeParse($("vibeJson")?$("vibeJson").value:"");
+  if(r.err){vibeStatusPaint({status:"invalid",errors:[r.err],warnings:[]});return null;}
+  var v=vibeValidate(r.obj);if(r.warn)v.warnings.unshift(r.warn);vibeStatusPaint(v);vibeAssumePaint(r.obj.assumptions||[]);return v.status==="invalid"?null:r.obj;}
+function vibePreview(){var o=vibeValidateBtn();var el=$("vibePreview");if(!el)return;
+  if(!o){el.innerHTML="";return;}
+  var T=VIBE_TOOLS[o.tool_id||o.tool];var stg=o.settings||{};
+  var h='<div class="card" style="border-left:3px solid var(--bud)"><div style="font-weight:800;font-family:var(--slate)">'+esc(T.name)+' \u2014 preview</div>';
+  if(o.workflow_name)h+='<div class="hint" style="margin-top:2px;text-transform:none;letter-spacing:0">'+esc(o.workflow_name)+"</div>";
+  h+='<table style="width:100%;margin-top:8px;font-size:13px;border-collapse:collapse">';
+  Object.keys(stg).forEach(function(k){if(k==="panels")return;var val=stg[k];if(val==null||val==="")return;
+    h+='<tr><td style="padding:3px 8px 3px 0;color:var(--bone-dim);vertical-align:top;white-space:nowrap">'+esc(k)+'</td><td style="padding:3px 0">'+esc(Array.isArray(val)?val.join(", "):String(val))+"</td></tr>";});
+  h+="</table>";
+  if(Array.isArray(stg.panels)&&stg.panels.length){h+='<div style="font-weight:800;font-family:var(--slate);margin-top:10px">'+stg.panels.length+" panels</div>";
+    stg.panels.slice(0,6).forEach(function(p,i){h+='<div style="margin-top:6px;padding:8px;border:1px solid var(--line);border-radius:8px;font-size:12px"><b>Panel '+(i+1)+'</b>'+(p.caption?'<div style="font-style:italic">\u201c'+esc(p.caption)+'\u201d</div>':"")+(p.dialogue?'<div style="color:var(--bone-dim);white-space:pre-wrap">'+esc(p.dialogue)+"</div>":"")+(p.visual?'<div style="margin-top:3px">'+esc(p.visual)+"</div>":"")+"</div>";});}
+  h+='<div class="hint" style="margin-top:8px;text-transform:none;letter-spacing:0">Nothing has been generated yet \u2014 applying just fills the tool. You still press its generate button.</div></div>';
+  el.innerHTML=h;}
+function vibeApply(){var o=vibeValidateBtn();if(!o){toast("Fix the JSON first \u2014 invalid setups can\u2019t be applied.",true);return;}
+  var T=VIBE_TOOLS[o.tool_id||o.tool];var box=$("vibeApplyChoice");
+  var doApply=function(fillOnly){if(box)box.innerHTML="";T.apply(o.settings||{},fillOnly);toast("Loaded into "+T.name+" \u2014 your setup is in place.");};
+  if(T.hasContent&&T.hasContent()&&box){
+    box.innerHTML='<div class="card" style="border-left:3px solid var(--red)"><div style="font-size:13px">'+esc(T.name)+' already has work in it. How should I load this?</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" id="vibeApRep" style="flex:1">Replace all</button><button class="btn ghost sm" id="vibeApFill" style="flex:1">Fill empty only</button><button class="btn ghost sm" id="vibeApNo" style="flex:0 0 auto;padding:8px 12px">\u2715</button></div></div>';
+    $("vibeApRep").addEventListener("click",function(){doApply(false);});
+    $("vibeApFill").addEventListener("click",function(){doApply(true);});
+    $("vibeApNo").addEventListener("click",function(){box.innerHTML="";});
+    return;}
+  doApply(false);}
+function vibeSave(){var o=vibeValidateBtn();if(!o){toast("Fix the JSON first.",true);return;}
+  var name=(o.workflow_name||"").trim()||((VIBE_TOOLS[o.tool_id]?VIBE_TOOLS[o.tool_id].name:"Workflow")+" \u2014 "+new Date().toLocaleDateString());
+  S.vibe.lib.unshift({id:uid(),name:name,tool:o.tool_id||"",json:$("vibeJson").value,ts:Date.now(),fav:false});save();renderVibeLib();toast("Saved to the Workflow Library.");}
+function renderVibeLib(){var host=$("vibeLibList");if(!host)return;var q=(($("vibeLibQ")||{}).value||"").toLowerCase();
+  var items=(S.vibe.lib||[]).filter(function(w){return !q||(w.name+" "+w.tool).toLowerCase().indexOf(q)>=0;});
+  items.sort(function(a,b){return (b.fav-a.fav)||(b.ts-a.ts);});
+  if(!items.length){host.innerHTML='<div class="hint" style="text-transform:none;letter-spacing:0">Nothing saved yet \u2014 build a workflow above and tap Save.</div>';return;}
+  host.innerHTML=items.map(function(w){var T=VIBE_TOOLS[w.tool];return '<div style="padding:10px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><div style="min-width:0"><div style="font-weight:800;font-family:var(--slate);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(w.name)+'</div><div class="hint" style="text-transform:none;letter-spacing:0">'+esc(T?T.name:w.tool)+" \u00b7 "+new Date(w.ts).toLocaleDateString()+'</div></div><button class="btn ghost sm" data-vfav="'+w.id+'" style="flex:0 0 auto;padding:6px 10px">'+(w.fav?"\u2605":"\u2606")+'</button></div><div class="row" style="margin-top:8px"><button class="btn ghost sm" data-vload="'+w.id+'" style="flex:1">Load</button><button class="btn green sm" data-vapply="'+w.id+'" style="flex:1">\u25b6 Apply</button><button class="btn ghost sm" data-vcopy="'+w.id+'" style="flex:0 0 auto;padding:8px 10px">\u29c9</button><button class="btn ghost sm" data-vdel="'+w.id+'" style="flex:0 0 auto;padding:8px 10px">\u2715</button></div></div>';}).join("");
+  host.querySelectorAll("[data-vfav]").forEach(function(b){b.addEventListener("click",function(){var w=S.vibe.lib.find(function(x){return x.id===b.getAttribute("data-vfav");});if(w){w.fav=!w.fav;save();renderVibeLib();}});});
+  host.querySelectorAll("[data-vload]").forEach(function(b){b.addEventListener("click",function(){var w=S.vibe.lib.find(function(x){return x.id===b.getAttribute("data-vload");});if(w&&$("vibeJson")){$("vibeJson").value=w.json;S.vibe.json=w.json;save();vibeValidateBtn();toast("Loaded into the editor.");}});});
+  host.querySelectorAll("[data-vapply]").forEach(function(b){b.addEventListener("click",function(){var w=S.vibe.lib.find(function(x){return x.id===b.getAttribute("data-vapply");});if(w&&$("vibeJson")){$("vibeJson").value=w.json;S.vibe.json=w.json;save();vibeApply();}});});
+  host.querySelectorAll("[data-vcopy]").forEach(function(b){b.addEventListener("click",function(){var w=S.vibe.lib.find(function(x){return x.id===b.getAttribute("data-vcopy");});if(w)navigator.clipboard.writeText(w.json).then(function(){toast("JSON copied.");}).catch(function(){toast("Copy failed.",true);});});});
+  host.querySelectorAll("[data-vdel]").forEach(function(b){b.addEventListener("click",function(){if(!confirm("Delete this workflow?"))return;S.vibe.lib=S.vibe.lib.filter(function(x){return x.id!==b.getAttribute("data-vdel");});save();renderVibeLib();});});}
+function renderVibe(){
+  var host=$("vibeBody");if(!host)return;if(!S.vibe)S.vibe={mode:"describe",tool:"auto",input:"",json:"",lib:[]};
+  var MODES=[["describe","Describe"],["prompt","Paste prompt"],["json","Paste JSON"],["upload","Upload .json"]];
+  var h='<div class="card"><label class="fld">How are you starting?</label><div class="tonerow" id="vibeModes" style="margin:4px 0 10px">'+MODES.map(function(m){return '<button type="button" class="tonechip'+(S.vibe.mode===m[0]?" on":"")+'" data-vm="'+m[0]+'">'+m[1]+"</button>";}).join("")+"</div>";
+  h+='<label class="fld">Tool</label><div class="row"><select id="vibeTool" style="flex:1"><option value="auto">\u2726 Auto-detect</option>'+Object.keys(VIBE_TOOLS).map(function(k){return '<option value="'+k+'"'+(S.vibe.tool===k?" selected":"")+">"+esc(VIBE_TOOLS[k].name)+"</option>";}).join("")+'</select></div><div class="hint" id="vibeToolTag" style="margin-top:4px;text-transform:none;letter-spacing:0"></div>';
+  h+='<label class="fld" style="margin-top:10px">Your input</label><textarea id="vibeIn" placeholder="Describe what you want to create, paste an existing prompt, or paste a JSON configuration." style="min-height:110px">'+esc(S.vibe.input||"")+"</textarea>";
+  h+='<input type="file" id="vibeFile" accept=".json,application/json" style="display:none">';
+  h+='<button class="btn green" id="vibeGen" style="width:100%;margin-top:10px;padding:13px">\u2726 Generate workflow</button><div id="vibeGenStatus"></div></div>';
+  h+='<div class="card"><label class="fld">Workflow JSON</label><div class="row" style="margin:4px 0 8px"><button class="btn ghost sm" id="vibeFmt" style="flex:1">Format</button><button class="btn ghost sm" id="vibeMin" style="flex:1">Minify</button><button class="btn ghost sm" id="vibeCopy" style="flex:0 0 auto;padding:8px 10px">\u29c9</button><button class="btn ghost sm" id="vibeDl" style="flex:0 0 auto;padding:8px 10px">\u2913</button></div>';
+  h+='<textarea id="vibeJson" placeholder="Generated (or pasted) JSON lands here \u2014 editable." style="min-height:180px;font-family:var(--mono);font-size:12px">'+esc(S.vibe.json||"")+"</textarea>";
+  h+='<div class="row" style="margin-top:8px"><button class="btn ghost sm" id="vibeVal" style="flex:1">\u2699 Validate</button><button class="btn ghost sm" id="vibePrev" style="flex:1">\ud83d\udc41 Preview</button></div><div id="vibeStatus" style="margin-top:6px"></div><div id="vibeAssume" style="margin-top:6px"></div><div id="vibePreview" style="margin-top:6px"></div><div id="vibeApplyChoice" style="margin-top:6px"></div>';
+  h+='<div class="row" style="margin-top:8px"><button class="btn green" id="vibeApply" style="flex:1">\u25b6 Apply to tool</button><button class="btn ghost" id="vibeSaveBtn" style="flex:1">\ud83d\udcbe Save to Library</button></div></div>';
+  h+='<div class="card"><label class="fld">Export a tool\u2019s current setup as JSON</label><div class="row" style="margin-top:4px"><select id="vibeExpSel" style="flex:1">'+Object.keys(VIBE_TOOLS).map(function(k){return '<option value="'+k+'">'+esc(VIBE_TOOLS[k].name)+"</option>";}).join("")+'</select><button class="btn ghost sm" id="vibeExpBtn" style="flex:0 0 auto;padding:8px 12px">\u2913 Export</button></div></div>';
+  h+='<div class="card"><label class="fld">Workflow Library</label><input type="text" id="vibeLibQ" placeholder="Search saved workflows\u2026" style="margin:4px 0 8px"><div id="vibeLibList"></div></div>';
+  host.innerHTML=h;
+  host.querySelectorAll("[data-vm]").forEach(function(b){b.addEventListener("click",function(){var m=b.getAttribute("data-vm");
+    if(m==="upload"){$("vibeFile").click();return;}
+    S.vibe.mode=m;save();host.querySelectorAll("[data-vm]").forEach(function(x){x.classList.toggle("on",x.getAttribute("data-vm")===m);});
+    var g=$("vibeGen");if(g)g.textContent=(m==="json")?"\u2699 Load + validate JSON":"\u2726 Generate workflow";});});
+  $("vibeFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;
+    if(f.size>1024*1024){toast("File too big \u2014 keep JSON under 1 MB.",true);return;}
+    var r=new FileReader();r.onload=function(){var t=$("vibeJson");if(t){t.value=r.result;S.vibe.json=r.result;save();vibeValidateBtn();toast("File loaded into the editor.");}};r.onerror=function(){toast("Could not read that file.",true);};r.readAsText(f);});
+  $("vibeTool").addEventListener("change",function(e){S.vibe.tool=e.target.value;save();var tag=$("vibeToolTag");if(tag)tag.textContent=e.target.value==="auto"?"":"forced: "+VIBE_TOOLS[e.target.value].name;});
+  $("vibeIn").addEventListener("input",function(e){S.vibe.input=e.target.value;save();});
+  $("vibeJson").addEventListener("input",function(e){S.vibe.json=e.target.value;save();});
+  $("vibeGen").addEventListener("click",vibeGenerate);
+  $("vibeVal").addEventListener("click",vibeValidateBtn);
+  $("vibePrev").addEventListener("click",vibePreview);
+  $("vibeApply").addEventListener("click",vibeApply);
+  $("vibeSaveBtn").addEventListener("click",vibeSave);
+  $("vibeFmt").addEventListener("click",function(){var r=vibeParse($("vibeJson").value);if(r.err){vibeStatusPaint({status:"invalid",errors:[r.err],warnings:[]});return;}$("vibeJson").value=JSON.stringify(r.obj,null,2);S.vibe.json=$("vibeJson").value;save();});
+  $("vibeMin").addEventListener("click",function(){var r=vibeParse($("vibeJson").value);if(r.err){vibeStatusPaint({status:"invalid",errors:[r.err],warnings:[]});return;}$("vibeJson").value=JSON.stringify(r.obj);S.vibe.json=$("vibeJson").value;save();});
+  $("vibeCopy").addEventListener("click",function(){navigator.clipboard.writeText($("vibeJson").value).then(function(){toast("JSON copied.");}).catch(function(){toast("Copy failed.",true);});});
+  $("vibeDl").addEventListener("click",function(){var blob=new Blob([$("vibeJson").value],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="vibe-workflow.json";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);});
+  $("vibeExpBtn").addEventListener("click",function(){var k=$("vibeExpSel").value;var T=VIBE_TOOLS[k];if(!T)return;
+    var env=vibeEnvelope(k,T.exportNow(),"export","");env.workflow_name=T.name+" \u2014 current setup";
+    var t=$("vibeJson");if(t){t.value=JSON.stringify(env,null,2);S.vibe.json=t.value;save();}vibeValidateBtn();toast("Exported \u2014 edit, save or download it.");});
+  $("vibeLibQ").addEventListener("input",renderVibeLib);
+  var g0=$("vibeGen");if(g0&&S.vibe.mode==="json")g0.textContent="\u2699 Load + validate JSON";
+  renderVibeLib();}
 const VO_VOICES=[["","\u2014 let the script describe the voice \u2014"],["__clone","Clone from my clip (@Audio1)"],["vivi_mixed_en_zh_ja_es_id","Vivi \u2014 versatile, multi-language"],["kian_en_zh","Kian \u2014 male"],["cedric_en_zh","Cedric \u2014 male, deep"],["magnus_en_zh","Magnus \u2014 male, bold"],["quentin_en_zh","Quentin \u2014 male"],["jean_en_zh","Jean \u2014 male"],["sophie_en_zh","Sophie \u2014 female"],["mabel_en_zh","Mabel \u2014 female"],["nadia_en_zh","Nadia \u2014 female"],["pearl_en_zh","Pearl \u2014 female"],["opal_en_zh","Opal \u2014 female"],["lyla_mixed_en_zh","Lyla \u2014 female, warm"],["corinne_mixed_en_zh","Corinne \u2014 female"],["esther_mixed_en_zh","Esther \u2014 female"],["mindy_en_es_id_pt_zh","Mindy \u2014 female, multi-language"]];
 const VO_CHARS=[
  {l:"EveryStoner",t:'EveryStoner (male, late 20s, American accent, laid-back and slightly baked, deadpan and unhurried) says: "TYPE THE LINE HERE"'},

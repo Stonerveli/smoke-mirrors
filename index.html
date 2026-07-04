@@ -455,10 +455,22 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   </div>
   <div class="card"><label class="fld">Motion Director — board → video prompt</label>
   <div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Turns the script above into a timed, shot-by-shot Seedance prompt — camera, blocking, dialogue and sound — with your cast DNA and locked Chiefin’ Season wardrobe baked in. Default audio: <b>no music, ever</b> — you score your own.</div>
+  <label class="fld">Motion recipe — optional technique</label><select id="mdRecipe" style="margin-bottom:8px"><option value="">— none · straight direction —</option></select>
   <div class="row"><select id="mdDur" style="flex:1"><option value="5">5s</option><option value="10">10s</option><option value="15" selected>15s · multi-shot</option></select><select id="mdAudio" style="flex:1.7"><option value="diegetic" selected>Diegetic only — NO music</option><option value="music">Diegetic + music allowed</option><option value="silent">Silent visual</option></select></div>
   <button class="btn green" id="mdGen" style="width:100%;margin-top:8px" onclick="genMotion()">🎬 Build motion prompt</button><div id="mdStatus"></div>
   <textarea id="mdOut" style="min-height:170px;margin-top:8px;display:none;font-size:13px"></textarea>
   <div class="row" id="mdActs" style="margin-top:6px;display:none"><button class="btn ghost sm" style="flex:1" onclick="mdCopyOut()">⧉ Copy</button><button class="btn ghost sm" style="flex:1" onclick="mdSaveDrop()">+ Save to drop</button></div></div>
+  <div class="card"><label class="fld">Rapid Multi-Shot — 15 seconds, no storyboard</label>
+  <div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">The speed lane: pick who, say what happens, get a paste-ready 15s prompt — 3–7 shots, lens + angle + one move each, DNA + locked wardrobe compressed in, hard 1,500-character cap, diegetic audio only.</div>
+  <label class="fld">Cast</label><div id="rmsCast" class="tonerow" style="margin:4px 0 8px"></div>
+  <div class="row"><select id="rmsSet" style="flex:1.4"></select><select id="rmsTime" style="flex:1"><option>day</option><option>golden hour</option><option selected>night</option><option>late night</option><option>dawn</option></select></div>
+  <div class="row" style="margin-top:6px"><select id="rmsPace" style="flex:1"><option value="balanced" selected>Balanced · 4-5 shots</option><option value="slow">Slow / emotional · 3-4</option><option value="fast">Fast comedy · 5-6</option><option value="high">High energy · 6-7</option><option value="dialogue">Dialogue-led · 3-5</option></select><select id="rmsModel" style="flex:1"><option selected>Seedance</option><option>Kling</option></select></div>
+  <label class="fld" style="margin-top:8px">Action / script</label><textarea id="rmsAction" style="min-height:80px" placeholder="What happens — action, reactions, any dialogue lines"></textarea>
+  <button class="btn green" style="width:100%;margin-top:8px" onclick="rmsGen()">⚡ Build 15s prompt</button><div id="rmsStatus"></div>
+  <textarea id="rmsOut" style="min-height:150px;margin-top:8px;display:none;font-size:13px" oninput="rmsCount()"></textarea>
+  <div id="rmsMeta" class="hint" style="margin-top:4px;text-transform:none;letter-spacing:0"></div>
+  <div class="row" id="rmsActs" style="margin-top:6px;display:none"><button class="btn ghost sm" style="flex:1" onclick="rmsCompress()">⚡ Compress</button><button class="btn ghost sm" style="flex:1" onclick="rmsCopy()">⧉ Copy</button><button class="btn ghost sm" style="flex:1" onclick="rmsSaveDrop()">+ Drop</button></div></div>
+
 </section>
 
 <!-- ===== STASH ===== -->
@@ -998,7 +1010,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.49 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.50 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1023,7 +1035,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -1349,6 +1361,7 @@ function go(name){
   if(name==="vibe")renderVibe();
   if(name==="run")renderRun();
   if(name==="socials")renderSocials();
+  if(name==="board"){if(typeof mdRecipeFill==="function")mdRecipeFill();if(typeof rmsFill==="function")rmsFill();}
   if(name==="fight")renderFight();
   if(name==="cast")renderCast();
   if(name==="sets")renderSets();
@@ -4839,6 +4852,72 @@ async function writeBoardScript(){
   try{const txt=await llmRun(sys,usr);if(ta)ta.value=txt;S.board.script=txt;save();if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Script written \u2014 lock characters below, then \u25a6 Generate storyboard</div>';}
   catch(e){if(st)st.innerHTML=errLine(e);}
 }
+const MOTION_RECIPES=[
+ {k:"img2vid",cat:"Core",name:"Reference image → video",g:"Animate the supplied still. Preserve face, proportions, garment design, colour placement and framing exactly; add only the described motion. Nothing morphs."},
+ {k:"start_end",cat:"Core",name:"Start frame → end frame",g:"Controlled transition from the described start image to the described end image. Motivated in-between action, no identity drift, no random wardrobe or background changes, no uncontrolled morphing."},
+ {k:"onetake",cat:"Core",name:"Continuous one-take",g:"ONE uninterrupted camera move, no cuts. Describe the full camera path and how blocking flows through it."},
+ {k:"living",cat:"Core",name:"Living photo",g:"Subtle life inside a still: breathing, eye shifts, wind in fabric and hair, drifting haze, flickering light, background passersby. Composition never changes."},
+ {k:"slam",cat:"Character",name:"Outfit slam-on",g:"The locked Chiefin’ Season outfit flies in and slams onto the character piece by readable piece — believable fabric physics, impact beat, ends wearing the EXACT locked fit. Face and body identity never change. No armor."},
+ {k:"assembly",cat:"Character",name:"Garment assembly",g:"Individual garments fly into place one by one — jacket, tee, cargos, kicks, chain, cap — magnetic/kinetic motion, clear order, ends in a locked hero pose wearing the exact fit."},
+ {k:"lookbook",cat:"Character",name:"Lookbook turn",g:"Controlled fashion progression: walk-in, front to side, side to back, full turn, hold. Clean staging, garment reads clearly at every angle, editorial pacing."},
+ {k:"swap",cat:"Character",name:"Character swap",g:"Keep the source performance: body timing, gestures, framing, camera motion, rhythm. Replace the performer with the selected character — face, hair, build, locked outfit — seamlessly."},
+ {k:"reveal",cat:"Product",name:"Product reveal",g:"Cinematic product reveal: controlled light, slow orbit or push-in, fabric/material macro moments, brand graphic lands last. Premium, unhurried, zero gimmick."},
+ {k:"macro",cat:"Product",name:"Garment detail macro",g:"Macro pass over weave, stitching, embroidery, print texture, zipper pulls and labels — shallow focus, slow drift, tactile lighting."},
+ {k:"poster",cat:"Product",name:"Poster wake-up",g:"A static campaign poster wakes up: layered paper shift, halftone shimmer, torn-edge flutter, haze lines, sticker motion, typography sliding — camera locked or gently pushing."},
+ {k:"restyle_env",cat:"World",name:"Environment restyle",g:"Keep subject performance and composition; transform the surroundings into the selected Stoneralia location — architecture, signage, light and background activity all convert."},
+ {k:"pov",cat:"Camera",name:"POV chase",g:"First-person or subject-locked pursuit through the location — urgent but readable, comedic energy allowed, environment whips past with clear geography."},
+ {k:"bullet",cat:"Camera",name:"Bullet-time freeze",g:"Freeze characters, haze and debris mid-moment while the camera travels through the frozen scene, then release back to speed. Audio drops with the freeze."},
+ {k:"ramp",cat:"Camera",name:"Speed-ramp impact",g:"Real time into slow motion at the key impact or reveal — hold the money frame — then snap back to speed."},
+ {k:"smoke",cat:"FX",name:"Smoke choreography",g:"Characters move with controlled haze ribbons — circles, figure-eights, negative space — trails never hide faces or the locked wardrobe. Ends in a clean formation."},
+ {k:"mech",cat:"FX",name:"Stoneralia mechanical assembly",g:"An object reconfigures into an ORIGINAL Stoneralia machine: interlocking industrial parts, visible mechanisms, hydraulic motion, folding panels. No franchise silhouettes or names."},
+ {k:"animatic",cat:"Production",name:"Storyboard → animatic",g:"Treat the beats as storyboard panels: camera pushes across each, timed panel-to-panel transitions, dialogue timing marks and audio cues — a moving board, not full animation."}
+];
+function mdRecipeFill(){var r=$("mdRecipe");if(!r)return;var cur=r.value;var cats={};MOTION_RECIPES.forEach(function(m){(cats[m.cat]=cats[m.cat]||[]).push(m);});
+ var h='<option value="">— none · straight direction —</option>';
+ Object.keys(cats).forEach(function(c){h+='<optgroup label="'+c+'">'+cats[c].map(function(m){return '<option value="'+m.k+'">'+m.name+"</option>";}).join("")+"</optgroup>";});
+ if(S.recipes&&S.recipes.length)h+='<optgroup label="My recipes">'+S.recipes.map(function(m){return '<option value="custom:'+m.id+'">'+esc(m.name)+"</option>";}).join("")+"</optgroup>";
+ r.innerHTML=h;r.value=cur||"";}
+function mdRecipeGuidance(){var r=$("mdRecipe");if(!r||!r.value)return "";
+ if(r.value.indexOf("custom:")===0){var c=(S.recipes||[]).find(function(x){return "custom:"+x.id===r.value;});return c?(" RECIPE — "+c.name+": "+c.txt):"";}
+ var m=MOTION_RECIPES.find(function(x){return x.k===r.value;});return m?(" RECIPE — "+m.name+": "+m.g):"";}
+var RMS={cast:{}};
+function rmsFill(){
+ var cw=$("rmsCast");if(cw){cw.innerHTML=(S.cast&&S.cast.length)?S.cast.map(function(c){return '<button type="button" class="tonechip'+(RMS.cast[c.id]?" on":"")+'" data-rmc="'+c.id+'">'+esc(c.name)+"</button>";}).join(""):'<span class="hint" style="text-transform:none;letter-spacing:0">Add characters in Cast first.</span>';
+  cw.querySelectorAll("[data-rmc]").forEach(function(b){b.addEventListener("click",function(){var id=b.getAttribute("data-rmc");RMS.cast[id]=!RMS.cast[id];b.classList.toggle("on",!!RMS.cast[id]);});});}
+ var sw=$("rmsSet");if(sw){sw.innerHTML='<option value="">— location —</option>'+(S.sets||[]).map(function(x){return '<option value="'+x.id+'">'+esc(x.name)+"</option>";}).join("");}}
+function rmsCount(){var o=$("rmsOut");var m=$("rmsMeta");if(!o||!m)return;var n=o.value.length;
+ m.innerHTML='<span style="color:'+(n>1500?"var(--red)":"var(--bud)")+';font-weight:800">'+n+" / 1500 characters</span>"+(n>1500?" — over the cap, tap ⚡ Compress":"");}
+async function rmsGen(){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var act=($("rmsAction")?$("rmsAction").value:"").trim();
+ if(!act){toast("Say what happens first.",true);return;}
+ var picked=(S.cast||[]).filter(function(c){return RMS.cast[c.id];});
+ var setIt=(S.sets||[]).find(function(x){return x.id===($("rmsSet")?$("rmsSet").value:"");});
+ var tod=($("rmsTime")?$("rmsTime").value:"night");var pace=($("rmsPace")?$("rmsPace").value:"balanced");var model=($("rmsModel")?$("rmsModel").value:"Seedance");
+ var paceTxt={balanced:"balanced — 4-5 shots",slow:"slow and emotional — 3-4 longer shots",fast:"fast comedy — 5-6 snappy shots",high:"high energy — 6-7 quick shots",dialogue:"dialogue-led — 3-5 shots shaped around the lines"}[pace];
+ var loc=(setIt?setIt.name:"the location")+", "+tod;
+ var st=$("rmsStatus");if(st)st.innerHTML=spinner("Cutting 15 seconds\u2026");
+ var sys="You build ONE compact multi-shot "+model+" video prompt. HARD RULES: total EXACTLY 15 seconds; 3 to 7 shots; each shot 2 to 5 seconds; every shot starts [Xs\u2013Ys] then shot size, lens mm equivalent, camera angle, ONE camera movement, then the action and staging, with any dialogue embedded in its own shot as Name: \"line\"; the FIRST mention of each character carries a compressed 60-120 character identity (face, build, locked Chiefin\u2019 Season outfit) and later mentions use just the name or a pronoun; pacing: "+paceTxt+"; shot timings must sum to exactly 15s. THE ENTIRE OUTPUT MUST BE 1500 CHARACTERS OR FEWER. End with EXACTLY these two lines and nothing after: Location: "+loc+". Audio: Diegetic sound only - natural ambience, environmental foley, subject-driven sound, and character dialogue. Return only the prompt text."+mdRecipeGuidance();
+ var usr="CHARACTERS:\n"+(picked.length?picked.map(function(c){return c.name+" \u2014 "+String(c.identity||"").slice(0,140)+(c.wardrobeNote?" \u00b7 outfit: "+String(c.wardrobeNote).slice(0,90):"");}).join("\n"):"(none picked \u2014 infer from the action)")+"\n\nACTION / SCRIPT:\n"+act;
+ try{
+  var txt=(await _llmRun(sys,usr,"ideas")).trim();
+  if(!txt)throw new Error("Nothing came back.");
+  var o=$("rmsOut");if(o){o.style.display="block";o.value=txt;}
+  var a=$("rmsActs");if(a)a.style.display="flex";
+  rmsCount();
+  if(txt.length>1500){if(st)st.innerHTML=spinner("Over the cap \u2014 compressing\u2026");await rmsCompress(true);}
+  if(st)st.innerHTML="";toast("15-second prompt ready.");
+ }catch(e){if(st)st.innerHTML=errLine(e);}}
+async function rmsCompress(auto){
+ var o=$("rmsOut");if(!o||!o.value){toast("Build it first.",true);return;}
+ var st=$("rmsStatus");if(st&&!auto)st.innerHTML=spinner("Compressing\u2026");
+ try{
+  var txt=(await _llmRun("Compress this multi-shot video prompt to 1500 characters or fewer. Keep every timecode (still summing to exactly 15 seconds), every shot\u2019s size + lens + angle + movement, all dialogue, and the final Location and Audio lines VERBATIM. Trim adjectives, not information. Return only the compressed prompt.",o.value,"ideas")).trim();
+  if(txt){o.value=txt;rmsCount();}
+  if(st)st.innerHTML="";if(!auto)toast("Compressed.");
+ }catch(e){if(st)st.innerHTML=errLine(e);}}
+function rmsCopy(){var o=$("rmsOut");if(!o||!o.value){toast("Build it first.",true);return;}navigator.clipboard.writeText(o.value).then(function(){toast("Prompt copied.");}).catch(function(){toast("Copy failed.",true);});}
+function rmsSaveDrop(){var o=$("rmsOut");if(!o||!o.value){toast("Build it first.",true);return;}projAttach("text","Rapid 15s \u2014 "+(($("rmsAction")||{}).value||"").slice(0,40),o.value);}
 function audioClause(){return (S.noMusic!==false)?" AUDIO RULE: diegetic sound only — natural ambience, environmental foley, character dialogue, movement and object sounds. NO music, NO score, NO soundtrack of any kind (the artist scores everything himself in post).":"";}
 async function genMotion(){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
@@ -4848,7 +4927,7 @@ async function genMotion(){
   S.noMusic=(mode!=="music");save();
   var st=$("mdStatus");if(st)st.innerHTML=spinner("Directing the motion…");
   var audio=(mode==="silent")?"AUDIO: none — silent visual, no dialogue, no sound design.":((mode==="music")?"AUDIO: diegetic sound (ambience, foley, dialogue) plus a fitting score is allowed.":"AUDIO: diegetic sound ONLY — natural ambience, environmental foley, character dialogue, movement and object sounds. NO music, NO score, NO soundtrack of any kind (the artist adds his own music in post).");
-  var sys=vibeCtx()+" You are a cinematic motion director building ONE production-ready Seedance video prompt from a storyboard script. Structure: short production header (visual style, total duration "+dur+"s, character + wardrobe continuity mandate), then timed shots — format [0.0s–1.5s] SHOT n — LABEL, then shot size + camera angle + camera movement, precise character blocking and facial performance, clothing and hair motion, object interaction, brief dialogue lines only where they fit the shot length, per-shot sound effects, and the cut or transition into the next shot. Shot timings must sum exactly to "+dur+" seconds. Keep every character’s face, proportions and locked Chiefin’ Season outfit IDENTICAL in every shot. End the prompt with this exact audio line: "+audio+" Return ONLY the finished prompt text, no commentary.";
+  var sys=vibeCtx()+" You are a cinematic motion director building ONE production-ready Seedance video prompt from a storyboard script. Structure: short production header (visual style, total duration "+dur+"s, character + wardrobe continuity mandate), then timed shots — format [0.0s–1.5s] SHOT n — LABEL, then shot size + camera angle + camera movement, precise character blocking and facial performance, clothing and hair motion, object interaction, brief dialogue lines only where they fit the shot length, per-shot sound effects, and the cut or transition into the next shot. Shot timings must sum exactly to "+dur+" seconds. Keep every character’s face, proportions and locked Chiefin’ Season outfit IDENTICAL in every shot. End the prompt with this exact audio line: "+audio+" Return ONLY the finished prompt text, no commentary."+mdRecipeGuidance();
   var usr="STORYBOARD SCRIPT / BEATS:\n"+script+((($("boardTitle")||{}).value)?"\nTITLE: "+$("boardTitle").value:"")+((($("boardStyle")||{}).value)?"\nBOARD STYLE: "+$("boardStyle").value:"");
   try{
     var txt=(await _llmRun(sys,usr,"ideas")).trim();

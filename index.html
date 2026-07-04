@@ -986,7 +986,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.45 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.46 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -2255,13 +2255,34 @@ function renderShots(){
 }
 
 /* cut */
+function reelNextShot(id){
+  var it=(S.reel||[]).find(function(x){return x.id===id;});
+  if(!it||it.type!=="video"){toast("That clip is gone.",true);return;}
+  toast("Grabbing the last frame…");
+  var v=document.createElement("video");v.crossOrigin="anonymous";v.muted=true;v.preload="auto";v.src=it.url;
+  var done=false;
+  v.addEventListener("loadedmetadata",function(){try{v.currentTime=Math.max(0,(v.duration||1)-0.05);}catch(e){}});
+  v.addEventListener("seeked",function(){
+    if(done)return;done=true;
+    try{
+      var w=Math.min(1280,v.videoWidth||1280);var h=Math.round(w*(v.videoHeight||720)/(v.videoWidth||1280));
+      var cv=document.createElement("canvas");cv.width=w;cv.height=h;
+      cv.getContext("2d").drawImage(v,0,0,w,h);
+      var url=cv.toDataURL("image/jpeg",0.85);
+      S.reel.unshift({id:uid(),type:"image",url:url,prompt:"Last frame — "+((it.prompt||"clip").slice(0,50)),ts:Date.now()});
+      save();renderReel();
+      toast("Last frame saved to The Cut — feed it to the next shot as its start or reference image.");
+    }catch(e){toast("Couldn’t read that video’s pixels (cross-site block). Save the clip and screenshot the final frame instead.",true);}
+  });
+  v.addEventListener("error",function(){if(!done){done=true;toast("Couldn’t load that clip.",true);}});
+}
 function renderReel(){
   const host=$("reelGrid");
   if(!S.reel.length){host.innerHTML='<div class="empty"><div class="big">Nothing in the can</div>Head to Studio or Pre-Roll and roll your first shot.</div>';return;}
   host.innerHTML='<div class="reel-grid"></div>';const g=host.firstChild;
   S.reel.forEach(it=>{const d=document.createElement("div");d.className="reel-item";
     const media=it.type==="video"?'<video class="zoomable" src="'+it.url+'" muted></video>':it.type==="audio"?'<div style="height:120px;display:flex;align-items:center;justify-content:center;color:var(--bud)">♪ audio</div>':'<img class="zoomable" src="'+it.url+'">';
-    d.innerHTML=media+'<div class="rmeta">'+esc(it.prompt||"")+'</div><div class="acts"><button class="tl">+ Timeline</button>'+(it.type==="image"?'<button class="c2">+ Cast</button>':'')+'<button class="dl">Save</button><button class="del">✕</button></div>';
+    d.innerHTML=media+'<div class="rmeta">'+esc(it.prompt||"")+'</div><div class="acts"><button class="tl">+ Timeline</button>'+(it.type==="image"?'<button class="c2">+ Cast</button>':'')+(it.type==="video"?'<button class="cf" onclick="reelNextShot(&quot;'+it.id+'&quot;)">⛓ Frame</button>':'')+'<button class="dl">Save</button><button class="del">✕</button></div>';
     d.querySelector(".tl").addEventListener("click",()=>{if(!S.timeline.includes(it.id)){S.timeline.push(it.id);save();toast("Added to timeline.");}});
     d.querySelector(".dl").addEventListener("click",()=>downloadUrl(it.url,"smokemirrors-"+it.id));
     const c2=d.querySelector(".c2");if(c2)c2.addEventListener("click",()=>sendToCast(it.url));
@@ -4652,7 +4673,7 @@ function renderComicView(comic){
   const host=$("comicBody");if(!host)return;
   let h='<button class="btn sm ghost" id="comicBack" style="margin-bottom:12px">← All comics</button><button class="btn ghost sm" id="comicSaveProjBtn" style="margin-bottom:12px;margin-left:8px">+ Save to drop</button><button class="btn ghost sm" id="comicVibeBtn" style="margin-bottom:12px;margin-left:8px">\u27f3 Optimize for the vibe</button>';
   h+='<div class="card"><input type="text" id="comicTitle" value="'+esc(comic.title||"")+'" placeholder="comic title" style="font-family:var(--slate);font-weight:800"><div class="hint" style="margin-top:4px">'+esc((COMIC_KINDS[comic.kind]||{}).label||"")+' · '+esc((COMIC_LOOKS[comic.look]||{}).label||"")+'</div></div>';
-  h+='<div class="row"><button class="btn green" id="comicRenderAll" data-cost="edit" style="flex:1">▦ Draw all panels</button><button class="btn ghost sm" id="comicReseed" style="flex:0">↻ Style</button><button class="btn ghost" id="comicExport" style="flex:0">⧉ Export</button><button class="btn ghost" id="comicPage" style="flex:0" onclick="comicPageExport()">🖼 Page</button></div><div class="hint" style="margin-top:6px;text-transform:none;letter-spacing:0">🔒 Style + character locked across all panels. Tap ↻ Style for a fresh look, then redraw.</div><div id="comicAllStatus" style="margin-top:6px"></div>';
+  h+='<div class="row"><button class="btn green" id="comicRenderAll" data-cost="edit" style="flex:1">▦ Draw all panels</button><button class="btn ghost sm" id="comicReseed" style="flex:0">↻ Style</button><button class="btn ghost" id="comicChain" style="flex:0"></button><button class="btn ghost" id="comicExport" style="flex:0">⧉ Export</button><button class="btn ghost" id="comicPage" style="flex:0" onclick="comicPageExport()">🖼 Page</button></div><div class="hint" style="margin-top:6px;text-transform:none;letter-spacing:0">🔒 Style + character locked across all panels. Tap ↻ Style for a fresh look, then redraw.</div><div id="comicAllStatus" style="margin-top:6px"></div>';
   comic.panels.forEach(p=>{
     h+='<div class="card" style="border-left:3px solid var(--bud)"><div style="font-weight:800;font-family:var(--slate)">Panel '+p.n+'</div>';
     h+='<div data-pout="'+p.id+'" style="margin-top:8px"></div>';
@@ -4669,6 +4690,7 @@ function renderComicView(comic){
   $("comicTitle").addEventListener("input",e=>{comic.title=e.target.value;save();});
   $("comicRenderAll").addEventListener("click",renderAllPanels);
   if($("comicReseed"))$("comicReseed").onclick=function(){comic.seed=Math.floor(Math.random()*1e9);save();toast("New art style locked — redraw panels to apply.");};
+  if($("comicChain")){var _cc=$("comicChain");var _cl=function(){_cc.textContent=(comic.chain!==false)?"⛓ Chain on":"⛓ Chain off";_cc.style.color=(comic.chain!==false)?"var(--bud)":"";};_cl();_cc.onclick=function(){comic.chain=(comic.chain!==false)?false:true;save();_cl();toast((comic.chain!==false)?"Panels will match the ones drawn before them.":"Chaining off — panels draw independently.");};}
   $("comicExport").addEventListener("click",exportComic);
   host.querySelectorAll("[data-pcap]").forEach(i=>i.addEventListener("input",()=>{const p=comic.panels.find(x=>x.id===i.dataset.pcap);if(p){p.caption=i.value;save();}}));
   host.querySelectorAll("[data-pdlg]").forEach(i=>i.addEventListener("input",()=>{const p=comic.panels.find(x=>x.id===i.dataset.pdlg);if(p){p.dialogue=i.value;save();}}));
@@ -4681,8 +4703,10 @@ async function renderComicImage(pid){
   const look=COMIC_LOOKS[comic.look]||COMIC_LOOKS.toon;
   if(comic.seed==null){comic.seed=Math.floor(Math.random()*1e9);save();}
   const out=document.querySelector('[data-pout="'+pid+'"]');if(out)out.innerHTML=spinner("Drawing panel "+pan.n+"…");
-  const refs=comicRefs(comic);const hasRefs=refs.length>0;
-  const prompt=(pan.visual||pan.caption||"comic panel")+"\n\nStyle: "+look.style+". A single comic panel, clean readable composition, strong silhouette. Keep the character's face, outfit, proportions, colour palette, line weight and art style IDENTICAL to the reference in every panel of this strip — same world, same drawing hand."+comicNote(comic)+((comic.mode==="dialogue"&&pan.dialogue)?" Render comic speech bubbles with clean bold hand-lettering containing EXACTLY this dialogue, spelled exactly as written: "+pan.dialogue+" — each bubble tail pointing to its speaker. No other text in the image.":" Do not render any caption or speech text in the image (it appears beneath the panel).");
+  let refs=comicRefs(comic);let chained=false;
+  if(comic.chain!==false){const drawn=comic.panels.filter(p=>p.url&&p.id!==pid&&p.n<pan.n);if(drawn.length){const anchor=drawn[0];const prev=drawn[drawn.length-1];[anchor,prev].forEach(pp=>{if(pp&&pp.url&&refs.indexOf(pp.url)<0){refs.push(pp.url);chained=true;}});refs=refs.slice(0,5);}}
+  const hasRefs=refs.length>0;
+  const prompt=(pan.visual||pan.caption||"comic panel")+"\n\nStyle: "+look.style+". A single comic panel, clean readable composition, strong silhouette. Keep the character's face, outfit, proportions, colour palette, line weight and art style IDENTICAL to the reference in every panel of this strip — same world, same drawing hand."+(chained?" The last attached image(s) are PREVIOUS PANELS of this exact strip — copy their art style, character design, line weight and colour palette EXACTLY; draw only the new scene described above, do not copy their composition.":"")+comicNote(comic)+((comic.mode==="dialogue"&&pan.dialogue)?" Render comic speech bubbles with clean bold hand-lettering containing EXACTLY this dialogue, spelled exactly as written: "+pan.dialogue+" — each bubble tail pointing to its speaker. No other text in the image.":" Do not render any caption or speech text in the image (it appears beneath the panel).");
   const model=hasRefs?(S.picked.edit||"fal-ai/nano-banana-pro/edit"):(S.picked.image||"fal-ai/nano-banana-pro");
   const ar=comic.kind==="single"?"1:1":"4:5";
   const input={prompt};Object.assign(input,sizeFor(model,ar));if(hasRefs)input.image_urls=refs;withRes(model,input);if(comic.seed!=null)input.seed=comic.seed;

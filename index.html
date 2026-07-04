@@ -985,7 +985,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.42 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.43 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1102,7 +1102,7 @@ const ANGLES=[{"n": "The Sneakerhead Low-Angle", "d": "Camera on the ground poin
 const BOARD_ADJ=["smoke atmosphere","hotbox haze","thick fog","rain atmosphere","dust & embers","neon glow","golden-hour haze","lens flares","backlit silhouette","slow-motion","darker mood","wider angles","more close-ups","handheld feel","slower pacing","aggressive framing"];
 
 /* nav */
-document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
+document.querySelectorAll("nav button[data-go]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
 function renderChecklist(){
   var fr=$("firstRun");if(!fr)return;
   if(S.frDismissed){fr.style.display="none";return;}
@@ -1317,9 +1317,10 @@ function navGroupTo(grp){if(VIEW_GROUP[CUR_VIEW]===grp){S.navGroup=grp;save();re
 /* nav groups */
 (function(){document.querySelectorAll('nav button.grp').forEach(function(b){b.addEventListener("click",function(){navGroupTo(b.getAttribute("data-grp-sel"));});});renderNav();})();
 function go(name){
+  var sec=$("view-"+name);if(!sec){errStrip("Unknown view: "+name);return;}
   CUR_VIEW=name;
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
-  $("view-"+name).classList.add("active");
+  sec.classList.add("active");
   document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.go===name));
   if(name==="stash"){renderStashFilter();renderStash();}
   if(name==="reel"){renderReel();renderTimeline();}

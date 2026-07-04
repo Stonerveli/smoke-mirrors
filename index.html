@@ -453,6 +453,12 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
       <div id="seedanceOut"></div>
     </div>
   </div>
+  <div class="card"><label class="fld">Motion Director — board → video prompt</label>
+  <div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Turns the script above into a timed, shot-by-shot Seedance prompt — camera, blocking, dialogue and sound — with your cast DNA and locked Chiefin’ Season wardrobe baked in. Default audio: <b>no music, ever</b> — you score your own.</div>
+  <div class="row"><select id="mdDur" style="flex:1"><option value="5">5s</option><option value="10">10s</option><option value="15" selected>15s · multi-shot</option></select><select id="mdAudio" style="flex:1.7"><option value="diegetic" selected>Diegetic only — NO music</option><option value="music">Diegetic + music allowed</option><option value="silent">Silent visual</option></select></div>
+  <button class="btn green" id="mdGen" style="width:100%;margin-top:8px" onclick="genMotion()">🎬 Build motion prompt</button><div id="mdStatus"></div>
+  <textarea id="mdOut" style="min-height:170px;margin-top:8px;display:none;font-size:13px"></textarea>
+  <div class="row" id="mdActs" style="margin-top:6px;display:none"><button class="btn ghost sm" style="flex:1" onclick="mdCopyOut()">⧉ Copy</button><button class="btn ghost sm" style="flex:1" onclick="mdSaveDrop()">+ Save to drop</button></div></div>
 </section>
 
 <!-- ===== STASH ===== -->
@@ -992,7 +998,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.48 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.49 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1017,7 +1023,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -3965,7 +3971,7 @@ async function fightChoreograph(){
   if(!A||!B||A.id===B.id){toast("Pick two different characters.",true);return;}
   const L=S.sets.find(x=>x.id===$("fcLoc").value)||null;const intn=$("fcInt").value;const fm=FIGHT_FORMULAS.find(x=>x.k===($("fcFormula")?$("fcFormula").value:"f8"))||FIGHT_FORMULAS[1];const fstyle=$("fcStyle")?$("fcStyle").value:"";
   const st=$("fcStatus");st.innerHTML=spinner("Choreographing the fight…");
-  const sys=writerSys(ep)+" You are a legendary fight choreographer + action director (samurai-grade, Boondocks energy). Design a readable, character-driven fight in clean BEATS, following the supplied beat structure EXACTLY (one scene per beat). "+FIGHT_MECHANICS_TXT+" "+FIGHT_CAMERAS_TXT+" For each beat return heading (LOCATION | beat vibe), action (the exchange — name the mechanic used), shot (COMPLETE ready-to-render IMAGE prompt — angle, lens, blocking, impact, lighting), motion (COMPLETE ready-to-render VIDEO prompt — camera move + choreography + diegetic impact sound, no music), ambience, grade. Bake in the LOOK. Make each fighter's style distinct and their weakness matter; build escalation, a clear reversal and a finisher. "+FIGHT_NEG+" Return JSON only: {\"beats\":[{\"heading\":\"\",\"action\":\"\",\"shot\":\"\",\"motion\":\"\",\"ambience\":\"\",\"grade\":\"\"}]}.";
+  const sys=writerSys(ep)+" You are a legendary fight choreographer + action director (samurai-grade, Boondocks energy). Design a readable, character-driven fight in clean BEATS, following the supplied beat structure EXACTLY (one scene per beat). "+FIGHT_MECHANICS_TXT+" "+FIGHT_CAMERAS_TXT+audioClause()+" For each beat return heading (LOCATION | beat vibe), action (the exchange — name the mechanic used), shot (COMPLETE ready-to-render IMAGE prompt — angle, lens, blocking, impact, lighting), motion (COMPLETE ready-to-render VIDEO prompt — camera move + choreography + diegetic impact sound, no music), ambience, grade. Bake in the LOOK. Make each fighter's style distinct and their weakness matter; build escalation, a clear reversal and a finisher. "+FIGHT_NEG+" Return JSON only: {\"beats\":[{\"heading\":\"\",\"action\":\"\",\"shot\":\"\",\"motion\":\"\",\"ambience\":\"\",\"grade\":\"\"}]}.";
   const usr="FIGHTERS: "+A.name+(A.powers?" (powers: "+A.powers+")":"")+" VS "+B.name+(B.powers?" (powers: "+B.powers+")":"")+".\nWEAKNESSES: "+A.name+" — "+(A.weakness||"unknown")+"; "+B.name+" — "+(B.weakness||"unknown")+".\nLOCATION: "+(L?L.name:"a fitting arena")+".\nINTENSITY: "+intn+(fstyle?".\nFIGHT STYLE: "+fstyle:"")+".\nLOOK: "+lookStyleOf(ep)+".\nBEAT STRUCTURE (follow exactly): "+fm.beats;
   try{
     const d=parseJSON(await llmRun(sys,usr));const beats=d.beats||[];
@@ -4833,6 +4839,27 @@ async function writeBoardScript(){
   try{const txt=await llmRun(sys,usr);if(ta)ta.value=txt;S.board.script=txt;save();if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Script written \u2014 lock characters below, then \u25a6 Generate storyboard</div>';}
   catch(e){if(st)st.innerHTML=errLine(e);}
 }
+function audioClause(){return (S.noMusic!==false)?" AUDIO RULE: diegetic sound only — natural ambience, environmental foley, character dialogue, movement and object sounds. NO music, NO score, NO soundtrack of any kind (the artist scores everything himself in post).":"";}
+async function genMotion(){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  var script=($("boardScript")?$("boardScript").value:"").trim();
+  if(!script){toast("Write or paste the script / beats above first.",true);return;}
+  var dur=parseInt((($("mdDur")||{}).value)||"15",10);var mode=(($("mdAudio")||{}).value)||"diegetic";
+  S.noMusic=(mode!=="music");save();
+  var st=$("mdStatus");if(st)st.innerHTML=spinner("Directing the motion…");
+  var audio=(mode==="silent")?"AUDIO: none — silent visual, no dialogue, no sound design.":((mode==="music")?"AUDIO: diegetic sound (ambience, foley, dialogue) plus a fitting score is allowed.":"AUDIO: diegetic sound ONLY — natural ambience, environmental foley, character dialogue, movement and object sounds. NO music, NO score, NO soundtrack of any kind (the artist adds his own music in post).");
+  var sys=vibeCtx()+" You are a cinematic motion director building ONE production-ready Seedance video prompt from a storyboard script. Structure: short production header (visual style, total duration "+dur+"s, character + wardrobe continuity mandate), then timed shots — format [0.0s–1.5s] SHOT n — LABEL, then shot size + camera angle + camera movement, precise character blocking and facial performance, clothing and hair motion, object interaction, brief dialogue lines only where they fit the shot length, per-shot sound effects, and the cut or transition into the next shot. Shot timings must sum exactly to "+dur+" seconds. Keep every character’s face, proportions and locked Chiefin’ Season outfit IDENTICAL in every shot. End the prompt with this exact audio line: "+audio+" Return ONLY the finished prompt text, no commentary.";
+  var usr="STORYBOARD SCRIPT / BEATS:\n"+script+((($("boardTitle")||{}).value)?"\nTITLE: "+$("boardTitle").value:"")+((($("boardStyle")||{}).value)?"\nBOARD STYLE: "+$("boardStyle").value:"");
+  try{
+    var txt=(await _llmRun(sys,usr,"ideas")).trim();
+    if(!txt)throw new Error("Nothing came back.");
+    var o=$("mdOut");if(o){o.style.display="block";o.value=txt;}
+    var a=$("mdActs");if(a)a.style.display="flex";
+    if(st)st.innerHTML="";toast("Motion prompt ready — drop it into Seedance.");
+  }catch(e){if(st)st.innerHTML=errLine(e);}
+}
+function mdCopyOut(){var o=$("mdOut");if(!o||!o.value){toast("Build it first.",true);return;}navigator.clipboard.writeText(o.value).then(function(){toast("Motion prompt copied.");}).catch(function(){toast("Copy failed.",true);});}
+function mdSaveDrop(){var o=$("mdOut");if(!o||!o.value){toast("Build it first.",true);return;}projAttach("text","Motion prompt — "+((($("boardTitle")||{}).value)||"board"),o.value);}
 const WARDROBE_PRESETS={
  signature:{name:"Chiefin’ Season Signature",text:"Chiefin’ Season Signature fit: matte-black premium graphic tee with bone CS wordmark, sage-green cargo pants, clean white high-tops with sage accents, gold chain, subtle leaf-pattern detailing."},
  cloud9:{name:"Cloud Nine Lounge",text:"Cloud Nine Lounge fit: oversized bone hoodie with tonal haze-swirl graphic, relaxed matte-black joggers, black beanie, quiet gold ring, easy indoor comfort."},

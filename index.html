@@ -550,7 +550,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   </div>
   <div class="filterbar" id="castFilter"></div>
   <div id="castEditor" class="card" style="display:none"></div>
-  <div id="castGrid"></div>
+  <div id="castLockBar" style="margin-bottom:10px"></div><div id="castGrid"></div>
   <input type="file" id="assetFile" accept="image/*" style="display:none">
 </section>
 <!-- ===== SETS ===== -->
@@ -992,7 +992,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.47 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.48 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1017,7 +1017,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -2473,7 +2473,8 @@ function renderAssetEditor(){
   let h='<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div><div style="font-family:var(--slate);font-stretch:condensed;font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:.04em">'+esc(it.name)+'</div><div class="hint">'+vs.length+' reference'+(vs.length===1?'':'s')+'</div></div><button class="btn sm ghost" id="aClose" style="margin-left:auto;flex:0">Done</button></div>';
   h+='<label class="fld">Name</label><input type="text" id="aName" value="'+esc(it.name)+'">';
   if(aKind==="cast"){
-    h+='<label class="fld">Identity lock — injected into every shot for consistency</label><textarea id="aIdentity" style="min-height:84px">'+esc(it.identity||"")+'</textarea>';
+    h+='<label class="fld">Identity lock — injected into every shot for consistency</label><textarea id="aIdentity" style="min-height:84px">'+esc(it.identity||"")+'</textarea>';h+='<button class="btn ghost sm" id="aDnaBtn" style="margin-top:6px;width:100%">✦ Generate character DNA</button><div id="aDnaStatus"></div>';
+    h+='<label class="fld" style="margin-top:10px">Chiefin’ Season outfit — locked wording, rides every prompt</label><select id="aFitPreset"><option value="">— apply a wardrobe preset —</option>'+Object.keys(WARDROBE_PRESETS).map(function(k){return '<option value="'+k+'">'+WARDROBE_PRESETS[k].name+"</option>";}).join("")+'</select><textarea id="aOutfitNote" style="min-height:64px;margin-top:6px" placeholder="exact outfit — garments, colours, accessories">'+esc(it.wardrobeNote||"")+'</textarea>';
     h+='<label class="fld" style="margin-top:10px">Voice / vibe note</label><input type="text" id="aVoice" value="'+esc(it.voice||"")+'" placeholder="deadpan, dry, gravelly">';h+='<button class="btn ghost sm" id="aVoiceBtn" style="margin-top:6px;width:100%">✦ Suggest voice & vibe</button><div id="aVoiceStatus"></div>';
     h+='<label class="fld" style="margin-top:10px">Side</label><select id="aSide"><option value="neutral">Neutral</option><option value="hero">Hero / good guy</option><option value="villain">Villain / bad guy</option></select>';
     h+='<label class="fld" style="margin-top:10px">Powers / abilities</label><textarea id="aPowers" style="min-height:54px" placeholder="what they can do">'+esc(it.powers||"")+'</textarea>';h+='<button class="btn ghost sm" id="aPowersBtn" style="margin-top:6px;width:100%">✦ Suggest powers & abilities</button><div id="aPowersStatus"></div>';
@@ -2504,6 +2505,9 @@ function renderAssetEditor(){
     $("aIdentity").addEventListener("input",e=>{it.identity=e.target.value;save();});
     $("aVoice").addEventListener("input",e=>{it.voice=e.target.value;save();});
     if($("aVoiceBtn"))$("aVoiceBtn").addEventListener("click",()=>suggestVoice(it));
+    if($("aDnaBtn"))$("aDnaBtn").addEventListener("click",()=>suggestDna(it));
+    const _on=$("aOutfitNote");if(_on)_on.addEventListener("input",e=>{it.wardrobeNote=e.target.value;save();});
+    const _fp=$("aFitPreset");if(_fp)_fp.addEventListener("change",e=>{const p=WARDROBE_PRESETS[e.target.value];if(!p)return;it.wardrobeNote=p.text;save();if(_on)_on.value=p.text;toast(p.name+" applied — tweak the wording to make it theirs.");});
     $("aSheet").addEventListener("click",()=>buildSheet(it));
     const wc=$("aWardrobe");if(wc){if(!S.stash.length){wc.innerHTML='<span class="hint">Add pieces in The Stash to dress them.</span>';}else{wc.innerHTML="";S.stash.forEach(sp=>{const ch=document.createElement("span");ch.className="chip"+(((it.wardrobe||[]).includes(sp.id))?" on":"");ch.textContent=sp.name;ch.addEventListener("click",()=>{if(!it.wardrobe)it.wardrobe=[];const i=it.wardrobe.indexOf(sp.id);i>=0?it.wardrobe.splice(i,1):it.wardrobe.push(sp.id);save();ch.classList.toggle("on");});wc.appendChild(ch);});}}
     if($("aWardrobeNote"))$("aWardrobeNote").addEventListener("input",e=>{it.wardrobeNote=e.target.value;save();});
@@ -2586,7 +2590,8 @@ function castCard(it,kind){
   d.addEventListener("click",()=>openAsset(kind,it.id));
   return d;
 }
-function renderCast(){renderCastFilter();const host=$("castGrid");if(!host)return;
+function renderCast(){renderCastFilter();const lb=$("castLockBar");if(lb){lb.innerHTML='<button class="btn ghost sm" id="wardLock" style="width:100%">'+((S.wardrobeLock!==false)?"🔒 Chiefin’ Season wardrobe lock: ON":"🔓 Wardrobe lock: OFF — outfits may drift")+"</button>";var wb=$("wardLock");if(wb)wb.onclick=function(){S.wardrobeLock=(S.wardrobeLock!==false)?false:true;save();renderCast();toast((S.wardrobeLock!==false)?"Wardrobe locked across every prompt.":"Wardrobe lock off.");};}
+  const host=$("castGrid");if(!host)return;
   if(!S.cast.length){host.innerHTML='<div class="empty"><div class="big">No cast yet</div>Add a character and lock their look. Chieff loads himself on first run.</div>';return;}
   const f=S.castFilter||"All";const list=S.cast.filter(c=>f==="All"||(f==="Heroes"&&c.side==="hero")||(f==="Villains"&&c.side==="villain"));
   host.innerHTML='<div class="grid"></div>';const g=host.firstChild;list.forEach(it=>g.appendChild(castCard(it,"cast")));}
@@ -2602,7 +2607,7 @@ function renderCastSet(){
   const sw=$("setPick");if(sw){sw.innerHTML="";const none=document.createElement("span");none.className="chip"+(!setPicked?" on":"");none.textContent="no set";none.addEventListener("click",()=>{setPicked="";renderCastSet();});sw.appendChild(none);
     S.sets.forEach(s=>{const ch=document.createElement("span");ch.className="chip"+(setPicked===s.id?" on":"");ch.textContent=s.name;ch.addEventListener("click",()=>{setPicked=s.id;renderCastSet();});sw.appendChild(ch);});}
 }
-function identityNote(items){if(!items.length)return "";return " Characters in this shot: "+items.map(c=>c.name+(c.identity?" — "+c.identity:"")+(c.wardrobeNote?" Wardrobe: "+c.wardrobeNote:"")+wardrobePieces(c)).join(" | ")+". Keep each character's face, design, colors and proportions exactly consistent with their reference images.";}
+function identityNote(items){if(!items.length)return "";return " Characters in this shot: "+items.map(c=>c.name+(c.identity?" — "+c.identity:"")+(c.wardrobeNote?" Wardrobe: "+c.wardrobeNote:"")+wardrobePieces(c)).join(" | ")+". Keep each character's face, design, colors and proportions exactly consistent with their reference images."+((S.wardrobeLock!==false)?" WARDROBE LOCKED: every garment, colour, accessory and graphic stays identical in every panel and shot — no costume changes unless the script explicitly calls for one.":"");}
 function setNote(it){if(!it)return "";let t=" Location: "+it.name+(it.vibe?" — "+it.vibe:"")+".";if(it.props&&it.props.length)t+=" Recurring elements here: "+it.props.map(p=>p.name+(p.desc?" ("+p.desc+")":"")).join("; ")+".";return t;}
 
 /* ===== Media House ===== */
@@ -3103,7 +3108,7 @@ function vibeCtx(){
   var p=(typeof projActive==="function")?projActive():null;var parts=[];
   parts.push("BRAND VIBE: Chiefin' Season / Stoneralia \u2014 deadpan, premium, cannabis-culture streetwear. Dry wit, understated confidence, cannabis-adjacent and platform-safe (no explicit drug talk). Matte black + bone foundation, sage/bud-green signature, rare gold/red. 'You smell the vibes.'");
   if(p)parts.push("ACTIVE DROP: "+(p.name||"")+(p.concept?(" \u2014 "+p.concept):""));
-  if(S.cast&&S.cast.length)parts.push("CAST: "+S.cast.map(function(c){return c.name;}).filter(Boolean).join(", "));
+  if(S.cast&&S.cast.length)parts.push("CAST: "+S.cast.map(function(c){if(!c.name)return "";var t=c.name;if(c.identity)t+=" [DNA: "+String(c.identity).slice(0,180)+"]";if(c.wardrobeNote)t+=" [CS outfit, locked: "+String(c.wardrobeNote).slice(0,120)+"]";return t;}).filter(Boolean).join(" | "));
   if(S.sets&&S.sets.length)parts.push("SETS: "+S.sets.map(function(x){return x.name;}).filter(Boolean).join(", "));
   if(S.canon&&S.canon.notes)parts.push("CANON NOTES: "+S.canon.notes);
   return parts.join("\n");
@@ -4827,6 +4832,27 @@ async function writeBoardScript(){
   const usr="IDEA / LOGLINE: "+seed+"\n"+(heroes?"HEROES: "+heroes+"\n":"")+(villains?"VILLAINS: "+villains+"\n":"")+(sets?"LOCATIONS available: "+sets+"\n":"")+"Write the scene as 6-10 numbered visual beats (one line each: shot type + what happens). Keep it continuous so it reads as a storyboard. Return only the numbered beats.";
   try{const txt=await llmRun(sys,usr);if(ta)ta.value=txt;S.board.script=txt;save();if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Script written \u2014 lock characters below, then \u25a6 Generate storyboard</div>';}
   catch(e){if(st)st.innerHTML=errLine(e);}
+}
+const WARDROBE_PRESETS={
+ signature:{name:"Chiefin’ Season Signature",text:"Chiefin’ Season Signature fit: matte-black premium graphic tee with bone CS wordmark, sage-green cargo pants, clean white high-tops with sage accents, gold chain, subtle leaf-pattern detailing."},
+ cloud9:{name:"Cloud Nine Lounge",text:"Cloud Nine Lounge fit: oversized bone hoodie with tonal haze-swirl graphic, relaxed matte-black joggers, black beanie, quiet gold ring, easy indoor comfort."},
+ resinrow:{name:"Resin Row Street",text:"Resin Row Street fit: black CS varsity jacket with bone sleeves and pixel-CS monogram, cream graphic tee, dark cargos or raw denim, black fitted cap, statement white sneakers, gold chain."},
+ island:{name:"Island Chief",text:"Island Chief fit: lightweight open bone shirt over sage CS tee, relaxed black shorts, woven bracelet, gold chain, crisp low-tops, easy Caribbean drape."},
+ studio:{name:"Studio Session",text:"Studio Session fit: matte-black CS tracksuit with sage piping, layered gold chains, over-ear headphones resting around the neck, fresh white sneakers, relaxed but polished."},
+ production:{name:"Chiefin’Vision Production",text:"Chiefin’Vision Production fit: black utility vest over bone CS graphic tee, dark cargos, lanyard and gaff-tape roll, broken-in black sneakers, working-set energy."},
+ nightlife:{name:"Stoneralia Nightlife",text:"Stoneralia Nightlife fit: premium black bomber with gold-thread CS crest, bold bone shirt, tailored dark trousers, stacked gold jewelry, sleek evening sneakers."}
+};
+async function suggestDna(it){
+  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+  const st=$("aDnaStatus");if(st)st.innerHTML=spinner("Composing DNA…");
+  const sys=VOICE_DNA+" Compose ONE compact CHARACTER DNA line used to keep an AI-generated character visually identical across every image and video. 150-300 characters. Include ONLY what locks the look: adult status, build and proportions, head and face signature, default expression, exact Chiefin’ Season outfit, key accessories. No backstory, no fluff. Return the line only, no quotes.";
+  const usr="CHARACTER: "+it.name+(it.identity?"\nCURRENT IDENTITY: "+it.identity:"")+(it.voice?"\nVOICE: "+it.voice:"")+(it.side?"\nSIDE: "+it.side:"")+(it.powers?"\nPOWERS: "+it.powers:"")+(it.wardrobeNote?"\nOUTFIT: "+it.wardrobeNote:"")+wardrobePieces(it);
+  try{
+    const line=(await _llmRun(sys,usr,"ideas")).trim().replace(/^["\u201c]|["\u201d]$/g,"");
+    if(!line)throw new Error("Nothing came back.");
+    it.identity=line;save();const f=$("aIdentity");if(f)f.value=line;
+    if(st)st.innerHTML="";toast("DNA locked — it now rides every prompt this character appears in.");
+  }catch(e){if(st)st.innerHTML=errLine(e);}
 }
 async function suggestVoice(it){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}

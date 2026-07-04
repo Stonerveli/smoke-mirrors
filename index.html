@@ -455,7 +455,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   </div>
   <div class="card"><label class="fld">Motion Director — board → video prompt</label>
   <div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Turns the script above into a timed, shot-by-shot Seedance prompt — camera, blocking, dialogue and sound — with your cast DNA and locked Chiefin’ Season wardrobe baked in. Default audio: <b>no music, ever</b> — you score your own.</div>
-  <label class="fld">Motion recipe — optional technique</label><select id="mdRecipe" style="margin-bottom:8px"><option value="">— none · straight direction —</option></select>
+  <label class="fld">Motion recipe — optional technique</label><select id="mdRecipe" style="margin-bottom:8px"><option value="">— none · straight direction —</option></select><button class="btn ghost sm" style="width:100%;margin-bottom:8px" onclick="mdSaveRecipe()">＋ Save my own recipe</button>
   <div class="row"><select id="mdDur" style="flex:1"><option value="5">5s</option><option value="10">10s</option><option value="15" selected>15s · multi-shot</option></select><select id="mdAudio" style="flex:1.7"><option value="diegetic" selected>Diegetic only — NO music</option><option value="music">Diegetic + music allowed</option><option value="silent">Silent visual</option></select></div>
   <button class="btn green" id="mdGen" style="width:100%;margin-top:8px" onclick="genMotion()">🎬 Build motion prompt</button><div id="mdStatus"></div>
   <textarea id="mdOut" style="min-height:170px;margin-top:8px;display:none;font-size:13px"></textarea>
@@ -839,6 +839,9 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <div id="bcStatus"></div><div id="bcOut"></div>
     </div></details>
   </div>
+  <div class="card"><label class="fld">Music Video Studio — song → visuals</label>
+  <div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Turns the song above into pitchable video concepts, then a treatment + timed beat list you can fire straight into Rapid Multi-Shot or the Motion Director. Uses your cast DNA + locked wardrobe. Generations stay music-free — the record is yours.</div>
+  <button class="btn green" style="width:100%" onclick="mvConcepts()">✦ Pitch 5 video concepts</button><div id="mvStatus"></div><div id="mvBody"></div></div>
 </section>
 <section class="view" id="view-csb">
   <div class="slatehead"><span style="display:flex;align-items:center;color:var(--bone)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:30px;height:30px;display:block"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><h2>CSB</h2><span class="tag">Cinematic Stonerboards</span></div>
@@ -1010,7 +1013,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.50 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.51 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1035,7 +1038,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -4250,7 +4253,7 @@ function renderSocials(){
  var host=$("socialsBody");if(!host)return;var st=socState();
  var keys=Object.keys(PLATFORM_GUIDE);
  var opts=keys.map(function(k){return '<option value="'+k+'">'+PLATFORM_GUIDE[k].name+"</option>";}).join("");
- var h='<div class="card"><label class="fld">Add an account</label><div class="row" style="margin-top:4px"><select id="socPlat" style="flex:1">'+opts+'</select><input type="text" id="socHandle" placeholder="@handle" style="flex:1.4"><button class="btn ghost sm" id="socAdd" style="flex:0 0 auto;padding:8px 12px">+ Add</button></div></div>';
+ var h='<div class="card"><label class="fld">Release Packager — YouTube-first</label><div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Package a drop: title candidates, description, tags (hard 500-char cap), hashtags, pinned comment and three thumbnail prompts — honest “high-CTR candidates”, no viral snake oil.</div><input type="text" id="rpWhat" placeholder="What\u2019s dropping? e.g. Quiet Elevation \u2014 official visual" style="margin-bottom:6px"><div class="row"><select id="rpKind" style="flex:1"><option>music video</option><option>short / clip</option><option>comic dump</option><option>episode</option><option>brand film</option></select><button class="btn green sm" style="flex:0 0 auto;padding:8px 14px" onclick="rpGen()">✦ Package</button></div><div id="rpStatus"></div><div id="rpBody"></div></div>';h+='<div class="card"><label class="fld">Add an account</label><div class="row" style="margin-top:4px"><select id="socPlat" style="flex:1">'+opts+'</select><input type="text" id="socHandle" placeholder="@handle" style="flex:1.4"><button class="btn ghost sm" id="socAdd" style="flex:0 0 auto;padding:8px 12px">+ Add</button></div></div>';
  keys.forEach(function(k){var g=PLATFORM_GUIDE[k];
   var accts=st.accounts.filter(function(a){return a.platform===k;});
   var n=st.log.filter(function(l){return l.platform===k;}).length;
@@ -4265,7 +4268,7 @@ function renderSocials(){
  h+="</div>";
  host.innerHTML=h;
  var W=function(id,fn){var el=$(id);if(el)el.addEventListener("click",fn);};
- W("socAdd",socAddAccount);W("socLogAdd",socAddLog);
+ W("socAdd",socAddAccount);rpPaint();W("socLogAdd",socAddLog);
  host.querySelectorAll("[data-sda]").forEach(function(b){b.addEventListener("click",function(e){e.preventDefault();socDelAccount(b.getAttribute("data-sda"));});});
  host.querySelectorAll("[data-sdl]").forEach(function(b){b.addEventListener("click",function(){socDelLog(b.getAttribute("data-sdl"));});});
 }
@@ -4852,6 +4855,71 @@ async function writeBoardScript(){
   try{const txt=await llmRun(sys,usr);if(ta)ta.value=txt;S.board.script=txt;save();if(st)st.innerHTML='<div class="statusline" style="color:var(--bud)">\u2713 Script written \u2014 lock characters below, then \u25a6 Generate storyboard</div>';}
   catch(e){if(st)st.innerHTML=errLine(e);}
 }
+function mdSaveRecipe(){
+ var name=prompt("Recipe name?");if(!name)return;
+ var txt=prompt("The technique \u2014 one or two sentences of direction the AI must follow:");if(!txt)return;
+ if(!S.recipes)S.recipes=[];S.recipes.push({id:uid(),name:name.slice(0,40),txt:txt.slice(0,400)});save();
+ if(typeof mdRecipeFill==="function")mdRecipeFill();
+ var r=$("mdRecipe");if(r)r.value="custom:"+S.recipes[S.recipes.length-1].id;
+ toast("Recipe saved \u2014 it\u2019s in the dropdown under My recipes.");}
+async function mvConcepts(){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var title=(($("sunoTitle")||{}).value||"").trim();var scene=(($("sunoScene")||{}).value||"").trim();var artist=(($("sunoArtist")||{}).value||"").trim();
+ if(!title&&!scene){toast("Give the song a title or scene up top first.",true);return;}
+ var st=$("mvStatus");if(st)st.innerHTML=spinner("Pitching concepts\u2026");
+ var sys=vibeCtx()+' You pitch music-video concepts for Stoneralia Media House. Return JSON ONLY: {"concepts":[{"t":"title","l":"one-line logline","h":"the visual hook","loc":"location (prefer the SETS listed)","w":"wardrobe note using locked Chiefin\u2019 Season fits"}]} with exactly 5 concepts. Each must be shootable with AI video, character-driven, deadpan-premium \u2014 no viral-guarantee language.';
+ var usr="SONG: "+(title||"untitled")+(artist?" \u2014 "+artist:"")+(scene?"\nSCENE / VIBE: "+scene:"");
+ try{
+  var d=parseJSON(await _llmRun(sys,usr,"ideas"));
+  if(!d||!Array.isArray(d.concepts)||!d.concepts.length)throw new Error("No concepts came back.");
+  S.mv={concepts:d.concepts.slice(0,5),pick:-1,beats:""};save();
+  if(st)st.innerHTML="";mvPaint();
+ }catch(e){if(st)st.innerHTML=errLine(e);}}
+function mvPaint(){
+ var b=$("mvBody");if(!b)return;var m=S.mv;if(!m||!m.concepts){b.innerHTML="";return;}
+ var h=m.concepts.map(function(c,i){return '<div style="padding:10px;border:1px solid '+(m.pick===i?"var(--bud)":"var(--line)")+';border-radius:8px;margin-top:8px"><div style="font-weight:800;font-family:var(--slate)">'+esc(c.t||"")+'</div><div style="font-size:13px;margin-top:2px">'+esc(c.l||"")+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">Hook: '+esc(c.h||"")+' \u00b7 '+esc(c.loc||"")+'</div><button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="mvTreat('+i+')">'+(m.pick===i?"\u21bb Rebuild treatment":"\u25b6 Build treatment + beats")+"</button></div>";}).join("");
+ if(m.beats){h+='<label class="fld" style="margin-top:12px">Treatment + timed beats \u2014 editable</label><textarea id="mvOut" style="min-height:170px;font-size:13px" oninput="S.mv.beats=this.value;save()">'+esc(m.beats)+'</textarea><div class="row" style="margin-top:6px"><button class="btn ghost sm" style="flex:1" onclick="mvToRapid()">\u26a1 \u2192 Rapid 15s</button><button class="btn ghost sm" style="flex:1" onclick="mvToBoard()">\ud83c\udfac \u2192 Motion Director</button></div><div class="row" style="margin-top:6px"><button class="btn ghost sm" style="flex:1" onclick="mvCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="mvDrop()">+ Drop</button></div>';}
+ b.innerHTML=h;}
+async function mvTreat(i){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var m=S.mv;if(!m||!m.concepts[i])return;m.pick=i;save();
+ var c=m.concepts[i];var st=$("mvStatus");if(st)st.innerHTML=spinner("Writing the treatment\u2026");
+ var sys=vibeCtx()+" You write a tight music-video treatment for AI production. Structure: TREATMENT \u2014 3 short paragraphs (world, arc, ending image). Then BEATS \u2014 8 to 12 numbered one-line visual beats with rough timings across the video, each shootable as one AI clip, wardrobe locked, no music direction (the record already exists), diegetic-visual language only. Plain text, no markdown.";
+ var usr="CONCEPT: "+c.t+" \u2014 "+c.l+"\nHOOK: "+(c.h||"")+"\nLOCATION: "+(c.loc||"")+"\nWARDROBE: "+(c.w||"")+"\nSONG: "+((($("sunoTitle")||{}).value)||"");
+ try{
+  var txt=(await _llmRun(sys,usr,"ideas")).trim();
+  if(!txt)throw new Error("Nothing came back.");
+  m.beats=txt;save();if(st)st.innerHTML="";mvPaint();toast("Treatment ready \u2014 send beats to a motion tool.");
+ }catch(e){if(st)st.innerHTML=errLine(e);}}
+function mvToRapid(){var m=S.mv;if(!m||!m.beats){toast("Build the treatment first.",true);return;}go("board");var a=$("rmsAction");if(a){a.value=m.beats.slice(0,1200);}toast("Beats loaded \u2014 pick cast + pacing and build.");}
+function mvToBoard(){var m=S.mv;if(!m||!m.beats){toast("Build the treatment first.",true);return;}go("board");var b=$("boardScript");if(b){b.value=m.beats;}toast("Beats loaded into the board script.");}
+function mvCopy(){var m=S.mv;if(!m||!m.beats){toast("Build the treatment first.",true);return;}navigator.clipboard.writeText(m.beats).then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
+function mvDrop(){var m=S.mv;if(!m||!m.beats){toast("Build the treatment first.",true);return;}projAttach("text","MV treatment \u2014 "+((m.concepts[m.pick]||{}).t||"concept"),m.beats);}
+async function rpGen(){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var what=(($("rpWhat")||{}).value||"").trim();var kind=(($("rpKind")||{}).value)||"music video";
+ if(!what){toast("Say what\u2019s dropping first.",true);return;}
+ var st=$("rpStatus");if(st)st.innerHTML=spinner("Packaging the release\u2026");
+ var sys=vibeCtx()+' You package a YouTube release for Stoneralia Media House. Return JSON ONLY: {"titles":["5 title candidates, each under 70 characters"],"description":"2 short paragraphs then a link/credits block placeholder","tags":"comma-separated tags totalling UNDER 480 characters","hashtags":"5-8 hashtags in one line","pinned":"one pinned comment that sparks replies","thumbs":["3 thumbnail image prompts \u2014 bold, readable at small size, brand palette, one clear subject each"]}. Honest language only: high-CTR candidate, search-aware \u2014 never guaranteed-viral claims.';
+ var usr="RELEASE TYPE: "+kind+"\nDROPPING: "+what;
+ try{
+  var d=parseJSON(await _llmRun(sys,usr,"ideas"));
+  if(!d||!Array.isArray(d.titles))throw new Error("Package came back malformed \u2014 try again.");
+  S.rp={what:what,kind:kind,d:d,ts:Date.now()};save();
+  if(st)st.innerHTML="";rpPaint();toast("Release package ready.");
+ }catch(e){if(st)st.innerHTML=errLine(e);}}
+function rpCopyTxt(t){navigator.clipboard.writeText(t).then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
+function rpThumb(i){var d=S.rp&&S.rp.d;if(!d||!d.thumbs||!d.thumbs[i])return;go("studio");var p=$("prompt");if(p)p.value=d.thumbs[i];toast("Thumbnail prompt loaded \u2014 render it in Studio.");}
+function rpPaint(){
+ var b=$("rpBody");if(!b)return;var r=S.rp;if(!r||!r.d){b.innerHTML="";return;}var d=r.d;
+ function row(t){return '<div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--line)"><span style="flex:1;font-size:13px">'+esc(t)+'</span><button class="btn ghost sm" style="flex:0 0 auto;padding:4px 10px" onclick="rpCopyTxt('+"'"+esc(String(t)).replace(/'/g,"\\'")+"'"+')">\u29c9</button></div>';}
+ var h='<div style="margin-top:10px"><div style="font-weight:800;font-family:var(--slate)">Titles \u2014 candidates</div>'+(d.titles||[]).map(row).join("")+"</div>";
+ var tags=String(d.tags||"");var tn=tags.length;
+ h+='<div style="margin-top:10px"><div style="font-weight:800;font-family:var(--slate)">Description</div><div style="font-size:13px;white-space:pre-wrap;margin-top:4px">'+esc(d.description||"")+'</div><button class="btn ghost sm" style="margin-top:6px" onclick="rpCopyTxt(S.rp.d.description||\'\')">\u29c9 Copy description</button></div>';
+ h+='<div style="margin-top:10px"><div style="font-weight:800;font-family:var(--slate)">Tags <span style="color:'+(tn>500?"var(--red)":"var(--bud)")+'">'+tn+' / 500</span></div><div style="font-size:12px;word-break:break-word;color:var(--bone-dim);margin-top:4px">'+esc(tags)+'</div><button class="btn ghost sm" style="margin-top:6px" onclick="rpCopyTxt(S.rp.d.tags||\'\')">\u29c9 Copy tags</button></div>';
+ h+='<div style="margin-top:10px"><div style="font-weight:800;font-family:var(--slate)">Hashtags + pinned comment</div>'+row(d.hashtags||"")+row(d.pinned||"")+"</div>";
+ h+='<div style="margin-top:10px"><div style="font-weight:800;font-family:var(--slate)">Thumbnail prompts</div>'+(d.thumbs||[]).map(function(t,i){return '<div style="padding:6px 0;border-bottom:1px solid var(--line)"><div style="font-size:12px;color:var(--bone-dim)">'+esc(t)+'</div><div class="row" style="margin-top:6px"><button class="btn ghost sm" style="flex:1" onclick="rpThumb('+i+')">\u2192 Studio</button><button class="btn ghost sm" style="flex:0 0 auto;padding:4px 10px" onclick="rpCopyTxt(S.rp.d.thumbs['+i+'])">\u29c9</button></div></div>';}).join("")+"</div>";
+ b.innerHTML=h;}
 const MOTION_RECIPES=[
  {k:"img2vid",cat:"Core",name:"Reference image → video",g:"Animate the supplied still. Preserve face, proportions, garment design, colour placement and framing exactly; add only the described motion. Nothing morphs."},
  {k:"start_end",cat:"Core",name:"Start frame → end frame",g:"Controlled transition from the described start image to the described end image. Motivated in-between action, no identity drift, no random wardrobe or background changes, no uncontrolled morphing."},

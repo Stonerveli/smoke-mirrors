@@ -247,6 +247,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button data-go="story"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20l1-4L17 4l3 3L8 19z'/><path d='M14 6l3 3'/></svg></span>Story</button>
   <button data-go="media"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 5 6 9H2v6h4l5 4z'/><path d='M15.5 8.5a5 5 0 0 1 0 7'/><path d='M19 4.5a9 9 0 0 1 0 15'/></svg></span>Media</button>
   <button data-go="reel"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></svg></span>Cut</button>
+  <button data-go="train"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M10 3v6L5 18a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3'/><path d='M8 3h8'/></svg></span>Lab</button>
   <button data-go="projects"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/></svg></span>Projects</button>
   <button data-go="brand"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7z'/><path d='M9.5 12l2 2 3.5-4'/></svg></span>Brand Lab</button>
   <button data-go="socials"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='18' cy='5' r='3'/><circle cx='6' cy='12' r='3'/><circle cx='18' cy='19' r='3'/><path d='M8.6 10.5l6.8-4M8.6 13.5l6.8 4'/></svg></span>Socials</button>
@@ -298,6 +299,11 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 21V4'/><path d='M5 4h13l-3 4.5L18 13H5'/></svg></span><h2>Daily Run</h2><span class="tag">Idea → post, one lap</span></div>
   <div class="hint" style="margin-bottom:12px">One lap a day: idea → create → export → caption → posted. Steps check themselves off where they can, the rest is one tap. Close the day, keep the streak.</div>
   <div id="runBody"></div>
+</section>
+<section class="view" id="view-train">
+  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M10 3v6L5 18a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3'/><path d='M8 3h8'/></svg></span><h2>Lab</h2><span class="tag">Train · try-on</span></div>
+  <div class="hint" style="margin-bottom:12px">Train your own LoRA (Chief, the house style — ~$2 a run, yours forever) and dress real people in real garments with virtual try-on. Both run on your fal key.</div>
+  <div id="labBody"></div>
 </section>
 <section class="view" id="view-vibe">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4z'/><path d='M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z'/></svg></span><h2>Vibe Builder</h2><span class="tag">Describe it · paste it · JSON</span></div>
@@ -1021,7 +1027,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.53 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.54 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1046,7 +1052,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -1337,7 +1343,7 @@ async function svGenerate(){
   svSetMode((S.songvid&&S.songvid.mode)||"perform");
 })();
 var CUR_VIEW="episodes";
-const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",canon:"universe",cast:"universe",sets:"universe",projects:"library",socials:"brand",brand:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
+const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",train:"create",canon:"universe",cast:"universe",sets:"universe",projects:"library",socials:"brand",brand:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
 const GROUP_FIRST={create:"smg",universe:"canon",library:"pipeline",brand:"brand",setup:"settings"};
 function navLabel(v){var b=document.querySelector('nav button[data-go="'+v+'"]');if(b){var t=(b.textContent||"").trim();if(t)return t;}return v;}
 function renderSubTabs(){
@@ -1371,6 +1377,7 @@ function go(name){
   if(name==="vo")renderVO();
   if(name==="vibe")renderVibe();
   if(name==="run")renderRun();
+  if(name==="train")renderLab();
   if(name==="socials")renderSocials();
   if(name==="brand")renderBrand();
   if(name==="board"){if(typeof mdRecipeFill==="function")mdRecipeFill();if(typeof rmsFill==="function")rmsFill();}
@@ -1635,10 +1642,12 @@ function renderRefs(){
 }
 $("genBtn").addEventListener("click",runGenerate);
 async function runGenerate(){
-  const st=STATIONS[S.station],model=currentModel(),prompt=$("prompt").value.trim();
+  const st=STATIONS[S.station];let model=currentModel();const prompt=$("prompt").value.trim();
   if(!model){toast("Pick a model.",true);return;}if(!prompt){toast("Write a prompt.",true);return;}
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
-  const aspect=$("aspect").value;let input={prompt};
+  let _lora=null;if(S.loraOn&&S.activeLora&&st.kind==="image"&&!st.refs){_lora=(S.loras||[]).find(l=>l.id===S.activeLora)||null;if(_lora)model="fal-ai/flux-lora";}
+  const prompt2=(_lora?_lora.trigger+", ":"")+prompt;
+  const aspect=$("aspect").value;let input={prompt:prompt2};if(_lora)input.loras=[{path:_lora.url,scale:1}];
   const stashItems=st.refs?S.stash.filter(x=>pickedRefs.has(x.id)):[];
   const castItems=S.cast.filter(c=>prompt.toLowerCase().indexOf(("@"+c.name).toLowerCase())>-1);
   const setItem=S.sets.find(x=>x.id===setPicked)||null;
@@ -1646,11 +1655,11 @@ async function runGenerate(){
   const refItems=[...castItems,...(setItem?[setItem]:[]),...stashItems];
   if(st.kind==="image"){input.num_images=parseInt($("numImages").value)||1;Object.assign(input,sizeFor(model,aspect));withRes(model,input);
     if(st.refs){const urls=flattenRefs(refItems,12);if(urls.length)input.image_urls=urls;}
-    if(sceneText)input.prompt=prompt+sceneText;}
+    if(sceneText)input.prompt=prompt2+sceneText;}
   if(st.kind==="video"){
     if(model.includes("kling")){input.duration=String($("duration").value);const cv=flattenRefs(refItems,1);if(cv[0])input.image_url=cv[0];}
     else{input.resolution=$("resolution").value;input.duration=String($("duration").value);if(aspect!=="auto")input.aspect_ratio=aspect;const urls=flattenRefs(refItems,4);if(urls.length)input.image_urls=urls;if($("genAudio").checked)input.generate_audio=true;}
-    if(sceneText)input.prompt=prompt+sceneText;}
+    if(sceneText)input.prompt=prompt2+sceneText;}
   const btn=$("genBtn");btn.disabled=true;btn.textContent="● Rolling…";
   const stat=$("studioStatus");stat.innerHTML='<div class="statusline"><span class="rec"></span><span id="stxt">Submitting to fal…</span></div>';$("studioResult").innerHTML="";
   try{
@@ -4389,6 +4398,97 @@ function renderRun(){
    r2.streak=(r2.lastDone===ys)?(r2.streak||0)+1:1;r2.lastDone=t;}
   socState().log.unshift({id:uid(),platform:r2.platform||"ig",what:(r2.lane==="comic"?(((S.comics&&S.comics[0])||{}).title||"Comic post"):"Clip post"),ts:Date.now(),src:"run"});save();renderRun();toast("Day closed — streak 🔥 "+r2.streak+". Logged to Socials.");});
 }
+var _CRC;function crc32(u8){if(!_CRC){_CRC=[];for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=(c&1)?(3988292384^(c>>>1)):(c>>>1);_CRC[n]=c>>>0;}}
+ var c=4294967295;for(var i=0;i<u8.length;i++)c=_CRC[(c^u8[i])&255]^(c>>>8);return (c^4294967295)>>>0;}
+function zipStore(files){
+ var parts=[],central=[],off=0;var enc=new TextEncoder();
+ function u16(v){return new Uint8Array([v&255,(v>>8)&255]);}
+ function u32(v){return new Uint8Array([v&255,(v>>8)&255,(v>>16)&255,(v>>>24)&255]);}
+ files.forEach(function(f){
+  var nm=enc.encode(f.name);var crc=crc32(f.bytes);var sz=f.bytes.length;
+  var head=[u32(67324752),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(sz),u32(sz),u16(nm.length),u16(0)];
+  var hlen=30+nm.length;
+  head.forEach(function(p){parts.push(p);});parts.push(nm);parts.push(f.bytes);
+  var cen=[u32(33639248),u16(20),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(sz),u32(sz),u16(nm.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(off)];
+  cen.forEach(function(p){central.push(p);});central.push(nm);
+  off+=hlen+sz;});
+ var cenStart=off,cenSize=0;central.forEach(function(p){cenSize+=p.length;});
+ var eocd=[u32(101010256),u16(0),u16(0),u16(files.length),u16(files.length),u32(cenSize),u32(cenStart),u16(0)];
+ var all=parts.concat(central,eocd);
+ return new Blob(all,{type:"application/zip"});}
+async function falUpload(blob,name,type){
+ var init=await fetch("https://rest.alpha.fal.ai/storage/upload/initiate?storage_type=fal-cdn-v3",{method:"POST",headers:{"Authorization":"Key "+S.apiKey,"Content-Type":"application/json"},body:JSON.stringify({content_type:type,file_name:name})});
+ if(!init.ok)throw new Error("fal storage refused the upload ("+init.status+") — screenshot this and tell me.");
+ var d=await init.json();
+ var put=await fetch(d.upload_url,{method:"PUT",headers:{"Content-Type":type},body:blob});
+ if(!put.ok)throw new Error("Upload failed mid-transfer ("+put.status+"). Try again.");
+ return d.file_url;}
+var TR={files:[]};var FIT={person:"",garment:""};
+function renderLab(){
+ var host=$("labBody");if(!host)return;
+ var h='<div class="card"><label class="fld">\U0001f9ec DNA Training Lab — train a LoRA</label>';
+ h+='<div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">15\u201335 images, one subject or one style. ~$2 per 1000-step run on flux-lora-fast-training. The finished .safetensors is yours — the URL lands below and in The Cut.</div>';
+ h+='<input type="file" id="trFiles" accept="image/*" multiple style="margin-bottom:6px"><div id="trList" class="hint" style="text-transform:none;letter-spacing:0"></div>';
+ h+='<div class="row" style="margin-top:8px"><input type="text" id="trTrigger" placeholder="trigger word e.g. chieffnug" style="flex:1.3"><select id="trType" style="flex:1"><option value="subject">Character / subject</option><option value="style">Style</option></select></div>';
+ h+='<div class="row" style="margin-top:6px"><select id="trSteps" style="flex:1"><option value="1000" selected>1000 steps · ~$2</option><option value="1500">1500 · ~$3</option><option value="2000">2000 · ~$4</option></select></div>';
+ h+='<button class="btn green" style="width:100%;margin-top:8px" onclick="trainLora()">\U0001f9ec Train LoRA</button><div id="trStatus"></div>';
+ h+='<div id="trModels" style="margin-top:10px"></div></div>';
+ h+='<div class="card"><label class="fld">\U0001f455 Chief Fitting Room — virtual try-on</label>';
+ h+='<div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Real person + real garment → worn. Product photography for the store without a shoot.</div>';
+ h+='<label class="fld">Person</label><input type="file" id="fitPerson" accept="image/*"><div id="fitPName" class="hint" style="text-transform:none;letter-spacing:0"></div>';
+ h+='<label class="fld" style="margin-top:8px">Garment (flat-lay or on-model)</label><input type="file" id="fitGarment" accept="image/*"><div id="fitGName" class="hint" style="text-transform:none;letter-spacing:0"></div>';
+ h+='<div class="row" style="margin-top:8px"><select id="fitCat" style="flex:1"><option value="auto" selected>Auto-detect</option><option value="tops">Top</option><option value="bottoms">Bottoms</option><option value="one-pieces">One-piece</option></select></div>';
+ h+='<button class="btn green" style="width:100%;margin-top:8px" onclick="fitGen()">\U0001f455 Try it on</button><div id="fitStatus"></div><div id="fitOut" style="margin-top:8px"></div></div>';
+ host.innerHTML=h;
+ var tf=$("trFiles");if(tf)tf.addEventListener("change",function(e){
+  var fs=Array.from(e.target.files||[]);if(!fs.length)return;
+  var done=0;fs.forEach(function(f){var r=new FileReader();r.onload=function(){TR.files.push({name:f.name.replace(/[^a-zA-Z0-9._-]/g,"_"),bytes:new Uint8Array(r.result)});done++;if(done===fs.length&&$("trList"))$("trList").textContent=TR.files.length+" images loaded";};r.readAsArrayBuffer(f);});});
+ var fp=$("fitPerson");if(fp)fp.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;svFile(f,function(d){FIT.person=d;if($("fitPName"))$("fitPName").textContent=f.name;});});
+ var fg=$("fitGarment");if(fg)fg.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;svFile(f,function(d){FIT.garment=d;if($("fitGName"))$("fitGName").textContent=f.name;});});
+ loraPaint();}
+function loraPaint(){
+ var b=$("trModels");if(!b)return;var L=S.loras||[];
+ if(!L.length){b.innerHTML="";return;}
+ b.innerHTML='<div style="font-weight:800;font-family:var(--slate)">My LoRAs</div>'+L.map(function(l){var on=(S.loraOn&&S.activeLora===l.id);
+  return '<div style="display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)"><div style="min-width:0"><div style="font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(l.name)+'</div><div class="hint" style="text-transform:none;letter-spacing:0">'+esc(l.trigger)+" \u00b7 "+l.type+'</div></div><div style="flex:0 0 auto;display:flex;gap:6px"><button class="btn ghost sm" style="padding:6px 10px" onclick="rpCopyTxt(S.loras.find(x=>x.id===\''+l.id+'\').url)">\u29c9</button><button class="btn '+(on?"green":"ghost")+' sm" style="padding:6px 10px" onclick="loraUse(\''+l.id+'\')">'+(on?"ON in Studio":"Use in Studio")+"</button></div></div>";}).join("");}
+function loraUse(id){
+ if(S.activeLora===id&&S.loraOn){S.loraOn=false;S.activeLora="";toast("LoRA off — Studio back to normal models.");}
+ else{S.activeLora=id;S.loraOn=true;var l=(S.loras||[]).find(function(x){return x.id===id;});toast("Studio will now generate with "+(l?l.name:"your LoRA")+" — trigger word added automatically.");}
+ save();loraPaint();}
+async function trainLora(){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ if(TR.files.length<10){toast("Load at least 10 images (15\u201335 is the sweet spot).",true);return;}
+ var trig=(($("trTrigger")||{}).value||"").trim();
+ if(!trig||/\s/.test(trig)){toast("Trigger word required — one word, no spaces.",true);return;}
+ var isStyle=(($("trType")||{}).value)==="style";var steps=parseInt((($("trSteps")||{}).value)||"1000",10);
+ var st=$("trStatus");
+ try{
+  if(st)st.innerHTML=spinner("Zipping "+TR.files.length+" images\u2026");
+  var zip=zipStore(TR.files);
+  if(st)st.innerHTML=spinner("Uploading dataset ("+Math.round(zip.size/1048576)+" MB)\u2026");
+  var zurl=await falUpload(zip,"dataset.zip","application/zip");
+  if(st)st.innerHTML=spinner("Training — this takes 15\u201330 min, leave the tab open\u2026");
+  var o=await falRun("fal-ai/flux-lora-fast-training",{images_data_url:zurl,trigger_word:trig,is_style:isStyle,steps:steps},function(s2,t){if(st)st.innerHTML=spinner("Training\u2026 ("+t+")");});
+  var lurl=(o&&o.diffusers_lora_file&&o.diffusers_lora_file.url)||(o&&o.lora_file&&o.lora_file.url);
+  if(!lurl)throw new Error("Training finished but no LoRA file came back — screenshot this.");
+  S.loras.unshift({id:uid(),name:trig+(isStyle?" (style)":""),trigger:trig,type:isStyle?"style":"subject",url:lurl,ts:Date.now()});
+  save();TR.files=[];if($("trList"))$("trList").textContent="";
+  if(st)st.innerHTML="";loraPaint();
+  toast("LoRA trained \U0001f9ec — copy the URL somewhere safe, then tap Use in Studio.");
+ }catch(e){if(st)st.innerHTML=errLine(e);}}
+async function fitGen(){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ if(!FIT.person||!FIT.garment){toast("Load both images first.",true);return;}
+ var st=$("fitStatus");if(st)st.innerHTML=spinner("Fitting\u2026");
+ try{
+  var o=await falRun("fal-ai/fashn/tryon/v1.5",{model_image:FIT.person,garment_image:FIT.garment,category:(($("fitCat")||{}).value)||"auto"},function(s2,t){if(st)st.innerHTML=spinner("Fitting\u2026 ("+t+")");});
+  var m=extractMedia(o);var url=(m&&m.url)||(o&&o.images&&o.images[0]&&o.images[0].url);
+  if(!url)throw new Error("No image came back.");
+  S.reel.unshift({id:uid(),type:"image",url:url,prompt:"Try-on — fitting room",ts:Date.now()});save();
+  if(st)st.innerHTML="";
+  var out=$("fitOut");if(out)out.innerHTML='<img src="'+esc(url)+'" style="width:100%;border-radius:10px">';
+  toast("Fitted — saved to The Cut.");
+ }catch(e){if(st)st.innerHTML=errLine(e);}}
 function vibeSetDom(map,st,fillOnly){Object.keys(map).forEach(function(k){var el=$(map[k]);if(!el||st[k]==null)return;if(fillOnly&&el.value)return;el.value=st[k]+"";});}
 function vibeReadDom(map){var o={};Object.keys(map).forEach(function(k){var el=$(map[k]);o[k]=el?el.value:"";});return o;}
 const VIBE_TOOLS={

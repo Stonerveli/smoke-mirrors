@@ -247,9 +247,10 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button data-go="story"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20l1-4L17 4l3 3L8 19z'/><path d='M14 6l3 3'/></svg></span>Story</button>
   <button data-go="media"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 5 6 9H2v6h4l5 4z'/><path d='M15.5 8.5a5 5 0 0 1 0 7'/><path d='M19 4.5a9 9 0 0 1 0 15'/></svg></span>Media</button>
   <button data-go="reel"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></svg></span>Cut</button>
-  <button data-go="train"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M10 3v6L5 18a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3'/><path d='M8 3h8'/></svg></span>Lab</button>
+  
   <button data-go="projects"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/></svg></span>Projects</button>
   <button data-go="brand"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7z'/><path d='M9.5 12l2 2 3.5-4'/></svg></span>Brand Lab</button>
+  <button data-go="train"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M10 3v6L5 18a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3'/><path d='M8 3h8'/></svg></span>Lab</button>
   <button data-go="socials"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='18' cy='5' r='3'/><circle cx='6' cy='12' r='3'/><circle cx='18' cy='19' r='3'/><path d='M8.6 10.5l6.8-4M8.6 13.5l6.8 4'/></svg></span>Socials</button>
   
   <button data-go="settings"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1'/></svg></span>Setup</button>
@@ -266,7 +267,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 
 <section class="view" id="view-songvid">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M10 9l5 3-5 3z'/></svg></span><h2>Lip-Sync</h2><span class="tag">Audio → video</span></div>
-  <div class="hint" style="margin-bottom:12px">Drop in a song, a voiceover, or just the hook, pick who performs it, and fal lip-syncs them to the audio. Two routes:<br>• <b>Perform it</b> — a character <b>image</b> mouths the track. Needs a mouth, so use <b>Haze</b>, a mouthed cast member, or a real face. <b>Chief is mouthless</b> — for a Chief music video, generate Seedance clips to the beat in the Video station and assemble them in <b>The Cut</b>.<br>• <b>Sync to a clip</b> — feed an existing <b>video</b> + the song and the mouth re-syncs (handles music).</div>
+  <div class="hint" style="margin-bottom:12px">Drop in a song, a voiceover, or just the hook, pick who performs it, and fal lip-syncs them to the audio. Two routes:<br>• <b>Perform it</b> — a character <b>image</b> mouths the track. Needs a mouth, so use <b>Haze</b>, a mouthed cast member, or a real face. <b>Chieff is mouthless</b> — for a Chieff music video, generate Seedance clips to the beat in the Video station and assemble them in <b>The Cut</b>.<br>• <b>Sync to a clip</b> — feed an existing <b>video</b> + the song and the mouth re-syncs (handles music).</div>
   <label class="fld">Your song</label>
   <input type="file" id="svAudio" accept="audio/*">
   <div id="svAudioInfo" class="hint" style="margin-top:6px"></div>
@@ -302,7 +303,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 </section>
 <section class="view" id="view-train">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M10 3v6L5 18a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3'/><path d='M8 3h8'/></svg></span><h2>Lab</h2><span class="tag">Train · try-on</span></div>
-  <div class="hint" style="margin-bottom:12px">Train your own LoRA (Chief, the house style — ~$2 a run, yours forever) and dress real people in real garments with virtual try-on. Both run on your fal key.</div>
+  <div class="hint" style="margin-bottom:12px">Train your own LoRA (Chieff, the house style — ~$2 a run, yours forever) and dress real people in real garments with virtual try-on. Both run on your fal key.</div>
   <div id="labBody"></div>
 </section>
 <section class="view" id="view-vibe">
@@ -312,7 +313,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 </section>
 <section class="view" id="view-vo">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='3' width='6' height='11' rx='3'/><path d='M5 11a7 7 0 0 0 14 0'/><path d='M12 18v3'/></svg></span><h2>Voiceover</h2><span class="tag">Seed Audio 1.0</span></div>
-  <div class="hint" style="margin-bottom:12px">Character voices, narration and full audio scenes (dialogue + ambience + SFX in one pass) from ByteDance Seed Audio. Pick a preset voice or clone one from a clip, then write the line — describe who speaks, their emotion and accent for best results. <b>Chief is mouthless</b>, so use this for narration over his scenes or for other characters. Output auto-saves to The Cut and can be fed into Lip-Sync. English &amp; Chinese.</div>
+  <div class="hint" style="margin-bottom:12px">Character voices, narration and full audio scenes (dialogue + ambience + SFX in one pass) from ByteDance Seed Audio. Pick a preset voice or clone one from a clip, then write the line — describe who speaks, their emotion and accent for best results. <b>Chieff is mouthless</b>, so use this for narration over his scenes or for other characters. Output auto-saves to The Cut and can be fed into Lip-Sync. English &amp; Chinese.</div>
   <div id="voBody"></div>
 </section>
 <section class="view" id="view-assets">
@@ -610,7 +611,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <button class="btn sm green" id="voiceNarr" style="margin-top:6px">&#128266; Voice narrator</button>
     <label class="fld" style="margin-top:12px">Chieff's dry line (optional)</label>
     <textarea id="chieffLine" style="min-height:48px"></textarea>
-    <button class="btn sm green" id="voiceChief" style="margin-top:6px">&#128266; Voice Chieff</button>
+    <button class="btn sm green" id="voiceChieff" style="margin-top:6px">&#128266; Voice Chieff</button>
     <label class="fld" style="margin-top:12px">Chieff's physical bit (silent — direction only, not voiced)</label>
     <textarea id="chieffPhysical" style="min-height:48px" readonly></textarea>
   </div>
@@ -1027,7 +1028,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.54 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.55 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1343,7 +1344,7 @@ async function svGenerate(){
   svSetMode((S.songvid&&S.songvid.mode)||"perform");
 })();
 var CUR_VIEW="episodes";
-const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",train:"create",canon:"universe",cast:"universe",sets:"universe",projects:"library",socials:"brand",brand:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
+const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",canon:"universe",cast:"universe",sets:"universe",projects:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
 const GROUP_FIRST={create:"smg",universe:"canon",library:"pipeline",brand:"brand",setup:"settings"};
 function navLabel(v){var b=document.querySelector('nav button[data-go="'+v+'"]');if(b){var t=(b.textContent||"").trim();if(t)return t;}return v;}
 function renderSubTabs(){
@@ -2862,7 +2863,7 @@ let sunoGenres=new Set();
 function bindMedia(){
   if($("banterBtn"))$("banterBtn").addEventListener("click",writeBanter);
   if($("voiceNarr"))$("voiceNarr").addEventListener("click",()=>voiceLine($("narratorLine").value,"Narrator"));
-  if($("voiceChief"))$("voiceChief").addEventListener("click",()=>voiceLine($("chieffLine").value,"Inner Chieff"));
+  if($("voiceChieff"))$("voiceChieff").addEventListener("click",()=>voiceLine($("chieffLine").value,"Inner Chieff"));
   if($("ttsBtn"))$("ttsBtn").addEventListener("click",()=>voiceLine($("ttsText").value,$("ttsType").value));
   if($("lipBtn"))$("lipBtn").onclick=genLipsync;
   if($("sfxBtn"))$("sfxBtn").onclick=genSfx;
@@ -4426,19 +4427,19 @@ async function falUpload(blob,name,type){
 var TR={files:[]};var FIT={person:"",garment:""};
 function renderLab(){
  var host=$("labBody");if(!host)return;
- var h='<div class="card"><label class="fld">\U0001f9ec DNA Training Lab — train a LoRA</label>';
+ var h='<div class="card"><label class="fld">🧬 DNA Training Lab — train a LoRA</label>';
  h+='<div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">15\u201335 images, one subject or one style. ~$2 per 1000-step run on flux-lora-fast-training. The finished .safetensors is yours — the URL lands below and in The Cut.</div>';
  h+='<input type="file" id="trFiles" accept="image/*" multiple style="margin-bottom:6px"><div id="trList" class="hint" style="text-transform:none;letter-spacing:0"></div>';
  h+='<div class="row" style="margin-top:8px"><input type="text" id="trTrigger" placeholder="trigger word e.g. chieffnug" style="flex:1.3"><select id="trType" style="flex:1"><option value="subject">Character / subject</option><option value="style">Style</option></select></div>';
  h+='<div class="row" style="margin-top:6px"><select id="trSteps" style="flex:1"><option value="1000" selected>1000 steps · ~$2</option><option value="1500">1500 · ~$3</option><option value="2000">2000 · ~$4</option></select></div>';
- h+='<button class="btn green" style="width:100%;margin-top:8px" onclick="trainLora()">\U0001f9ec Train LoRA</button><div id="trStatus"></div>';
+ h+='<button class="btn green" style="width:100%;margin-top:8px" onclick="trainLora()">🧬 Train LoRA</button><div id="trStatus"></div>';
  h+='<div id="trModels" style="margin-top:10px"></div></div>';
- h+='<div class="card"><label class="fld">\U0001f455 Chief Fitting Room — virtual try-on</label>';
+ h+='<div class="card"><label class="fld">👕 Chieff Fitting Room — virtual try-on</label>';
  h+='<div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Real person + real garment → worn. Product photography for the store without a shoot.</div>';
  h+='<label class="fld">Person</label><input type="file" id="fitPerson" accept="image/*"><div id="fitPName" class="hint" style="text-transform:none;letter-spacing:0"></div>';
  h+='<label class="fld" style="margin-top:8px">Garment (flat-lay or on-model)</label><input type="file" id="fitGarment" accept="image/*"><div id="fitGName" class="hint" style="text-transform:none;letter-spacing:0"></div>';
  h+='<div class="row" style="margin-top:8px"><select id="fitCat" style="flex:1"><option value="auto" selected>Auto-detect</option><option value="tops">Top</option><option value="bottoms">Bottoms</option><option value="one-pieces">One-piece</option></select></div>';
- h+='<button class="btn green" style="width:100%;margin-top:8px" onclick="fitGen()">\U0001f455 Try it on</button><div id="fitStatus"></div><div id="fitOut" style="margin-top:8px"></div></div>';
+ h+='<button class="btn green" style="width:100%;margin-top:8px" onclick="fitGen()">👕 Try it on</button><div id="fitStatus"></div><div id="fitOut" style="margin-top:8px"></div></div>';
  host.innerHTML=h;
  var tf=$("trFiles");if(tf)tf.addEventListener("change",function(e){
   var fs=Array.from(e.target.files||[]);if(!fs.length)return;
@@ -4474,7 +4475,7 @@ async function trainLora(){
   S.loras.unshift({id:uid(),name:trig+(isStyle?" (style)":""),trigger:trig,type:isStyle?"style":"subject",url:lurl,ts:Date.now()});
   save();TR.files=[];if($("trList"))$("trList").textContent="";
   if(st)st.innerHTML="";loraPaint();
-  toast("LoRA trained \U0001f9ec — copy the URL somewhere safe, then tap Use in Studio.");
+  toast("LoRA trained 🧬 — copy the URL somewhere safe, then tap Use in Studio.");
  }catch(e){if(st)st.innerHTML=errLine(e);}}
 async function fitGen(){
  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
@@ -4509,7 +4510,7 @@ const VIBE_TOOLS={
     if($("comicMode"))$("comicMode").value=S.comicMode||"silent";if($("comicKind"))$("comicKind").value=S.comicKind||"strip3";if($("comicLook"))$("comicLook").value=S.comicLook||"toon";}},
  board:{name:"Storyboard (Pre-Roll)",view:"board",desc:"storyboard / pre-viz board from a script or logline",detect:"storyboard, board, shots, pre-viz, scene list",
   schema:{required:["script"],fields:{script:{t:"string"},style:{t:"enum",v:["frames","pitchbible","action9","comic6"]},title:{t:"string"},palette:{t:"string"}}},
-  example:{script:"Chief vs Grinderjaw on a rooftop, 9 beats, no dialogue, ends crashing through an AC unit",style:"action9",title:"Rooftop"},
+  example:{script:"Chieff vs Grinderjaw on a rooftop, 9 beats, no dialogue, ends crashing through an AC unit",style:"action9",title:"Rooftop"},
   _map:{script:"boardScript",style:"boardStyle",title:"boardTitle",palette:"boardPalette"},
   hasContent:function(){var el=$("boardScript");return !!(el&&el.value);},
   exportNow:function(){return vibeReadDom(this._map);},
@@ -4535,7 +4536,7 @@ const VIBE_TOOLS={
     save();go("vo");}},
  studio:{name:"Image Studio",view:"studio",desc:"single image generation prompt",detect:"image, picture, photo, poster, render, shot of",
   schema:{required:["prompt"],fields:{prompt:{t:"string"},model:{t:"string"}}},
-  example:{prompt:"Canonical Toy Chief on a bodega rooftop at dusk, cinematic, brand palette"},
+  example:{prompt:"Canonical Toy Chieff on a bodega rooftop at dusk, cinematic, brand palette"},
   hasContent:function(){var el=$("prompt");return !!(el&&el.value);},
   exportNow:function(){var el=$("prompt");var m=$("modelSelect");return {prompt:el?el.value:"",model:m?m.value:""};},
   apply:function(st,fillOnly){var el=$("prompt");if(el&&st.prompt!=null&&(!fillOnly||!el.value))el.value=st.prompt+"";
@@ -4759,7 +4760,7 @@ function svPickFromCut(){
   box.innerHTML='<div class="hint" style="margin:6px 0 4px">Tap one to load:</div>'+auds.map(function(a){return '<button type="button" class="btn ghost sm" data-cut="'+esc(a.url)+'" data-cn="'+esc(a.prompt||"audio")+'" style="width:100%;text-align:left;margin-bottom:4px">\u266a '+esc((a.prompt||"audio").slice(0,48))+'</button>';}).join("");
   box.querySelectorAll("[data-cut]").forEach(function(b){b.addEventListener("click",function(){SV.audio=b.getAttribute("data-cut");SV.audioName=b.getAttribute("data-cn")||"Audio";SV.audioDur=0;var pv=$("svAudioPrev");if(pv)pv.innerHTML='<audio src="'+esc(SV.audio)+'" controls style="width:100%"></audio>';if(typeof svRefresh==="function")svRefresh();box.innerHTML="";toast("Loaded from The Cut.");});});
 }
-const COMIC_TWISTS=["the cashier turns out to be his plug's mom","the bag he grabbed is full of oregano","he has a full existential crisis over which chips are 'the real him'","the security camera is just a smoke detector and he has been performing for a light","his card finally works but he is holding the blunt out in plain sight","the guy he owes money to just wants to split it and call it even","he answers every question with a 20-second delay and total sincerity","he counts his change three times and somehow it is less each time","the drink he grabbed expired before he was old enough to buy it","Chief is silently watching from the chip rack the entire time","he confidently walks straight into the closed automatic door","he has already eaten half of what he is trying to pay for"];
+const COMIC_TWISTS=["the cashier turns out to be his plug's mom","the bag he grabbed is full of oregano","he has a full existential crisis over which chips are 'the real him'","the security camera is just a smoke detector and he has been performing for a light","his card finally works but he is holding the blunt out in plain sight","the guy he owes money to just wants to split it and call it even","he answers every question with a 20-second delay and total sincerity","he counts his change three times and somehow it is less each time","the drink he grabbed expired before he was old enough to buy it","Chieff is silently watching from the chip rack the entire time","he confidently walks straight into the closed automatic door","he has already eaten half of what he is trying to pay for"];
 const COMIC_SPARKS=[
  {l:"Classic Bodega Fail",s:"EveryStoner is buying a single blunt and a drink at the 24-hour bodega",p:"his card keeps declining while the line grows behind him"},
  {l:"Munchies Disaster",s:"3AM, EveryStoner hits the bodega with the munchies",p:"he wants everything but only has $2 and some lint"},
@@ -4795,7 +4796,7 @@ function renderComics(){
   const cc=curComic();if(cc){renderComicView(cc);return;}
   S.curComic=null;
   let h='<div class="card"><label class="fld">Type</label><select id="comicKind"></select>';
-  h+='<label class="fld" style="margin-top:10px">Look</label><select id="comicLook"></select>';h+='<label class="fld" style="margin-top:10px">Comedy mechanic</label><select id="comicMechanic"></select>';h+='<label class="fld" style="margin-top:10px">Comedy mode</label><select id="comicMode"><option value="silent">Silent — visual gag, caption below</option><option value="dialogue">Dialogue — speech bubbles in panels</option></select><div class="hint" style="margin-top:4px;text-transform:none;letter-spacing:0">Dialogue is for talking characters (EveryStoner &amp; co). Chief is mouthless — he stays silent either way.</div>';h+='<label class="fld" style="margin-top:10px">Resolution</label><select id="comicRes"><option value="1K">1K · standard</option><option value="2K">2K · sharper</option><option value="4K">4K · 2× price</option></select>';
+  h+='<label class="fld" style="margin-top:10px">Look</label><select id="comicLook"></select>';h+='<label class="fld" style="margin-top:10px">Comedy mechanic</label><select id="comicMechanic"></select>';h+='<label class="fld" style="margin-top:10px">Comedy mode</label><select id="comicMode"><option value="silent">Silent — visual gag, caption below</option><option value="dialogue">Dialogue — speech bubbles in panels</option></select><div class="hint" style="margin-top:4px;text-transform:none;letter-spacing:0">Dialogue is for talking characters (EveryStoner &amp; co). Chieff is mouthless — he stays silent either way.</div>';h+='<label class="fld" style="margin-top:10px">Resolution</label><select id="comicRes"><option value="1K">1K · standard</option><option value="2K">2K · sharper</option><option value="4K">4K · 2× price</option></select>';
   h+='<label class="fld" style="margin-top:10px">Lead character</label><select id="comicLead"></select>';
   h+='<label class="fld" style="margin-top:10px">Location</label><select id="comicSet"></select>';
   h+='<label class="fld" style="margin-top:12px">Idea builder</label>';h+='<div class="hint" style="margin:0 0 6px;text-transform:none;letter-spacing:0">Tap a spark to auto-fill, or write your own. Setup alone works — problem &amp; twist sharpen the joke.</div>';h+='<div id="comicSparks" class="tonerow" style="margin-bottom:8px"></div>';h+='<input type="text" id="cbSetup" placeholder="Setup — what is happening? (e.g. EveryStoner buys one blunt at 3AM)">';h+='<input type="text" id="cbProblem" placeholder="Going wrong — the goal or the problem (optional)" style="margin-top:6px">';h+='<input type="text" id="cbTwist" placeholder="Twist — the funny turn (optional; where the joke lives)" style="margin-top:6px">';h+='<div class="row" style="margin-top:8px"><button class="btn ghost sm" id="comicDice" style="flex:1">🎲 Surprise me</button><button class="btn ghost sm" id="comicIdeaBtn" style="flex:1">✦ AI gag</button></div><div id="comicIdeaStatus"></div>';
@@ -4842,7 +4843,7 @@ async function genComic(){
   const cmech=COMEDY_MECHANICS.find(m=>m.n===S.comicMechanic)||null;const st=$("comicGenStatus");st.innerHTML=spinner("Writing the comic…");
   const lead=leadId?S.cast.find(c=>c.id===leadId):null;const set=setId?S.sets.find(x=>x.id===setId):null;
   const mode=($("comicMode")?$("comicMode").value:(S.comicMode||"silent"));const dlg=(mode==="dialogue");
-  const sys=STONERALIA_LAW+" "+VOICE_DNA+" You write COMICS — "+(single?"a single-panel Far Side-style cartoon: one image, one short deadpan caption, the whole joke in one frame.":"a "+ko.panels+"-panel comic strip built on a comedy arc — Setup, Trigger, Escalation, Complication, Peak Chaos, Payoff — compressed cleanly into "+ko.panels+" panels; each panel one readable beat that moves the story forward; cause and effect — every mistake makes the situation worse; escalate to peak chaos, then end on the hardest payoff: punchline, reveal, reversal, callback or visual gag.")+" Keep captions short and dry; lean visual."+(dlg?" DIALOGUE MODE: panels may include brief speech-bubble dialogue — natural casual voices, max 8 words per line, 1-2 lines per panel, label every speaker (Name: \"line\"). Chief/Chieff is MOUTHLESS and never speaks — others talk around him. The visual gag must still carry the joke even without the words.":" The joke must read with the sound off — visual punchline, no dialogue, no speech bubbles.")+(lead&&/everystoner/i.test(lead.name||"")?" LEAD VOICE — The EveryStoner: casual, slightly dumb but not clueless, easily distracted, mildly overconfident, occasionally paranoid, accidentally clever, sincere even when his logic makes no sense.":"")+(cmech?" PRIMARY COMEDY MECHANIC: "+cmech.n+" — "+cmech.p+".":"");
+  const sys=STONERALIA_LAW+" "+VOICE_DNA+" You write COMICS — "+(single?"a single-panel Far Side-style cartoon: one image, one short deadpan caption, the whole joke in one frame.":"a "+ko.panels+"-panel comic strip built on a comedy arc — Setup, Trigger, Escalation, Complication, Peak Chaos, Payoff — compressed cleanly into "+ko.panels+" panels; each panel one readable beat that moves the story forward; cause and effect — every mistake makes the situation worse; escalate to peak chaos, then end on the hardest payoff: punchline, reveal, reversal, callback or visual gag.")+" Keep captions short and dry; lean visual."+(dlg?" DIALOGUE MODE: panels may include brief speech-bubble dialogue — natural casual voices, max 8 words per line, 1-2 lines per panel, label every speaker (Name: \"line\"). Chieff/Chieff is MOUTHLESS and never speaks — others talk around him. The visual gag must still carry the joke even without the words.":" The joke must read with the sound off — visual punchline, no dialogue, no speech bubbles.")+(lead&&/everystoner/i.test(lead.name||"")?" LEAD VOICE — The EveryStoner: casual, slightly dumb but not clueless, easily distracted, mildly overconfident, occasionally paranoid, accidentally clever, sincere even when his logic makes no sense.":"")+(cmech?" PRIMARY COMEDY MECHANIC: "+cmech.n+" — "+cmech.p+".":"");
   const ctx=(lead?"LEAD: "+lead.name+(lead.identity?" — "+lead.identity:"")+wardrobePieces(lead)+(lead.wardrobeNote?" Wardrobe: "+lead.wardrobeNote:"")+"\n":"")+(set?"LOCATION: "+set.name+(set.vibe?" — "+set.vibe:"")+(set.props&&set.props.length?" Recurring here: "+set.props.map(p=>p.name+(p.desc?" ("+p.desc+")":"")).join("; "):"")+"\n":"");
   const usr=ctx+(idea?"IDEA: "+idea+"\n":"Invent an original gag true to the universe.\n")+"Write "+ko.panels+" panel"+(ko.panels>1?"s":"")+". For each panel: caption (short, dry — or empty)"+(dlg?", dialogue (the speech-bubble lines, format Name: \"line\" — or empty)":"")+" and visual (a COMPLETE ready-to-render image prompt for that panel"+(dlg?", describing the action and who is speaking":"")+"). Also a title. Return JSON only: {\"title\":\"\",\"panels\":[{\"caption\":\"\",\"dialogue\":\"\",\"visual\":\"\"}]}.";
   try{
@@ -5232,7 +5233,7 @@ const WARDROBE_PRESETS={
  signature:{name:"Chiefin’ Season Signature",text:"Chiefin’ Season Signature fit: matte-black premium graphic tee with bone CS wordmark, sage-green cargo pants, clean white high-tops with sage accents, gold chain, subtle leaf-pattern detailing."},
  cloud9:{name:"Cloud Nine Lounge",text:"Cloud Nine Lounge fit: oversized bone hoodie with tonal haze-swirl graphic, relaxed matte-black joggers, black beanie, quiet gold ring, easy indoor comfort."},
  resinrow:{name:"Resin Row Street",text:"Resin Row Street fit: black CS varsity jacket with bone sleeves and pixel-CS monogram, cream graphic tee, dark cargos or raw denim, black fitted cap, statement white sneakers, gold chain."},
- island:{name:"Island Chief",text:"Island Chief fit: lightweight open bone shirt over sage CS tee, relaxed black shorts, woven bracelet, gold chain, crisp low-tops, easy Caribbean drape."},
+ island:{name:"Island Chieff",text:"Island Chieff fit: lightweight open bone shirt over sage CS tee, relaxed black shorts, woven bracelet, gold chain, crisp low-tops, easy Caribbean drape."},
  studio:{name:"Studio Session",text:"Studio Session fit: matte-black CS tracksuit with sage piping, layered gold chains, over-ear headphones resting around the neck, fresh white sneakers, relaxed but polished."},
  production:{name:"Chiefin’Vision Production",text:"Chiefin’Vision Production fit: black utility vest over bone CS graphic tee, dark cargos, lanyard and gaff-tape roll, broken-in black sneakers, working-set energy."},
  nightlife:{name:"Stoneralia Nightlife",text:"Stoneralia Nightlife fit: premium black bomber with gold-thread CS crest, bold bone shirt, tailored dark trousers, stacked gold jewelry, sleek evening sneakers."}

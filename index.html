@@ -226,6 +226,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button class="grp" data-grp-sel="library"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 7l8-4 8 4-8 4z'/><path d='M4 12l8 4 8-4'/><path d='M4 17l8 4 8-4'/></svg></span>Library</button>
   <button class="grp" data-grp-sel="brand"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7z'/><path d='M9.5 12l2 2 3.5-4'/></svg></span>Brand Lab</button>
   <button class="grp" data-grp-sel="setup"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1'/></svg></span>Setup</button>
+  <button data-go="chief"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M12 7v5l3.5 2'/></svg></span>Chief</button>
   <button data-go="run"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 21V4'/><path d='M5 4h13l-3 4.5L18 13H5'/></svg></span>Run</button>
   <button data-go="cloudtoons"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 17h11a3.5 3.5 0 0 0 .5-6.97A5 5 0 0 0 8 8.5 3.5 3.5 0 0 0 6 17z'/></svg></span>Cloudtoons</button>
   <button data-go="comics"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span>Comics</button>
@@ -296,6 +297,15 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="row" style="margin-top:8px"><button class="btn ghost sm" id="svSaveProjBtn" style="flex:0">+ Save to drop</button></div>
 </section>
 
+<section class="view" id="view-chief">
+  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M12 7v5l3.5 2'/></svg></span><h2>Chief Command</h2><span class="tag">Front door</span></div>
+  <div style="font-family:var(--slate);font-weight:800;font-size:22px;letter-spacing:.5px;margin:6px 0 10px">WHAT ARE WE MAKING TODAY?</div>
+  <textarea id="chiefIdea" style="min-height:84px" placeholder="Describe it, paste a prompt, or paste JSON."></textarea>
+  <button class="btn green" style="width:100%;margin-top:8px" onclick="chiefQuick()">⚡ WONDERVIZION, HANDLE IT</button>
+  <div class="row" style="margin-top:6px"><button class="btn ghost sm" style="flex:1" onclick="chiefGuided()">🧭 Build it with me</button><button class="btn ghost sm" style="flex:1" onclick="chiefPro()">🎛 Pro controls</button></div>
+  <div id="chiefStatus"></div>
+  <div id="chiefBody" style="margin-top:12px"></div>
+</section>
 <section class="view" id="view-run">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 21V4'/><path d='M5 4h13l-3 4.5L18 13H5'/></svg></span><h2>Daily Run</h2><span class="tag">Idea → post, one lap</span></div>
   <div class="hint" style="margin-bottom:12px">One lap a day: idea → create → export → caption → posted. Steps check themselves off where they can, the rest is one tap. Close the day, keep the streak.</div>
@@ -1028,7 +1038,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.60 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.61 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1344,8 +1354,8 @@ async function svGenerate(){
   svSetMode((S.songvid&&S.songvid.mode)||"perform");
 })();
 var CUR_VIEW="episodes";
-const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",canon:"universe",cast:"universe",sets:"universe",projects:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
-const GROUP_FIRST={create:"smg",universe:"canon",library:"pipeline",brand:"brand",setup:"settings"};
+const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",chief:"create",canon:"universe",cast:"universe",sets:"universe",projects:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
+const GROUP_FIRST={create:"chief",universe:"canon",library:"pipeline",brand:"brand",setup:"settings"};
 function navLabel(v){var b=document.querySelector('nav button[data-go="'+v+'"]');if(b){var t=(b.textContent||"").trim();if(t)return t;}return v;}
 function renderSubTabs(){
   var host=$("subtabs");if(!host)return;var g=S.navGroup||"create";
@@ -1377,6 +1387,7 @@ function go(name){
   if(name==="comics")renderComics();
   if(name==="vo")renderVO();
   if(name==="vibe")renderVibe();
+  if(name==="chief")renderChief();
   if(name==="run")renderRun();
   if(name==="train")renderLab();
   if(name==="studio"||name==="board"||name==="comics"||name==="run")try{renderHUD("view-"+name);}catch(e){}
@@ -2304,6 +2315,56 @@ function renderShots(){
 }
 
 /* cut */
+var CHIEF_VIEW={comic:"comics",board:"board",smg:"smg",vo:"vo",studio:"studio"};
+function chiefIdeaVal(){var e=$("chiefIdea");return e?e.value.trim():"";}
+function chiefQuick(tool){
+ var idea=chiefIdeaVal();
+ if(!idea){toast("Say what we’re making first.",true);return;}
+ if(!S.vibe)S.vibe={mode:"describe",tool:"auto",input:"",json:"",lib:[]};
+ if(idea.charAt(0)==="{"){S.vibe.mode="json";S.vibe.json=idea;}
+ else{S.vibe.mode="describe";S.vibe.input=idea;}
+ S.vibe.tool=(typeof tool==="string"&&tool)?tool:"auto";
+ save();go("vibe");
+ setTimeout(function(){try{if(typeof vibeSetDom==="function")vibeSetDom();if(typeof vibeGenerate==="function")vibeGenerate();}catch(e){}},120);
+ toast("Wondervizion on it — review the preview and tap Apply when it lands.");}
+function chiefPro(){
+ if(!S.vibe)S.vibe={mode:"describe",tool:"auto",input:"",json:"",lib:[]};
+ var idea=chiefIdeaVal();if(idea){if(idea.charAt(0)==="{"){S.vibe.mode="json";S.vibe.json=idea;}else{S.vibe.mode="describe";S.vibe.input=idea;}save();}
+ go("vibe");toast("Pro deck — full JSON, models and refs are yours.");}
+async function chiefGuided(){
+ var idea=chiefIdeaVal();
+ if(!idea){toast("Say what we’re making first.",true);return;}
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var st=$("chiefStatus");if(st)st.innerHTML=spinner("Reading the vision…");
+ var sys=vibeCtx()+' You are CHIEF COMMAND, the front door of the Smoke & Mirrors studio. Read the idea and return JSON ONLY: {"goal":"one line restating what we are making","character":"best canon character(s) for it or none","format":"the output format (vertical animated short, 6-panel comic, song, music video, storyboard, voiceover, still)","tool":"comic|board|smg|vo|studio","workflow":["3-6 short steps from idea to release using the studio: script, characters, wardrobe, board, motion, voice, edit, release"],"cost":"honest rough range like $0.10\u2013$0.60 based on: comic panel edits ~$0.05-0.10 each, storyboard sheet ~$0.10, stills ~$0.03-0.08, voiceover ~$0.075/min, video generation happens outside this app","next":"the single next action, one sentence"} \u2014 tool MUST be one of the five keys exactly.';
+ try{
+  var d=parseJSON(await _llmRun(sys,"IDEA: "+idea,"ideas"));
+  if(!d||!d.tool||!CHIEF_VIEW[d.tool])throw new Error("Recommendation came back malformed — try again.");
+  S.chiefLast={idea:idea,d:d,ts:Date.now()};save();
+  if(st)st.innerHTML="";chiefPaintPlan();
+ }catch(e){if(st)st.innerHTML=errLine(e);}}
+function chiefPaintPlan(){
+ var b=$("chiefOut");if(!b)return;var r=S.chiefLast;if(!r||!r.d){b.innerHTML="";return;}var d=r.d;
+ var h='<div class="card" style="border-left:3px solid var(--bud)"><div style="font-weight:800;font-family:var(--slate)">'+esc(d.goal||"The plan")+'</div>';
+ h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">'+esc(d.character||"")+(d.format?" · "+esc(d.format):"")+(d.cost?" · est "+esc(d.cost):"")+'</div>';
+ if(Array.isArray(d.workflow))h+='<ol style="margin:8px 0 0 18px;padding:0;font-size:13px">'+d.workflow.map(function(w){return "<li style=\"margin-bottom:3px\">"+esc(w)+"</li>";}).join("")+"</ol>";
+ if(d.next)h+='<div style="font-size:13px;margin-top:8px"><b>Next:</b> '+esc(d.next)+"</div>";
+ h+='<div class="row" style="margin-top:10px"><button class="btn green sm" style="flex:1" onclick="chiefQuick(S.chiefLast.d.tool)">⚡ Handle it now</button><button class="btn ghost sm" style="flex:1" onclick="go(CHIEF_VIEW[S.chiefLast.d.tool])">Open '+esc(d.tool)+' →</button></div></div>';
+ b.innerHTML=h;}
+function renderChief(){
+ var host=$("chiefBody");if(!host)return;
+ var h="";var cont=[];
+ var c=S.comics&&S.comics[0];if(c)cont.push(["📚 "+esc(String(c.title||"Latest comic").slice(0,20)),"comics"]);
+ if(S.board&&S.board.script)cont.push(["🎬 Board in progress","board"]);
+ if(S.reel&&S.reel[0])cont.push(["🎞 Latest in The Cut","reel"]);
+ if(S.run&&S.run.streak)cont.push(["🔥 Streak "+S.run.streak,"run"]);
+ if(cont.length)h+='<label class="fld">Continue creating</label><div class="tonerow" style="margin:4px 0 12px">'+cont.map(function(x){return '<button type="button" class="tonechip" data-ccv="'+x[1]+'">'+x[0]+"</button>";}).join("")+"</div>";
+ var qs=[["📚 Comic","comics"],["⚡ 15s clip","board"],["🎵 Song","smg"],["🧍 Character","cast"],["📦 Release","socials"],["🧵 Merch","brand"],["🏁 Daily Run","run"]];
+ h+='<label class="fld">Quick starts</label><div class="tonerow" style="margin:4px 0 12px">'+qs.map(function(x){return '<button type="button" class="tonechip" data-ccv="'+x[1]+'">'+x[0]+"</button>";}).join("")+"</div>";
+ h+='<div id="chiefOut"></div>';
+ host.innerHTML=h;
+ host.querySelectorAll("[data-ccv]").forEach(function(b){b.addEventListener("click",function(){go(b.getAttribute("data-ccv"));});});
+ chiefPaintPlan();}
 function stGo(kind,it){
  if(kind==="lsimg"){SV.img=it.url;SV.imgName=it.prompt||"image";go("songvid");toast("Loaded into Lip-Sync as the face image.");}
  else if(kind==="lsaud"){SV.audio=it.url;SV.audioName=it.prompt||"audio";SV.audioDur=0;var pv=$("svAudioPrev");if(pv)pv.innerHTML='<audio src="'+esc(SV.audio)+'" controls style="width:100%"></audio>';if(typeof svRefresh==="function")svRefresh();go("songvid");toast("Loaded into Lip-Sync as the audio.");}

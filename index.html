@@ -1028,7 +1028,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.59 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.60 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1379,6 +1379,7 @@ function go(name){
   if(name==="vibe")renderVibe();
   if(name==="run")renderRun();
   if(name==="train")renderLab();
+  if(name==="studio"||name==="board"||name==="comics"||name==="run")try{renderHUD("view-"+name);}catch(e){}
   if(name==="socials")renderSocials();
   if(name==="brand")renderBrand();
   if(name==="board"){if(typeof mdRecipeFill==="function")mdRecipeFill();if(typeof rmsFill==="function")rmsFill();}
@@ -2303,6 +2304,36 @@ function renderShots(){
 }
 
 /* cut */
+function stGo(kind,it){
+ if(kind==="lsimg"){SV.img=it.url;SV.imgName=it.prompt||"image";go("songvid");toast("Loaded into Lip-Sync as the face image.");}
+ else if(kind==="lsaud"){SV.audio=it.url;SV.audioName=it.prompt||"audio";SV.audioDur=0;var pv=$("svAudioPrev");if(pv)pv.innerHTML='<audio src="'+esc(SV.audio)+'" controls style="width:100%"></audio>';if(typeof svRefresh==="function")svRefresh();go("songvid");toast("Loaded into Lip-Sync as the audio.");}
+ else if(kind==="lsvid"){SV.vid=it.url;SV.vidName=it.prompt||"video";if(typeof svRefresh==="function")svRefresh();go("songvid");toast("Loaded into Lip-Sync as the video.");}
+ else if(kind==="fitp"){FIT.person=it.url;go("train");var e=$("fitPName");if(e)e.textContent=(it.prompt||"from The Cut");toast("Loaded into the Fitting Room as the person.");}
+ else if(kind==="fitg"){FIT.garment=it.url;go("train");var e2=$("fitGName");if(e2)e2.textContent=(it.prompt||"from The Cut");toast("Loaded into the Fitting Room as the garment.");}
+ else if(kind==="vocl"){VOAUD.clip=it.url;VOAUD.name=it.prompt||"clip";go("vo");var e3=$("voClipInfo");if(e3)e3.textContent=VOAUD.name;toast("Loaded into Voiceover as the clone reference — pick Clone from my clip.");}
+}
+function stMenu(id){
+ var it=(S.reel||[]).find(function(x){return x.id===id;});var box=$("st_"+id);if(!it||!box)return;
+ if(box.innerHTML){box.innerHTML="";return;}
+ var opts=[];
+ if(it.type==="image"){opts=[["lsimg","🗣 Lip-Sync face"],["fitp","🧍 Fit: person"],["fitg","👕 Fit: garment"]];}
+ else if(it.type==="audio"){opts=[["lsaud","🎬 Lip-Sync audio"],["vocl","🎙 VO clone ref"]];}
+ else if(it.type==="video"){opts=[["lsvid","🎬 Lip-Sync video"]];}
+ if(!opts.length){toast("No destinations for this type yet.",true);return;}
+ box.innerHTML='<div class="row" style="margin-top:6px;flex-wrap:wrap">'+opts.map(function(o){return '<button class="btn ghost sm" style="flex:1;min-width:40%" data-stk="'+o[0]+'">'+o[1]+"</button>";}).join("")+"</div>";
+ box.querySelectorAll("[data-stk]").forEach(function(b){b.addEventListener("click",function(){box.innerHTML="";stGo(b.getAttribute("data-stk"),it);});});
+}
+function renderHUD(viewId){
+ var sec=document.getElementById(viewId);if(!sec)return;
+ var hud=sec.querySelector(".conthud");
+ if(!hud){hud=document.createElement("div");hud.className="conthud";hud.style.cssText="display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px";var sl=sec.querySelector(".slatehead");if(sl&&sl.nextSibling)sec.insertBefore(hud,sl.nextSibling);else sec.insertBefore(hud,sec.firstChild);}
+ function chip(ok,warn,txt){var col=ok?"var(--bud)":(warn?"#c9a94a":"var(--red)");return '<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:11px;color:var(--bone-dim)"><span style="width:8px;height:8px;border-radius:50%;background:'+col+'"></span>'+txt+"</span>";}
+ var dna=(S.cast||[]).some(function(c){return c.identity;});
+ var ward=(S.wardrobeLock!==false);
+ var lora=(S.loraOn&&S.activeLora)?((S.loras||[]).find(function(l){return l.id===S.activeLora;})||null):null;
+ hud.innerHTML=chip(dna,!dna,dna?"DNA locked":"No character DNA yet")+chip(ward,false,ward?"Wardrobe locked":"Wardrobe UNLOCKED")+chip(!!lora,true,lora?("LoRA: "+lora.name):"No LoRA active");
+}
+function stGoNoop(){}
 function reelNextShot(id){
   var it=(S.reel||[]).find(function(x){return x.id===id;});
   if(!it||it.type!=="video"){toast("That clip is gone.",true);return;}
@@ -2330,7 +2361,7 @@ function renderReel(){
   host.innerHTML='<div class="reel-grid"></div>';const g=host.firstChild;
   S.reel.forEach(it=>{const d=document.createElement("div");d.className="reel-item";
     const media=it.type==="video"?'<video class="zoomable" src="'+it.url+'" muted></video>':it.type==="audio"?'<div style="height:120px;display:flex;align-items:center;justify-content:center;color:var(--bud)">♪ audio</div>':'<img class="zoomable" src="'+it.url+'">';
-    d.innerHTML=media+'<div class="rmeta">'+esc(it.prompt||"")+'</div><div class="acts"><button class="tl">+ Timeline</button>'+(it.type==="image"?'<button class="c2">+ Cast</button>':'')+(it.type==="video"?'<button class="cf" onclick="reelNextShot(&quot;'+it.id+'&quot;)">⛓ Frame</button>':'')+'<button class="dl">Save</button><button class="del">✕</button></div>';
+    d.innerHTML=media+'<div class="rmeta">'+esc(it.prompt||"")+'</div><div class="acts"><button class="tl">+ Timeline</button>'+(it.type==="image"?'<button class="c2">+ Cast</button>':'')+(it.type==="video"?'<button class="cf" onclick="reelNextShot(&quot;'+it.id+'&quot;)">⛓ Frame</button>':'')+'<button class="st2" onclick="stMenu(&quot;'+it.id+'&quot;)">➡ Send</button><button class="dl">Save</button><button class="del">✕</button></div><div class="stbox" id="st_'+it.id+'"></div>';
     d.querySelector(".tl").addEventListener("click",()=>{if(!S.timeline.includes(it.id)){S.timeline.push(it.id);save();toast("Added to timeline.");}});
     d.querySelector(".dl").addEventListener("click",()=>downloadUrl(it.url,"smokemirrors-"+it.id));
     const c2=d.querySelector(".c2");if(c2)c2.addEventListener("click",()=>sendToCast(it.url));

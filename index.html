@@ -1043,7 +1043,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.63 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.65 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -2413,12 +2413,20 @@ function stGo(kind,it){
  else if(kind==="fitg"){FIT.garment=it.url;go("train");var e2=$("fitGName");if(e2)e2.textContent=(it.prompt||"from The Cut");toast("Loaded into the Fitting Room as the garment.");}
  else if(kind==="vocl"){VOAUD.clip=it.url;VOAUD.name=it.prompt||"clip";go("vo");var e3=$("voClipInfo");if(e3)e3.textContent=VOAUD.name;toast("Loaded into Voiceover as the clone reference — pick Clone from my clip.");}
  else if(kind==="mir"){mirrorPick(it);}
+ else if(kind==="trn"){
+  toast("Fetching the image\u2026");
+  fetch(it.url).then(function(r){if(!r.ok)throw new Error("fetch");return r.arrayBuffer();}).then(function(b){
+   TR.files.push({name:"cut_"+it.id+".jpg",bytes:new Uint8Array(b)});
+   if($("trList"))$("trList").textContent=TR.files.length+" images loaded";
+   toast("Added \u2014 training set now "+TR.files.length+" image"+(TR.files.length===1?"":"s")+". "+(TR.files.length>=15?"Ready to train when you are.":"Aim for 25\u201335."));
+  }).catch(function(){toast("Couldn\u2019t read that image cross-site \u2014 download + Choose Files instead.",true);});
+ }
 }
 function stMenu(id){
  var it=(S.reel||[]).find(function(x){return x.id===id;});var box=$("st_"+id);if(!it||!box)return;
  if(box.innerHTML){box.innerHTML="";return;}
  var opts=[];
- if(it.type==="image"){opts=[["lsimg","🗣 Lip-Sync face"],["fitp","🧍 Fit: person"],["fitg","👕 Fit: garment"],["mir","🪞 Mirror mode — before/after"]];}
+ if(it.type==="image"){opts=[["lsimg","🗣 Lip-Sync face"],["fitp","🧍 Fit: person"],["fitg","👕 Fit: garment"],["mir","🪞 Mirror mode — before/after"],["trn","🧬 Add to LoRA training set"]];}
  else if(it.type==="audio"){opts=[["lsaud","🎬 Lip-Sync audio"],["vocl","🎙 VO clone ref"]];}
  else if(it.type==="video"){opts=[["lsvid","🎬 Lip-Sync video"]];}
  if(!opts.length){toast("No destinations for this type yet.",true);return;}
@@ -4575,9 +4583,73 @@ async function falUpload(blob,name,type){
  if(!put.ok)throw new Error("Upload failed mid-transfer ("+put.status+"). Try again.");
  return d.file_url;}
 var TR={files:[]};var FIT={person:"",garment:""};
+var AUTO={list:[],running:false,stop:false,idx:0};
+function apParse(txt){
+ var lines=String(txt||"").split("\n").map(function(l){return l.replace(/^[#>*`\s]+/,"").replace(/[`\s]+$/,"").replace(/\*\*/g,"").trim();}).filter(Boolean);
+ var styleBlock="";
+ for(var i=0;i<lines.length;i++){var L=lines[i];if(L.length>120&&/art style[\s,.]*$/i.test(L)&&!/same style block/i.test(L)){styleBlock=L.replace(/[,\s]+$/,"");break;}}
+ var out=[];
+ lines.forEach(function(L){
+  var num=/^(\d{1,2})[.)]\s*(.*)$/.exec(L);var body=(num?num[2]:L).trim();
+  if(!body||body.length<20)return;
+  if(/same style block/i.test(body)){
+   var parts=body.split(/\u2014/);var seg=parts.length>1?parts.slice(1).join(" ").trim():body.replace(/^[\u2026.\s]*same style block[\s\u2014-]*/i,"").trim();
+   if(styleBlock&&seg)out.push(styleBlock+", "+seg);return;}
+  if(/art style/i.test(body)&&body.length>140){if(body!==styleBlock)out.push(body);return;}
+  if(num&&styleBlock&&!/art style/i.test(body)&&!/^(STYLE BLOCK|Settings|Keep|Reject|Goal|Media House|Load|When|Tap|For prompts|Descriptions)/i.test(body)){out.push(styleBlock+", "+body);return;}
+ });
+ var seen={};return out.filter(function(p){var k=p;if(seen[k])return false;seen[k]=1;return true;}).slice(0,60);}
+function apScanNow(){
+ var txt=$("apText")?$("apText").value:"";
+ AUTO.list=apParse(txt);
+ var inf=$("apInfo");
+ if(!AUTO.list.length){if(inf)inf.textContent="No prompts found \u2014 paste the shot-list doc or the assembled prompts.";return;}
+ var mdl=(S.picked&&S.picked.image)||"fal-ai/nano-banana-2";var per="";
+ try{per=" \u00b7 \u2248 "+costOf(mdl)+" each";}catch(e){}
+ if(inf)inf.textContent=AUTO.list.length+" prompts ready"+per+" \u00b7 tap \u2715 to drop any";
+ apPaintList();}
+function apPaintList(){
+ var b=$("apList");if(!b)return;
+ b.innerHTML=AUTO.list.map(function(p,i){return '<div data-apr="'+i+'" style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--line)"><span style="flex:0 0 auto;font-size:11px;color:var(--bone-dim);width:20px">'+(i+1)+'</span><span style="flex:1;font-size:11px;color:var(--bone-dim);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(p.slice(p.indexOf("art style")>=0?p.indexOf("art style")+11:0,200))+'</span><button style="flex:0 0 auto;background:none;border:none;color:var(--bone-dim);cursor:pointer" data-apx="'+i+'">\u2715</button></div>';}).join("");
+ b.querySelectorAll("[data-apx]").forEach(function(x){x.addEventListener("click",function(){AUTO.list.splice(+x.getAttribute("data-apx"),1);apScanRefresh();});});}
+function apScanRefresh(){var inf=$("apInfo");if(inf)inf.textContent=AUTO.list.length+" prompts ready";apPaintList();}
+function apProgress(txt){var st=$("apStatus");if(st)st.innerHTML='<div class="statusline">'+txt+"</div>";}
+async function apRunToggle(){
+ if(AUTO.running){AUTO.stop=true;apProgress("Stopping after this shot\u2026");return;}
+ if(!AUTO.list.length){toast("Scan a shot list first.",true);return;}
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var prevLora=!!S.loraOn;if(S.loraOn){S.loraOn=false;save();toast("LoRA paused while we build the dataset.");}
+ var prevStation=S.station;S.station="image";save();
+ var asel=$("aspect");var prevAspect=asel?asel.value:null;
+ if(asel){for(var oi=0;oi<asel.options.length;oi++){if(asel.options[oi].value==="1:1"){asel.value="1:1";break;}}}
+ AUTO.running=true;AUTO.stop=false;
+ var btn=$("apRun");if(btn)btn.textContent="\u23f9 Stop autopilot";
+ var made=0,failed=0;
+ for(var i=0;i<AUTO.list.length;i++){
+  if(AUTO.stop)break;
+  AUTO.idx=i;apProgress("Shot "+(i+1)+" / "+AUTO.list.length+" \u2014 generating\u2026 ("+made+" in the can)");
+  var pEl=$("prompt");if(pEl)pEl.value=AUTO.list[i];
+  var beforeId=(S.reel&&S.reel[0]&&S.reel[0].id)||"";
+  try{await runGenerate();}catch(e){}
+  var it=S.reel&&S.reel[0];
+  if(it&&it.id!==beforeId&&it.type==="image"){
+   made++;
+   var ck=$("apTrain");
+   if(ck&&ck.checked){
+    try{var r=await fetch(it.url);var b2=await r.arrayBuffer();TR.files.push({name:"ap_"+String(i+1)+".jpg",bytes:new Uint8Array(b2)});if($("trList"))$("trList").textContent=TR.files.length+" images loaded";}catch(e2){}
+   }
+  }else failed++;
+ }
+ AUTO.running=false;
+ if(btn)btn.textContent="\u25b6 Run autopilot";
+ S.station=prevStation;if(prevLora)S.loraOn=true;save();
+ if(asel&&prevAspect)asel.value=prevAspect;
+ apProgress((AUTO.stop?"Stopped":"Done")+" \u2014 "+made+" generated"+(failed?", "+failed+" failed":"")+". Training set: "+TR.files.length+" images.");
+ toast(AUTO.stop?"Autopilot stopped \u2014 keepers are in The Cut.":"Autopilot done \u2705 Review The Cut, clear any weak ones, then set trigger + Train.");}
 function renderLab(){
  var host=$("labBody");if(!host)return;
- var h='<div class="card"><label class="fld">🧬 DNA Training Lab — train a LoRA</label>';
+ var h='<div class="card"><label class="fld">✈ Dataset Autopilot — shot list → training set</label><div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Paste the LoRA shot-list doc (or upload the .md) — S&amp;M reads the prompts, generates every shot back-to-back in Studio, saves them to The Cut, and loads the training set for you. You curate, then Train.</div><input type="file" id="apFile" accept=".md,.txt,text/plain,text/markdown" style="margin-bottom:6px"><textarea id="apText" style="min-height:70px" placeholder="…or paste the shot list here"></textarea><div class="row" style="margin-top:6px"><button class="btn ghost sm" id="apScan" style="flex:1">🔍 Scan prompts</button><label style="flex:1;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--bone-dim)"><input type="checkbox" id="apTrain" checked> auto-add to training set</label></div><div id="apInfo" class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px"></div><div id="apList" style="margin-top:6px;max-height:200px;overflow:auto"></div><button class="btn green" id="apRun" style="width:100%;margin-top:8px">▶ Run autopilot</button><div id="apStatus"></div></div>';
+ h+='<div class="card"><label class="fld">🧬 DNA Training Lab — train a LoRA</label>';
  h+='<div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">15\u201335 images, one subject or one style. ~$2 per 1000-step run on flux-lora-fast-training. The finished .safetensors is yours — the URL lands below and in The Cut.</div>';
  h+='<input type="file" id="trFiles" accept="image/*" multiple style="margin-bottom:6px"><div id="trList" class="hint" style="text-transform:none;letter-spacing:0"></div>';
  h+='<div class="row" style="margin-top:8px"><input type="text" id="trTrigger" placeholder="trigger word e.g. chieffnug" style="flex:1.3"><select id="trType" style="flex:1"><option value="subject">Character / subject</option><option value="style">Style</option></select></div>';
@@ -4596,6 +4668,10 @@ function renderLab(){
   var done=0;fs.forEach(function(f){var r=new FileReader();r.onload=function(){TR.files.push({name:f.name.replace(/[^a-zA-Z0-9._-]/g,"_"),bytes:new Uint8Array(r.result)});done++;if(done===fs.length&&$("trList"))$("trList").textContent=TR.files.length+" images loaded";};r.readAsArrayBuffer(f);});});
  var fp=$("fitPerson");if(fp)fp.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;svFile(f,function(d){FIT.person=d;if($("fitPName"))$("fitPName").textContent=f.name;});});
  var fg=$("fitGarment");if(fg)fg.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;svFile(f,function(d){FIT.garment=d;if($("fitGName"))$("fitGName").textContent=f.name;});});
+ var af=$("apFile");if(af)af.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){if($("apText"))$("apText").value=String(r.result||"");apScanNow();};r.readAsText(f);});
+ var ascn=$("apScan");if(ascn)ascn.addEventListener("click",apScanNow);
+ var arn=$("apRun");if(arn){arn.addEventListener("click",apRunToggle);if(AUTO.running)arn.textContent="\u23f9 Stop autopilot";}
+ if(AUTO.list.length){apScanRefresh();}
  loraPaint();}
 function loraPaint(){
  var b=$("trModels");if(!b)return;var L=S.loras||[];

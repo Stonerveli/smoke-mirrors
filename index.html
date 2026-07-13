@@ -1043,7 +1043,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.65 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.66 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1068,7 +1068,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,datasets:[],dsActive:"",
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -2413,20 +2413,13 @@ function stGo(kind,it){
  else if(kind==="fitg"){FIT.garment=it.url;go("train");var e2=$("fitGName");if(e2)e2.textContent=(it.prompt||"from The Cut");toast("Loaded into the Fitting Room as the garment.");}
  else if(kind==="vocl"){VOAUD.clip=it.url;VOAUD.name=it.prompt||"clip";go("vo");var e3=$("voClipInfo");if(e3)e3.textContent=VOAUD.name;toast("Loaded into Voiceover as the clone reference — pick Clone from my clip.");}
  else if(kind==="mir"){mirrorPick(it);}
- else if(kind==="trn"){
-  toast("Fetching the image\u2026");
-  fetch(it.url).then(function(r){if(!r.ok)throw new Error("fetch");return r.arrayBuffer();}).then(function(b){
-   TR.files.push({name:"cut_"+it.id+".jpg",bytes:new Uint8Array(b)});
-   if($("trList"))$("trList").textContent=TR.files.length+" images loaded";
-   toast("Added \u2014 training set now "+TR.files.length+" image"+(TR.files.length===1?"":"s")+". "+(TR.files.length>=15?"Ready to train when you are.":"Aim for 25\u201335."));
-  }).catch(function(){toast("Couldn\u2019t read that image cross-site \u2014 download + Choose Files instead.",true);});
- }
+ else if(kind==="trn"){dsPickSheet(it);}
 }
 function stMenu(id){
  var it=(S.reel||[]).find(function(x){return x.id===id;});var box=$("st_"+id);if(!it||!box)return;
  if(box.innerHTML){box.innerHTML="";return;}
  var opts=[];
- if(it.type==="image"){opts=[["lsimg","🗣 Lip-Sync face"],["fitp","🧍 Fit: person"],["fitg","👕 Fit: garment"],["mir","🪞 Mirror mode — before/after"],["trn","🧬 Add to LoRA training set"]];}
+ if(it.type==="image"){opts=[["lsimg","🗣 Lip-Sync face"],["fitp","🧍 Fit: person"],["fitg","👕 Fit: garment"],["mir","🪞 Mirror mode — before/after"],["trn","🧬 Add to a show dataset…"]];}
  else if(it.type==="audio"){opts=[["lsaud","🎬 Lip-Sync audio"],["vocl","🎙 VO clone ref"]];}
  else if(it.type==="video"){opts=[["lsvid","🎬 Lip-Sync video"]];}
  if(!opts.length){toast("No destinations for this type yet.",true);return;}
@@ -4583,6 +4576,46 @@ async function falUpload(blob,name,type){
  if(!put.ok)throw new Error("Upload failed mid-transfer ("+put.status+"). Try again.");
  return d.file_url;}
 var TR={files:[]};var FIT={person:"",garment:""};
+var TRB={};
+function dsState(){if(!Array.isArray(S.datasets))S.datasets=[];return S.datasets;}
+function dsGet(id){return dsState().find(function(d){return d.id===id;})||null;}
+function dsCount(d){return (d?d.items.length:0)+((d&&TRB[d.id])?TRB[d.id].length:0);}
+function dsNewPrompt(){
+ var name=prompt("Show / dataset name? (e.g. Stoneralia House Style)");if(!name)return null;
+ var trig=prompt("Trigger word for this show \u2014 one word, no spaces:","")||"";
+ var d={id:uid(),name:name.slice(0,40),trigger:trig.replace(/\s+/g,"").slice(0,20),sref:"",items:[],trained:false,ts:Date.now()};
+ dsState().push(d);S.dsActive=d.id;save();
+ if(typeof dsPaint==="function")dsPaint();
+ toast("Dataset created \u2014 feed it 25\u201335 on-style images.");return d;}
+function dsAdd(dsId,item){var d=dsGet(dsId);if(!d)return false;
+ if(d.items.some(function(x){return x.url===item.url;})){toast("Already in "+d.name+".",true);return false;}
+ d.items.push({url:item.url,name:item.name||("img_"+d.items.length)});save();
+ if(typeof dsPaint==="function")dsPaint();return true;}
+function dsChip(d){var n=dsCount(d);var col=n>=25?"var(--bud)":(n>=15?"#c9a94a":"var(--red)");
+ return '<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid '+col+';color:'+col+';border-radius:999px;padding:3px 10px;font-size:11px;font-weight:800">'+n+' / 25\u201335 needed'+(d.trained?" \u00b7 trained \u2713":"")+"</span>";}
+function dsPaint(){
+ var sel=$("dsSel");if(!sel)return;var L=dsState();
+ sel.innerHTML=L.length?L.map(function(d){return '<option value="'+d.id+'"'+(S.dsActive===d.id?" selected":"")+'>'+esc(d.name)+" ("+dsCount(d)+")</option>";}).join(""):'<option value="">\u2014 no show datasets yet \u2014</option>';
+ var d=dsGet(S.dsActive)||L[0]||null;if(d&&S.dsActive!==d.id){S.dsActive=d.id;save();}
+ var m=$("dsMeta");
+ if(m)m.innerHTML=d?(dsChip(d)+' <button class="btn ghost sm" style="padding:3px 10px;margin-left:6px" onclick="dsClear()">\u2715 clear images</button>'):'<span class="hint" style="text-transform:none;letter-spacing:0">Tap \uff0b New to start a show dataset.</span>';
+ var sr=$("dsSref");if(sr){sr.value=d?(d.sref||""):"";}
+ var tg=$("trTrigger");if(tg&&d&&d.trigger&&!tg.value)tg.value=d.trigger;
+ var tl=$("trList");if(tl&&d)tl.textContent=(d.items.length?d.items.length+" saved links":"")+((TRB[d.id]&&TRB[d.id].length)?((d.items.length?" + ":"")+TRB[d.id].length+" local (this session only)"):"");}
+function dsClear(){var d=dsGet(S.dsActive);if(!d)return;
+ if(!confirm("Clear all "+dsCount(d)+" images from "+d.name+"?"))return;
+ d.items=[];TRB[d.id]=[];save();dsPaint();toast("Dataset cleared.");}
+function dsPickSheet(it){
+ var L=dsState();
+ var h='<div style="font-weight:800;font-family:var(--slate);margin-bottom:8px">🧬 Add to which show?</div>';
+ h+=L.map(function(d){return '<button class="btn ghost sm" style="width:100%;text-align:left;margin-bottom:6px" data-dsp="'+d.id+'">'+esc(d.name)+' \u00b7 '+dsCount(d)+' / 25\u201335</button>';}).join("");
+ h+='<button class="btn ghost sm" style="width:100%;text-align:left;margin-bottom:6px" data-dsp="__new">\uff0b New show dataset\u2026</button>';
+ sendSheet(h);
+ var sh=$("sendsheet");
+ sh.querySelectorAll("[data-dsp]").forEach(function(b){b.addEventListener("click",function(){sh.remove();
+  var id=b.getAttribute("data-dsp");
+  if(id==="__new"){var d=dsNewPrompt();if(d&&dsAdd(d.id,{url:it.url,name:"cut_"+it.id}))toast("Added \u2014 "+d.name+" now "+dsCount(d)+" / 25\u201335.");return;}
+  var d2=dsGet(id);if(d2&&dsAdd(id,{url:it.url,name:"cut_"+it.id}))toast("Added \u2014 "+d2.name+" now "+dsCount(d2)+" / 25\u201335.");});});}
 var AUTO={list:[],running:false,stop:false,idx:0};
 function apParse(txt){
  var lines=String(txt||"").split("\n").map(function(l){return l.replace(/^[#>*`\s]+/,"").replace(/[`\s]+$/,"").replace(/\*\*/g,"").trim();}).filter(Boolean);
@@ -4636,7 +4669,7 @@ async function apRunToggle(){
    made++;
    var ck=$("apTrain");
    if(ck&&ck.checked){
-    try{var r=await fetch(it.url);var b2=await r.arrayBuffer();TR.files.push({name:"ap_"+String(i+1)+".jpg",bytes:new Uint8Array(b2)});if($("trList"))$("trList").textContent=TR.files.length+" images loaded";}catch(e2){}
+    try{var _d=dsGet(S.dsActive);if(_d)dsAdd(_d.id,{url:it.url,name:"ap_"+String(i+1)});}catch(e2){}
    }
   }else failed++;
  }
@@ -4644,15 +4677,15 @@ async function apRunToggle(){
  if(btn)btn.textContent="\u25b6 Run autopilot";
  S.station=prevStation;if(prevLora)S.loraOn=true;save();
  if(asel&&prevAspect)asel.value=prevAspect;
- apProgress((AUTO.stop?"Stopped":"Done")+" \u2014 "+made+" generated"+(failed?", "+failed+" failed":"")+". Training set: "+TR.files.length+" images.");
+ apProgress((AUTO.stop?"Stopped":"Done")+" \u2014 "+made+" generated"+(failed?", "+failed+" failed":"")+". Active dataset: "+dsCount(dsGet(S.dsActive))+" / 25–35.");
  toast(AUTO.stop?"Autopilot stopped \u2014 keepers are in The Cut.":"Autopilot done \u2705 Review The Cut, clear any weak ones, then set trigger + Train.");}
 function renderLab(){
  var host=$("labBody");if(!host)return;
- var h='<div class="card"><label class="fld">✈ Dataset Autopilot — shot list → training set</label><div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Paste the LoRA shot-list doc (or upload the .md) — S&amp;M reads the prompts, generates every shot back-to-back in Studio, saves them to The Cut, and loads the training set for you. You curate, then Train.</div><input type="file" id="apFile" accept=".md,.txt,text/plain,text/markdown" style="margin-bottom:6px"><textarea id="apText" style="min-height:70px" placeholder="…or paste the shot list here"></textarea><div class="row" style="margin-top:6px"><button class="btn ghost sm" id="apScan" style="flex:1">🔍 Scan prompts</button><label style="flex:1;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--bone-dim)"><input type="checkbox" id="apTrain" checked> auto-add to training set</label></div><div id="apInfo" class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px"></div><div id="apList" style="margin-top:6px;max-height:200px;overflow:auto"></div><button class="btn green" id="apRun" style="width:100%;margin-top:8px">▶ Run autopilot</button><div id="apStatus"></div></div>';
+ var h='<div class="card"><label class="fld">✈ Dataset Autopilot — shot list → training set</label><div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Paste the LoRA shot-list doc (or upload the .md) — S&amp;M reads the prompts, generates every shot back-to-back in Studio, saves them to The Cut, and loads the training set for you. You curate, then Train.</div><input type="file" id="apFile" accept=".md,.txt,text/plain,text/markdown" style="margin-bottom:6px"><textarea id="apText" style="min-height:70px" placeholder="…or paste the shot list here"></textarea><div class="row" style="margin-top:6px"><button class="btn ghost sm" id="apScan" style="flex:1">🔍 Scan prompts</button><label style="flex:1;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--bone-dim)"><input type="checkbox" id="apTrain" checked> auto-add to the active show dataset</label></div><div id="apInfo" class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px"></div><div id="apList" style="margin-top:6px;max-height:200px;overflow:auto"></div><button class="btn green" id="apRun" style="width:100%;margin-top:8px">▶ Run autopilot</button><div id="apStatus"></div></div>';
  h+='<div class="card"><label class="fld">🧬 DNA Training Lab — train a LoRA</label>';
  h+='<div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">15\u201335 images, one subject or one style. ~$2 per 1000-step run on flux-lora-fast-training. The finished .safetensors is yours — the URL lands below and in The Cut.</div>';
  h+='<input type="file" id="trFiles" accept="image/*" multiple style="margin-bottom:6px"><div id="trList" class="hint" style="text-transform:none;letter-spacing:0"></div>';
- h+='<div class="row" style="margin-top:8px"><input type="text" id="trTrigger" placeholder="trigger word e.g. chieffnug" style="flex:1.3"><select id="trType" style="flex:1"><option value="subject">Character / subject</option><option value="style">Style</option></select></div>';
+ h+='<label class="fld">Show / dataset</label><div class="row"><select id="dsSel" style="flex:1.4"></select><button class="btn ghost sm" style="flex:0 0 auto;padding:8px 12px" onclick="dsNewPrompt()">＋ New</button></div><div id="dsMeta" style="margin-top:6px"></div><input type="text" id="dsSref" placeholder="MJ --sref code / style-ref note (optional, saved with the show)" style="margin-top:6px">'+'<div class="row" style="margin-top:8px"><input type="text" id="trTrigger" placeholder="trigger word e.g. chieffnug" style="flex:1.3"><select id="trType" style="flex:1"><option value="subject">Character / subject</option><option value="style">Style</option></select></div>';
  h+='<div class="row" style="margin-top:6px"><select id="trSteps" style="flex:1"><option value="1000" selected>1000 steps · ~$2</option><option value="1500">1500 · ~$3</option><option value="2000">2000 · ~$4</option></select></div>';
  h+='<button class="btn green" style="width:100%;margin-top:8px" onclick="trainLora()">🧬 Train LoRA</button><div id="trStatus"></div>';
  h+='<div id="trModels" style="margin-top:10px"></div></div>';
@@ -4665,44 +4698,66 @@ function renderLab(){
  host.innerHTML=h;
  var tf=$("trFiles");if(tf)tf.addEventListener("change",function(e){
   var fs=Array.from(e.target.files||[]);if(!fs.length)return;
-  var done=0;fs.forEach(function(f){var r=new FileReader();r.onload=function(){TR.files.push({name:f.name.replace(/[^a-zA-Z0-9._-]/g,"_"),bytes:new Uint8Array(r.result)});done++;if(done===fs.length&&$("trList"))$("trList").textContent=TR.files.length+" images loaded";};r.readAsArrayBuffer(f);});});
+  var done=0;fs.forEach(function(f){var r=new FileReader();r.onload=function(){var _d=dsGet(S.dsActive)||dsNewPrompt();if(_d){(TRB[_d.id]=TRB[_d.id]||[]).push({name:f.name.replace(/[^a-zA-Z0-9._-]/g,"_"),bytes:new Uint8Array(r.result)});}done++;if(done===fs.length)dsPaint();};r.readAsArrayBuffer(f);});});
  var fp=$("fitPerson");if(fp)fp.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;svFile(f,function(d){FIT.person=d;if($("fitPName"))$("fitPName").textContent=f.name;});});
  var fg=$("fitGarment");if(fg)fg.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;svFile(f,function(d){FIT.garment=d;if($("fitGName"))$("fitGName").textContent=f.name;});});
  var af=$("apFile");if(af)af.addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){if($("apText"))$("apText").value=String(r.result||"");apScanNow();};r.readAsText(f);});
  var ascn=$("apScan");if(ascn)ascn.addEventListener("click",apScanNow);
  var arn=$("apRun");if(arn){arn.addEventListener("click",apRunToggle);if(AUTO.running)arn.textContent="\u23f9 Stop autopilot";}
  if(AUTO.list.length){apScanRefresh();}
+ var srf=$("dsSref");if(srf)srf.addEventListener("change",function(){var d=dsGet(S.dsActive);if(d){d.sref=srf.value.trim();save();toast("Style-ref note saved with "+d.name+".");}});
+ dsPaint();
  loraPaint();}
 function loraPaint(){
  var b=$("trModels");if(!b)return;var L=S.loras||[];
  if(!L.length){b.innerHTML="";return;}
- b.innerHTML='<div style="font-weight:800;font-family:var(--slate)">My LoRAs</div>'+L.map(function(l){var on=(S.loraOn&&S.activeLora===l.id);
-  return '<div style="display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)"><div style="min-width:0"><div style="font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(l.name)+'</div><div class="hint" style="text-transform:none;letter-spacing:0">'+esc(l.trigger)+" \u00b7 "+l.type+'</div></div><div style="flex:0 0 auto;display:flex;gap:6px"><button class="btn ghost sm" style="padding:6px 10px" onclick="rpCopyTxt(S.loras.find(x=>x.id===\''+l.id+'\').url)">\u29c9</button><button class="btn '+(on?"green":"ghost")+' sm" style="padding:6px 10px" onclick="loraUse(\''+l.id+'\')">'+(on?"ON in Studio":"Use in Studio")+"</button></div></div>";}).join("");}
+ b.innerHTML='<div style="font-weight:800;font-family:var(--slate)">📚 Show Library</div>'+L.map(function(l){var on=(S.loraOn&&S.activeLora===l.id);
+  var meta=[l.trigger,l.type,(l.count?l.count+" imgs":""),(l.ts?new Date(l.ts).toLocaleDateString():"")].filter(Boolean).join(" \u00b7 ");
+  return '<div style="padding:10px 0;border-bottom:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><div style="min-width:0"><div style="font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(l.show||l.name)+'</div><div class="hint" style="text-transform:none;letter-spacing:0">'+esc(meta)+'</div></div><button class="btn '+(on?"green":"ghost")+' sm" style="flex:0 0 auto;padding:6px 10px" onclick="loraUse(\''+l.id+'\')">'+(on?"ON in Studio":"Use in Studio")+'</button></div>'
+  +(l.sref?'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">sref: '+esc(l.sref)+'</div>':"")
+  +(l.notes?'<div style="font-size:12px;margin-top:4px;white-space:pre-wrap">'+esc(l.notes)+'</div>':"")
+  +'<div class="row" style="margin-top:6px"><button class="btn ghost sm" style="flex:1;padding:4px 10px" onclick="rpCopyTxt(S.loras.find(function(x){return x.id===\''+l.id+'\'}).url)">\u29c9 URL</button><button class="btn ghost sm" style="flex:1;padding:4px 10px" onclick="loraNote(\''+l.id+'\')">\u270f Notes</button></div></div>';}).join("");}
+function loraNote(id){var l=(S.loras||[]).find(function(x){return x.id===id;});if(!l)return;
+ var n=prompt("Show notes \u2014 style rules, sref, wardrobe, anything:",l.notes||"");
+ if(n===null)return;l.notes=n.slice(0,600);save();loraPaint();toast("Notes saved.");}
+
 function loraUse(id){
  if(S.activeLora===id&&S.loraOn){S.loraOn=false;S.activeLora="";toast("LoRA off — Studio back to normal models.");}
  else{S.activeLora=id;S.loraOn=true;var l=(S.loras||[]).find(function(x){return x.id===id;});toast("Studio will now generate with "+(l?l.name:"your LoRA")+" — trigger word added automatically.");}
  save();loraPaint();}
 async function trainLora(){
  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
- if(TR.files.length<10){toast("Load at least 10 images (15\u201335 is the sweet spot).",true);return;}
- var trig=(($("trTrigger")||{}).value||"").trim();
- if(!trig||/\s/.test(trig)){toast("Trigger word required — one word, no spaces.",true);return;}
+ var ds=dsGet(S.dsActive);
+ if(!ds){toast("Create a show dataset first \u2014 tap \uff0b New.",true);return;}
+ var sess=TRB[ds.id]||[];var total=ds.items.length+sess.length;
+ if(total<10){toast(ds.name+" has "+total+" images \u2014 needs at least 10, 25\u201335 is the sweet spot.",true);return;}
+ var trig=(($("trTrigger")||{}).value||ds.trigger||"").trim();
+ if(!trig||/\s/.test(trig)){toast("Trigger word required \u2014 one word, no spaces.",true);return;}
+ ds.trigger=trig;ds.sref=(($("dsSref")||{}).value||ds.sref||"").trim();save();
  var isStyle=(($("trType")||{}).value)==="style";var steps=parseInt((($("trSteps")||{}).value)||"1000",10);
  var st=$("trStatus");
  try{
-  if(st)st.innerHTML=spinner("Zipping "+TR.files.length+" images\u2026");
-  var zip=zipStore(TR.files);
+  var files=sess.slice();
+  for(var i=0;i<ds.items.length;i++){
+   if(st)st.innerHTML=spinner("Fetching image "+(i+1)+" / "+ds.items.length+"\u2026");
+   var r=await fetch(ds.items[i].url);
+   if(!r.ok)throw new Error("Image "+(i+1)+" wouldn\u2019t load \u2014 it may have expired. Clear it and re-add.");
+   files.push({name:(ds.items[i].name||("img_"+i)).replace(/[^a-zA-Z0-9._-]/g,"_")+".jpg",bytes:new Uint8Array(await r.arrayBuffer())});
+  }
+  if(st)st.innerHTML=spinner("Zipping "+files.length+" images\u2026");
+  var zip=zipStore(files);
   if(st)st.innerHTML=spinner("Uploading dataset ("+Math.round(zip.size/1048576)+" MB)\u2026");
   var zurl=await falUpload(zip,"dataset.zip","application/zip");
-  if(st)st.innerHTML=spinner("Training — this takes 15\u201330 min, leave the tab open\u2026");
+  if(st)st.innerHTML=spinner("Training "+ds.name+" \u2014 15\u201330 min, leave the tab open\u2026");
   var o=await falRun("fal-ai/flux-lora-fast-training",{images_data_url:zurl,trigger_word:trig,is_style:isStyle,steps:steps},function(s2,t){if(st)st.innerHTML=spinner("Training\u2026 ("+t+")");});
   var lurl=(o&&o.diffusers_lora_file&&o.diffusers_lora_file.url)||(o&&o.lora_file&&o.lora_file.url);
-  if(!lurl)throw new Error("Training finished but no LoRA file came back — screenshot this.");
-  S.loras.unshift({id:uid(),name:trig+(isStyle?" (style)":""),trigger:trig,type:isStyle?"style":"subject",url:lurl,ts:Date.now()});
-  save();TR.files=[];if($("trList"))$("trList").textContent="";
-  if(st)st.innerHTML="";loraPaint();
-  toast("LoRA trained 🧬 — copy the URL somewhere safe, then tap Use in Studio.");
+  if(!lurl)throw new Error("Training finished but no LoRA file came back \u2014 screenshot this.");
+  S.loras.unshift({id:uid(),name:ds.name,show:ds.name,trigger:trig,type:isStyle?"style":"subject",url:lurl,sref:ds.sref||"",notes:"",dsId:ds.id,count:files.length,ts:Date.now()});
+  ds.trained=true;save();TRB[ds.id]=[];
+  if(st)st.innerHTML="";dsPaint();loraPaint();
+  toast(ds.name+" trained 🧬 \u2014 copy the URL somewhere safe, then tap Use in Studio.");
  }catch(e){if(st)st.innerHTML=errLine(e);}}
+
 async function fitGen(){
  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
  if(!FIT.person||!FIT.garment){toast("Load both images first.",true);return;}
@@ -5273,7 +5328,7 @@ function brPaint(){
  var h=o.angles.map(function(a,i){return '<div class="card" style="border-left:3px solid '+(o.pick===i?"var(--bud)":"var(--line)")+'"><div style="font-weight:800;font-family:var(--slate)">'+esc(a.n||"")+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:2px">Desire: '+esc(a.d||"")+'</div><div style="font-size:13px;margin-top:6px">'+esc(a.s||"")+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">Proof: '+esc(a.p||"")+" \u00b7 "+esc(a.pl||"")+" \u00b7 "+esc(a.f||"")+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="brHooks('+i+')">\ud83e\ude9d 20 hooks</button><button class="btn ghost sm" style="flex:1" onclick="brCopyPack('+i+')">\ud83d\udcdd Copy pack</button></div></div>';}).join("");
  if(o.hooks&&o.pick>=0){h+='<div class="card"><div style="font-weight:800;font-family:var(--slate)">Hooks \u2014 '+esc((o.angles[o.pick]||{}).n||"")+'</div>'+o.hooks.map(function(k){return '<div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--line)"><span class="hint" style="flex:0 0 auto;text-transform:none;letter-spacing:0;min-width:86px">'+esc(k.t||"")+'</span><span style="flex:1;font-size:13px">'+esc(k.h||"")+'</span><button class="btn ghost sm" style="flex:0 0 auto;padding:4px 10px" onclick="rpCopyTxt(\''+brQ(k.h||"")+'\')">\u29c9</button></div>';}).join("")+"</div>";}
  if(o.copy){h+='<div class="card"><div style="font-weight:800;font-family:var(--slate)">Copy pack \u2014 '+esc((o.angles[o.pick]||{}).n||"")+'</div><label class="fld" style="margin-top:8px">Post</label><div style="font-size:13px;white-space:pre-wrap">'+esc(o.copy.post)+'</div><button class="btn ghost sm" style="margin-top:6px" onclick="rpCopyTxt(S.brand.out.copy.post)">\u29c9 Copy post</button><label class="fld" style="margin-top:10px">Long-form story</label><div style="font-size:13px;white-space:pre-wrap">'+esc(o.copy.story)+'</div><button class="btn ghost sm" style="margin-top:6px" onclick="rpCopyTxt(S.brand.out.copy.story)">\u29c9 Copy story</button></div>';}
- if(o.merch){h+=o.merch.map(function(c,i){return '<div class="card" style="border-left:3px solid '+(o.mpick===i?"var(--bud)":"var(--line)")+'"><div style="font-weight:800;font-family:var(--slate)">\U0001f9f5 '+esc(c.n||"")+'</div><div style="font-size:13px;margin-top:2px">'+esc(c.w||"")+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">'+esc(c.fb||"")+' \u00b7 '+esc(c.ft||"")+' \u00b7 '+esc(c.dc||"")+' \u00b7 '+esc(c.pr||"")+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">Hits: '+esc(c.g||"")+' \u00b7 Avoids: '+esc(c.av||"")+'</div><button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="brShopCopy('+i+')">\ud83d\udccb Shopify copy</button></div>';}).join("");}
+ if(o.merch){h+=o.merch.map(function(c,i){return '<div class="card" style="border-left:3px solid '+(o.mpick===i?"var(--bud)":"var(--line)")+'"><div style="font-weight:800;font-family:var(--slate)">🧵 '+esc(c.n||"")+'</div><div style="font-size:13px;margin-top:2px">'+esc(c.w||"")+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">'+esc(c.fb||"")+' \u00b7 '+esc(c.ft||"")+' \u00b7 '+esc(c.dc||"")+' \u00b7 '+esc(c.pr||"")+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">Hits: '+esc(c.g||"")+' \u00b7 Avoids: '+esc(c.av||"")+'</div><button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="brShopCopy('+i+')">\ud83d\udccb Shopify copy</button></div>';}).join("");}
  if(o.shop){var mN=String(o.shop.seoM||"").length;h+='<div class="card"><div style="font-weight:800;font-family:var(--slate)">Listing \u2014 '+esc((o.merch[o.mpick]||{}).n||"")+'</div><label class="fld" style="margin-top:8px">Title ('+String(o.shop.title||"").length+'/70)</label><div style="font-size:13px">'+esc(o.shop.title)+'</div><button class="btn ghost sm" style="margin-top:4px" onclick="rpCopyTxt(S.brand.out.shop.title)">\u29c9</button><label class="fld" style="margin-top:8px">Description</label><div style="font-size:13px;white-space:pre-wrap">'+esc(o.shop.desc)+'</div><button class="btn ghost sm" style="margin-top:4px" onclick="rpCopyTxt(S.brand.out.shop.desc)">\u29c9</button><label class="fld" style="margin-top:8px">SEO title + meta <span style="color:'+(mN>155?"var(--red)":"var(--bud)")+'">'+mN+'/155</span></label><div style="font-size:13px">'+esc(o.shop.seoT)+'</div><div style="font-size:12px;color:var(--bone-dim);margin-top:2px">'+esc(o.shop.seoM)+'</div><div class="row" style="margin-top:4px"><button class="btn ghost sm" style="flex:1" onclick="rpCopyTxt(S.brand.out.shop.seoT)">\u29c9 SEO title</button><button class="btn ghost sm" style="flex:1" onclick="rpCopyTxt(S.brand.out.shop.seoM)">\u29c9 Meta</button></div><label class="fld" style="margin-top:8px">Tags</label><div style="font-size:12px;color:var(--bone-dim);word-break:break-word">'+esc(o.shop.tags)+'</div><button class="btn ghost sm" style="margin-top:4px" onclick="rpCopyTxt(S.brand.out.shop.tags)">\u29c9</button></div>';}
  b.innerHTML=h;}
 const MERCH_INTEL="MARKET SIGNALS (design toward): heavyweight fabric 350-450gsm fleece / 220-280gsm tees; boxy and relaxed silhouettes with strong shoulder lines; garment-wash and vintage-fade finishes; textured decoration \u2014 embroidery, puff print, applique, chenille \u2014 over flat prints; tonal and earth palettes; quiet-luxury restraint; authentic story behind every piece. CATEGORY COMPLAINTS (solve them): thin fabric, prints that crack, shrinkage, inconsistent sizing, cheap novelty energy, weak packaging. OVERSATURATION BANK (never design): giant leaf graphics, 420 cliches, neon weed novelty, meme-slap merch, generic pot-leaf all-over prints. PRICE BANDS: premium tee $45-60, heavyweight hoodie $80-120, cap $30-40, matching set $120-160.";

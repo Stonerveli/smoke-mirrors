@@ -1043,7 +1043,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.62 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.63 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1395,7 +1395,7 @@ function go(name){
   if(name==="chief")renderChief();
   if(name==="run")renderRun();
   if(name==="train")renderLab();
-  if(name==="studio"||name==="board"||name==="comics"||name==="run")try{renderHUD("view-"+name);}catch(e){}
+  if(name==="studio"||name==="board"||name==="comics"||name==="fight"||name==="story")try{renderHUD("view-"+name);}catch(e){}
   if(name==="socials")renderSocials();
   if(name==="brand")renderBrand();
   if(name==="board"){if(typeof mdRecipeFill==="function")mdRecipeFill();if(typeof rmsFill==="function")rmsFill();}
@@ -2429,12 +2429,27 @@ function renderHUD(viewId){
  var sec=document.getElementById(viewId);if(!sec)return;
  var hud=sec.querySelector(".conthud");
  if(!hud){hud=document.createElement("div");hud.className="conthud";hud.style.cssText="display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px";var sl=sec.querySelector(".slatehead");if(sl&&sl.nextSibling)sec.insertBefore(hud,sl.nextSibling);else sec.insertBefore(hud,sec.firstChild);}
+ if(viewId==="view-board")hud.id="hudBoard";
+ hud.innerHTML=hudChips(viewId==="view-run"?"run":"view");
+}
+function hudChips(scope){
  function chip(ok,warn,txt){var col=ok?"var(--bud)":(warn?"#c9a94a":"var(--red)");return '<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:11px;color:var(--bone-dim)"><span style="width:8px;height:8px;border-radius:50%;background:'+col+'"></span>'+txt+"</span>";}
- var dna=(S.cast||[]).some(function(c){return c.identity;});
+ var cast=S.cast||[];var withDna=cast.filter(function(c){return c.identity;});
  var ward=(S.wardrobeLock!==false);
  var lora=(S.loraOn&&S.activeLora)?((S.loras||[]).find(function(l){return l.id===S.activeLora;})||null):null;
- hud.innerHTML=chip(dna,!dna,dna?"DNA locked":"No character DNA yet")+chip(ward,false,ward?"Wardrobe locked":"Wardrobe UNLOCKED")+chip(!!lora,true,lora?("LoRA: "+lora.name):"No LoRA active");
+ function presetOf(c){if(!c.wardrobeNote)return "no fit set";var k=Object.keys(WARDROBE_PRESETS).find(function(p){return WARDROBE_PRESETS[p].text===c.wardrobeNote;});return k?WARDROBE_PRESETS[k].name:"custom fit";}
+ var h="";
+ h+=chip(withDna.length>0,withDna.length===0,withDna.length?("DNA "+withDna.length+"/"+cast.length):"No character DNA yet");
+ withDna.slice(0,2).forEach(function(c){h+=chip(true,false,c.name+" · "+presetOf(c));});
+ if(withDna.length>2)h+=chip(true,false,"+"+(withDna.length-2)+" more");
+ h+=chip(ward,false,ward?"Wardrobe locked":"Wardrobe UNLOCKED");
+ h+=chip(!!lora,true,lora?("LoRA: "+lora.name):"No LoRA active");
+ h+=chip(true,false,"Canon v3");
+ if(scope==="run"&&S.run&&S.run.streak)h+=chip(true,false,"🔥 Streak "+S.run.streak);
+ if(scope==="run")return '<div style="display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px">'+h+"</div>";
+ return h;
 }
+function hudPaintBoard(){try{renderHUD("view-board");}catch(e){}}
 function stGoNoop(){}
 function reelNextShot(id){
   var it=(S.reel||[]).find(function(x){return x.id===id;});
@@ -4496,7 +4511,7 @@ function renderRun(){
  var drawn=!!(c&&c.ts>=todayT&&c.panels&&c.panels.some(function(p){return p.url;}));
  if(drawn&&!r.steps.render){r.steps.render=true;save();}
  var i3=S.comicIdea3||{};
- var h='<div class="card" style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-family:var(--slate)">'+r.day+'</div><div class="hint" style="text-transform:none;letter-spacing:0">One lap. Every day. That’s the whole trick.</div></div><div style="font-size:20px;font-weight:800">🔥 '+(r.streak||0)+'</div></div>';
+ var h=hudChips("run")+'<div class="card" style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-family:var(--slate)">'+r.day+'</div><div class="hint" style="text-transform:none;letter-spacing:0">One lap. Every day. That’s the whole trick.</div></div><div style="font-size:20px;font-weight:800">🔥 '+(r.streak||0)+'</div></div>';
  h+='<div class="tonerow" style="margin:4px 0 12px"><button type="button" class="tonechip'+(r.lane==="comic"?" on":"")+'" data-rl="comic">Comic post</button><button type="button" class="tonechip'+(r.lane==="clip"?" on":"")+'" data-rl="clip">Video clip</button></div>';
  function card(key,title,desc,inner){var done=!!r.steps[key];
   return '<div class="card" style="'+(done?"opacity:.65;":"")+'border-left:3px solid '+(done?"var(--bud)":"var(--line)")+'"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><div style="font-weight:800;font-family:var(--slate)">'+title+'</div><button class="btn ghost sm" data-rt="'+key+'" style="flex:0 0 auto;padding:6px 12px">'+(done?"✓":"○")+'</button></div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:2px">'+desc+'</div>'+(inner||"")+'</div>';}

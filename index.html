@@ -1049,7 +1049,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.68 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.69 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -2343,8 +2343,8 @@ function renderChiefinese(){
  var L=S.slang||[];
  if(!L.length)h+='<button class="btn ghost sm" style="width:100%;margin-top:6px" onclick="chnSeed()">🌱 Seed the starter pack (7 canon phrases)</button>';
  h+='<div id="chnFilt" style="margin-top:10px"></div><div id="chnList"></div></div>';
- h+='<div class="card"><label class="fld">🧍 District People Generator</label><div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Generates a resident with Home / Public / Pressure voices — using YOUR custom slang for that district.</div>';
- h+='<div class="row" style="margin-bottom:6px"><select id="chnPDist" style="flex:1">'+dopts+'</select></div>';
+ h+='<div class="card"><label class="fld">🧍 Stoneralia Resident Generator — powered by Chiefinese</label><div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Generates a resident with Home / Public / Pressure voices — using YOUR custom slang for that district.</div>';
+ h+='<div class="row" style="margin-bottom:6px"><select id="chnPDist" style="flex:1">'+dopts+'</select><select id="chnPFam" style="flex:1"><option value="">family roots — optional</option>'+dopts+'</select></div>';
  h+='<input type="text" id="chnPVibe" placeholder="optional: role or vibe (bodega owner, retired DJ, court hustler…)" style="margin-bottom:6px">';
  h+='<button class="btn green" style="width:100%" onclick="chnPerson()">🎲 Generate a resident</button><div id="chnPStatus"></div><div id="chnPOut" style="margin-top:8px"></div></div>';
  host.innerHTML=h;
@@ -2373,12 +2373,12 @@ function chnPaintList(){
  }).join(""):'<div class="hint" style="text-transform:none;letter-spacing:0;padding:8px 0">Nothing here yet — add a phrase or seed the starter pack.</div>';}
 async function chnPerson(){
  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
- var d=($("chnPDist")||{}).value||"Couchwick";var vibe=(($("chnPVibe")||{}).value||"").trim();
+ var d=($("chnPDist")||{}).value||"Couchwick";var vibe=(($("chnPVibe")||{}).value||"").trim();var fam=(($("chnPFam")||{}).value||"").trim();
  var st=$("chnPStatus");if(st)st.innerHTML=spinner("Pulling somebody off the "+d+" block…");
  var mine=(S.slang||[]).filter(function(x){return x.district===d;}).slice(0,12).map(function(x){return x.term+" = "+x.meaning;}).join("; ");
- var sys=vibeCtx()+' You are the Chiefinese DISTRICT PEOPLE GENERATOR. Create ONE original resident of the requested district, speaking per the Chiefinese rules (slang as seasoning; three voices). '+(mine?("USER-DEFINED "+d+" SLANG (use naturally where fitting): "+mine+". "):"")+'Return JSON ONLY: {"name":"first + street name","age":0,"district":"","role":"what they do","look":"one-line visual for image prompts","quirk":"one specific recurring behavior","voice":{"home":"one sample line, Home Voice","public":"one sample line, Public Voice","pressure":"one sample line, Pressure Voice \u2014 district roots showing"},"slang_used":["terms used"]} \u2014 no mockery spellings, G-rated, culturally respectful.';
+ var sys=vibeCtx()+' You are the STONERALIA RESIDENT GENERATOR, powered by Chiefinese. Create ONE original resident born, raised, working or rooted in the requested district. RULES: default fully to the chosen district — its dialect, values, geography, humor, routines and conflicts; do not blend districts for variety. If FAMILY ROOTS are given, layer that heritage naturally (family sayings, food, code-switching) over the native district. Match speech to generation — elders carry legacy phrases, teens carry new slang. Slang is seasoning, three voices always. STEREOTYPE PROTECTION: grounded and specific, never a caricature — flaws are personal, not cultural. This resident is a generator draft, not canon. '+(mine?("USER-DEFINED "+d+" SLANG (use naturally where fitting): "+mine+". "):"")+'Return JSON ONLY: {"name":"first + street name","age":0,"district":"","role":"what they do","look":"one-line visual for image prompts","quirk":"one specific recurring behavior","voice":{"home":"one sample line, Home Voice","public":"one sample line, Public Voice","pressure":"one sample line, Pressure Voice \u2014 district roots showing"},"slang_used":["terms used"]} \u2014 no mockery spellings, G-rated, culturally respectful.';
  try{
-  var p=parseJSON(await _llmRun(sys,"DISTRICT: "+d+(vibe?(" · ROLE/VIBE: "+vibe):""),"ideas"));
+  var p=parseJSON(await _llmRun(sys,"DISTRICT: "+d+(fam?(" · FAMILY ROOTS: "+fam):"")+(vibe?(" · ROLE/VIBE: "+vibe):""),"ideas"));
   if(!p||!p.name)throw new Error("Generator came back empty — run it again.");
   CHN.lastPerson=p;if(st)st.innerHTML="";chnPaintPerson();
  }catch(e){if(st)st.innerHTML=errLine(e);}}

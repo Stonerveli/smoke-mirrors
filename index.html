@@ -481,7 +481,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   </div>
   <div class="card"><label class="fld">Motion Director — board → video prompt</label>
   <div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Turns the script above into a timed, shot-by-shot Seedance prompt — camera, blocking, dialogue and sound — with your cast DNA and locked Chiefin’ Season wardrobe baked in. Default audio: <b>no music, ever</b> — you score your own.</div>
-  <label class="fld">Motion recipe — optional technique</label><select id="mdRecipe" style="margin-bottom:8px"><option value="">— none · straight direction —</option></select><button class="btn ghost sm" style="width:100%;margin-bottom:8px" onclick="mdSaveRecipe()">＋ Save my own recipe</button>
+  <label class="fld">Render · pacing · target model</label><div class="row" style="margin-bottom:8px"><select id="mdRender" style="flex:1" onchange="cineSet('render',this.value)"></select><select id="mdPace" style="flex:1" onchange="cineSet('pace',this.value)"></select></div><div class="row" style="margin-bottom:8px"><select id="mdModel" style="flex:1" onchange="cineSet('model',this.value)"></select></div><label class="fld">Motion recipe — optional technique</label><select id="mdRecipe" style="margin-bottom:8px"><option value="">— none · straight direction —</option></select><button class="btn ghost sm" style="width:100%;margin-bottom:8px" onclick="mdSaveRecipe()">＋ Save my own recipe</button>
   <div class="row"><select id="mdDur" style="flex:1"><option value="5">5s</option><option value="10">10s</option><option value="15" selected>15s · multi-shot</option></select><select id="mdAudio" style="flex:1.7"><option value="diegetic" selected>Diegetic only — NO music</option><option value="music">Diegetic + music allowed</option><option value="silent">Silent visual</option></select></div>
   <button class="btn green" id="mdGen" style="width:100%;margin-top:8px" onclick="genMotion()">🎬 Build motion prompt</button><div id="mdStatus"></div>
   <textarea id="mdOut" style="min-height:170px;margin-top:8px;display:none;font-size:13px"></textarea>
@@ -1049,7 +1049,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="appfooter">Smoke &amp; Mirrors v9.69 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+  <div class="appfooter">Smoke &amp; Mirrors v9.70 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1074,7 +1074,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],datasets:[],dsActive:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance"},datasets:[],dsActive:"",
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -1405,7 +1405,7 @@ function go(name){
   if(name==="studio"||name==="board"||name==="comics"||name==="fight"||name==="story")try{renderHUD("view-"+name);}catch(e){}
   if(name==="socials")renderSocials();
   if(name==="brand")renderBrand();
-  if(name==="board"){if(typeof mdRecipeFill==="function")mdRecipeFill();if(typeof rmsFill==="function")rmsFill();}
+  if(name==="board"){if(typeof mdRecipeFill==="function")mdRecipeFill();if(typeof rmsFill==="function")rmsFill();if(typeof cineFill==="function")cineFill();}
   if(name==="fight")renderFight();
   if(name==="cast")renderCast();
   if(name==="sets")renderSets();
@@ -5571,6 +5571,64 @@ async function rmsCompress(auto){
 function rmsCopy(){var o=$("rmsOut");if(!o||!o.value){toast("Build it first.",true);return;}navigator.clipboard.writeText(o.value).then(function(){toast("Prompt copied.");}).catch(function(){toast("Copy failed.",true);});}
 function rmsSaveDrop(){var o=$("rmsOut");if(!o||!o.value){toast("Build it first.",true);return;}projAttach("text","Rapid 15s \u2014 "+(($("rmsAction")||{}).value||"").slice(0,40),o.value);}
 function audioClause(){return (S.noMusic!==false)?" AUDIO RULE: diegetic sound only — natural ambience, environmental foley, character dialogue, movement and object sounds. NO music, NO score, NO soundtrack of any kind (the artist scores everything himself in post).":"";}
+var CINE_RENDER={
+ stoneralia_animated:["Stoneralia Animated","RENDER PROFILE — Stoneralia Animated: bold readable silhouettes, expressive 2D animation, urban + Caribbean-influenced detail, established character designs and wardrobe, comedy-friendly staging. Never photoreal humans."],
+ stoneralia_cinematic:["Stoneralia Cinematic","RENDER PROFILE — Stoneralia Cinematic Animation: the established animated designs with deeper lighting, atmospheric depth, filmic framing, dramatic scale and stronger shadows."],
+ painterly:["Painterly Grounded","RENDER PROFILE — Painterly Grounded Realism: grounded realism with hand-painted concept-art texture, subtle illustrative grain, tactile fabric/skin/wood/metal/smoke, soft diffused light, mood-led composition. No glossy plastic CG, no plain photorealism, no artist names."],
+ fashion:["Fashion Film","RENDER PROFILE — Chiefin' Season Fashion Film: premium streetwear presentation, garment detail, accurate STABLE logos and graphics, fabric movement, urban luxury, product-focused lighting, wardrobe continuity."],
+ comic:["Comic-Book Action","RENDER PROFILE — Comic-Book Action: bold silhouettes, dynamic poses, readable choreography, impact frames, dramatic angles, original heroes and villains only, consistent anatomy."],
+ commercial:["Clean Commercial","RENDER PROFILE — Clean Commercial Product: clear product visibility, accurate proportions, controlled reflections, stable logos and packaging, clean backgrounds, commercial lighting."],
+ ugc:["UGC Realism","RENDER PROFILE — UGC Realism: natural handheld phone framing, natural light, casual performance, realistic pauses, minor imperfections, authentic social pacing. No cinematic polish."],
+ refmatch:["Reference-Matched","RENDER PROFILE — Reference-Matched: preserve the reference's design, facial structure, wardrobe, palette, texture, proportions and treatment exactly. Invent nothing stylistic."],
+ custom:["Custom","RENDER PROFILE — Custom: follow the board style notes verbatim as the visual law."]};
+var CINE_PACE={
+ balanced:["Balanced Cinematic","PACING — Balanced: clear setup, development, payoff; moderate shot lengths; purposeful camera variation."],
+ contemplative:["Contemplative","PACING — Contemplative: fewer shots, longer holds, slow camera, environmental storytelling, negative space, delayed reveals."],
+ fast_action:["Fast Action","PACING — Fast Action: shorter shots, clear directional movement, impact beats, reaction shots, readable choreography — fast but always understandable."],
+ epic:["Epic Scale","PACING — Epic Scale: wide environmental frames, low angles, slow heavy movement, small figures against huge environments, long reveals."],
+ suspense:["Suspense","PACING — Suspense: restricted information, slow pushes, held close-ups, delayed reveals, environmental sound, controlled turns."],
+ comedy:["Comedy Timing","PACING — Comedy Timing: setup → expectation → brief hold → realization → reaction → consequence. Never rush the joke; allow silent reaction shots. Crumbz stays chaotic but readable; Hoodie Chieff stays silent — deadpan, shade and hoodie movement only."],
+ music:["Music Performance","PACING — Music Performance: beat-aware cuts, performance coverage, hero angles, crowd reactions, wardrobe continuity, visual rhythm."],
+ product:["Product Showcase","PACING — Product Showcase: product-first composition, intro → details → demonstration → benefit → final hero frame; logos and packaging stable."],
+ custom:["Custom","PACING — Custom: follow the pacing described in the script notes."]};
+var CINE_MODELS={seedance:["Seedance",1500],kling:["Kling",2500],sora:["Sora",4000],veo:["Veo",4000],runway:["Runway",2000],luma:["Luma",2000],hailuo:["Hailuo",2000],wan:["Wan",2000],higgsfield:["Higgsfield",2500],custom:["your video model",4000]};
+function cineSet(k,v){if(!S.cine)S.cine={render:"stoneralia_animated",pace:"balanced",model:"seedance"};S.cine[k]=v;save();}
+function cineFill(){
+ if(!S.cine)S.cine={render:"stoneralia_animated",pace:"balanced",model:"seedance"};
+ var r=$("mdRender"),p=$("mdPace"),m=$("mdModel");
+ if(r&&!r.options.length){Object.keys(CINE_RENDER).forEach(function(k){r.add(new Option(CINE_RENDER[k][0],k));});}
+ if(p&&!p.options.length){Object.keys(CINE_PACE).forEach(function(k){p.add(new Option(CINE_PACE[k][0],k));});}
+ if(m&&!m.options.length){Object.keys(CINE_MODELS).forEach(function(k){m.add(new Option(CINE_MODELS[k][0]+" · "+CINE_MODELS[k][1]+"ch",k));});}
+ if(r)r.value=S.cine.render;if(p)p.value=S.cine.pace;if(m)m.value=S.cine.model;}
+function cineLaw(){
+ var c=S.cine||{};
+ var r=(CINE_RENDER[c.render]||CINE_RENDER.stoneralia_animated)[1];
+ var p=(CINE_PACE[c.pace]||CINE_PACE.balanced)[1];
+ var m=CINE_MODELS[c.model]||CINE_MODELS.seedance;
+ return " UNIVERSAL MOTION ENGINE: motion and appearance are SEPARATE systems — the render profile sets the look, the motion rules set the movement; neither erases the other. "+r+" "+p+" MOTION INTEGRITY: bodies move with real mechanics — feet lift, plant, weight transfers, arms counterbalance (no sliding, floating or teleporting); hands grip with finger wrap and object weight; fabric drags and settles, chains swing, hats stay secured; vehicles roll on turning wheels with suspension response; smoke curls and disperses with airflow and never turns solid; still characters stay fully locked with only requested breathing. TIMING: weight shot durations by story need — setups short, reactions and reveals longer, comedy pauses preserved, impact beats sharp — never divide time evenly. Never repeat the identical camera setup in consecutive shots unless intentional. EVERY shot must state: shot size, lens in mm, camera angle, camera movement, subject action with physical mechanics, and its story purpose. FAILURE GUARDS: include only the guards THIS scene needs (logo stability for merch shots, varied non-cloned crowds, wheel rotation for vehicles, identity/wardrobe drift locks for characters) — never a generic negative dump. TARGET MODEL: "+m[0]+" — keep the final prompt under "+m[1]+" characters counting everything; if over, compress by trimming repeated adjectives and repeated environment wording and shortening subject references after first mention — never cut timecodes, identity, required action, motion mechanics or the payoff."}
+function cineValidate(txt,dur){
+ var ok="var(--bud)",warn="#c9a94a",bad="var(--red)";
+ function chip(col,t){return '<span style="display:inline-flex;border:1px solid '+col+';color:'+col+';border-radius:999px;padding:2px 9px;font-size:11px;font-weight:800;margin:2px 6px 2px 0">'+t+"</span>";}
+ var re=new RegExp("\\[(\\d+(?:\\.\\d+)?)s?\\s*[\u2013\u2014-]\\s*(\\d+(?:\\.\\d+)?)s?\\]","g");
+ var m,spans=[];
+ while((m=re.exec(txt)))spans.push([parseFloat(m[1]),parseFloat(m[2])]);
+ var h="";
+ if(!spans.length){h+=chip(warn,"Timecodes: none found");}
+ else{
+  var chron=true,gaps=false;
+  if(Math.abs(spans[0][0])>0.01)chron=false;
+  for(var i=0;i<spans.length;i++){
+   if(spans[i][1]<=spans[i][0])chron=false;
+   if(i>0){var d=spans[i][0]-spans[i-1][1];if(d<-0.01)chron=false;if(d>0.15)gaps=true;}}
+  var end=spans[spans.length-1][1];
+  var rOK=Math.abs(end-dur)<=0.35;
+  h+=chip(rOK?ok:bad,"Runtime "+end+"s / "+dur+"s"+(rOK?" ✓":" ✗"));
+  h+=chip(chron&&!gaps?ok:(chron?warn:bad),"Timecodes "+(chron?(gaps?"gaps":"✓"):"✗"));
+  h+=chip(ok,spans.length+" shots");}
+ var mdl=CINE_MODELS[(S.cine||{}).model]||CINE_MODELS.seedance;
+ var bOK=txt.length<=mdl[1];
+ h+=chip(bOK?ok:warn,"Budget "+txt.length+"/"+mdl[1]+(bOK?" ✓":" ⚠"));
+ return '<div style="margin-top:6px">'+h+'<span class="hint" style="text-transform:none;letter-spacing:0"> auto-check</span></div>';}
 async function genMotion(){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   var script=($("boardScript")?$("boardScript").value:"").trim();
@@ -5579,14 +5637,14 @@ async function genMotion(){
   S.noMusic=(mode!=="music");save();
   var st=$("mdStatus");if(st)st.innerHTML=spinner("Directing the motion…");
   var audio=(mode==="silent")?"AUDIO: none — silent visual, no dialogue, no sound design.":((mode==="music")?"AUDIO: diegetic sound (ambience, foley, dialogue) plus a fitting score is allowed.":"AUDIO: diegetic sound ONLY — natural ambience, environmental foley, character dialogue, movement and object sounds. NO music, NO score, NO soundtrack of any kind (the artist adds his own music in post).");
-  var sys=vibeCtx()+" You are a cinematic motion director building ONE production-ready Seedance video prompt from a storyboard script. Structure: short production header (visual style, total duration "+dur+"s, character + wardrobe continuity mandate), then timed shots — format [0.0s–1.5s] SHOT n — LABEL, then shot size + camera angle + camera movement, precise character blocking and facial performance, clothing and hair motion, object interaction, brief dialogue lines only where they fit the shot length, per-shot sound effects, and the cut or transition into the next shot. Shot timings must sum exactly to "+dur+" seconds. Keep every character’s face, proportions and locked Chiefin’ Season outfit IDENTICAL in every shot. End the prompt with this exact audio line: "+audio+" Return ONLY the finished prompt text, no commentary."+mdRecipeGuidance();
+  var sys=vibeCtx()+" You are a cinematic motion director building ONE production-ready "+((CINE_MODELS[(S.cine||{}).model]||CINE_MODELS.seedance)[0])+" video prompt from a storyboard script." + cineLaw() + " Structure: short production header (visual style, total duration "+dur+"s, character + wardrobe continuity mandate), then timed shots — format [0.0s–1.5s] SHOT n — LABEL, then shot size + camera angle + camera movement, precise character blocking and facial performance, clothing and hair motion, object interaction, brief dialogue lines only where they fit the shot length, per-shot sound effects, and the cut or transition into the next shot. Shot timings must sum exactly to "+dur+" seconds. Keep every character’s face, proportions and locked Chiefin’ Season outfit IDENTICAL in every shot. End the prompt with this exact audio line: "+audio+" Return ONLY the finished prompt text, no commentary."+mdRecipeGuidance();
   var usr="STORYBOARD SCRIPT / BEATS:\n"+script+((($("boardTitle")||{}).value)?"\nTITLE: "+$("boardTitle").value:"")+((($("boardStyle")||{}).value)?"\nBOARD STYLE: "+$("boardStyle").value:"");
   try{
     var txt=(await _llmRun(sys,usr,"ideas")).trim();
     if(!txt)throw new Error("Nothing came back.");
     var o=$("mdOut");if(o){o.style.display="block";o.value=txt;}
     var a=$("mdActs");if(a)a.style.display="flex";
-    if(st)st.innerHTML="";toast("Motion prompt ready — drop it into Seedance.");
+    if(st)st.innerHTML=cineValidate(txt,dur);toast("Motion prompt ready — auto-check below.");
   }catch(e){if(st)st.innerHTML=errLine(e);}
 }
 function mdCopyOut(){var o=$("mdOut");if(!o||!o.value){toast("Build it first.",true);return;}navigator.clipboard.writeText(o.value).then(function(){toast("Motion prompt copied.");}).catch(function(){toast("Copy failed.",true);});}

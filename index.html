@@ -593,6 +593,8 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <label class="fld">Add a character</label>
     <input type="text" id="castName" placeholder="Name — e.g. Chieff, Szn, The Landlord">
     <textarea id="castIdentity" style="min-height:72px;margin-top:8px" placeholder="Identity lock — the canonical look injected into every shot of this character"></textarea>
+     <div class="row" style="margin-top:8px"><input type="text" id="castNick" placeholder="Nickname — e.g. Receipt Queen" style="flex:1"><select id="castFrom" style="flex:1"><option value="">From — district (optional)</option></select></div>
+     <input type="text" id="castShow" list="castShowList" placeholder="Series / show — e.g. Stoneralia" style="margin-top:8px"><datalist id="castShowList"></datalist>
     <button class="btn green" id="castAdd" style="margin-top:10px;width:100%">+ Add character</button>
     <div class="hint" style="margin-top:8px">Then tap the character to add reference photos, build a 6-angle sheet, and set a voice. Chieff loads himself on first run.</div>
   </div>
@@ -1055,7 +1057,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:10px">Restore from backup</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v9.76 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v9.77 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1456,7 +1458,7 @@ function go(name){
   if(name==="brand")renderBrand();
   if(name==="board"){if(typeof mdRecipeFill==="function")mdRecipeFill();if(typeof rmsFill==="function")rmsFill();if(typeof cineFill==="function")cineFill();}
   if(name==="fight")renderFight();
-  if(name==="cast")renderCast();
+  if(name==="cast"){renderCast();if(typeof castMetaFill==="function")castMetaFill();}
   if(name==="sets")renderSets();
   if(name==="media")renderMedia();
   if(name==="smg")renderMedia();
@@ -2888,18 +2890,30 @@ async function buildLocation(it){
 
 /* ===== Cast + Sets sections ===== */
 function addCast(){const name=$("castName").value.trim();if(!name){toast("Name the character.",true);return;}
-  S.cast.unshift({id:uid(),name,identity:$("castIdentity").value.trim(),voice:"",color:"",src:"",views:[]});save();
-  $("castName").value="";$("castIdentity").value="";toast("Character added — tap it to add reference photos.");renderCast();renderCastSet();}
+  S.cast.unshift({id:uid(),name,identity:$("castIdentity").value.trim(),nick:(($("castNick")||{}).value||"").trim(),from:(($("castFrom")||{}).value||""),show:(($("castShow")||{}).value||"").trim(),voice:"",color:"",src:"",views:[]});save();
+  $("castName").value="";$("castIdentity").value="";if($("castNick"))$("castNick").value="";if($("castFrom"))$("castFrom").value="";if($("castShow"))$("castShow").value="";toast("Character added — tap it to add reference photos.");renderCast();renderCastSet();}
 function addSet(){const name=$("setName").value.trim();if(!name){toast("Name the location.",true);return;}
   S.sets.unshift({id:uid(),name,vibe:$("setVibe").value.trim(),src:"",views:[]});save();
   $("setName").value="";$("setVibe").value="";toast("Location added — tap it to build or add photos.");renderSets();renderCastSet();}
+function castMetaFill(){
+ var f=$("castFrom");
+ if(f&&f.options.length<=1&&typeof CHN_DISTS!=="undefined"){CHN_DISTS.forEach(function(d){f.add(new Option(d,d));});}
+ var dl=$("castShowList");
+ if(dl){dl.innerHTML=((S.datasets||[]).map(function(d){return '<option value="'+esc(d.name)+'">';}).join(""))+'<option value="Stoneralia">';}}
+function castMetaEdit(id){
+ var c=(S.cast||[]).find(function(x){return x.id===id;});if(!c)return;
+ var n=prompt("Nickname:",c.nick||"");if(n===null)return;
+ var fr=prompt("From (district — spelling matters, e.g. Herblyn City):",c.from||"");if(fr===null)return;
+ var sh=prompt("Series / show:",c.show||"");if(sh===null)return;
+ c.nick=n.trim();c.from=fr.trim();c.show=sh.trim();save();renderCast();
+ toast((c.name)+" carded 🪪"+(c.from?" — "+c.from+" voice + style now auto-apply.":""));}
 function castCard(it,kind){
   const d=document.createElement("div");d.className="stash-item";
   const nv=viewsOf(it).filter(v=>v.src).length;
   const img=it.src?'<img src="'+it.src+'">':'<div class="noimg">'+esc((it.name||"?").slice(0,2).toUpperCase())+'</div>';
   const badge=nv>0?'<span class="vbadge">▦ '+nv+' ref'+(nv>1?'s':'')+'</span>':'<span class="vbadge add">＋ add refs</span>';
-  const sub=kind==="cast"?(it.identity?esc(it.identity.slice(0,44)):'no identity lock yet'):(it.vibe?esc(it.vibe.slice(0,44)):'no vibe set');
-  d.innerHTML='<button class="x">✕</button>'+badge+img+'<div class="meta"><div class="nm">'+esc(it.name)+'</div><div class="ty">'+sub+'</div></div>';
+  const sub=kind==="cast"?((it.nick?'“'+esc(it.nick)+'” ':'')+(it.from?esc(it.from)+' ':'')+(it.show?'· '+esc(it.show)+' ':'')||(it.identity?esc(it.identity.slice(0,44)):'no identity lock yet')):(it.vibe?esc(it.vibe.slice(0,44)):'no vibe set');
+  d.innerHTML='<button class="x">✕</button>'+(kind==="cast"?'<button class="vbadge" style="right:auto;left:6px;cursor:pointer" onclick="event.stopPropagation();castMetaEdit(\''+it.id+'\')">🪪</button>':'')+badge+img+'<div class="meta"><div class="nm">'+esc(it.name)+'</div><div class="ty">'+sub+'</div></div>';
   d.querySelector(".x").addEventListener("click",e=>{e.stopPropagation();
     if(kind==="cast"){S.cast=S.cast.filter(x=>x.id!==it.id);castPicked.delete(it.id);}else{S.sets=S.sets.filter(x=>x.id!==it.id);if(setPicked===it.id)setPicked="";}
     save();renderCast();renderSets();renderCastSet();closeAsset(kind);});
@@ -3424,7 +3438,7 @@ function vibeCtx(){
   var p=(typeof projActive==="function")?projActive():null;var parts=[];
   parts.push("BRAND VIBE: Chiefin' Season / Stoneralia \u2014 deadpan, premium, cannabis-culture streetwear. Dry wit, understated confidence, cannabis-adjacent and platform-safe (no explicit drug talk). Matte black + bone foundation, sage/bud-green signature, rare gold/red. 'You smell the vibes.'");
   if(p)parts.push("ACTIVE DROP: "+(p.name||"")+(p.concept?(" \u2014 "+p.concept):""));
-  if(S.cast&&S.cast.length)parts.push("CAST: "+S.cast.map(function(c){if(!c.name)return "";var t=c.name;if(c.identity)t+=" [DNA: "+String(c.identity).slice(0,180)+"]";if(c.wardrobeNote)t+=" [CS outfit, locked: "+String(c.wardrobeNote).slice(0,120)+"]";return t;}).filter(Boolean).join(" | "));
+  if(S.cast&&S.cast.length)parts.push("CAST: "+S.cast.map(function(c){if(!c.name)return "";var t=c.name;if(c.nick)t+=" “"+c.nick+"”";if(c.from)t+=" [from "+c.from+" — speaks, styles and carries slang per that district's Chiefinese]";if(c.show)t+=" [series: "+c.show+"]";if(c.identity)t+=" [DNA: "+String(c.identity).slice(0,180)+"]";if(c.wardrobeNote)t+=" [CS outfit, locked: "+String(c.wardrobeNote).slice(0,120)+"]";return t;}).filter(Boolean).join(" | "));
   if(S.sets&&S.sets.length)parts.push("SETS: "+S.sets.map(function(x){return x.name;}).filter(Boolean).join(", "));
   parts.push(STONERALIA_WORLD);
   if(S.canon&&S.canon.notes)parts.push("CANON NOTES: "+S.canon.notes);

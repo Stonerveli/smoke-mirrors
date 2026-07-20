@@ -244,6 +244,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button data-go="canon"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z'/><path d='M9 12l2 2 4-4'/></svg></span>Canon</button>
   <button data-go="cast"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='3.5'/><path d='M5.5 20a6.5 6.5 0 0 1 13 0'/><path d='M14.8 9.3l3.6-.6'/><circle cx='18.7' cy='8.6' r='.8' fill='currentColor' stroke='none'/><path d='M18.9 7.3c.7-.5.2-1.2.6-1.9'/></svg></span>Cast</button>
   <button data-go="chiefinese"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg></span>Chiefinese</button>
+  <button data-go="shows"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='6' width='20' height='13' rx='2'/><path d='M8 3l4 3 4-3'/></svg></span>Shows</button>
   <button data-go="sets"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M3 15l5-4 4 3 3-2 6 5'/><circle cx='8' cy='9' r='1.3'/></svg></span>Sets</button>
   <button data-go="pipeline"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='6' cy='6' r='2'/><circle cx='18' cy='18' r='2'/><path d='M8 6h7a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h7'/></svg></span>Pipeline</button>
   <button data-go="assets"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='7' height='7' rx='1'/><rect x='14' y='3' width='7' height='7' rx='1'/><rect x='3' y='14' width='7' height='7' rx='1'/><rect x='14' y='14' width='7' height='7' rx='1'/></svg></span>Assets</button>
@@ -586,6 +587,11 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg></span><h2>Chiefinese</h2><span class="tag">The language of the world</span></div>
   <div class="hint" style="margin-bottom:12px">Your living dictionary + the District People Generator. Slang is seasoning, not the meal — add terms, tag their district and origin, and generate residents who speak like where they’re from.</div>
   <div id="chnBody"></div>
+</section>
+<section class="view" id="view-shows">
+  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='6' width='20' height='13' rx='2'/><path d='M8 3l4 3 4-3'/></svg></span><h2>Shows</h2><span class="tag">Series &amp; writers rooms</span></div>
+  <div class="hint" style="margin-bottom:12px">Every series, its logline, and the writers on payroll. ★ = equipped · 🔥 = recommended for this show. Two writers max — one leads, one sharpens.</div>
+  <div id="showsBody"></div>
 </section>
 <section class="view" id="view-cast">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='3.5'/><path d='M5.5 20a6.5 6.5 0 0 1 13 0'/><path d='M14.8 9.3l3.6-.6'/><circle cx='18.7' cy='8.6' r='.8' fill='currentColor' stroke='none'/><path d='M18.9 7.3c.7-.5.2-1.2.6-1.9'/></svg></span><h2>Cast</h2><span class="tag">Characters</span></div>
@@ -1057,7 +1063,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:10px">Restore from backup</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v9.77 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v9.80 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1082,7 +1088,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance"},datasets:[],dsActive:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance"},datasets:[],dsActive:"",
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -1415,7 +1421,7 @@ async function svGenerate(){
   svSetMode((S.songvid&&S.songvid.mode)||"perform");
 })();
 var CUR_VIEW="episodes";
-const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",chief:"create",canon:"universe",cast:"universe",chiefinese:"universe",sets:"universe",projects:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
+const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",chief:"create",canon:"universe",cast:"universe",chiefinese:"universe",shows:"universe",sets:"universe",projects:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
 const GROUP_FIRST={create:"chief",universe:"canon",library:"pipeline",brand:"brand",setup:"settings"};
 function navLabel(v){var b=document.querySelector('nav button[data-go="'+v+'"]');if(b){var t=(b.textContent||"").trim();if(t)return t;}return v;}
 function renderSubTabs(){
@@ -1451,9 +1457,10 @@ function go(name){
   if(name==="chief")renderChief();
   if(name==="settings"&&typeof bkPaint==="function")bkPaint();
   if(name==="chiefinese")renderChiefinese();
+  if(name==="shows")renderShows();
   if(name==="run")renderRun();
   if(name==="train")renderLab();
-  if(name==="studio"||name==="board"||name==="comics"||name==="fight"||name==="story")try{renderHUD("view-"+name);}catch(e){}
+  if(name==="studio"||name==="board"||name==="comics"||name==="fight"||name==="story"||name==="train"||name==="chiefinese"||name==="shows")try{renderHUD("view-"+name);}catch(e){}
   if(name==="socials")renderSocials();
   if(name==="brand")renderBrand();
   if(name==="board"){if(typeof mdRecipeFill==="function")mdRecipeFill();if(typeof rmsFill==="function")rmsFill();if(typeof cineFill==="function")cineFill();}
@@ -2498,6 +2505,12 @@ function renderChief(){
  host.innerHTML=h;
  host.querySelectorAll("[data-ccv]").forEach(function(b){b.addEventListener("click",function(){go(b.getAttribute("data-ccv"));});});
  chiefPaintPlan();}
+function sendSheet(html){
+ var d=$("sendsheet");if(d)d.remove();
+ d=document.createElement("div");d.id="sendsheet";
+ d.style.cssText="position:fixed;left:8px;right:8px;bottom:70px;z-index:99997;max-height:70vh;overflow:auto;background:var(--panel,#141414);border:1px solid var(--line,#2a2a2a);border-radius:14px;padding:12px;box-shadow:0 -8px 30px rgba(0,0,0,.5)";
+ d.innerHTML=html+'<button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="document.getElementById(&quot;sendsheet&quot;).remove()">\u2715 Close</button>';
+ document.body.appendChild(d);}
 function mirrorPick(a){
  var imgs=(S.reel||[]).filter(function(x){return x.type==="image"&&x.id!==a.id;});
  if(!imgs.length){toast("Need a second image in The Cut to mirror against.",true);return;}
@@ -2554,12 +2567,76 @@ function stMenu(id){
  box.innerHTML='<div class="row" style="margin-top:6px;flex-wrap:wrap">'+opts.map(function(o){return '<button class="btn ghost sm" style="flex:1;min-width:40%" data-stk="'+o[0]+'">'+o[1]+"</button>";}).join("")+"</div>";
  box.querySelectorAll("[data-stk]").forEach(function(b){b.addEventListener("click",function(){box.innerHTML="";stGo(b.getAttribute("data-stk"),it);});});
 }
+var WRITERS={
+ mcgruder:["Aaron McGruder — razor social satire","razor Black social satire, hypocrisy exposure, class tension, Brand-vs-Street conflict"],
+ pryor:["Richard Pryor — vulnerable truth","vulnerable confessional storytelling, pain becoming comedy, deeply flawed lovable humanity"],
+ chappelle:["Dave Chappelle — slow-burn layers","layered slow-burn premises, moral ambiguity, unexpected reversals, cultural satire"],
+ rock:["Chris Rock — comic arguments","clear repeated comic arguments, quotable logic, relationship and class observations"],
+ mooney:["Paul Mooney — fearless truth","fearless uncomfortable social truth, community hypocrisy called by name"],
+ gregory:["Dick Gregory — purpose wit","moral-purpose comedy, political and historical awareness"],
+ sykes:["Wanda Sykes — sharp frustration","sharp frustration, intelligent sarcasm, direct reaction comedy"],
+ keenan:["Keenan Wayans — sketch architecture","strong sketch structure, ensemble balance, recurring-character premises, parody systems"],
+ damon:["Damon Wayans — eccentric logic","eccentric exaggerated character logic, absurd confidence, physical commitment"],
+ shawn:["Shawn Wayans — ensemble chemistry","laid-back sibling banter, relatable family chaos, reaction comedy"],
+ marlon:["Marlon Wayans — physical escalation","high-energy physical escalation, expressive chaos, vulnerability under the silliness"],
+ foxx:["Redd Foxx — elder heat","elder insult comedy, survival humor, family tension, streetwise timing"],
+ bernie:["Bernie Mac — family authority","commanding family authority, tough love, emotional truth beneath force"],
+ katt:["Katt Williams — underdog shine","stylish underdog confidence, flashy verbal rhythm, sharp street truth"],
+ griffin:["Eddie Griffin — fast riffs","fast expressive cultural riffing, street-level observation"],
+ cmurphy:["Charlie Murphy — legendary encounters","unbelievable-encounter storytelling, dead-serious narration of absurd events"],
+ emurphy:["Eddie Murphy — transformations","charismatic character transformations, family-role variety, big comic set pieces"],
+ martin:["Martin Lawrence — neighborhood chaos","neighborhood personalities, escalating relationship chaos, expressive reactions"],
+ norm:["Norm MacDonald — anti-climax","sideways payoffs, anti-climax, deliberate awkwardness, strange patient logic"],
+ gervais:["Ricky Gervais — cringe realism","social embarrassment, ego exposure, uncomfortable realism"],
+ atkinson:["Rowan Atkinson — silent objects","expressive silence, object comedy, escalating physical mistakes"],
+ cleese:["John Cleese — collapsing formality","controlled fury, formal behavior collapsing, bureaucratic physical comedy"],
+ chaplin:["Charlie Chaplin — silent heart","silent emotional visual storytelling, grace, humor with heart"],
+ carlin:["George Carlin — systems absurdity","institutional absurdity, fake rules, language games, contradictory systems"],
+ peele:["Jordan Peele — uneasy mundane","mundane situations turning quietly unsettling, hidden motives, symbolic tension"],
+ coogler:["Ryan Coogler — community weight","community loyalty, cultural identity, generational emotional stakes"],
+ macfarlane:["Seth MacFarlane — rapid absurdity","rapid absurd escalation, unexpected detours, ensemble chaos"]};
+function wroomLaw(){
+ var d=(typeof dsGet==="function")?dsGet(S.dsActive):null;
+ var W=(d&&d.writers)||[];
+ if(!W.length)return "";
+ var names=W.map(function(k){return WRITERS[k]?WRITERS[k][0].split(" — ")[0]:k;});
+ var crafts=W.map(function(k){return WRITERS[k]?WRITERS[k][1]:"";}).filter(Boolean);
+ return "WRITERS ROOM (for the active show "+(d.name?("“"+d.name+"”"):"")+"): channel the CRAFT of "+names.join(" + ")+" — "+crafts.join("; ")+". Translate these qualities into original Stoneralia writing. NEVER copy their voices, jokes, catchphrases or material. One primary influence leads; the second only sharpens.";}
+function dsWriters(){
+ var d=(typeof dsGet==="function")?dsGet(S.dsActive):null;
+ if(!d){toast("Pick or create a show dataset first (Lab).",true);return;}
+ d.writers=d.writers||[];
+ var h='<div style="font-weight:800;font-family:var(--slate);margin-bottom:4px">✍ Writers Room — '+esc(d.name)+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">One primary voice, a second only when it clearly sharpens — max 2 (routing law). Tap to equip.</div>';
+ h+=Object.keys(WRITERS).map(function(k){var on=d.writers.indexOf(k)>=0;
+  return '<button class="btn '+(on?"green":"ghost")+' sm" style="width:100%;text-align:left;margin-bottom:5px;white-space:normal" data-wr="'+k+'">'+(on?"✓ ":"")+esc(WRITERS[k][0])+"</button>";}).join("");
+ sendSheet(h);
+ var sh=$("sendsheet");
+ sh.querySelectorAll("[data-wr]").forEach(function(b){b.addEventListener("click",function(){
+  var k=b.getAttribute("data-wr");var i=d.writers.indexOf(k);
+  if(i>=0)d.writers.splice(i,1);
+  else{if(d.writers.length>=2){toast("Two max — one leads, one sharpens. Unequip one first.",true);return;}d.writers.push(k);}
+  save();sh.remove();dsWriters();}); });}
+function nextHint(viewId){
+ var t="";
+ try{
+  if(viewId==="view-studio"){t=!S.apiKey?"Add your fal key in Setup — nothing runs without it.":(!(S.reel&&S.reel.length)?"Describe one image and hit Generate — first brick.":"Tap ➡ Send on your best Cut item — it becomes a face, a fit, or training data.");}
+  else if(viewId==="view-comics"){t=(S.comics&&S.comics.length)?"Generate the pages → export → caption in Run → post → ✅":"Roll an idea in Daily Run — or drop a setup + twist right here.";}
+  else if(viewId==="view-board"){t=(S.board&&S.board.script)?"Profiles are set — run Motion Director and check the auto-chips.":"Send a comic here or paste beats — the board turns story into shots.";}
+  else if(viewId==="view-fight"){t="Pick two from Cast, set the venue, let the choreography write itself.";}
+  else if(viewId==="view-story"){t="One district, one flaw, one ordinary problem — that\u2019s a whole episode.";}
+  else if(viewId==="view-train"){var d=(typeof dsGet==="function")?dsGet(S.dsActive):null;var n=d?dsCount(d):0;
+   t=!d?"＋ New show dataset — name it, set the trigger word.":(d.trained?"Trained ✓ — tap Use in Studio and generate in-style.":(n<15?"Feed "+d.name+" — autopilot a shot list or ➡ Send images from The Cut ("+n+"/25).":(n<25?"Almost — "+n+"/25–35. A few more clean ones.":"The set is ready — hit Train (~$2), then save the file it returns.")));}
+  else if(viewId==="view-chiefinese"){t=(S.slang&&S.slang.length)?"Generate a resident — your dictionary shapes how they talk.":"Load the starter pack, then add your own — the language grows the world.";}
+  else if(viewId==="view-shows"){var _L=(typeof dsState==="function")?dsState():[];var _nw=_L.filter(function(x){return (x.writers||[]).length;}).length;t=!_L.length?"＋ New series — name it, then give it a logline and a writer.":(_nw<_L.length?"Equip a writer on every show — 🔥 marks the best fits.":"Rooms are staffed — make something in Comics or Pre-Roll.");}
+  else if(viewId==="view-run"){t="Roll the idea → make it → caption → post → ✅ Close the day. One lap.";}
+ }catch(e){}
+ return t?'<div class="hint" style="text-transform:none;letter-spacing:0;flex-basis:100%;margin-top:2px">🧭 Next: '+t+"</div>":"";}
 function renderHUD(viewId){
  var sec=document.getElementById(viewId);if(!sec)return;
  var hud=sec.querySelector(".conthud");
  if(!hud){hud=document.createElement("div");hud.className="conthud";hud.style.cssText="display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px";var sl=sec.querySelector(".slatehead");if(sl&&sl.nextSibling)sec.insertBefore(hud,sl.nextSibling);else sec.insertBefore(hud,sec.firstChild);}
  if(viewId==="view-board")hud.id="hudBoard";
- hud.innerHTML=hudChips(viewId==="view-run"?"run":"view");
+ hud.innerHTML=hudChips(viewId==="view-run"?"run":"view")+((typeof nextHint==="function")?nextHint(viewId):"");
 }
 function hudChips(scope){
  function chip(ok,warn,txt){var col=ok?"var(--bud)":(warn?"#c9a94a":"var(--red)");return '<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:11px;color:var(--bone-dim)"><span style="width:8px;height:8px;border-radius:50%;background:'+col+'"></span>'+txt+"</span>";}
@@ -2575,7 +2652,7 @@ function hudChips(scope){
  h+=chip(!!lora,true,lora?("LoRA: "+lora.name):"No LoRA active");
  h+=chip(true,false,"Canon v3");
  if(scope==="run"&&S.run&&S.run.streak)h+=chip(true,false,"🔥 Streak "+S.run.streak);
- if(scope==="run")return '<div style="display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px">'+h+"</div>";
+ if(scope==="run")return '<div style="display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px">'+h+((typeof nextHint==="function")?nextHint("view-run"):"")+"</div>";
  return h;
 }
 function hudPaintBoard(){try{renderHUD("view-board");}catch(e){}}
@@ -3438,8 +3515,10 @@ function vibeCtx(){
   var p=(typeof projActive==="function")?projActive():null;var parts=[];
   parts.push("BRAND VIBE: Chiefin' Season / Stoneralia \u2014 deadpan, premium, cannabis-culture streetwear. Dry wit, understated confidence, cannabis-adjacent and platform-safe (no explicit drug talk). Matte black + bone foundation, sage/bud-green signature, rare gold/red. 'You smell the vibes.'");
   if(p)parts.push("ACTIVE DROP: "+(p.name||"")+(p.concept?(" \u2014 "+p.concept):""));
+  if(S.cast&&S.cast.length)parts.push("CHARACTER LAW — identity vs. style: a character's IDENTITY (silhouette, build, facial structure, hair shape, signature items, energy) is permanent; their ART STYLE always matches the show or style they currently appear in — same person, different pen. When a character cameos in another show, redraw them faithfully in THAT show's style, keeping them instantly recognizable. Never freeze a character in their home show's rendering.");
   if(S.cast&&S.cast.length)parts.push("CAST: "+S.cast.map(function(c){if(!c.name)return "";var t=c.name;if(c.nick)t+=" “"+c.nick+"”";if(c.from)t+=" [from "+c.from+" — speaks, styles and carries slang per that district's Chiefinese]";if(c.show)t+=" [series: "+c.show+"]";if(c.identity)t+=" [DNA: "+String(c.identity).slice(0,180)+"]";if(c.wardrobeNote)t+=" [CS outfit, locked: "+String(c.wardrobeNote).slice(0,120)+"]";return t;}).filter(Boolean).join(" | "));
   if(S.sets&&S.sets.length)parts.push("SETS: "+S.sets.map(function(x){return x.name;}).filter(Boolean).join(", "));
+  var _wl=(typeof wroomLaw==="function")?wroomLaw():"";if(_wl)parts.push(_wl);
   parts.push(STONERALIA_WORLD);
   if(S.canon&&S.canon.notes)parts.push("CANON NOTES: "+S.canon.notes);
   return parts.join("\n");
@@ -3951,7 +4030,7 @@ function quickAddSet(){
 function renderSetPresets(){const sb=$("setSuggestBtn");if(sb&&!sb.dataset.b){sb.dataset.b="1";sb.addEventListener("click",suggestLocations);}const w=$("setPresets");if(!w)return;w.innerHTML="";SET_PRESETS.forEach(p=>{const c=document.createElement("span");c.className="chip";c.textContent="+ "+p.name;c.title=p.vibe;c.addEventListener("click",()=>addSetPreset(p.name,p.vibe));w.appendChild(c);});}
 
 /* ================= PHASE 1 — EPISODE BRAIN ================= */
-const STONERALIA_WORLD="STONERALIA WORLD BIBLE (permanent canon, v3 — synced): Cannabis culture is the atmosphere, not the personality — comedy comes from SOCIAL SYSTEMS (snack law, vibe bureaucracy, lighter circulation, couch zoning, password diplomacy, house rules) and people failing them. CHIEFF (Hoodie Chieff) is the FACE of the universe — silent deadpan anchor, NEVER speaks; communicates only through shade tilts, slow head turns, gestures, signs, phone notes, silent exits, frozen stares, perfectly timed pauses. SETTING: Stoneralia, the main world island (not strictly circular; STONERALIA may appear in Hollywood-Sign lettering on hills in maps). DISTRICTS + THEIR RULES: Couchwick (home base — nothing simple stays simple), Herblyn City (stoop culture, the block remembers; contains Kushville), Queens Grenadines Projects, Cloudside (creative/music/influencer), Munchie Mile (food is love until someone does math), Vibeport (a quick run is never quick), Rollington Heights (hustle, streetwear, reputation), Ashtray Park (somebody always saw what happened), Low Battery Village (the phone dies right before proof arrives), Sparklem, Greenish Village, Sativa Island, Bong Island (contains Danktons), Dabifornia (west-coast surf + lowrider; contains Compuffton and Crenshmoke), Floribud (contains Grabbasville), Stonedale. ISLANDS: Herbibbean (Vincy Mas energy — the family homeland), PuffaRico, Smokinican, Trinidab & Tokebago, Greenada, Zamaica, Zaiti. LANDMARKS: Central Toke, Mount Kushmore, Statue of Leaferty, Church of Holy Tokes (mega church), Madison Smoke Gardens, Dankees Stadium, Ganja Bridge, Stoney Island, Bonglehelm, Grabbasville Beach + Stadium, Hollyweed, Hash Vegas, Puffer Park and West Tokes Street Courts (always-busy street ball). INSTITUTIONS: Bureau of Vibes, Vibe Inspector, Munchie Court, Lighter Council, Playlist Parole Office. PROJECTS (raw stoop loyalty): Queens Grenadines, Smokehouse, Loud Park, Kushville, Herblyn Houses, Sparklem. TRANSIT — local: Vibe Line, Herblyn Express, B.I.E., SideQuest Shuttle; inter-island: Dab Line, PuffaRico Express, Smokinican Connector, Herbibbean Passage, Compuffton Run, Grabbasville Link; roads: Eastern Puffway, HighRise Highway. Driver controls the playlist; lost lighters are offered to the city. CORE CREW: Chieff (silent anchor), Crumbz McCloud (fake survival emergencies, Stay Crispy), Nia Receipt Queen Banks (receipts + accountability), Rico Lighter Liability Cruz (relocates objects emotionally), Tray Table Rollins (snack logistics as warfare), Keisha Doorbell Doom Monroe (every sound is a threat), Malik Playlist Papi Vega (controls emotional weather by music), Tasha Ashtray Auntie Bell (house law by side-eye). SIDEQUEST BOYZ: Miles Quick Run (panics, over-explains, completes the mission) and Darnell Captain Know It All (confidently wrong routes) — NEVER call them Kenny. RECURRING: Marty (uninvited, acts like he belongs), Barry (repairs make it worse), Miss Matcha (turns conflict into wellness content). MEDIA HOUSE ARTIST: Chiefico Brazski. LEGACY TIER (elders — weight, never jokes; rooted in family, church, land, St. Vincent & the Grenadines, Brooklyn): MAMA NONO (N.A.S.) — Herbibbean-born legendary teacher and community matriarch of the Eastern Puffway, church leader, youth protector; flaw: carries everyone’s burdens hiding her exhaustion; If you know better, move better; Community don’t raise itself. POPPA V — elder outlaw legend 65+, health-nut, romantic myth; grew up with NoNo on the island, followed her to the city, wrote love letters from the run; ALWAYS his own impossible transport (hoopty to tricked-out UFO), arrival never witnessed — he just pulls up smiling; flaw: disappears instead of standing still; NoNo is the one place he cannot vanish from; I was never gone. I was in motion. MOMMY ETTA — NoNo’s mother, small smiling incredibly strong island legend; church on a hill, land, animals, farm; power reads as faith, prayer, dreams, weather, bells, timing and love — NEVER a cartoon witch; goats react to lies first; The land remembers who loves it. THE UNCLES (NoNo’s brothers; Unc Reggie is RETIRED — route his old functions to whichever uncle fits): UNC HENNY (older) — smooth salesman, ladies’ man, image consultant; flaw: can sell anything except the truth when it makes him look bad; Presentation is half the blessing. UNC PHILLIE (younger) — blunt serial entrepreneur, deadpan truth-teller with eternal clipboard; flaw: says the most brutally honest thing at the worst time, then calmly eats; I’m not judging. I’m observing aggressively. UNC DOOBIE (baby brother) — fake scholar, charming playa, recycles NoNo’s wisdom as his own with unnecessary academic language and authority reading glasses; As I have always taught. LEGACY ARCS: The NoNo Legacy, Where’s Poppa V?, The Church on the Hill, The NoNo & V Letters. STORY TOOLS: pick the district first — it sets the chaos flavor; every inter-district trip adds one transit complication; lost objects return as callbacks; one main character flaw drives each story; endings leave something behind (a debt, rumor, letter, object, hook). CREATIVE ROUTING DISCIPLINE: each piece uses ONE primary creative influence lens (writing) or ONE director lens (music video), a second only when it clearly strengthens — translate qualities into original Stoneralia craft, never copy voices, jokes, shots or signatures. LANGUAGE — CHIEFINESE: the official language and slang identity of Stoneralia (powered internally by the Stoneralia Language Engine). Rules: slang is seasoning, not the meal — roughly one district phrase every 3–6 dialogue lines, more when emotional or among childhood friends, less in formal settings. Every character has three voices: Home, Public, and Pressure — Pressure Voice exposes their strongest district roots. Slang gets borrowed, misused and disputed across districts (a Cloudside influencer using Herblyn phrases performatively is comedy fuel). NEVER write accents as spelling gimmicks or mockery — use vocabulary, rhythm and sentence structure. Each district owns its greetings, comparisons, conflict language and approval/rejection terms; language reveals where someone is from without announcing it.";
+const STONERALIA_WORLD="STONERALIA WORLD BIBLE (permanent canon, v3 — synced): Cannabis culture is the atmosphere, not the personality — comedy comes from SOCIAL SYSTEMS (snack law, vibe bureaucracy, lighter circulation, couch zoning, password diplomacy, house rules) and people failing them. CHIEFF (Hoodie Chieff) is the FACE of the universe — silent deadpan anchor, NEVER speaks; communicates only through shade tilts, slow head turns, gestures, signs, phone notes, silent exits, frozen stares, perfectly timed pauses. SETTING: Stoneralia, the main world island (not strictly circular; STONERALIA may appear in Hollywood-Sign lettering on hills in maps). DISTRICTS + THEIR RULES: Couchwick (home base — nothing simple stays simple), Herblyn City (stoop culture, the block remembers; contains Kushville), Queens Grenadines Projects, Cloudside (creative/music/influencer), Munchie Mile (food is love until someone does math), Vibeport (a quick run is never quick), Rollington Heights (hustle, streetwear, reputation), Ashtray Park (somebody always saw what happened), Low Battery Village (the phone dies right before proof arrives), Sparklem, Greenish Village, Sativa Island, Bong Island (contains Danktons), Dabifornia (west-coast surf + lowrider; contains Compuffton and Crenshmoke), Floribud (contains Grabbasville), Stonedale. ISLANDS: Herbibbean (Vincy Mas energy — the family homeland), PuffaRico, Smokinican, Trinidab & Tokebago, Greenada, Zamaica, Zaiti. LANDMARKS: Central Toke, Mount Kushmore, Statue of Leaferty, Church of Holy Tokes (mega church), Madison Smoke Gardens, Dankees Stadium, Ganja Bridge, Stoney Island, Bonglehelm, Grabbasville Beach + Stadium, Hollyweed, Hash Vegas, Puffer Park and West Tokes Street Courts (always-busy street ball). INSTITUTIONS: Bureau of Vibes, Vibe Inspector, Munchie Court, Lighter Council, Playlist Parole Office. PROJECTS (raw stoop loyalty): Queens Grenadines, Smokehouse, Loud Park, Kushville, Herblyn Houses, Sparklem. TRANSIT — local: Vibe Line, Herblyn Express, B.I.E., SideQuest Shuttle; inter-island: Dab Line, PuffaRico Express, Smokinican Connector, Herbibbean Passage, Compuffton Run, Grabbasville Link; roads: Eastern Puffway, HighRise Highway. Driver controls the playlist; lost lighters are offered to the city. CORE CREW: Chieff (silent anchor), Crumbz McCloud (fake survival emergencies, Stay Crispy), Nia Receipt Queen Banks (receipts + accountability), Rico Lighter Liability Cruz (relocates objects emotionally), Tray Table Rollins (snack logistics as warfare), Keisha Doorbell Doom Monroe (every sound is a threat), Malik Playlist Papi Vega (controls emotional weather by music), Tasha Ashtray Auntie Bell (house law by side-eye). SIDEQUEST BOYZ: Miles Quick Run (panics, over-explains, completes the mission) and Darnell Captain Know It All (confidently wrong routes) — NEVER call them Kenny. RECURRING: Marty (uninvited, acts like he belongs), Barry (repairs make it worse), Miss Matcha (turns conflict into wellness content). MEDIA HOUSE ARTIST: Chiefico Brazski. LEGACY TIER (elders — weight, never jokes; rooted in family, church, land, St. Vincent & the Grenadines, Brooklyn): MAMA NONO (N.A.S.) — Herbibbean-born legendary teacher and community matriarch of the Eastern Puffway, church leader, youth protector; flaw: carries everyone’s burdens hiding her exhaustion; If you know better, move better; Community don’t raise itself. POPPA V — elder outlaw legend 65+, health-nut, romantic myth; grew up with NoNo on the island, followed her to the city, wrote love letters from the run; ALWAYS his own impossible transport (hoopty to tricked-out UFO), arrival never witnessed — he just pulls up smiling; flaw: disappears instead of standing still; NoNo is the one place he cannot vanish from; I was never gone. I was in motion. MOMMY ETTA — NoNo’s mother, small smiling incredibly strong island legend; church on a hill, land, animals, farm; power reads as faith, prayer, dreams, weather, bells, timing and love — NEVER a cartoon witch; goats react to lies first; The land remembers who loves it. THE UNCLES (NoNo’s brothers; Unc Reggie is RETIRED — route his old functions to whichever uncle fits): UNC HENNY (older) — smooth salesman, ladies’ man, image consultant; flaw: can sell anything except the truth when it makes him look bad; Presentation is half the blessing. UNC PHILLIE (younger) — blunt serial entrepreneur, deadpan truth-teller with eternal clipboard; flaw: says the most brutally honest thing at the worst time, then calmly eats; I’m not judging. I’m observing aggressively. UNC DOOBIE (baby brother) — fake scholar, charming playa, recycles NoNo’s wisdom as his own with unnecessary academic language and authority reading glasses; As I have always taught. LEGACY ARCS: The NoNo Legacy, Where’s Poppa V?, The Church on the Hill, The NoNo & V Letters. CHARACTER LAW: identity (silhouette, build, features, signature items) is permanent; art style belongs to the active show — same person, different pen, always recognizable. STORY TOOLS: pick the district first — it sets the chaos flavor; every inter-district trip adds one transit complication; lost objects return as callbacks; one main character flaw drives each story; endings leave something behind (a debt, rumor, letter, object, hook). CREATIVE ROUTING DISCIPLINE: each piece uses ONE primary creative influence lens (writing) or ONE director lens (music video), a second only when it clearly strengthens — translate qualities into original Stoneralia craft, never copy voices, jokes, shots or signatures. LANGUAGE — CHIEFINESE: the official language and slang identity of Stoneralia (powered internally by the Stoneralia Language Engine). Rules: slang is seasoning, not the meal — roughly one district phrase every 3–6 dialogue lines, more when emotional or among childhood friends, less in formal settings. Every character has three voices: Home, Public, and Pressure — Pressure Voice exposes their strongest district roots. Slang gets borrowed, misused and disputed across districts (a Cloudside influencer using Herblyn phrases performatively is comedy fuel). NEVER write accents as spelling gimmicks or mockery — use vocabulary, rhythm and sentence structure. Each district owns its greetings, comparisons, conflict language and approval/rejection terms; language reveals where someone is from without announcing it.";
 const STONERALIA_LAW="STONERALIA LAW (the universe's hidden constitution — it governs every story but is NEVER stated aloud in the work): In Stoneralia everything non-human is alive, has opinions, and is secretly organized — lighters, food, smoke, furniture, doors, the moon, plants, animals. Humans are the last to know. Comedy and twists come from the gap between the conscious world operating and the clueless human missing it. Chieff is the one human who SEES it and simply does not engage — the deadpan native, never the victim. The audience must EARN this realization by watching; never narrate the rule.";
 const VOICE_DNA="VOICE: write with the tension of Jordan Peele and the grounded soul of Ryan Coogler, and the comedic mind of Dick Gregory, Patrice O'Neal, George Carlin, Adam Ray and Deadpool — smart, culturally sharp, deadpan, a little uncomfortable, then it flips the table. Funny because it is true; unsettling because it is real. Relatable equals shareable, accurate equals trust, twist equals replay.";
 const CINE_STD="STANDARD: trillion-dollar taste on every choice — the right lens and angle for the emotion, motivated light, intentional blocking, real sound design, and where the cut lands. Premium and deliberate, never generic AI slop. Deliver blockbuster CHOICES within short-clip reality.";
@@ -4646,6 +4725,88 @@ async function runCaption(){
   r.cap={caption:d.caption+"",alt:(d.alt||"")+"",tags:(Array.isArray(d.hashtags)?d.hashtags:[]).join(" "),plat:plat};
   r.steps.caption=true;save();if(st)st.innerHTML="";renderRun();
  }catch(e){if(st)st.innerHTML=errLine(e);}}
+function REC_MAP(){return [
+ [["comedy","funny","sitcom","gag","laugh","sketch","humor"],["keenan","damon","rock","marlon"]],
+ [["silent","wordless","no dialogue","visual","mime"],["chaplin","atkinson","norm"]],
+ [["music","song","video","concert","rap","album"],["katt","emurphy","griffin"]],
+ [["family","legacy","roots","ancestry","church","grandmother","elder"],["coogler","bernie","pryor"]],
+ [["street","hood","block","project","hustle","satire","brand"],["mcgruder","katt","griffin"]],
+ [["creepy","horror","strange","unsettling","mystery","paranoid"],["peele","gervais","norm"]],
+ [["bureau","office","rules","system","permit","institution","government"],["carlin","cleese","rock"]],
+ [["action","fight","hero","villain","battle","superhero"],["cmurphy","marlon","macfarlane"]],
+ [["kid","cartoon","toon","animated","cloudtoons"],["keenan","damon","chaplin"]],
+ [["fashion","luxury","product","commercial","merch"],["emurphy","sykes","gervais"]]];}
+function showRecs(d){
+ var t=((d&&d.name||"")+" "+(d&&d.logline||"")).toLowerCase();
+ var out=[];REC_MAP().forEach(function(pair){
+  if(pair[0].some(function(k){return t.indexOf(k)>=0;}))pair[1].forEach(function(w){if(out.indexOf(w)<0)out.push(w);});});
+ if(!out.length)out=["mcgruder","pryor","keenan","coogler"];
+ return out.slice(0,6);}
+function showLogline(id){
+ var d=dsGet(id);if(!d)return;
+ var v=prompt("One line — what is “"+d.name+"” about?",d.logline||"");
+ if(v===null)return;d.logline=v.trim();save();renderShows();}
+function showsToggle(id,key){
+ var d=dsGet(id);if(!d||!key)return;
+ d.writers=d.writers||[];
+ var i=d.writers.indexOf(key);
+ if(i>=0)d.writers.splice(i,1);
+ else{if(d.writers.length>=2){toast("Two max — one leads, one sharpens. Unequip one first.",true);renderShows();return;}d.writers.push(key);}
+ save();renderShows();
+ toast((WRITERS[key]?WRITERS[key][0].split(" — ")[0]:key)+(i>=0?" left the room.":" is writing "+d.name+"."));}
+function showsNew(){var d=dsNewPrompt();if(d)renderShows();}
+function renderShows(){
+ var host=$("showsBody");if(!host)return;
+ var L=(typeof dsState==="function")?dsState():[];
+ if(!L.length){
+  host.innerHTML='<div class="card"><div class="hint" style="text-transform:none;letter-spacing:0">No series yet. A show holds its own logline, writers room, style dataset and trigger word.</div><button class="btn green" style="width:100%;margin-top:10px" onclick="showsNew()">＋ New series</button></div>';
+  return;}
+ var h=L.map(function(d){
+  var recs=showRecs(d),W=d.writers||[];
+  var opts='<option value="">＋ equip a writer…</option>'+Object.keys(WRITERS).map(function(k){
+   var mark=(W.indexOf(k)>=0?"★ ":"")+(recs.indexOf(k)>=0?"🔥 ":"");
+   return '<option value="'+k+'">'+mark+esc(WRITERS[k][0])+"</option>";}).join("");
+  var chips=W.length?W.map(function(k){
+   return '<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bud);color:var(--bud);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:800;margin:6px 6px 0 0">★ '+esc(WRITERS[k]?WRITERS[k][0].split(" — ")[0]:k)+' <button style="background:none;border:none;color:var(--bud);cursor:pointer;padding:0" onclick="showsToggle(\''+d.id+'\',\''+k+'\')">✕</button></span>';}).join(""):'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">No writers equipped — the room writes house-default.</div>';
+  var craft=W.length?'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">'+esc(W.map(function(k){return WRITERS[k]?WRITERS[k][1]:"";}).filter(Boolean).join(" + "))+"</div>":"";
+  var n=(typeof dsCount==="function")?dsCount(d):0;
+  return '<div class="card"><label class="fld">'+esc(d.name)+'</label>'
+   +'<div class="hint" style="margin-top:-2px;margin-bottom:8px;text-transform:none;letter-spacing:0">'+(d.logline?esc(d.logline):"— no logline yet —")+' <button class="btn ghost sm" style="padding:2px 8px;margin-left:4px" onclick="showLogline(\''+d.id+'\')">✎</button></div>'
+   +'<select onchange="showsToggle(\''+d.id+'\',this.value)">'+opts+"</select>"
+   +'<div>'+chips+"</div>"+craft
+   +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px">'+(d.trigger?esc(d.trigger)+" · ":"")+n+" image"+(n===1?"":"s")+(d.trained?" · trained ✓":"")+(d.sref?" · sref saved":"")+"</div></div>";
+ }).join("");
+ h+='<button class="btn ghost" style="width:100%" onclick="showsNew()">＋ New series</button>';
+ host.innerHTML=h;}
+function jointSVG(pct,lit){
+ var maxLen=138,len=Math.max(0,Math.round(maxLen*(1-pct)));
+ var x0=52,tip=x0+len;
+ var g='<svg viewBox="0 0 250 58" width="100%" height="54" preserveAspectRatio="xMidYMid meet">';
+ g+='<rect x="18" y="21" width="34" height="16" rx="4" fill="#8a6a3f"/><rect x="18" y="21" width="34" height="16" rx="4" fill="none" stroke="#5e4626"/>';
+ if(len>2)g+='<rect x="'+x0+'" y="20" width="'+len+'" height="18" rx="3" fill="#f2ead8"/>';
+ if(lit&&len>2){
+  g+='<circle cx="'+(tip+5)+'" cy="29" r="9" fill="#ff7a1a" opacity=".18"/>';
+  g+='<circle cx="'+(tip+4)+'" cy="29" r="5" fill="#ff7a1a"/><circle cx="'+(tip+3)+'" cy="29" r="2.4" fill="#ffd08a"/>';
+  g+='<path d="M'+(tip+8)+' 22 q 10 -10 2 -16 q 12 6 4 16" fill="none" stroke="#f2ead8" stroke-opacity=".22" stroke-width="2"/>';
+ }
+ if(!lit&&len>2)g+='<rect x="'+(tip-1)+'" y="20" width="4" height="18" rx="2" fill="#3a3a3a"/>';
+ if(len<=2)g+='<path d="M56 20 q 8 -10 0 -16" fill="none" stroke="#f2ead8" stroke-opacity=".18" stroke-width="2"/>';
+ return g+"</svg>";}
+function jointCard(r){
+ var keys=["idea","render","pack","caption","post"];
+ var done=keys.filter(function(k){return r.steps&&r.steps[k];}).length;
+ var pct=done/keys.length;
+ var label=done===0?"Not lit — tap a step to spark it":(pct>=1?"Roach — that’s a wrap 🪶":"Burning — "+done+"/"+keys.length+" down");
+ return '<div class="card" style="padding:10px 12px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:800;font-family:var(--slate)">The session</div><div class="hint" style="text-transform:none;letter-spacing:0">'+esc(label)+'</div></div>'+jointSVG(pct,done>0)+"</div>";}
+function roachAdd(r){
+ if(!Array.isArray(S.roaches))S.roaches=[];
+ var t=(r.lane==="comic")?((((S.comics&&S.comics[0])||{}).title)||((S.comicIdea3||{}).setup)||"Comic post"):"Clip post";
+ S.roaches.unshift({id:uid(),day:runToday(),lane:r.lane||"comic",title:String(t).slice(0,80),ts:Date.now()});}
+function ashtrayCard(){
+ var R=S.roaches||[];
+ var body=R.length?'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">'+R.slice(0,60).map(function(x){
+  return '<span title="'+esc(x.day+" — "+x.title)+'" style="display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:8px;padding:4px 8px;background:#141414"><span style="width:16px;height:8px;border-radius:2px;background:#8a6a3f;display:inline-block"></span><span style="font-size:10px;color:var(--bone-dim)">'+esc(x.day.slice(5))+"</span></span>";}).join("")+"</div>":'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">Empty — close a day and drop the first one in.</div>';
+ return '<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><label class="fld" style="margin:0">🗑 The ashtray</label><div style="font-weight:800">'+((S.roaches||[]).length)+'</div></div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:2px">Every finished lap leaves a roach. Lightning in a bottle, one clip at a time.</div>'+body+"</div>";}
 function renderRun(){
  var host=$("runBody");if(!host)return;var r=runState();
  var c=S.comics&&S.comics[0];var todayT=new Date(runToday()+"T00:00:00").getTime();
@@ -4653,6 +4814,7 @@ function renderRun(){
  if(drawn&&!r.steps.render){r.steps.render=true;save();}
  var i3=S.comicIdea3||{};
  var h=hudChips("run")+'<div class="card" style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-family:var(--slate)">'+r.day+'</div><div class="hint" style="text-transform:none;letter-spacing:0">One lap. Every day. That’s the whole trick.</div></div><div style="font-size:20px;font-weight:800">🔥 '+(r.streak||0)+'</div></div>';
+ h+=jointCard(r);
  h+='<div class="tonerow" style="margin:4px 0 12px"><button type="button" class="tonechip'+(r.lane==="comic"?" on":"")+'" data-rl="comic">Comic post</button><button type="button" class="tonechip'+(r.lane==="clip"?" on":"")+'" data-rl="clip">Video clip</button></div>';
  function card(key,title,desc,inner){var done=!!r.steps[key];
   return '<div class="card" style="'+(done?"opacity:.65;":"")+'border-left:3px solid '+(done?"var(--bud)":"var(--line)")+'"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><div style="font-weight:800;font-family:var(--slate)">'+title+'</div><button class="btn ghost sm" data-rt="'+key+'" style="flex:0 0 auto;padding:6px 12px">'+(done?"✓":"○")+'</button></div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:2px">'+desc+'</div>'+(inner||"")+'</div>';}
@@ -4674,6 +4836,7 @@ function renderRun(){
  h+=card("caption","Caption","Brand-voice caption tuned to the platform you pick.",capInner);
  h+=card("post","Post it","Put it up, then close the day and bank the streak.",
   '<div class="row" style="margin-top:8px"><button class="btn green" id="runDone" style="flex:1">✅ Done for today</button></div>');
+ h+=ashtrayCard();
  host.innerHTML=h;
  host.querySelectorAll("[data-rl]").forEach(function(b){b.addEventListener("click",function(){runState().lane=b.getAttribute("data-rl");save();renderRun();});});
  host.querySelectorAll("[data-rt]").forEach(function(b){b.addEventListener("click",function(){runMark(b.getAttribute("data-rt"));});});
@@ -4687,8 +4850,8 @@ function renderRun(){
  W("runTagCopy",function(){navigator.clipboard.writeText((runState().cap||{}).tags||"").then(function(){toast("Hashtags copied.");}).catch(function(){toast("Copy failed.",true);});});
  W("runDone",function(){var r2=runState();r2.steps.post=true;var t=runToday();
   if(r2.lastDone!==t){var y=new Date();y.setDate(y.getDate()-1);var ys=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");
-   r2.streak=(r2.lastDone===ys)?(r2.streak||0)+1:1;r2.lastDone=t;}
-  socState().log.unshift({id:uid(),platform:r2.platform||"ig",what:(r2.lane==="comic"?(((S.comics&&S.comics[0])||{}).title||"Comic post"):"Clip post"),ts:Date.now(),src:"run"});save();renderRun();toast("Day closed — streak 🔥 "+r2.streak+". Logged to Socials.");});
+   r2.streak=(r2.lastDone===ys)?(r2.streak||0)+1:1;r2.lastDone=t;try{roachAdd(r2);}catch(e){}}
+  socState().log.unshift({id:uid(),platform:r2.platform||"ig",what:(r2.lane==="comic"?(((S.comics&&S.comics[0])||{}).title||"Comic post"):"Clip post"),ts:Date.now(),src:"run"});save();renderRun();toast("Day closed — streak 🔥 "+r2.streak+" · roach #"+((S.roaches||[]).length)+" in the ashtray.");});
 }
 var _CRC;function crc32(u8){if(!_CRC){_CRC=[];for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=(c&1)?(3988292384^(c>>>1)):(c>>>1);_CRC[n]=c>>>0;}}
  var c=4294967295;for(var i=0;i<u8.length;i++)c=_CRC[(c^u8[i])&255]^(c>>>8);return (c^4294967295)>>>0;}
@@ -4738,7 +4901,7 @@ function dsPaint(){
  sel.innerHTML=L.length?L.map(function(d){return '<option value="'+d.id+'"'+(S.dsActive===d.id?" selected":"")+'>'+esc(d.name)+" ("+dsCount(d)+")</option>";}).join(""):'<option value="">\u2014 no show datasets yet \u2014</option>';
  var d=dsGet(S.dsActive)||L[0]||null;if(d&&S.dsActive!==d.id){S.dsActive=d.id;save();}
  var m=$("dsMeta");
- if(m)m.innerHTML=d?(dsChip(d)+' <button class="btn ghost sm" style="padding:3px 10px;margin-left:6px" onclick="dsClear()">\u2715 clear images</button>'):'<span class="hint" style="text-transform:none;letter-spacing:0">Tap \uff0b New to start a show dataset.</span>';
+ if(m)m.innerHTML=d?(dsChip(d)+' <button class="btn ghost sm" style="padding:3px 10px;margin-left:6px" onclick="dsClear()">\u2715 clear images</button> <button class="btn ghost sm" style="padding:3px 10px;margin-left:6px" onclick="dsWriters()">\u270d '+(((d.writers||[]).length)||0)+'</button>'):'<span class="hint" style="text-transform:none;letter-spacing:0">Tap \uff0b New to start a show dataset.</span>';
  var sr=$("dsSref");if(sr){sr.value=d?(d.sref||""):"";}
  var tg=$("trTrigger");if(tg&&d&&d.trigger&&!tg.value)tg.value=d.trigger;
  var tl=$("trList");if(tl&&d)tl.textContent=(d.items.length?d.items.length+" saved links":"")+((TRB[d.id]&&TRB[d.id].length)?((d.items.length?" + ":"")+TRB[d.id].length+" local (this session only)"):"");}

@@ -1063,7 +1063,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:10px">Restore from backup</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v9.82 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v9.83 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -2507,7 +2507,7 @@ async function chnPerson(){
  var d=($("chnPDist")||{}).value||"Couchwick";var vibe=(($("chnPVibe")||{}).value||"").trim();var fam=(($("chnPFam")||{}).value||"").trim();
  var st=$("chnPStatus");if(st)st.innerHTML=spinner("Pulling somebody off the "+d+" block…");
  var mine=(S.slang||[]).filter(function(x){return x.district===d;}).slice(0,12).map(function(x){return x.term+" = "+x.meaning;}).join("; ");
- var sys=vibeCtx()+' You are the STONERALIA RESIDENT GENERATOR, powered by Chiefinese. Create ONE original resident born, raised, working or rooted in the requested district. RULES: default fully to the chosen district — its dialect, values, geography, humor, routines and conflicts; do not blend districts for variety. If FAMILY ROOTS are given, layer that heritage naturally (family sayings, food, code-switching) over the native district. Match speech to generation — elders carry legacy phrases, teens carry new slang. Slang is seasoning, three voices always. STEREOTYPE PROTECTION: grounded and specific, never a caricature — flaws are personal, not cultural. This resident is a generator draft, not canon. '+(mine?("USER-DEFINED "+d+" SLANG (use naturally where fitting): "+mine+". "):"")+'Return JSON ONLY: {"name":"first + street name","age":0,"district":"","role":"what they do","look":"one-line visual for image prompts","quirk":"one specific recurring behavior","voice":{"home":"one sample line, Home Voice","public":"one sample line, Public Voice","pressure":"one sample line, Pressure Voice \u2014 district roots showing"},"slang_used":["terms used"]} \u2014 no mockery spellings, G-rated, culturally respectful.';
+ var sys=vibeCtx("lite")+' You are the STONERALIA RESIDENT GENERATOR, powered by Chiefinese. Create ONE original resident born, raised, working or rooted in the requested district. RULES: default fully to the chosen district — its dialect, values, geography, humor, routines and conflicts; do not blend districts for variety. If FAMILY ROOTS are given, layer that heritage naturally (family sayings, food, code-switching) over the native district. Match speech to generation — elders carry legacy phrases, teens carry new slang. Slang is seasoning, three voices always. STEREOTYPE PROTECTION: grounded and specific, never a caricature — flaws are personal, not cultural. This resident is a generator draft, not canon. '+(mine?("USER-DEFINED "+d+" SLANG (use naturally where fitting): "+mine+". "):"")+'Return JSON ONLY: {"name":"first + street name","age":0,"district":"","role":"what they do","look":"one-line visual for image prompts","quirk":"one specific recurring behavior","voice":{"home":"one sample line, Home Voice","public":"one sample line, Public Voice","pressure":"one sample line, Pressure Voice \u2014 district roots showing"},"slang_used":["terms used"]} \u2014 no mockery spellings, G-rated, culturally respectful.';
  try{
   var p=parseJSON(await _llmRun(sys,"DISTRICT: "+d+(fam?(" · FAMILY ROOTS: "+fam):"")+(vibe?(" · ROLE/VIBE: "+vibe):""),"ideas"));
   if(!p||!p.name)throw new Error("Generator came back empty — run it again.");
@@ -3584,16 +3584,25 @@ function rhymeShow(i){
   $("rhyUse").onclick=()=>{const sel=$("lyrRhyme");if(sel){sel.value=String(+i);toast("Set as Lyric Lab rhyme scheme.");}const ll=$("lyrConcept");if(ll)ll.scrollIntoView({behavior:"smooth",block:"center"});};
 }
 var LYR_LAST="";
-function vibeCtx(){
+function vibeCore(){
+  var d=(typeof CHN_DISTS!=="undefined")?CHN_DISTS.join(", "):"";
+  return "CANON CORE \u2014 Stoneralia: comedy comes from social systems (snack law, couch zoning, vibe bureaucracy, house rules) and people failing them \u2014 never from being high. Districts"+(d?" ("+d+")":"")+" each have their own rule; pick the district first; inter-district trips add one transit complication. Hoodie Chieff (two f\u2019s, always) NEVER speaks \u2014 signs, shade tilts, stillness. Slang is seasoning (~1 phrase per 3\u20136 lines). Family legacy tier (Mama NoNo, Poppa V, Mommy Etta, the uncles) carries weight, never caricature. Identity is permanent; art style belongs to the show \u2014 same person, different pen. Flaws personal, never cultural. G-rated, platform-safe, all original.";}
+function vibeCtx(mode,text){
   var p=(typeof projActive==="function")?projActive():null;var parts=[];
+  var lite=(mode==="lite");
+  var tl=(typeof text==="string"&&text.trim())?text.toLowerCase():"";
   parts.push("BRAND VIBE: Chiefin' Season / Stoneralia \u2014 deadpan, premium, cannabis-culture streetwear. Dry wit, understated confidence, cannabis-adjacent and platform-safe (no explicit drug talk). Matte black + bone foundation, sage/bud-green signature, rare gold/red. 'You smell the vibes.'");
   if(p)parts.push("ACTIVE DROP: "+(p.name||"")+(p.concept?(" \u2014 "+p.concept):""));
   if(S.cast&&S.cast.length)parts.push("CHARACTER LAW — identity vs. style: a character's IDENTITY (silhouette, build, facial structure, hair shape, signature items, energy) is permanent; their ART STYLE always matches the show or style they currently appear in — same person, different pen. When a character cameos in another show, redraw them faithfully in THAT show's style, keeping them instantly recognizable. Never freeze a character in their home show's rendering.");
-  if(S.cast&&S.cast.length)parts.push("CAST: "+S.cast.map(function(c){if(!c.name)return "";var t=c.name;if(c.nick)t+=" “"+c.nick+"”";if(c.from)t+=" [from "+c.from+" — speaks, styles and carries slang per that district's Chiefinese]";if(c.show)t+=" [series: "+c.show+"]";if(c.identity)t+=" [DNA: "+String(c.identity).slice(0,180)+"]";if(c.wardrobeNote)t+=" [CS outfit, locked: "+String(c.wardrobeNote).slice(0,120)+"]";return t;}).filter(Boolean).join(" | "));
+  if(lite&&S.cast&&S.cast.length)parts.push("CAST (names): "+S.cast.map(function(c){return c.name+(c.nick?" \u201c"+c.nick+"\u201d":"");}).filter(Boolean).join(", "));
+  if(!lite&&S.cast&&S.cast.length)parts.push("CAST: "+S.cast.map(function(c){if(!c.name)return "";
+   if(tl){var _nm=c.name.toLowerCase();var _hit=tl.indexOf(_nm)>=0||(c.nick&&tl.indexOf(String(c.nick).toLowerCase())>=0)||_nm.split(/\s+/).some(function(w2){return w2.length>=3&&tl.indexOf(w2)>=0;});
+    if(!_hit)return c.name+(c.nick?" \u201c"+c.nick+"\u201d":"")+(c.from?" ("+c.from+")":"");}
+   var t=c.name;if(c.nick)t+=" “"+c.nick+"”";if(c.from)t+=" [from "+c.from+" — speaks, styles and carries slang per that district's Chiefinese]";if(c.show)t+=" [series: "+c.show+"]";if(c.identity)t+=" [DNA: "+String(c.identity).slice(0,180)+"]";if(c.wardrobeNote)t+=" [CS outfit, locked: "+String(c.wardrobeNote).slice(0,120)+"]";return t;}).filter(Boolean).join(" | "));
   if(S.sets&&S.sets.length)parts.push("SETS: "+S.sets.map(function(x){return x.name;}).filter(Boolean).join(", "));
   var _wl=(typeof wroomLaw==="function")?wroomLaw():"";if(_wl)parts.push(_wl);
   var _bl=(typeof cfLaw==="function")?cfLaw():"";if(_bl)parts.push(_bl);
-  parts.push(STONERALIA_WORLD);
+  parts.push(lite?vibeCore():STONERALIA_WORLD);
   if(S.canon&&S.canon.notes)parts.push("CANON NOTES: "+S.canon.notes);
   return parts.join("\n");
 }
@@ -3602,7 +3611,7 @@ async function vibeOptimize(text,label,onDone){
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   if(!text||!text.trim()){toast("Nothing to optimize yet.",true);return;}
   var sys="You are the show-runner and editor for Chiefin' Season / Stoneralia. Optimize the given "+(label||"text")+" so it is the strongest possible version that FITS the established project vibe without straying from it. Tighten weak lines, sharpen hooks and openers, improve flow and impact, keep it on-brand, deadpan, cannabis-adjacent and platform-safe. Do NOT change the core idea, the format, or any [section tags] / structure \u2014 only make it better and more on-vibe. Return JSON ONLY: {\"optimized\":\"\",\"changes\":\"one short line on what you improved\"}.";
-  var usr=vibeCtx()+"\n\n"+(label?(label.toUpperCase()+":\n"):"")+text+"\n\nOptimize it now. Keep the same structure and similar length.";
+  var usr=vibeCtx("lite")+"\n\n"+(label?(label.toUpperCase()+":\n"):"")+text+"\n\nOptimize it now. Keep the same structure and similar length.";
   try{var r=parseJSON(await llmRun(sys,usr));onDone(r.optimized||text,r.changes||"");}
   catch(e){toast("Optimize failed: "+e.message,true);onDone(null,"");}
 }
@@ -5559,7 +5568,7 @@ async function twSuggest(){
  var setup=(($("cbSetup")||{}).value||"").trim(),prob=(($("cbProblem")||{}).value||"").trim();
  if(!setup&&!prob){toast("Give me the setup first — twists grow out of it.",true);return;}
  var b=$("twOut");if(b)b.innerHTML=spinner("Finding the funny turn…");
- var sys=vibeCtx()+' You are the TWIST ROOM. Given a comic setup, pitch 5 DIFFERENT hilarious twists — each a single sentence under 140 characters, each a genuinely different comedic mechanism (reversal, self-own, escalation, deadpan authority, absurd-small-stakes, canon-character cameo). Shareable, visual, G-rated, no rushing the joke. Return JSON ONLY: {"twists":["","","","",""]}';
+ var sys=vibeCtx("lite")+' You are the TWIST ROOM. Given a comic setup, pitch 5 DIFFERENT hilarious twists — each a single sentence under 140 characters, each a genuinely different comedic mechanism (reversal, self-own, escalation, deadpan authority, absurd-small-stakes, canon-character cameo). Shareable, visual, G-rated, no rushing the joke. Return JSON ONLY: {"twists":["","","","",""]}';
  try{
   var d=parseJSON(await _llmRun(sys,"SETUP: "+setup+(prob?" | PROBLEM: "+prob:""),"ideas"));
   var L=(d&&d.twists||[]).filter(function(x){return x&&typeof x==="string";}).slice(0,5);
@@ -5788,7 +5797,7 @@ async function brAngles(){
  if(!o.subject){toast("Say what you’re selling first.",true);return;}
  var B=BRAND_POS[o.brand];var A=brAvatarOf(o.avatar);
  var el=$("brStatus");if(el)el.innerHTML=spinner("Finding the angles…");
- var sys=vibeCtx()+" You are a direct-response strategist for "+B.name+"."+BRAND_RAILS+' Return JSON ONLY: {"angles":[{"n":"angle name","d":"the single mass desire it hits","s":"situation \u2192 realization \u2192 discovery \u2192 resolution, one tight paragraph","p":"the proof to show (real, producible \u2014 product shots, design detail, world material)","pl":"best platform","f":"best copy format"}]} \u2014 exactly 5 angles, each hitting a MEANINGFULLY different desire (five different people wanting different results). Funnel stage: '+o.stage+" \u2014 cold audiences get curiosity and identity, never pressure. Starter angle territory (inspiration, not limits): "+B.ang+".";
+ var sys=vibeCtx("lite")+" You are a direct-response strategist for "+B.name+"."+BRAND_RAILS+' Return JSON ONLY: {"angles":[{"n":"angle name","d":"the single mass desire it hits","s":"situation \u2192 realization \u2192 discovery \u2192 resolution, one tight paragraph","p":"the proof to show (real, producible \u2014 product shots, design detail, world material)","pl":"best platform","f":"best copy format"}]} \u2014 exactly 5 angles, each hitting a MEANINGFULLY different desire (five different people wanting different results). Funnel stage: '+o.stage+" \u2014 cold audiences get curiosity and identity, never pressure. Starter angle territory (inspiration, not limits): "+B.ang+".";
  var usr="BRAND POSITIONING: "+B.pos+" CONTRAST: "+B.con+"\nAUDIENCE: "+A.n+" \u2014 desire: "+A.d+(A.c?" \u2014 concerns: "+A.c:"")+"\nSELLING: "+o.subject;
  try{
   var d=parseJSON(await _llmRun(sys,usr,"ideas"));
@@ -5800,7 +5809,7 @@ async function brHooks(i){
  var o=brandState().out;if(!o||!o.angles||!o.angles[i])return;o.pick=i;save();
  var a=o.angles[i];var B=BRAND_POS[o.brand||"cs"];
  var el=$("brStatus");if(el)el.innerHTML=spinner("Writing 20 hooks…");
- var sys=vibeCtx()+BRAND_RAILS+' Return JSON ONLY: {"hooks":[{"t":"type","h":"the hook line"}]} \u2014 exactly 20 hooks for the campaign angle, max 14 words each, spread across these types: identity, curiosity, confession, contrarian, problem recognition, product realization, founder discovery, cultural observation, comparison, transformation, story opening, question, unexpected detail, insider language, community invitation, pattern interrupt, benefit, objection reversal. Deadpan-premium, zero hype.';
+ var sys=vibeCtx("lite")+BRAND_RAILS+' Return JSON ONLY: {"hooks":[{"t":"type","h":"the hook line"}]} \u2014 exactly 20 hooks for the campaign angle, max 14 words each, spread across these types: identity, curiosity, confession, contrarian, problem recognition, product realization, founder discovery, cultural observation, comparison, transformation, story opening, question, unexpected detail, insider language, community invitation, pattern interrupt, benefit, objection reversal. Deadpan-premium, zero hype.';
  var usr="BRAND: "+B.name+" \u2014 "+B.pos+"\nANGLE: "+a.n+" \u2014 "+(a.s||"")+"\nSELLING: "+(o.subject||"");
  try{
   var d=parseJSON(await _llmRun(sys,usr,"ideas"));
@@ -5811,7 +5820,7 @@ async function brCopyPack(i){
  var o=brandState().out;if(!o||!o.angles||!o.angles[i])return;o.pick=i;save();
  var a=o.angles[i];var B=BRAND_POS[o.brand||"cs"];
  var el=$("brStatus");if(el)el.innerHTML=spinner("Writing the copy pack…");
- var sys=vibeCtx()+BRAND_RAILS+' Return JSON ONLY: {"post":"short-form social copy, 40-80 words, hook first line","story":"long-form product/world story, 250-350 words: the hook \u2014 the problem nobody says out loud \u2014 why the usual stuff fails (mechanism) \u2014 what we built instead (mechanism) \u2014 the story behind it \u2014 quiet call to action"}. Plain text values, no markdown.';
+ var sys=vibeCtx("lite")+BRAND_RAILS+' Return JSON ONLY: {"post":"short-form social copy, 40-80 words, hook first line","story":"long-form product/world story, 250-350 words: the hook \u2014 the problem nobody says out loud \u2014 why the usual stuff fails (mechanism) \u2014 what we built instead (mechanism) \u2014 the story behind it \u2014 quiet call to action"}. Plain text values, no markdown.';
  var usr="BRAND: "+B.name+" \u2014 "+B.pos+" CONTRAST: "+B.con+"\nANGLE: "+a.n+" \u2014 "+(a.s||"")+"\nSELLING: "+(o.subject||"")+"\nFUNNEL: "+(o.stage||"awareness");
  try{
   var d=parseJSON(await _llmRun(sys,usr,"ideas"));
@@ -5833,7 +5842,7 @@ async function brMerch(){
  o.brand=o.brand||"cs";o.subject=(($("brSubject")||{}).value||"").trim();
  var B=BRAND_POS[o.brand]||BRAND_POS.cs;var A=brAvatarOf(o.avatar||($("brAvatar")||{}).value);
  var el=$("brStatus");if(el)el.innerHTML=spinner("Designing the line\u2026");
- var sys=vibeCtx()+BRAND_RAILS+" "+MERCH_INTEL+' You are a merchandising director for '+B.name+'. Return JSON ONLY: {"concepts":[{"n":"product name","w":"what it is, one line","g":"which market signals it hits","fb":"fabric + weight","ft":"fit and silhouette","dc":"decoration method + placement","pr":"price","av":"the oversaturation trap it deliberately avoids"}]} \u2014 exactly 5 original concepts, own wordmarks and motifs only, every one grounded in the signals and clear of the oversaturation bank.';
+ var sys=vibeCtx("lite")+BRAND_RAILS+" "+MERCH_INTEL+' You are a merchandising director for '+B.name+'. Return JSON ONLY: {"concepts":[{"n":"product name","w":"what it is, one line","g":"which market signals it hits","fb":"fabric + weight","ft":"fit and silhouette","dc":"decoration method + placement","pr":"price","av":"the oversaturation trap it deliberately avoids"}]} \u2014 exactly 5 original concepts, own wordmarks and motifs only, every one grounded in the signals and clear of the oversaturation bank.';
  var usr="BRAND: "+B.pos+" CONTRAST: "+B.con+"\nBUYER: "+A.n+" \u2014 "+A.d+(o.subject?"\nBIAS TOWARD: "+o.subject:"");
  try{
   var d=parseJSON(await _llmRun(sys,usr,"ideas"));
@@ -5845,7 +5854,7 @@ async function brShopCopy(i){
  var o=brandState().out;if(!o||!o.merch||!o.merch[i])return;o.mpick=i;save();
  var c=o.merch[i];var B=BRAND_POS[o.brand||"cs"]||BRAND_POS.cs;
  var el=$("brStatus");if(el)el.innerHTML=spinner("Writing the listing\u2026");
- var sys=vibeCtx()+BRAND_RAILS+' You write Shopify product copy in the Chiefin\u2019 Season voice \u2014 deadpan, premium, zero hype. Return JSON ONLY: {"title":"product title, 70 characters max, Name \u2014 descriptor format","desc":"description: one hook line, a short story paragraph, then a plain details block (fabric, fit, care), then a quiet one-line CTA","seoT":"SEO title, 60 characters max","seoM":"meta description, 155 characters max","tags":"12-15 comma-separated tags"}. Plain text values, no markdown.';
+ var sys=vibeCtx("lite")+BRAND_RAILS+' You write Shopify product copy in the Chiefin\u2019 Season voice \u2014 deadpan, premium, zero hype. Return JSON ONLY: {"title":"product title, 70 characters max, Name \u2014 descriptor format","desc":"description: one hook line, a short story paragraph, then a plain details block (fabric, fit, care), then a quiet one-line CTA","seoT":"SEO title, 60 characters max","seoM":"meta description, 155 characters max","tags":"12-15 comma-separated tags"}. Plain text values, no markdown.';
  var usr="PRODUCT: "+c.n+" \u2014 "+(c.w||"")+"\nFABRIC: "+(c.fb||"")+"\nFIT: "+(c.ft||"")+"\nDECORATION: "+(c.dc||"")+"\nPRICE: "+(c.pr||"")+"\nBRAND: "+B.pos;
  try{
   var d=parseJSON(await _llmRun(sys,usr,"ideas"));
@@ -5865,7 +5874,7 @@ async function mvConcepts(){
  var title=(($("sunoTitle")||{}).value||"").trim();var scene=(($("sunoScene")||{}).value||"").trim();var artist=(($("sunoArtist")||{}).value||"").trim();
  if(!title&&!scene){toast("Give the song a title or scene up top first.",true);return;}
  var st=$("mvStatus");if(st)st.innerHTML=spinner("Pitching concepts\u2026");
- var sys=vibeCtx()+' You pitch music-video concepts for Stoneralia Media House. Return JSON ONLY: {"concepts":[{"t":"title","l":"one-line logline","h":"the visual hook","loc":"location (prefer the SETS listed)","w":"wardrobe note using locked Chiefin\u2019 Season fits"}]} with exactly 5 concepts. Each must be shootable with AI video, character-driven, deadpan-premium \u2014 no viral-guarantee language.';
+ var sys=vibeCtx("lite")+' You pitch music-video concepts for Stoneralia Media House. Return JSON ONLY: {"concepts":[{"t":"title","l":"one-line logline","h":"the visual hook","loc":"location (prefer the SETS listed)","w":"wardrobe note using locked Chiefin\u2019 Season fits"}]} with exactly 5 concepts. Each must be shootable with AI video, character-driven, deadpan-premium \u2014 no viral-guarantee language.';
  var usr="SONG: "+(title||"untitled")+(artist?" \u2014 "+artist:"")+(scene?"\nSCENE / VIBE: "+scene:"");
  try{
   var d=parseJSON(await _llmRun(sys,usr,"ideas"));
@@ -5882,7 +5891,7 @@ async function mvTreat(i){
  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
  var m=S.mv;if(!m||!m.concepts[i])return;m.pick=i;save();
  var c=m.concepts[i];var st=$("mvStatus");if(st)st.innerHTML=spinner("Writing the treatment\u2026");
- var sys=vibeCtx()+" You write a tight music-video treatment for AI production. Structure: TREATMENT \u2014 3 short paragraphs (world, arc, ending image). Then BEATS \u2014 8 to 12 numbered one-line visual beats with rough timings across the video, each shootable as one AI clip, wardrobe locked, no music direction (the record already exists), diegetic-visual language only. Plain text, no markdown.";
+ var sys=vibeCtx("lite")+" You write a tight music-video treatment for AI production. Structure: TREATMENT \u2014 3 short paragraphs (world, arc, ending image). Then BEATS \u2014 8 to 12 numbered one-line visual beats with rough timings across the video, each shootable as one AI clip, wardrobe locked, no music direction (the record already exists), diegetic-visual language only. Plain text, no markdown.";
  var usr="CONCEPT: "+c.t+" \u2014 "+c.l+"\nHOOK: "+(c.h||"")+"\nLOCATION: "+(c.loc||"")+"\nWARDROBE: "+(c.w||"")+"\nSONG: "+((($("sunoTitle")||{}).value)||"");
  try{
   var txt=(await _llmRun(sys,usr,"ideas")).trim();
@@ -5898,7 +5907,7 @@ async function rpGen(){
  var what=(($("rpWhat")||{}).value||"").trim();var kind=(($("rpKind")||{}).value)||"music video";
  if(!what){toast("Say what\u2019s dropping first.",true);return;}
  var st=$("rpStatus");if(st)st.innerHTML=spinner("Packaging the release\u2026");
- var sys=vibeCtx()+' You package a YouTube release for Stoneralia Media House. Return JSON ONLY: {"titles":["5 title candidates, each under 70 characters"],"description":"2 short paragraphs then a link/credits block placeholder","tags":"comma-separated tags totalling UNDER 480 characters","hashtags":"5-8 hashtags in one line","pinned":"one pinned comment that sparks replies","captions":{"ig":"IG caption in brand voice","tiktok":"toned streetwear-led TikTok caption","x":"dry quotable X caption"},"teasers":["3 short teaser hooks for shorts/stories"],"keywords":"one line of comma-separated search keywords","endcard":"one image prompt for a branded end card \u2014 matte black, bone type, sage accent","thumbs":["3 thumbnail image prompts \u2014 bold, readable at small size, brand palette, one clear subject each"]}. Honest language only: high-CTR candidate, search-aware \u2014 never guaranteed-viral claims.';
+ var sys=vibeCtx("lite")+' You package a YouTube release for Stoneralia Media House. Return JSON ONLY: {"titles":["5 title candidates, each under 70 characters"],"description":"2 short paragraphs then a link/credits block placeholder","tags":"comma-separated tags totalling UNDER 480 characters","hashtags":"5-8 hashtags in one line","pinned":"one pinned comment that sparks replies","captions":{"ig":"IG caption in brand voice","tiktok":"toned streetwear-led TikTok caption","x":"dry quotable X caption"},"teasers":["3 short teaser hooks for shorts/stories"],"keywords":"one line of comma-separated search keywords","endcard":"one image prompt for a branded end card \u2014 matte black, bone type, sage accent","thumbs":["3 thumbnail image prompts \u2014 bold, readable at small size, brand palette, one clear subject each"]}. Honest language only: high-CTR candidate, search-aware \u2014 never guaranteed-viral claims.';
  var usr="RELEASE TYPE: "+kind+"\nDROPPING: "+what;
  try{
   var d=parseJSON(await _llmRun(sys,usr,"ideas"));
@@ -6055,7 +6064,7 @@ async function genMotion(){
   S.noMusic=(mode!=="music");save();
   var st=$("mdStatus");if(st)st.innerHTML=spinner("Directing the motion…");
   var audio=(mode==="silent")?"AUDIO: none — silent visual, no dialogue, no sound design.":((mode==="music")?"AUDIO: diegetic sound (ambience, foley, dialogue) plus a fitting score is allowed.":"AUDIO: diegetic sound ONLY — natural ambience, environmental foley, character dialogue, movement and object sounds. NO music, NO score, NO soundtrack of any kind (the artist adds his own music in post).");
-  var sys=vibeCtx()+" You are a cinematic motion director building ONE production-ready "+((CINE_MODELS[(S.cine||{}).model]||CINE_MODELS.seedance)[0])+" video prompt from a storyboard script." + cineLaw() + " Structure: short production header (visual style, total duration "+dur+"s, character + wardrobe continuity mandate), then timed shots — format [0.0s–1.5s] SHOT n — LABEL, then shot size + camera angle + camera movement, precise character blocking and facial performance, clothing and hair motion, object interaction, brief dialogue lines only where they fit the shot length, per-shot sound effects, and the cut or transition into the next shot. Shot timings must sum exactly to "+dur+" seconds. Keep every character’s face, proportions and locked Chiefin’ Season outfit IDENTICAL in every shot. End the prompt with this exact audio line: "+audio+" Return ONLY the finished prompt text, no commentary."+mdRecipeGuidance();
+  var sys=vibeCtx("full",(($("boardScript")||{}).value||""))+" You are a cinematic motion director building ONE production-ready "+((CINE_MODELS[(S.cine||{}).model]||CINE_MODELS.seedance)[0])+" video prompt from a storyboard script." + cineLaw() + " Structure: short production header (visual style, total duration "+dur+"s, character + wardrobe continuity mandate), then timed shots — format [0.0s–1.5s] SHOT n — LABEL, then shot size + camera angle + camera movement, precise character blocking and facial performance, clothing and hair motion, object interaction, brief dialogue lines only where they fit the shot length, per-shot sound effects, and the cut or transition into the next shot. Shot timings must sum exactly to "+dur+" seconds. Keep every character’s face, proportions and locked Chiefin’ Season outfit IDENTICAL in every shot. End the prompt with this exact audio line: "+audio+" Return ONLY the finished prompt text, no commentary."+mdRecipeGuidance();
   var usr="STORYBOARD SCRIPT / BEATS:\n"+script+((($("boardTitle")||{}).value)?"\nTITLE: "+$("boardTitle").value:"")+((($("boardStyle")||{}).value)?"\nBOARD STYLE: "+$("boardStyle").value:"");
   try{
     var txt=(await _llmRun(sys,usr,"ideas")).trim();

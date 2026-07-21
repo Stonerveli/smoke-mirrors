@@ -1063,7 +1063,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:10px">Restore from backup</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v9.81 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v9.82 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -3592,6 +3592,7 @@ function vibeCtx(){
   if(S.cast&&S.cast.length)parts.push("CAST: "+S.cast.map(function(c){if(!c.name)return "";var t=c.name;if(c.nick)t+=" “"+c.nick+"”";if(c.from)t+=" [from "+c.from+" — speaks, styles and carries slang per that district's Chiefinese]";if(c.show)t+=" [series: "+c.show+"]";if(c.identity)t+=" [DNA: "+String(c.identity).slice(0,180)+"]";if(c.wardrobeNote)t+=" [CS outfit, locked: "+String(c.wardrobeNote).slice(0,120)+"]";return t;}).filter(Boolean).join(" | "));
   if(S.sets&&S.sets.length)parts.push("SETS: "+S.sets.map(function(x){return x.name;}).filter(Boolean).join(", "));
   var _wl=(typeof wroomLaw==="function")?wroomLaw():"";if(_wl)parts.push(_wl);
+  var _bl=(typeof cfLaw==="function")?cfLaw():"";if(_bl)parts.push(_bl);
   parts.push(STONERALIA_WORLD);
   if(S.canon&&S.canon.notes)parts.push("CANON NOTES: "+S.canon.notes);
   return parts.join("\n");
@@ -4828,6 +4829,111 @@ function showsToggle(id,key){
  save();renderShows();
  toast((WRITERS[key]?WRITERS[key][0].split(" — ")[0]:key)+(i>=0?" left the room.":" is writing "+d.name+"."));}
 function showsNew(){var d=dsNewPrompt();if(d)renderShows();}
+function cfLaw(){
+ var d=(typeof dsGet==="function")?dsGet(S.dsActive):null;
+ if(!d||!d.bible)return "";
+ var b=d.bible;
+ var g=[];
+ if(b.logline)g.push("logline: "+b.logline);
+ if(b.tone)g.push("tone: "+b.tone);
+ if(b.episode_engine)g.push("episode engine: "+b.episode_engine);
+ if(Array.isArray(b.gags)&&b.gags.length)g.push("running gags: "+b.gags.slice(0,4).join("; "));
+ if(!g.length)return "";
+ return "SHOW BIBLE \u2014 "+(d.name||"active show")+": "+g.join(" \u00b7 ")+".";}
+async function cfForge(id){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var d=dsGet(id);if(!d){toast("Pick a show first.",true);return;}
+ var st=$("cfStatus_"+id);if(st)st.innerHTML=spinner("Forging the bible for "+esc(d.name)+"\u2026");
+ var known=(S.cast||[]).filter(function(c){return c.show===d.name;}).map(function(c){return c.name+(c.nick?" \u201c"+c.nick+"\u201d":"")+(c.from?" ("+c.from+")":"");}).join("; ");
+ var terms=(S.slang||[]).slice(0,14).map(function(t){return t.term;}).join(", ");
+ var sys=vibeCtx()+' You are the STONERALIA CANON FORGE \u2014 the bible room. Build ONE show bible. LAW: cannabis is atmosphere never personality; comedy comes from social systems and people failing them; Hoodie Chieff NEVER speaks (signs, shade tilts, stillness); district first \u2014 every district has its own rule; slang is seasoning; identity is permanent but art style belongs to the show; flaws are personal never cultural; elders and family carry weight, never caricature; G-rated, commercially safe, all original, no real people. Identity locks must be STRUCTURAL (build, hair shape, signature items, posture) so the character survives being redrawn in another show\u2019s style. Voice/movement/stillness descriptors must be short enough to paste straight into an image or video prompt. Return JSON ONLY: {"logline":"one line","thesis":"the thing under the jokes, 2 sentences","tone":"one line","districts":[{"name":"","rule":"the rule that shapes conflict there"}],"institutions":["systems this show antagonizes"],"cast":[{"name":"","nick":"","from":"district","identity":"structural identity lock","function":"what they are in the machine","flaw":"one flaw that turns small problems into episodes","stake":"what they want across the series and what it costs","voices":{"home":"","public":"","pressure":""},"movement":"","stillness":"","wardrobe":"default fit and what never comes off","engine":"their repeatable story shape","gags":["visual repeatable bits"]}],"ensemble":[{"pair":"A + B","generates":"what that pairing reliably produces"}],"slang":[{"term":"","meaning":"","district":"","example":"one line of dialogue using it"}],"episode_engine":"the repeatable spine of a typical episode","springboards":["6 episode ideas, one line each"],"gags":["show-wide running gags"],"production":{"render":"one of: stoneralia_animated, stoneralia_cinematic, painterly, fashion, comic, commercial, ugc","pacing":"one of: balanced, contemplative, fast_action, epic, suspense, comedy, music, product","writers":["two roster keys max from the equipped writers room if set"],"style_note":"the art-style line for this show"}} \u2014 4 to 6 cast members maximum, 5 to 8 slang terms.';
+ var ask="SHOW: "+d.name+(d.logline?" | LOGLINE: "+d.logline:"")+(known?" | EXISTING CAST (reuse, do not duplicate): "+known:"")+(terms?" | EXISTING CHIEFINESE: "+terms:"")+((d.writers||[]).length?" | WRITERS ROOM: "+d.writers.join(", "):"");
+ try{
+  var b=parseJSON(await _llmRun(sys,ask,"ideas"));
+  if(!b||!b.logline)throw new Error("Bible came back empty \u2014 run it again.");
+  b.ts=Date.now();b.status="draft";
+  d.bible=b;if(!d.logline&&b.logline)d.logline=b.logline;
+  save();if(st)st.innerHTML="";renderShows();
+  toast("Bible forged \u2014 review it, then import the parts you want.");
+ }catch(e){if(st)st.innerHTML=errLine(e);}}
+function cfImportCast(id){
+ var d=dsGet(id);if(!d||!d.bible||!Array.isArray(d.bible.cast))return;
+ var added=0,skipped=0;
+ d.bible.cast.forEach(function(c){
+  if(!c.name)return;
+  if((S.cast||[]).some(function(x){return x.name.toLowerCase()===String(c.name).toLowerCase();})){skipped++;return;}
+  var v=(c.voices||{});
+  S.cast.unshift({id:uid(),name:c.name,identity:String(c.identity||"")+(c.wardrobe?" Wardrobe: "+c.wardrobe:""),
+   nick:c.nick||"",from:c.from||"",show:d.name,voice:v.public||v.home||"",status:"draft",
+   color:"",src:"",views:[]});
+  added++;});
+ save();renderShows();
+ toast(added+" character"+(added===1?"":"s")+" added as DRAFT"+(skipped?" \u00b7 "+skipped+" already existed":"")+" \u2014 lock DNA in Cast.");}
+function cfImportSlang(id){
+ var d=dsGet(id);if(!d||!d.bible||!Array.isArray(d.bible.slang))return;
+ var added=0,skipped=0;
+ d.bible.slang.forEach(function(t){
+  if(!t.term)return;
+  if((S.slang||[]).some(function(x){return x.term.toLowerCase()===String(t.term).toLowerCase();})){skipped++;return;}
+  S.slang.unshift({id:uid(),term:t.term,meaning:t.meaning||"",district:t.district||"Couchwick",origin:"stoneralia_original",example:t.example||"",status:"draft",ts:Date.now()});
+  added++;});
+ save();
+ toast(added+" term"+(added===1?"":"s")+" added to Chiefinese"+(skipped?" \u00b7 "+skipped+" already in":"")+".");}
+function cfApplyProd(id){
+ var d=dsGet(id);if(!d||!d.bible)return;
+ var p=d.bible.production||{};
+ if(!S.cine)S.cine={render:"stoneralia_animated",pace:"balanced",model:"seedance"};
+ if(p.render&&CINE_RENDER[p.render])S.cine.render=p.render;
+ if(p.pacing&&CINE_PACE[p.pacing])S.cine.pace=p.pacing;
+ if(Array.isArray(p.writers)&&p.writers.length&&!(d.writers||[]).length){
+  d.writers=p.writers.filter(function(k){return WRITERS[k];}).slice(0,2);}
+ save();renderShows();
+ toast("Production locks applied \u2014 "+((CINE_RENDER[S.cine.render]||[])[0]||"")+" \u00b7 "+((CINE_PACE[S.cine.pace]||[])[0]||"")+".");}
+function cfMarkdown(b,name){
+ var L=[];
+ L.push("# "+name+" \u2014 SHOW BIBLE");
+ if(b.logline)L.push("**Logline:** "+b.logline);
+ if(b.thesis)L.push("**Thesis:** "+b.thesis);
+ if(b.tone)L.push("**Tone:** "+b.tone);
+ if(Array.isArray(b.districts)&&b.districts.length){L.push("\n## Districts");b.districts.forEach(function(x){L.push("- **"+(x.name||"")+"** \u2014 "+(x.rule||""));});}
+ if(Array.isArray(b.institutions)&&b.institutions.length)L.push("\n## Systems it antagonizes\n- "+b.institutions.join("\n- "));
+ if(Array.isArray(b.cast)&&b.cast.length){L.push("\n## Cast");
+  b.cast.forEach(function(c){var v=c.voices||{};
+   L.push("\n### "+(c.name||"")+(c.nick?" \u2014 \u201c"+c.nick+"\u201d":"")+(c.from?" \u00b7 "+c.from:""));
+   if(c.identity)L.push("**Identity lock:** "+c.identity);
+   if(c.function)L.push("**Function:** "+c.function);
+   if(c.flaw)L.push("**Flaw:** "+c.flaw);
+   if(c.stake)L.push("**Stake:** "+c.stake);
+   if(v.home)L.push("**Home voice:** \u201c"+v.home+"\u201d");
+   if(v.public)L.push("**Public voice:** \u201c"+v.public+"\u201d");
+   if(v.pressure)L.push("**Pressure voice:** \u201c"+v.pressure+"\u201d");
+   if(c.movement)L.push("**Movement:** \u201c"+c.movement+"\u201d");
+   if(c.stillness)L.push("**Stillness:** \u201c"+c.stillness+"\u201d");
+   if(c.wardrobe)L.push("**Wardrobe:** "+c.wardrobe);
+   if(c.engine)L.push("**Episode engine:** "+c.engine);
+   if(Array.isArray(c.gags)&&c.gags.length)L.push("**Gags:** "+c.gags.join(" \u00b7 "));});}
+ if(Array.isArray(b.ensemble)&&b.ensemble.length){L.push("\n## Ensemble");b.ensemble.forEach(function(x){L.push("- **"+(x.pair||"")+"** \u2014 "+(x.generates||""));});}
+ if(Array.isArray(b.slang)&&b.slang.length){L.push("\n## Chiefinese in this show");b.slang.forEach(function(t){L.push("- **"+(t.term||"")+"** \u2014 "+(t.meaning||"")+(t.example?" \u00b7 \u201c"+t.example+"\u201d":""));});}
+ if(b.episode_engine)L.push("\n## Episode engine\n"+b.episode_engine);
+ if(Array.isArray(b.springboards)&&b.springboards.length)L.push("\n## Springboards\n- "+b.springboards.join("\n- "));
+ if(Array.isArray(b.gags)&&b.gags.length)L.push("\n## Running gags\n- "+b.gags.join("\n- "));
+ if(b.production)L.push("\n## Production locks\n- render: "+(b.production.render||"")+"\n- pacing: "+(b.production.pacing||"")+"\n- style: "+(b.production.style_note||""));
+ return L.join("\n");}
+function cfCopy(id){var d=dsGet(id);if(!d||!d.bible)return;rpCopyTxt(cfMarkdown(d.bible,d.name));}
+function cfPaint(d){
+ var b=d.bible;
+ if(!b)return '<button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="cfForge(\''+d.id+'\')">\U0001f4d6 Forge the show bible</button><div id="cfStatus_'+d.id+'"></div>';
+ var nCast=(b.cast||[]).length,nSl=(b.slang||[]).length;
+ var h='<details style="margin-top:10px"><summary style="cursor:pointer;font-weight:800;font-family:var(--slate)">\U0001f4d6 Show bible \u00b7 '+nCast+' cast \u00b7 '+nSl+' terms \u00b7 DRAFT</summary>';
+ h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">'+esc(b.thesis||b.logline||"")+"</div>";
+ if(Array.isArray(b.districts)&&b.districts.length)h+='<div style="font-size:12px;margin-top:6px">'+b.districts.map(function(x){return "<b>"+esc(x.name||"")+"</b> \u2014 "+esc(x.rule||"");}).join("<br>")+"</div>";
+ if(Array.isArray(b.cast))h+='<div style="font-size:12px;margin-top:8px">'+b.cast.map(function(c){return "<b>"+esc(c.name||"")+"</b>"+(c.nick?" \u201c"+esc(c.nick)+"\u201d":"")+(c.flaw?" \u2014 "+esc(c.flaw):"");}).join("<br>")+"</div>";
+ if(b.episode_engine)h+='<div style="font-size:12px;margin-top:8px"><b>Engine:</b> '+esc(b.episode_engine)+"</div>";
+ if(Array.isArray(b.springboards))h+='<div style="font-size:12px;margin-top:6px">'+b.springboards.slice(0,6).map(function(x){return "\u2022 "+esc(x);}).join("<br>")+"</div>";
+ h+='<div class="row" style="margin-top:10px"><button class="btn green sm" style="flex:1" onclick="cfImportCast(\''+d.id+'\')">\uff0b Cast ('+nCast+')</button><button class="btn green sm" style="flex:1" onclick="cfImportSlang(\''+d.id+'\')">\uff0b Chiefinese ('+nSl+')</button></div>';
+ h+='<div class="row" style="margin-top:6px"><button class="btn ghost sm" style="flex:1" onclick="cfApplyProd(\''+d.id+'\')">\U0001f39b Apply production locks</button><button class="btn ghost sm" style="flex:1" onclick="cfCopy(\''+d.id+'\')">\u29c9 Copy bible</button></div>';
+ h+='<button class="btn ghost sm" style="width:100%;margin-top:6px" onclick="cfForge(\''+d.id+'\')">\u21bb Re-forge</button><div id="cfStatus_'+d.id+'"></div></details>';
+ return h;}
 function renderShows(){
  var host=$("showsBody");if(!host)return;
  var L=(typeof dsState==="function")?dsState():[];
@@ -4847,7 +4953,7 @@ function renderShows(){
    +'<div class="hint" style="margin-top:-2px;margin-bottom:8px;text-transform:none;letter-spacing:0">'+(d.logline?esc(d.logline):"— no logline yet —")+' <button class="btn ghost sm" style="padding:2px 8px;margin-left:4px" onclick="showLogline(\''+d.id+'\')">✎</button></div>'
    +'<select onchange="showsToggle(\''+d.id+'\',this.value)">'+opts+"</select>"
    +'<div>'+chips+"</div>"+craft
-   +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px">'+(d.trigger?esc(d.trigger)+" · ":"")+n+" image"+(n===1?"":"s")+(d.trained?" · trained ✓":"")+(d.sref?" · sref saved":"")+"</div></div>";
+   +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px">'+(d.trigger?esc(d.trigger)+" · ":"")+n+" image"+(n===1?"":"s")+(d.trained?" · trained ✓":"")+(d.sref?" · sref saved":"")+"</div>"+cfPaint(d)+"</div>";
  }).join("");
  h+='<button class="btn ghost" style="width:100%" onclick="showsNew()">＋ New series</button>';
  host.innerHTML=h;}

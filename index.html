@@ -602,6 +602,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
      <div class="row" style="margin-top:8px"><input type="text" id="castNick" placeholder="Nickname — e.g. Receipt Queen" style="flex:1"><select id="castFrom" style="flex:1"><option value="">From — district (optional)</option></select></div>
      <input type="text" id="castShow" list="castShowList" placeholder="Series / show — e.g. Stoneralia" style="margin-top:8px"><datalist id="castShowList"></datalist>
     <button class="btn green" id="castAdd" style="margin-top:10px;width:100%">+ Add character</button>
+     <button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="castStateClearAll()">🧹 Scene reset — clear all temporary states</button>
     <div class="hint" style="margin-top:8px">Then tap the character to add reference photos, build a 6-angle sheet, and set a voice. Chieff loads himself on first run.</div>
   </div>
   <div class="filterbar" id="castFilter"></div>
@@ -1063,7 +1064,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:10px">Restore from backup</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v9.84 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v9.85 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -3057,13 +3058,36 @@ function castMetaEdit(id){
  var sh=prompt("Series / show:",c.show||"");if(sh===null)return;
  c.nick=n.trim();c.from=fr.trim();c.show=sh.trim();save();renderCast();
  toast((c.name)+" carded 🪪"+(c.from?" — "+c.from+" voice + style now auto-apply.":""));}
+function castStateStr(c){
+ if(!c||!c.state)return "";
+ var st=c.state,b=[];
+ if(st.loc)b.push("at "+st.loc);
+ if(st.mood)b.push(st.mood);
+ if(st.wear)b.push("wearing/holding: "+st.wear);
+ if(st.note)b.push(st.note);
+ return b.join(", ");}
+function castStateEdit(id){
+ var c=(S.cast||[]).find(function(x){return x.id===id;});if(!c)return;
+ var st=c.state||{};
+ var loc=prompt("SCENE STATE (temporary \u2014 never rewrites canon)\n\nWhere are they right now? (empty everything = clear)",st.loc||"");if(loc===null)return;
+ var mood=prompt("Mood right now?",st.mood||"");if(mood===null)return;
+ var wear=prompt("Wearing / holding (temporary only \u2014 wardrobe lock stays canon):",st.wear||"");if(wear===null)return;
+ var note=prompt("Anything else? (injury, goal, detail)",st.note||"");if(note===null)return;
+ loc=loc.trim();mood=mood.trim();wear=wear.trim();note=note.trim();
+ if(!loc&&!mood&&!wear&&!note){delete c.state;save();renderCast();toast(c.name+" \u2014 state cleared, back to canon only.");return;}
+ c.state={loc:loc,mood:mood,wear:wear,note:note,ts:Date.now()};
+ save();renderCast();toast(c.name+" \u2014 scene state set (temporary, canon untouched).");}
+function castStateClearAll(){
+ var n=0;(S.cast||[]).forEach(function(c){if(c.state){delete c.state;n++;}});
+ save();renderCast();toast(n?("Scene reset \u2014 "+n+" state"+(n===1?"":"s")+" cleared. Canon only."):"No states were set.");}
 function castCard(it,kind){
   const d=document.createElement("div");d.className="stash-item";
   const nv=viewsOf(it).filter(v=>v.src).length;
   const img=it.src?'<img src="'+it.src+'">':'<div class="noimg">'+esc((it.name||"?").slice(0,2).toUpperCase())+'</div>';
   const badge=nv>0?'<span class="vbadge">▦ '+nv+' ref'+(nv>1?'s':'')+'</span>':'<span class="vbadge add">＋ add refs</span>';
-  const sub=kind==="cast"?((it.nick?'“'+esc(it.nick)+'” ':'')+(it.from?esc(it.from)+' ':'')+(it.show?'· '+esc(it.show)+' ':'')||(it.identity?esc(it.identity.slice(0,44)):'no identity lock yet')):(it.vibe?esc(it.vibe.slice(0,44)):'no vibe set');
-  d.innerHTML='<button class="x">✕</button>'+(kind==="cast"?'<button class="vbadge" style="right:auto;left:6px;cursor:pointer" onclick="event.stopPropagation();castMetaEdit(\''+it.id+'\')">🪪</button>':'')+badge+img+'<div class="meta"><div class="nm">'+esc(it.name)+'</div><div class="ty">'+sub+'</div></div>';
+  let sub=kind==="cast"?((it.nick?'“'+esc(it.nick)+'” ':'')+(it.from?esc(it.from)+' ':'')+(it.show?'· '+esc(it.show)+' ':'')||(it.identity?esc(it.identity.slice(0,44)):'no identity lock yet')):(it.vibe?esc(it.vibe.slice(0,44)):'no vibe set');
+  if(kind==="cast"&&it.state)sub+='<br><span style="color:#d9a441">▸ now: '+esc(castStateStr(it).slice(0,52))+'</span>';
+  d.innerHTML='<button class="x">✕</button>'+(kind==="cast"?'<button class="vbadge" style="right:auto;left:6px;cursor:pointer" onclick="event.stopPropagation();castMetaEdit(\''+it.id+'\')">🪪</button><button class="vbadge" style="right:auto;left:38px;cursor:pointer'+(it.state?';border-color:#d9a441;color:#d9a441':'')+'" onclick="event.stopPropagation();castStateEdit(\''+it.id+'\')">🎬</button>':'')+badge+img+'<div class="meta"><div class="nm">'+esc(it.name)+'</div><div class="ty">'+sub+'</div></div>';
   d.querySelector(".x").addEventListener("click",e=>{e.stopPropagation();
     if(kind==="cast"){S.cast=S.cast.filter(x=>x.id!==it.id);castPicked.delete(it.id);}else{S.sets=S.sets.filter(x=>x.id!==it.id);if(setPicked===it.id)setPicked="";}
     save();renderCast();renderSets();renderCastSet();closeAsset(kind);});
@@ -3594,11 +3618,12 @@ function vibeCtx(mode,text){
   parts.push("BRAND VIBE: Chiefin' Season / Stoneralia \u2014 deadpan, premium, cannabis-culture streetwear. Dry wit, understated confidence, cannabis-adjacent and platform-safe (no explicit drug talk). Matte black + bone foundation, sage/bud-green signature, rare gold/red. 'You smell the vibes.'");
   if(p)parts.push("ACTIVE DROP: "+(p.name||"")+(p.concept?(" \u2014 "+p.concept):""));
   if(S.cast&&S.cast.length)parts.push("CHARACTER LAW — identity vs. style: a character's IDENTITY (silhouette, build, facial structure, hair shape, signature items, energy) is permanent; their ART STYLE always matches the show or style they currently appear in — same person, different pen. When a character cameos in another show, redraw them faithfully in THAT show's style, keeping them instantly recognizable. Never freeze a character in their home show's rendering.");
+  if(!lite&&S.cast&&S.cast.some(function(c){return c.state;}))parts.push("CANON vs STATE: each character's identity/DNA and wardrobe lock are PERMANENT CANON. Lines marked NOW are TEMPORARY scene state \u2014 they apply to this scene only, change scene to scene, and must NEVER rewrite identity, canon wardrobe, or canon facts.");
   if(lite&&S.cast&&S.cast.length)parts.push("CAST (names): "+S.cast.map(function(c){return c.name+(c.nick?" \u201c"+c.nick+"\u201d":"");}).filter(Boolean).join(", "));
   if(!lite&&S.cast&&S.cast.length)parts.push("CAST: "+S.cast.map(function(c){if(!c.name)return "";
    if(tl){var _nm=c.name.toLowerCase();var _hit=tl.indexOf(_nm)>=0||(c.nick&&tl.indexOf(String(c.nick).toLowerCase())>=0)||_nm.split(/\s+/).some(function(w2){return w2.length>=3&&tl.indexOf(w2)>=0;});
     if(!_hit)return c.name+(c.nick?" \u201c"+c.nick+"\u201d":"")+(c.from?" ("+c.from+")":"");}
-   var t=c.name;if(c.nick)t+=" “"+c.nick+"”";if(c.from)t+=" [from "+c.from+" — speaks, styles and carries slang per that district's Chiefinese]";if(c.show)t+=" [series: "+c.show+"]";if(c.identity)t+=" [DNA: "+String(c.identity).slice(0,180)+"]";if(c.wardrobeNote)t+=" [CS outfit, locked: "+String(c.wardrobeNote).slice(0,120)+"]";return t;}).filter(Boolean).join(" | "));
+   var t=c.name;if(c.nick)t+=" “"+c.nick+"”";if(c.from)t+=" [from "+c.from+" — speaks, styles and carries slang per that district's Chiefinese]";if(c.show)t+=" [series: "+c.show+"]";if(c.identity)t+=" [DNA: "+String(c.identity).slice(0,180)+"]";if(c.wardrobeNote)t+=" [CS outfit, locked: "+String(c.wardrobeNote).slice(0,120)+"]";if(c.state)t+=" [NOW (temporary): "+castStateStr(c).slice(0,160)+"]";return t;}).filter(Boolean).join(" | "));
   if(S.sets&&S.sets.length)parts.push("SETS: "+S.sets.map(function(x){return x.name;}).filter(Boolean).join(", "));
   var _wl=(typeof wroomLaw==="function")?wroomLaw():"";if(_wl)parts.push(_wl);
   var _bl=(typeof cfLaw==="function")?cfLaw():"";if(_bl)parts.push(_bl);

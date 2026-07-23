@@ -1064,7 +1064,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:10px">Restore from backup</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v9.85 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v9.86 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -2252,8 +2252,12 @@ $("boardSeedance").addEventListener("click",async()=>{
 
 /* stash */
 function cat(it){return it.category||it.type||"piece";}
+var AUTH_KINDS=["face","hair","body","outfit","pose","style","prop"];
+function authRank(v){var i=AUTH_KINDS.indexOf(v&&v.auth||"");return i<0?99:i;}
+function authSort(vs){return vs.slice().sort(function(a,b){return authRank(a)-authRank(b);});}
+function authOf(it,kind){var vs=viewsOf(it);var hit=vs.find(function(v){return v.auth===kind&&v.src;});return hit||vs[0]||null;}
 function viewsOf(it){return (it.views&&it.views.length)?it.views:[{label:"Main",src:it.src}];}
-function flattenRefs(items,cap){const out=[];for(const it of items){for(const v of viewsOf(it)){if(v.src)out.push(v.src);if(out.length>=cap)return out;}}return out;}
+function flattenRefs(items,cap){const out=[];for(const it of items){for(const v of authSort(viewsOf(it))){if(v.src)out.push(v.src);if(out.length>=cap)return out;}}return out;}
 function refNote(items){const m=items.filter(it=>viewsOf(it).length>1);if(!m.length)return "";return " Product references are shown from multiple sides — "+m.map(it=>it.name+" ("+viewsOf(it).map(v=>v.label).join(", ")+")").join("; ")+". Put each design on its correct side or panel and keep every other side accurate.";}
 let editId=null,pendingLabel="Back";
 const VIEW_LABELS=["Front","Back","Left Sleeve","Right Sleeve","Hood","Front Panel","Back Panel","Side Panel","Collar","Detail","Tag"];
@@ -2961,8 +2965,8 @@ function renderAssetEditor(){
     h+='<button class="btn ghost sm" id="aSetFill" style="margin-top:10px;width:100%">✦ Fill in the blanks (AI)</button><div id="aSetFillStatus"></div>';
     h+='<div class="row" style="margin-top:10px"><button class="btn ghost sm" id="aSuggest">✦ Suggest scenes (AI)</button><button class="btn green sm" id="aBuild" data-cost="img">✦ Build this location</button></div><div id="aSetStatus"></div><div id="aSetResult"></div>';
   }
-  h+='<label class="fld" style="margin-top:14px">References</label><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(106px,1fr))">';
-  vs.forEach((v,i)=>{h+='<div class="stash-item'+(i===0?' ismain':'')+'"><button class="x" data-i="'+i+'">✕</button>'+(i===0?'<span class="mainbadge">★ main</span>':'<button class="setmain" data-m="'+i+'">set main</button>')+'<img class="zoomable" src="'+v.src+'"><div class="meta"><div class="nm">'+esc(v.label)+'</div></div></div>';});
+  h+='<label class="fld" style="margin-top:14px">References</label><div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:6px">Tap a ref\u2019s authority tag \u2014 a face ref rules identity, an outfit ref rules clothing. Tagged refs ride first when models only take a few images.</div><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(106px,1fr))">';
+  vs.forEach((v,i)=>{h+='<div class="stash-item'+(i===0?' ismain':'')+'"><button class="x" data-i="'+i+'">✕</button>'+(i===0?'<span class="mainbadge">★ main</span>':'<button class="setmain" data-m="'+i+'">set main</button>')+'<img class="zoomable" src="'+v.src+'"><div class="meta"><div class="nm">'+esc(v.label)+'</div><button class="authchip" data-a="'+i+'" style="font-size:9px;padding:2px 6px;margin-top:3px;border-radius:4px;border:1px solid '+(v.auth?'#d9a441':'var(--line)')+';background:none;color:'+(v.auth?'#d9a441':'var(--bone-dim)')+';cursor:pointer;width:100%">'+(v.auth?'🔒 '+v.auth:'authority: any')+'</button></div></div>';});
   if(!vs.length)h+='<div class="hint" style="padding:8px">No references yet — add some below so the AI stays consistent.</div>';
   h+='</div>';
   h+='<label class="fld" style="margin-top:12px">Add a reference — pick the angle, then the photo</label><div class="tokenchips" id="aLabels"></div>';
@@ -3005,6 +3009,15 @@ function renderAssetEditor(){
   const lw=$("aLabels");labels.forEach(l=>{const c=document.createElement("span");c.className="chip"+(l===aLabel?" on":"");c.textContent=l;c.addEventListener("click",()=>{aLabel=l;renderAssetEditor();});lw.appendChild(c);});
   $(aKind+"Editor").querySelectorAll(".x").forEach(b=>b.addEventListener("click",()=>{const i=parseInt(b.dataset.i);const t=assetOf();const v=viewsOf(t).filter(x=>x.src);t.views=v.filter((_,idx)=>idx!==i);t.src=t.views[0]?t.views[0].src:"";save();renderAssetEditor();renderCast();renderSets();}));
   $(aKind+"Editor").querySelectorAll(".setmain").forEach(b=>b.addEventListener("click",()=>setMainAsset(parseInt(b.dataset.m))));
+  $(aKind+"Editor").querySelectorAll(".authchip").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();
+    const it2=assetOf();if(!it2)return;
+    if(!it2.views||!it2.views.length)it2.views=[{label:"Main",src:it2.src}];
+    const v2=it2.views[parseInt(b.dataset.a)];if(!v2)return;
+    const cur=AUTH_KINDS.indexOf(v2.auth||"");
+    v2.auth=(cur>=AUTH_KINDS.length-1)?"":AUTH_KINDS[cur+1]||AUTH_KINDS[0];
+    if(v2.auth==="" )delete v2.auth;
+    save();renderAssetEditor();
+    toast(v2.auth?("This ref now rules "+v2.auth+" only 🔒"):"Ref untagged \u2014 general reference.");}));
   $("aUpload").addEventListener("click",()=>$("assetFile").click());
   $("aUrl").addEventListener("click",()=>{const u=window.prompt("Image URL for the "+aLabel+":");if(!u)return;if(!/^https?:\/\//.test(u)){toast("Needs to start with http.",true);return;}addAssetView(aLabel,u.trim());});
 }
@@ -3623,7 +3636,7 @@ function vibeCtx(mode,text){
   if(!lite&&S.cast&&S.cast.length)parts.push("CAST: "+S.cast.map(function(c){if(!c.name)return "";
    if(tl){var _nm=c.name.toLowerCase();var _hit=tl.indexOf(_nm)>=0||(c.nick&&tl.indexOf(String(c.nick).toLowerCase())>=0)||_nm.split(/\s+/).some(function(w2){return w2.length>=3&&tl.indexOf(w2)>=0;});
     if(!_hit)return c.name+(c.nick?" \u201c"+c.nick+"\u201d":"")+(c.from?" ("+c.from+")":"");}
-   var t=c.name;if(c.nick)t+=" “"+c.nick+"”";if(c.from)t+=" [from "+c.from+" — speaks, styles and carries slang per that district's Chiefinese]";if(c.show)t+=" [series: "+c.show+"]";if(c.identity)t+=" [DNA: "+String(c.identity).slice(0,180)+"]";if(c.wardrobeNote)t+=" [CS outfit, locked: "+String(c.wardrobeNote).slice(0,120)+"]";if(c.state)t+=" [NOW (temporary): "+castStateStr(c).slice(0,160)+"]";return t;}).filter(Boolean).join(" | "));
+   var t=c.name;if(c.nick)t+=" “"+c.nick+"”";if(c.from)t+=" [from "+c.from+" — speaks, styles and carries slang per that district's Chiefinese]";if(c.show)t+=" [series: "+c.show+"]";if(c.identity)t+=" [DNA: "+String(c.identity).slice(0,180)+"]";if(c.wardrobeNote)t+=" [CS outfit, locked: "+String(c.wardrobeNote).slice(0,120)+"]";if(c.state)t+=" [NOW (temporary): "+castStateStr(c).slice(0,160)+"]";var _am=(c.views||[]).map(function(v,vi){return (v&&v.auth)?(v.auth+"\u2190ref"+(vi+1)):"";}).filter(Boolean).join(", ");if(_am)t+=" [REF AUTHORITY: "+_am+" \u2014 each reference image controls ONLY its tagged domain; a face ref never changes clothing, an outfit ref never changes the face]";return t;}).filter(Boolean).join(" | "));
   if(S.sets&&S.sets.length)parts.push("SETS: "+S.sets.map(function(x){return x.name;}).filter(Boolean).join(", "));
   var _wl=(typeof wroomLaw==="function")?wroomLaw():"";if(_wl)parts.push(_wl);
   var _bl=(typeof cfLaw==="function")?cfLaw():"";if(_bl)parts.push(_bl);

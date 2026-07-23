@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="theme-color" content="#0b0b0b">
+<meta name="theme-color" content="#000000">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -212,7 +212,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 .tonerow{display:flex;flex-wrap:wrap;gap:6px}
 .tonechip{background:none;border:1px solid var(--line);color:var(--bone-dim);padding:5px 11px;border-radius:999px;font-size:12px;white-space:nowrap}
 .tonechip.on{color:var(--bud);border-color:var(--bud);background:rgba(124,154,107,.09)}
-#splash{position:fixed;inset:0;z-index:99999;background:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .55s ease}
+#splash{position:fixed;inset:0;z-index:99999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .55s ease}
 #splash.gone{opacity:0;pointer-events:none}
 #splash .splash-logo{width:min(72vw,300px);height:auto;display:block;filter:drop-shadow(0 8px 30px rgba(0,0,0,.6));animation:splashpop .7s cubic-bezier(.2,.8,.2,1) both}
 #splash .splash-pulse{width:46px;height:3px;border-radius:3px;background:var(--bud);opacity:.7;animation:splashbar 1s ease-in-out infinite alternate}
@@ -1063,7 +1063,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:10px">Restore from backup</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v9.83 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v9.84 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -2399,11 +2399,11 @@ function cdCard(){
   +terms.map(function(t){return '<option value="'+t.id+'">'+esc(t.term)+(used.indexOf(t.id)>=0?" \u00b7 used":"")+"</option>";}).join("");
  var lens=Object.keys(CD_LEN).map(function(k){return '<option value="'+k+'"'+(k==="standard"?" selected":"")+">"+CD_LEN[k][0]+"</option>";}).join("");
  var madeToday=d.log.filter(function(x){return x.day===runToday();}).length;
- return '<div class="card" style="border-left:3px solid var(--bud)"><label class="fld">\U0001f4c5 Chiefinese Daily \u2014 word of the day, whole package</label>'
+ return '<div class="card" style="border-left:3px solid var(--bud)"><label class="fld">📅 Chiefinese Daily \u2014 word of the day, whole package</label>'
   +'<div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">One tap builds the script, skit, definition card, captions and dictionary entry. '+(d.log.length?(d.log.length+" episode"+(d.log.length===1?"":"s")+" made"+(madeToday?" \u00b7 today \u2713":"")):"Your daily format \u2014 never start from blank again.")+'</div>'
   +'<div class="row"><select id="cdTerm" style="flex:1.4">'+opts+'</select></div>'
   +'<div class="row" style="margin-top:6px"><select id="cdLen" style="flex:1">'+lens+'</select></div>'
-  +'<button class="btn green" style="width:100%;margin-top:8px" onclick="cdMake()">\U0001f4c5 MAKE TODAY\u2019S CHIEFINESE</button>'
+  +'<button class="btn green" style="width:100%;margin-top:8px" onclick="cdMake()">📅 MAKE TODAY\u2019S CHIEFINESE</button>'
   +'<div id="cdStatus"></div><div id="cdOut" style="margin-top:8px"></div></div>';}
 async function cdMake(){
  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
@@ -2444,9 +2444,9 @@ function cdPaint(){
  h+=sec("Micro-skit",skit)+sec("Chiefin\u2019 Truth",p.chiefin_truth)+sec("Outro",p.outro)+sec("Definition card \u2014 image prompt",p.card_prompt)+sec("Thumbnail",p.thumbnail);
  if(p.captions)h+=sec("IG",p.captions.ig)+sec("TikTok",p.captions.tiktok)+sec("X",p.captions.x);
  h+=sec("Tags",p.tags);
- h+='<div class="row" style="margin-top:10px"><button class="btn green sm" style="flex:1" data-cd="comic">\u270f To Comics</button><button class="btn ghost sm" style="flex:1" data-cd="studio">\U0001f5bc Card \u2192 Studio</button></div>';
- h+='<div class="row" style="margin-top:6px"><button class="btn ghost sm" style="flex:1" data-cd="board">\U0001f3ac Skit \u2192 Pre-Roll</button><button class="btn ghost sm" style="flex:1" data-cd="copy">\u29c9 Copy script</button></div>';
- h+=(p._termId?"":'<button class="btn ghost sm" style="width:100%;margin-top:6px" data-cd="save">\U0001f4d6 Save \u201c'+esc(p.word)+'\u201d to the dictionary</button>');
+ h+='<div class="row" style="margin-top:10px"><button class="btn green sm" style="flex:1" data-cd="comic">\u270f To Comics</button><button class="btn ghost sm" style="flex:1" data-cd="studio">🖼 Card \u2192 Studio</button></div>';
+ h+='<div class="row" style="margin-top:6px"><button class="btn ghost sm" style="flex:1" data-cd="board">🎬 Skit \u2192 Pre-Roll</button><button class="btn ghost sm" style="flex:1" data-cd="copy">\u29c9 Copy script</button></div>';
+ h+=(p._termId?"":'<button class="btn ghost sm" style="width:100%;margin-top:6px" data-cd="save">📖 Save \u201c'+esc(p.word)+'\u201d to the dictionary</button>');
  h+="</div>";
  b.innerHTML=h;
  var script=[p.title,p.hook,"",p.definition,p.example,"",skit,"",p.chiefin_truth,p.outro].filter(Boolean).join("\n");
@@ -4931,16 +4931,16 @@ function cfMarkdown(b,name){
 function cfCopy(id){var d=dsGet(id);if(!d||!d.bible)return;rpCopyTxt(cfMarkdown(d.bible,d.name));}
 function cfPaint(d){
  var b=d.bible;
- if(!b)return '<button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="cfForge(\''+d.id+'\')">\U0001f4d6 Forge the show bible</button><div id="cfStatus_'+d.id+'"></div>';
+ if(!b)return '<button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="cfForge(\''+d.id+'\')">📖 Forge the show bible</button><div id="cfStatus_'+d.id+'"></div>';
  var nCast=(b.cast||[]).length,nSl=(b.slang||[]).length;
- var h='<details style="margin-top:10px"><summary style="cursor:pointer;font-weight:800;font-family:var(--slate)">\U0001f4d6 Show bible \u00b7 '+nCast+' cast \u00b7 '+nSl+' terms \u00b7 DRAFT</summary>';
+ var h='<details style="margin-top:10px"><summary style="cursor:pointer;font-weight:800;font-family:var(--slate)">📖 Show bible \u00b7 '+nCast+' cast \u00b7 '+nSl+' terms \u00b7 DRAFT</summary>';
  h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">'+esc(b.thesis||b.logline||"")+"</div>";
  if(Array.isArray(b.districts)&&b.districts.length)h+='<div style="font-size:12px;margin-top:6px">'+b.districts.map(function(x){return "<b>"+esc(x.name||"")+"</b> \u2014 "+esc(x.rule||"");}).join("<br>")+"</div>";
  if(Array.isArray(b.cast))h+='<div style="font-size:12px;margin-top:8px">'+b.cast.map(function(c){return "<b>"+esc(c.name||"")+"</b>"+(c.nick?" \u201c"+esc(c.nick)+"\u201d":"")+(c.flaw?" \u2014 "+esc(c.flaw):"");}).join("<br>")+"</div>";
  if(b.episode_engine)h+='<div style="font-size:12px;margin-top:8px"><b>Engine:</b> '+esc(b.episode_engine)+"</div>";
  if(Array.isArray(b.springboards))h+='<div style="font-size:12px;margin-top:6px">'+b.springboards.slice(0,6).map(function(x){return "\u2022 "+esc(x);}).join("<br>")+"</div>";
  h+='<div class="row" style="margin-top:10px"><button class="btn green sm" style="flex:1" onclick="cfImportCast(\''+d.id+'\')">\uff0b Cast ('+nCast+')</button><button class="btn green sm" style="flex:1" onclick="cfImportSlang(\''+d.id+'\')">\uff0b Chiefinese ('+nSl+')</button></div>';
- h+='<div class="row" style="margin-top:6px"><button class="btn ghost sm" style="flex:1" onclick="cfApplyProd(\''+d.id+'\')">\U0001f39b Apply production locks</button><button class="btn ghost sm" style="flex:1" onclick="cfCopy(\''+d.id+'\')">\u29c9 Copy bible</button></div>';
+ h+='<div class="row" style="margin-top:6px"><button class="btn ghost sm" style="flex:1" onclick="cfApplyProd(\''+d.id+'\')">🎛 Apply production locks</button><button class="btn ghost sm" style="flex:1" onclick="cfCopy(\''+d.id+'\')">\u29c9 Copy bible</button></div>';
  h+='<button class="btn ghost sm" style="width:100%;margin-top:6px" onclick="cfForge(\''+d.id+'\')">\u21bb Re-forge</button><div id="cfStatus_'+d.id+'"></div></details>';
  return h;}
 function renderShows(){

@@ -997,7 +997,10 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
         <option value="gpt-4o">gpt-4o — mid</option>
         <option value="gpt-5">gpt-5 — strong</option>
         <option value="gpt-5.2">gpt-5.2 — stronger</option>
-        <option value="gpt-5.5">gpt-5.5 — newest / premium</option>
+        <option value="gpt-5.5">gpt-5.5 — premium</option>
+        <option value="gpt-5.6-luna">gpt-5.6-luna — newest / cheapest</option>
+        <option value="gpt-5.6-terra">gpt-5.6-terra — newest / best value</option>
+        <option value="gpt-5.6-sol">gpt-5.6-sol — newest / flagship</option>
         <option value="__custom">Custom…</option>
       </select>
       <input type="text" id="openaiModelCustom" placeholder="type any model id" style="display:none;margin-top:8px">
@@ -1014,9 +1017,9 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <label class="fld">Lyrics — Lyric Lab</label><select id="taskLyrics" data-task="lyrics"></select>
     <div class="hint" style="margin-top:4px">★ Claude Sonnet 4.5 — best voice &amp; deadpan tone, needs the least cleanup.</div>
     <label class="fld" style="margin-top:10px">Suno prompts &amp; music — SMG</label><select id="taskSuno" data-task="suno"></select>
-    <div class="hint" style="margin-top:4px">★ Gemini 2.5 Flash — cheap &amp; fast for structured tags. Iterate all day.</div>
+    <div class="hint" style="margin-top:4px">★ GPT-5.6 Luna — newest family, cheapest tier. Structured tags for well under a cent. Iterate all day.</div>
     <label class="fld" style="margin-top:10px">Storyboards — CSB &amp; cloudtoons</label><select id="taskStoryboard" data-task="storyboard"></select>
-    <div class="hint" style="margin-top:4px">★ GPT-5 — tightest plot logic &amp; structure across frames.</div>
+    <div class="hint" style="margin-top:4px">★ GPT-5.6 Sol — newest flagship, deepest reasoning. Tightest plot logic &amp; structure across frames.</div>
     <label class="fld" style="margin-top:10px">Ideas &amp; scripts — episodes, comics, cloudtoons, fight beats, pre-roll</label><select id="taskIdeas" data-task="ideas"></select>
     <div class="hint" style="margin-top:4px">★ Claude Sonnet 4.5 — voice-first scripts &amp; dialogue.</div>
     <label class="fld" style="margin-top:10px">Continuity / canon check — CSB</label><select id="taskContinuity" data-task="continuity"></select>
@@ -1064,7 +1067,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:10px">Restore from backup</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v9.86 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v9.89 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1084,7 +1087,7 @@ function errStrip(msg){var d=document.getElementById("errstrip");
  var t=document.getElementById("errstriptxt");if(t)t.textContent=msg;}
 const LS="smokemirrors_v1";try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){};
 const blank={
-  apiKey:"",llmModel:"google/gemini-2.5-flash",llmProvider:"fal",openaiKey:"",openaiModel:"gpt-4o-mini",taskBrains:{lyrics:"fal:anthropic/claude-sonnet-4.5",suno:"fal:google/gemini-2.5-flash",storyboard:"openai:gpt-5",ideas:"fal:anthropic/claude-sonnet-4.5",continuity:"fal:anthropic/claude-sonnet-4.5"},station:"image",
+  apiKey:"",llmModel:"google/gemini-2.5-flash",llmProvider:"fal",openaiKey:"",openaiModel:"gpt-4o-mini",taskBrains:{lyrics:"fal:anthropic/claude-sonnet-4.5",suno:"openai:gpt-5.6-luna",storyboard:"openai:gpt-5.6-sol",ideas:"fal:anthropic/claude-sonnet-4.5",continuity:"fal:anthropic/claude-sonnet-4.5"},station:"image",
   picked:{image:"fal-ai/nano-banana-2",edit:"fal-ai/nano-banana-2/edit",video:"bytedance/seedance-2.0/reference-to-video",audio:"fal-ai/elevenlabs/sound-effects"},
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
@@ -1094,6 +1097,14 @@ const blank={
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
 let S=load();
+(function brainMig(){try{
+ if(S.brainMig56)return;
+ var T=S.taskBrains||{};
+ if(T.suno==="fal:google/gemini-2.5-flash")T.suno="openai:gpt-5.6-luna";
+ if(T.storyboard==="openai:gpt-5")T.storyboard="openai:gpt-5.6-sol";
+ S.taskBrains=T;S.brainMig56=1;
+ localStorage.setItem(LS,JSON.stringify(S));
+}catch(e){}})();
 function load(){try{return deepMerge(structuredClone(blank),JSON.parse(localStorage.getItem(LS)||"{}"));}catch(e){return structuredClone(blank);}}
 function deepMerge(base,extra){for(const k in extra){if(extra[k]&&typeof extra[k]==="object"&&!Array.isArray(extra[k])&&base[k]&&typeof base[k]==="object")deepMerge(base[k],extra[k]);else base[k]=extra[k];}return base;}
 function bkSlim(){
@@ -1584,10 +1595,10 @@ function renderProjects(){
 })();
 /* openai brain */
 (function(){
-  const BRAINS=[["default","Default (global pick)"],["fal:anthropic/claude-sonnet-4.5","Claude Sonnet 4.5 (fal)"],["fal:google/gemini-2.5-pro","Gemini 2.5 Pro (fal)"],["fal:google/gemini-2.5-flash","Gemini 2.5 Flash (fal, cheap)"],["openai:gpt-4o-mini","GPT-4o-mini (cheapest)"],["openai:gpt-4.1-mini","GPT-4.1-mini (cheap)"],["openai:gpt-4o","GPT-4o (mid)"],["openai:gpt-5","GPT-5"],["openai:gpt-5.2","GPT-5.2"],["openai:gpt-5.5","GPT-5.5 (premium)"]];
-  const REC={lyrics:"fal:anthropic/claude-sonnet-4.5",suno:"fal:google/gemini-2.5-flash",storyboard:"openai:gpt-5",ideas:"fal:anthropic/claude-sonnet-4.5",continuity:"fal:anthropic/claude-sonnet-4.5"};
-  const OAI_COST={"gpt-4o-mini":"Cheapest \u2014 ~$0.15 / $0.60 per 1M tokens. Well under 0.1\u00a2 per call.","gpt-4.1-mini":"Cheap & sharp \u2014 ~$0.40 / $1.60 per 1M. A fraction of a cent per call.","gpt-4o":"Mid \u2014 ~$2.50 / $10 per 1M. Around 1\u00a2 per call.","gpt-5":"Strong reasoning \u2014 ~$1.25 / $10 per 1M. About 1\u00a2 per call, a touch slower.","gpt-5.2":"Stronger \u2014 $1.75 / $14 per 1M. Roughly 1\u20132\u00a2 per call.","gpt-5.5":"Newest, premium \u2014 $5 / $30 per 1M. Roughly 3\u20135\u00a2 per call. Save it for heavy lifting."};
-  const KNOWN=["gpt-4o-mini","gpt-4.1-mini","gpt-4o","gpt-5","gpt-5.2","gpt-5.5"];
+  const BRAINS=[["default","Default (global pick)"],["fal:anthropic/claude-sonnet-4.5","Claude Sonnet 4.5 (fal)"],["fal:google/gemini-2.5-pro","Gemini 2.5 Pro (fal)"],["fal:google/gemini-2.5-flash","Gemini 2.5 Flash (fal, cheap)"],["openai:gpt-4o-mini","GPT-4o-mini (cheapest)"],["openai:gpt-4.1-mini","GPT-4.1-mini (cheap)"],["openai:gpt-4o","GPT-4o (mid)"],["openai:gpt-5","GPT-5"],["openai:gpt-5.2","GPT-5.2"],["openai:gpt-5.5","GPT-5.5 (premium)"],["openai:gpt-5.6-luna","GPT-5.6 Luna (newest, cheapest)"],["openai:gpt-5.6-terra","GPT-5.6 Terra (newest, best value)"],["openai:gpt-5.6-sol","GPT-5.6 Sol (newest, flagship)"]];
+  const REC={lyrics:"fal:anthropic/claude-sonnet-4.5",suno:"openai:gpt-5.6-luna",storyboard:"openai:gpt-5.6-sol",ideas:"fal:anthropic/claude-sonnet-4.5",continuity:"fal:anthropic/claude-sonnet-4.5"};
+  const OAI_COST={"gpt-4o-mini":"Cheapest \u2014 ~$0.15 / $0.60 per 1M tokens. Well under 0.1\u00a2 per call.","gpt-4.1-mini":"Cheap & sharp \u2014 ~$0.40 / $1.60 per 1M. A fraction of a cent per call.","gpt-4o":"Mid \u2014 ~$2.50 / $10 per 1M. Around 1\u00a2 per call.","gpt-5":"Strong reasoning \u2014 ~$1.25 / $10 per 1M. About 1\u00a2 per call, a touch slower.","gpt-5.2":"Stronger \u2014 $1.75 / $14 per 1M. Roughly 1\u20132\u00a2 per call.","gpt-5.5":"Premium \u2014 $5 / $30 per 1M. Roughly 3\u20135\u00a2 per call. Save it for heavy lifting.","gpt-5.6-luna":"Newest family, cheapest tier \u2014 $1 / $6 per 1M. Well under 1\u00a2 per call. Great for captions, tags and quick rolls.","gpt-5.6-terra":"Newest, best value \u2014 $2.50 / $15 per 1M. Roughly 1\u20132\u00a2 per call. GPT-5.5-class work at about half the price.","gpt-5.6-sol":"Newest flagship \u2014 $5 / $30 per 1M. Roughly 3\u20135\u00a2 per call. Deepest reasoning; save it for bibles and boards."};
+  const KNOWN=["gpt-4o-mini","gpt-4.1-mini","gpt-4o","gpt-5","gpt-5.2","gpt-5.5","gpt-5.6-luna","gpt-5.6-terra","gpt-5.6-sol"];
   const prov=$("brainProv");
   function renderProv(){if(!prov)return;const cur=S.llmProvider||"fal";prov.innerHTML=[["fal","fal (any model)"],["openai","OpenAI (ChatGPT API)"]].map(o=>'<span class="chip'+(cur===o[0]?" on":"")+'" data-prov="'+o[0]+'">'+o[1]+'</span>').join("");const ob=$("openaiBlock");if(ob)ob.style.display=(cur==="openai")?"block":"none";}
   if(prov)prov.onclick=function(e){const t=e.target;if(t&&t.dataset&&t.dataset.prov){S.llmProvider=t.dataset.prov;save();renderProv();toast("Brain set to "+(t.dataset.prov==="openai"?"OpenAI":"fal")+".");}};
@@ -2252,6 +2263,18 @@ $("boardSeedance").addEventListener("click",async()=>{
 
 /* stash */
 function cat(it){return it.category||it.type||"piece";}
+var STATUS_LEVELS={draft:["DRAFT","#8a8a8a"],ready:["REF READY","#d9a441"],canon:["CANON \u2713","var(--bud)"],archived:["ARCHIVED","#555"]};
+function stOf(o){return (o&&o.status)||"canon";}
+function stPill(o,fn,id){var k=stOf(o),v=STATUS_LEVELS[k]||STATUS_LEVELS.canon;
+ return '<button onclick="event.stopPropagation();'+fn+'(\''+id+'\')" style="font-size:9px;font-weight:800;letter-spacing:.05em;padding:1px 7px;border-radius:999px;border:1px solid '+v[1]+';color:'+v[1]+';background:none;cursor:pointer'+(k==="archived"?";text-decoration:line-through":"")+'">'+v[0]+"</button>";}
+function stNext(k){var o=["draft","ready","canon","archived"];return o[(o.indexOf(k)+1)%o.length];}
+function castStatusCycle(id){var c=(S.cast||[]).find(function(x){return x.id===id;});if(!c)return;
+ c.status=stNext(stOf(c));save();renderCast();
+ toast(c.name+" \u2192 "+STATUS_LEVELS[c.status][0]+(c.status==="archived"?" \u2014 out of every pipe until restored.":c.status==="canon"?" \u2014 locked project truth.":""));}
+function slangStatusCycle(id){var t=(S.slang||[]).find(function(x){return x.id===id;});if(!t)return;
+ t.status=stNext(stOf(t));save();chnPaintList();
+ toast("\u201c"+t.term+"\u201d \u2192 "+STATUS_LEVELS[t.status][0]);}
+function slangActive(){return (S.slang||[]).filter(function(x){return stOf(x)!=="archived";});}
 var AUTH_KINDS=["face","hair","body","outfit","pose","style","prop"];
 function authRank(v){var i=AUTH_KINDS.indexOf(v&&v.auth||"");return i<0?99:i;}
 function authSort(vs){return vs.slice().sort(function(a,b){return authRank(a)-authRank(b);});}
@@ -2419,7 +2442,7 @@ async function cdMake(){
  var term=null;
  if(pick==="auto"){
   var used=d.log.map(function(x){return x.termId;});
-  var pool=(S.slang||[]).filter(function(t){return used.indexOf(t.id)<0;});
+  var pool=slangActive().filter(function(t){return used.indexOf(t.id)<0;});
   term=pool.length?pool[Math.floor(Math.random()*pool.length)]:((S.slang||[])[Math.floor(Math.random()*Math.max(1,(S.slang||[]).length))]||null);
  }else if(pick!=="new"){term=(S.slang||[]).find(function(t){return t.id===pick;})||null;}
  var st=$("cdStatus");if(st)st.innerHTML=spinner("Rolling today\u2019s Chiefinese\u2026");
@@ -2505,13 +2528,13 @@ function chnPaintList(){
  if(f)f.innerHTML=dists.map(function(d){return '<button type="button" class="tonechip'+(CHN.filter===d?" on":"")+'" onclick="chnSetFilter(\''+esc(d).replace(/'/g,"")+'\')">'+esc(d)+"</button>";}).join(" ");
  var rows=L.filter(function(x){return CHN.filter==="all"||x.district===CHN.filter;});
  b.innerHTML=rows.length?rows.map(function(x){
-  return '<div style="padding:8px 0;border-bottom:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:8px"><div style="min-width:0"><span style="font-weight:800">'+esc(x.term)+'</span> <span class="hint" style="text-transform:none;letter-spacing:0">· '+esc(x.district)+" · "+esc(chnOrigName(x.origin))+'</span><div style="font-size:13px">'+esc(x.meaning)+"</div>"+(x.example?'<div style="font-size:12px;color:var(--bone-dim);font-style:italic">“'+esc(x.example)+'”</div>':"")+'</div><button style="flex:0 0 auto;background:none;border:none;color:var(--bone-dim);cursor:pointer" onclick="chnDel(\''+x.id+'\')">✕</button></div></div>';
+  return '<div style="padding:8px 0;border-bottom:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:8px"><div style="min-width:0"><span style="font-weight:800">'+esc(x.term)+'</span> '+stPill(x,"slangStatusCycle",x.id)+' <span class="hint" style="text-transform:none;letter-spacing:0">· '+esc(x.district)+" · "+esc(chnOrigName(x.origin))+'</span><div style="font-size:13px">'+esc(x.meaning)+"</div>"+(x.example?'<div style="font-size:12px;color:var(--bone-dim);font-style:italic">“'+esc(x.example)+'”</div>':"")+'</div><button style="flex:0 0 auto;background:none;border:none;color:var(--bone-dim);cursor:pointer" onclick="chnDel(\''+x.id+'\')">✕</button></div></div>';
  }).join(""):'<div class="hint" style="text-transform:none;letter-spacing:0;padding:8px 0">Nothing here yet — add a phrase or seed the starter pack.</div>';}
 async function chnPerson(){
  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
  var d=($("chnPDist")||{}).value||"Couchwick";var vibe=(($("chnPVibe")||{}).value||"").trim();var fam=(($("chnPFam")||{}).value||"").trim();
  var st=$("chnPStatus");if(st)st.innerHTML=spinner("Pulling somebody off the "+d+" block…");
- var mine=(S.slang||[]).filter(function(x){return x.district===d;}).slice(0,12).map(function(x){return x.term+" = "+x.meaning;}).join("; ");
+ var mine=slangActive().filter(function(x){return x.district===d;}).slice(0,12).map(function(x){return x.term+" = "+x.meaning;}).join("; ");
  var sys=vibeCtx("lite")+' You are the STONERALIA RESIDENT GENERATOR, powered by Chiefinese. Create ONE original resident born, raised, working or rooted in the requested district. RULES: default fully to the chosen district — its dialect, values, geography, humor, routines and conflicts; do not blend districts for variety. If FAMILY ROOTS are given, layer that heritage naturally (family sayings, food, code-switching) over the native district. Match speech to generation — elders carry legacy phrases, teens carry new slang. Slang is seasoning, three voices always. STEREOTYPE PROTECTION: grounded and specific, never a caricature — flaws are personal, not cultural. This resident is a generator draft, not canon. '+(mine?("USER-DEFINED "+d+" SLANG (use naturally where fitting): "+mine+". "):"")+'Return JSON ONLY: {"name":"first + street name","age":0,"district":"","role":"what they do","look":"one-line visual for image prompts","quirk":"one specific recurring behavior","voice":{"home":"one sample line, Home Voice","public":"one sample line, Public Voice","pressure":"one sample line, Pressure Voice \u2014 district roots showing"},"slang_used":["terms used"]} \u2014 no mockery spellings, G-rated, culturally respectful.';
  try{
   var p=parseJSON(await _llmRun(sys,"DISTRICT: "+d+(fam?(" · FAMILY ROOTS: "+fam):"")+(vibe?(" · ROLE/VIBE: "+vibe):""),"ideas"));
@@ -3099,7 +3122,9 @@ function castCard(it,kind){
   const img=it.src?'<img src="'+it.src+'">':'<div class="noimg">'+esc((it.name||"?").slice(0,2).toUpperCase())+'</div>';
   const badge=nv>0?'<span class="vbadge">▦ '+nv+' ref'+(nv>1?'s':'')+'</span>':'<span class="vbadge add">＋ add refs</span>';
   let sub=kind==="cast"?((it.nick?'“'+esc(it.nick)+'” ':'')+(it.from?esc(it.from)+' ':'')+(it.show?'· '+esc(it.show)+' ':'')||(it.identity?esc(it.identity.slice(0,44)):'no identity lock yet')):(it.vibe?esc(it.vibe.slice(0,44)):'no vibe set');
+  if(kind==="cast")sub=stPill(it,'castStatusCycle',it.id)+' '+sub;
   if(kind==="cast"&&it.state)sub+='<br><span style="color:#d9a441">▸ now: '+esc(castStateStr(it).slice(0,52))+'</span>';
+  if(kind==="cast"&&stOf(it)==="archived")d.style.opacity=".45";
   d.innerHTML='<button class="x">✕</button>'+(kind==="cast"?'<button class="vbadge" style="right:auto;left:6px;cursor:pointer" onclick="event.stopPropagation();castMetaEdit(\''+it.id+'\')">🪪</button><button class="vbadge" style="right:auto;left:38px;cursor:pointer'+(it.state?';border-color:#d9a441;color:#d9a441':'')+'" onclick="event.stopPropagation();castStateEdit(\''+it.id+'\')">🎬</button>':'')+badge+img+'<div class="meta"><div class="nm">'+esc(it.name)+'</div><div class="ty">'+sub+'</div></div>';
   d.querySelector(".x").addEventListener("click",e=>{e.stopPropagation();
     if(kind==="cast"){S.cast=S.cast.filter(x=>x.id!==it.id);castPicked.delete(it.id);}else{S.sets=S.sets.filter(x=>x.id!==it.id);if(setPicked===it.id)setPicked="";}
@@ -3632,11 +3657,11 @@ function vibeCtx(mode,text){
   if(p)parts.push("ACTIVE DROP: "+(p.name||"")+(p.concept?(" \u2014 "+p.concept):""));
   if(S.cast&&S.cast.length)parts.push("CHARACTER LAW — identity vs. style: a character's IDENTITY (silhouette, build, facial structure, hair shape, signature items, energy) is permanent; their ART STYLE always matches the show or style they currently appear in — same person, different pen. When a character cameos in another show, redraw them faithfully in THAT show's style, keeping them instantly recognizable. Never freeze a character in their home show's rendering.");
   if(!lite&&S.cast&&S.cast.some(function(c){return c.state;}))parts.push("CANON vs STATE: each character's identity/DNA and wardrobe lock are PERMANENT CANON. Lines marked NOW are TEMPORARY scene state \u2014 they apply to this scene only, change scene to scene, and must NEVER rewrite identity, canon wardrobe, or canon facts.");
-  if(lite&&S.cast&&S.cast.length)parts.push("CAST (names): "+S.cast.map(function(c){return c.name+(c.nick?" \u201c"+c.nick+"\u201d":"");}).filter(Boolean).join(", "));
-  if(!lite&&S.cast&&S.cast.length)parts.push("CAST: "+S.cast.map(function(c){if(!c.name)return "";
+  if(lite&&S.cast&&S.cast.length)parts.push("CAST (names): "+S.cast.filter(function(c){return stOf(c)!=="archived";}).map(function(c){return c.name+(c.nick?" \u201c"+c.nick+"\u201d":"");}).filter(Boolean).join(", "));
+  if(!lite&&S.cast&&S.cast.length)parts.push("CAST: "+S.cast.filter(function(c){return stOf(c)!=="archived";}).map(function(c){if(!c.name)return "";
    if(tl){var _nm=c.name.toLowerCase();var _hit=tl.indexOf(_nm)>=0||(c.nick&&tl.indexOf(String(c.nick).toLowerCase())>=0)||_nm.split(/\s+/).some(function(w2){return w2.length>=3&&tl.indexOf(w2)>=0;});
     if(!_hit)return c.name+(c.nick?" \u201c"+c.nick+"\u201d":"")+(c.from?" ("+c.from+")":"");}
-   var t=c.name;if(c.nick)t+=" “"+c.nick+"”";if(c.from)t+=" [from "+c.from+" — speaks, styles and carries slang per that district's Chiefinese]";if(c.show)t+=" [series: "+c.show+"]";if(c.identity)t+=" [DNA: "+String(c.identity).slice(0,180)+"]";if(c.wardrobeNote)t+=" [CS outfit, locked: "+String(c.wardrobeNote).slice(0,120)+"]";if(c.state)t+=" [NOW (temporary): "+castStateStr(c).slice(0,160)+"]";var _am=(c.views||[]).map(function(v,vi){return (v&&v.auth)?(v.auth+"\u2190ref"+(vi+1)):"";}).filter(Boolean).join(", ");if(_am)t+=" [REF AUTHORITY: "+_am+" \u2014 each reference image controls ONLY its tagged domain; a face ref never changes clothing, an outfit ref never changes the face]";return t;}).filter(Boolean).join(" | "));
+   var t=c.name;if(c.nick)t+=" “"+c.nick+"”";if(c.from)t+=" [from "+c.from+" — speaks, styles and carries slang per that district's Chiefinese]";if(c.show)t+=" [series: "+c.show+"]";if(c.identity)t+=" [DNA: "+String(c.identity).slice(0,180)+"]";if(c.wardrobeNote)t+=" [CS outfit, locked: "+String(c.wardrobeNote).slice(0,120)+"]";if(c.state)t+=" [NOW (temporary): "+castStateStr(c).slice(0,160)+"]";if(stOf(c)==="draft")t+=" (DRAFT \u2014 not locked canon yet)";var _am=(c.views||[]).map(function(v,vi){return (v&&v.auth)?(v.auth+"\u2190ref"+(vi+1)):"";}).filter(Boolean).join(", ");if(_am)t+=" [REF AUTHORITY: "+_am+" \u2014 each reference image controls ONLY its tagged domain; a face ref never changes clothing, an outfit ref never changes the face]";return t;}).filter(Boolean).join(" | "));
   if(S.sets&&S.sets.length)parts.push("SETS: "+S.sets.map(function(x){return x.name;}).filter(Boolean).join(", "));
   var _wl=(typeof wroomLaw==="function")?wroomLaw():"";if(_wl)parts.push(_wl);
   var _bl=(typeof cfLaw==="function")?cfLaw():"";if(_bl)parts.push(_bl);
@@ -4892,7 +4917,7 @@ async function cfForge(id){
  var d=dsGet(id);if(!d){toast("Pick a show first.",true);return;}
  var st=$("cfStatus_"+id);if(st)st.innerHTML=spinner("Forging the bible for "+esc(d.name)+"\u2026");
  var known=(S.cast||[]).filter(function(c){return c.show===d.name;}).map(function(c){return c.name+(c.nick?" \u201c"+c.nick+"\u201d":"")+(c.from?" ("+c.from+")":"");}).join("; ");
- var terms=(S.slang||[]).slice(0,14).map(function(t){return t.term;}).join(", ");
+ var terms=slangActive().slice(0,14).map(function(t){return t.term;}).join(", ");
  var sys=vibeCtx()+' You are the STONERALIA CANON FORGE \u2014 the bible room. Build ONE show bible. LAW: cannabis is atmosphere never personality; comedy comes from social systems and people failing them; Hoodie Chieff NEVER speaks (signs, shade tilts, stillness); district first \u2014 every district has its own rule; slang is seasoning; identity is permanent but art style belongs to the show; flaws are personal never cultural; elders and family carry weight, never caricature; G-rated, commercially safe, all original, no real people. Identity locks must be STRUCTURAL (build, hair shape, signature items, posture) so the character survives being redrawn in another show\u2019s style. Voice/movement/stillness descriptors must be short enough to paste straight into an image or video prompt. Return JSON ONLY: {"logline":"one line","thesis":"the thing under the jokes, 2 sentences","tone":"one line","districts":[{"name":"","rule":"the rule that shapes conflict there"}],"institutions":["systems this show antagonizes"],"cast":[{"name":"","nick":"","from":"district","identity":"structural identity lock","function":"what they are in the machine","flaw":"one flaw that turns small problems into episodes","stake":"what they want across the series and what it costs","voices":{"home":"","public":"","pressure":""},"movement":"","stillness":"","wardrobe":"default fit and what never comes off","engine":"their repeatable story shape","gags":["visual repeatable bits"]}],"ensemble":[{"pair":"A + B","generates":"what that pairing reliably produces"}],"slang":[{"term":"","meaning":"","district":"","example":"one line of dialogue using it"}],"episode_engine":"the repeatable spine of a typical episode","springboards":["6 episode ideas, one line each"],"gags":["show-wide running gags"],"production":{"render":"one of: stoneralia_animated, stoneralia_cinematic, painterly, fashion, comic, commercial, ugc","pacing":"one of: balanced, contemplative, fast_action, epic, suspense, comedy, music, product","writers":["two roster keys max from the equipped writers room if set"],"style_note":"the art-style line for this show"}} \u2014 4 to 6 cast members maximum, 5 to 8 slang terms.';
  var ask="SHOW: "+d.name+(d.logline?" | LOGLINE: "+d.logline:"")+(known?" | EXISTING CAST (reuse, do not duplicate): "+known:"")+(terms?" | EXISTING CHIEFINESE: "+terms:"")+((d.writers||[]).length?" | WRITERS ROOM: "+d.writers.join(", "):"");
  try{

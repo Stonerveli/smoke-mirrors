@@ -1070,7 +1070,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v9.90 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v9.91 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1095,7 +1095,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance"},datasets:[],dsActive:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance"},datasets:[],dsActive:"",
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -2511,7 +2511,24 @@ function cdPaint(){
  var script=[p.title,p.hook,"",p.definition,p.example,"",skit,"",p.chiefin_truth,p.outro].filter(Boolean).join("\n");
  b.querySelectorAll("[data-cd]").forEach(function(btn){btn.addEventListener("click",function(){
   var k=btn.getAttribute("data-cd");
-  if(k==="comic"){S.comicIdea3={setup:(p.hook||"")+" "+(p.definition||""),problem:p.misunderstanding||"",twist:p.chiefin_truth||""};save();go("comics");toast("Loaded into Comics \u2014 generate the pages.");}
+  if(k==="comic"){
+    S.comicIdea3={setup:(p.hook||"")+" "+(p.definition||""),problem:p.misunderstanding||"",twist:p.chiefin_truth||""};
+    var beats=Array.isArray(p.skit)?p.skit.length:0;
+    var kindByBeats=beats>=11?"strip12":beats>=8?"strip9":beats>=5?"strip6":beats>=3?"strip3":beats===1?"single":"strip6";
+    S.comicKind=kindByBeats;
+    var whos=Array.isArray(p.skit)?p.skit.map(function(x){return (x&&x.who||"").toLowerCase();}):[];
+    var refs=[];(S.cast||[]).forEach(function(c){var nm=c.name.toLowerCase().trim();if(!nm)return;
+     var toks=nm.split(/\s+/).filter(function(t){return t.length>=3;});
+     var hit=whos.some(function(w){w=(w||"").trim();if(!w)return false;
+       if(w===nm)return true;
+       if(w.length>=4&&(nm===w||nm.indexOf(w+" ")===0||nm.indexOf(" "+w)>=0))return true;
+       return toks.some(function(t){return w===t||w.indexOf(t+" ")>=0||w.indexOf(" "+t)>=0||w===t;});});
+     if(hit&&refs.indexOf(c.id)<0)refs.push(c.id);});
+    refs=refs.filter(function(id){var me=(S.cast.find(function(c){return c.id===id;})||{}).name||"";var ml=me.toLowerCase();
+     return !refs.some(function(o){if(o===id)return false;var on=((S.cast.find(function(c){return c.id===o;})||{}).name||"").toLowerCase();return on!==ml&&on.indexOf(ml)>=0&&on.length>ml.length;});});
+    S.comicCharRefs=refs.slice(0,6);
+    S.curComic=null;save();go("comics");
+    toast("Loaded "+beats+" beats \u2192 "+((COMIC_KINDS[kindByBeats]||{}).label||"comic")+(refs.length?" \u00b7 "+refs.length+" cast attached":"")+". Review + generate.");}
   else if(k==="studio"){go("studio");var el=$("prompt");if(el)el.value=p.card_prompt||"";toast("Definition card prompt loaded.");}
   else if(k==="board"){go("board");var t2=$("boardScript");if(t2)t2.value=script;toast("Skit loaded into Pre-Roll.");}
   else if(k==="copy"){rpCopyTxt(script);}
@@ -4775,7 +4792,9 @@ const COMIC_KINDS={
  single:{label:"Single Panel (Far Side)",panels:1},
  strip3:{label:"3-Panel Strip",panels:3},
  strip4:{label:"4-Panel Strip",panels:4},
- strip6:{label:"6-Panel Strip",panels:6}
+ strip6:{label:"6-Panel Strip",panels:6},
+ strip9:{label:"9-Panel Strip",panels:9},
+ strip12:{label:"12-Panel Page",panels:12}
 };
 const COMIC_LOOKS={
  toon:{label:"Flat 2D Toon",style:"bold flat 2D cartoon, thick uniform black outlines, flat color fills, light print grain, matte-black and bud-green palette, mobile-readable"},
@@ -4786,17 +4805,22 @@ const COMIC_LOOKS={
 function curComic(){return S.comics.find(c=>c.id===S.curComic)||null;}
 function comicRefs(comic){
   const out=[],cap=6;
-  const lead=comic.leadId?S.cast.find(c=>c.id===comic.leadId):null;
-  if(lead){viewsOf(lead).forEach(v=>{if(v.src&&out.length<cap)out.push(v.src);});
-    (lead.wardrobe||[]).forEach(id=>{const sp=S.stash.find(x=>x.id===id);if(sp)viewsOf(sp).forEach(v=>{if(v.src&&out.length<cap)out.push(v.src);});});}
+  const ids=[];
+  if(comic.leadId)ids.push(comic.leadId);
+  (comic.charRefs||[]).forEach(id=>{if(ids.indexOf(id)<0)ids.push(id);});
+  ids.forEach(cid=>{const c=S.cast.find(x=>x.id===cid);if(!c)return;
+    (typeof authSort==="function"?authSort(viewsOf(c)):viewsOf(c)).forEach(v=>{if(v.src&&out.length<cap&&out.indexOf(v.src)<0)out.push(v.src);});
+    (c.wardrobe||[]).forEach(id=>{const sp=S.stash.find(x=>x.id===id);if(sp)viewsOf(sp).forEach(v=>{if(v.src&&out.length<cap&&out.indexOf(v.src)<0)out.push(v.src);});});});
   const set=comic.setId?S.sets.find(x=>x.id===comic.setId):null;
-  if(set)viewsOf(set).forEach(v=>{if(v.src&&out.length<cap)out.push(v.src);});
+  if(set)viewsOf(set).forEach(v=>{if(v.src&&out.length<cap&&out.indexOf(v.src)<0)out.push(v.src);});
   return out;
 }
 function comicNote(comic){
   const lead=comic.leadId?S.cast.find(c=>c.id===comic.leadId):null;
   const set=comic.setId?S.sets.find(x=>x.id===comic.setId):null;
-  return (lead?identityNote([lead]):"")+(set?setNote(set):"");
+  var extra=(comic.charRefs||[]).map(function(id){return S.cast.find(function(c){return c.id===id;});}).filter(Boolean).filter(function(c){return !lead||c.id!==lead.id;});
+  var extraNote=extra.length?(" Other characters present, keep each visually consistent with their identity: "+extra.map(function(c){return c.name+(c.identity?" ("+String(c.identity).slice(0,120)+")":"");}).join("; ")+"."):"";
+  return extraNote+(lead?identityNote([lead]):"")+(set?setNote(set):"");
 }
 const PLATFORM_GUIDE={
  ig:{name:"Instagram",tier:"Cannabis-forward",allow:["Culture, comedy and character content","Product shots without hard-sell language","Link in bio to the store"],avoid:["Buy links + sales pressure in captions","Consumption close-ups as Reel covers","Banned hashtags \u2014 they quietly cap reach"],best:["Daily Reel or carousel, 4:5 / 9:16","Hook line before the fold","Comics as carousels \u2014 one panel per slide"]},
@@ -5369,7 +5393,7 @@ const VIBE_TOOLS={
       var comic={id:uid(),title:st.title||"Vibe comic",kind:kind,look:(st.look==="inked"?"inked":(S.comicLook||"toon")),leadId:S.comicLead||"",setId:S.comicSet||"",idea:"",mode:(st.mode==="dialogue"?"dialogue":"silent"),panels:ps.map(function(p,i){return {id:uid(),n:i+1,caption:(p.caption||"")+"",dialogue:(p.dialogue||"")+"",visual:(p.visual||"")+"",url:""};}),seed:Math.floor(Math.random()*1e9),ts:Date.now()};
       S.comics.unshift(comic);S.curComic=comic.id;save();go("comics");return;}
     if(st.mode&&!fillOnly)S.comicMode=(st.mode==="dialogue"?"dialogue":"silent");
-    if(st.panels_count){var n2=+st.panels_count;if(n2>=1)S.comicKind=n2===1?"single":(n2<=3?"strip3":(n2<=4?"strip4":"strip6"));}
+    if(st.panels_count){var n2=+st.panels_count;if(n2>=1)S.comicKind=n2===1?"single":(n2<=3?"strip3":(n2<=4?"strip4":(n2<=6?"strip6":(n2<=9?"strip9":"strip12"))));}
     if(st.look&&!fillOnly&&(st.look==="toon"||st.look==="inked"))S.comicLook=st.look;
     var i3=S.comicIdea3||{setup:"",problem:"",twist:""};["setup","problem","twist"].forEach(function(k){if(st[k]!=null&&(!fillOnly||!i3[k]))i3[k]=st[k]+"";});S.comicIdea3=i3;S.curComic=null;save();go("comics");
     vibeSetDom({setup:"cbSetup",problem:"cbProblem",twist:"cbTwist"},i3,false);
@@ -5670,6 +5694,17 @@ async function twSuggest(){
   if(b)b.innerHTML='<div class="hint" style="text-transform:none;letter-spacing:0;margin:6px 0 4px">Tap one to use it:</div>'+L.map(function(t,i){return '<button type="button" class="btn ghost sm" data-tw="'+i+'" style="width:100%;text-align:left;margin-bottom:5px;white-space:normal">'+esc(t)+"</button>";}).join("");
   b.querySelectorAll("[data-tw]").forEach(function(x){x.addEventListener("click",function(){var el=$("cbTwist");if(el)el.value=L[+x.getAttribute("data-tw")];b.innerHTML="";toast("Twist locked 🎲");});});
  }catch(e){if(b)b.innerHTML=errLine(e);}}
+function comicPaintChars(){
+ var host=$("comicChars");if(!host)return;
+ if(!Array.isArray(S.comicCharRefs))S.comicCharRefs=[];
+ var cast=(S.cast||[]).filter(function(c){return c.name;});
+ if(!cast.length){host.innerHTML='<div class="hint" style="text-transform:none;letter-spacing:0">No characters yet \u2014 add them in Universe \u2192 Cast.</div>';return;}
+ host.innerHTML=cast.map(function(c){var on=S.comicCharRefs.indexOf(c.id)>=0;
+  return '<button type="button" class="tok'+(on?" on":"")+'" data-cch="'+c.id+'">'+(on?"\u2713 ":"")+esc(c.name)+(c.nick?' \u201c'+esc(c.nick)+'\u201d':'')+"</button>";}).join("");
+ host.querySelectorAll("[data-cch]").forEach(function(b){b.addEventListener("click",function(){
+  var id=b.getAttribute("data-cch"),i=S.comicCharRefs.indexOf(id);
+  if(i>=0)S.comicCharRefs.splice(i,1);else{if(S.comicCharRefs.length>=6){toast("Six characters max per comic.",true);return;}S.comicCharRefs.push(id);}
+  save();comicPaintChars();}); });}
 function renderComics(){
   const host=$("comicBody");if(!host)return;
   const cc=curComic();if(cc){renderComicView(cc);return;}
@@ -5677,6 +5712,7 @@ function renderComics(){
   let h='<div class="card"><label class="fld">Type</label><select id="comicKind"></select>';
   h+='<label class="fld" style="margin-top:10px">Look</label><select id="comicLook"></select>';h+='<label class="fld" style="margin-top:10px">Comedy mechanic</label><select id="comicMechanic"></select>';h+='<label class="fld" style="margin-top:10px">Comedy mode</label><select id="comicMode"><option value="silent">Silent — visual gag, caption below</option><option value="dialogue">Dialogue — speech bubbles in panels</option></select><div class="hint" style="margin-top:4px;text-transform:none;letter-spacing:0">Dialogue is for talking characters (EveryStoner &amp; co). Chieff is mouthless — he stays silent either way.</div>';h+='<label class="fld" style="margin-top:10px">Resolution</label><select id="comicRes"><option value="1K">1K · standard</option><option value="2K">2K · sharper</option><option value="4K">4K · 2× price</option></select>';
   h+='<label class="fld" style="margin-top:10px">Lead character</label><select id="comicLead"></select>';
+  h+='<label class="fld" style="margin-top:10px">Characters in this comic <span class="hint" style="text-transform:none;letter-spacing:0">\u2014 tap to lock their look into every panel</span></label><div class="tokenchips" id="comicChars"></div>';
   h+='<label class="fld" style="margin-top:10px">Location</label><select id="comicSet"></select>';
   h+='<label class="fld" style="margin-top:12px">Idea builder</label>';h+='<div class="hint" style="margin:0 0 6px;text-transform:none;letter-spacing:0">Tap a spark to auto-fill, or write your own. Setup alone works — problem &amp; twist sharpen the joke.</div>';h+='<div id="comicSparks" class="tonerow" style="margin-bottom:8px"></div>';h+='<input type="text" id="cbSetup" placeholder="Setup — what is happening? (e.g. EveryStoner buys one blunt at 3AM)">';h+='<input type="text" id="cbProblem" placeholder="Going wrong — the goal or the problem (optional)" style="margin-top:6px">';h+='<input type="text" id="cbTwist" placeholder="Twist — the funny turn (optional; where the joke lives)" style="margin-top:6px"><button class="btn ghost sm" style="width:100%;margin-top:6px" onclick="twSuggest()">🎲 Suggest twists — tuned to this story</button><div id="twOut"></div>';h+='<div class="row" style="margin-top:8px"><button class="btn ghost sm" id="comicDice" style="flex:1">🎲 Surprise me</button><button class="btn ghost sm" id="comicIdeaBtn" style="flex:1">✦ AI gag</button></div><div id="comicIdeaStatus"></div>';
   h+='<button class="btn green" id="comicGen" style="margin-top:12px;width:100%">✦ Generate comic</button><div id="comicGenStatus"></div></div>';
@@ -5691,6 +5727,8 @@ function renderComics(){
   $("comicGen").addEventListener("click",genComic);
   if($("cjTpl1"))$("cjTpl1").addEventListener("click",()=>comicJsonTpl(1));if($("cjTpl3"))$("cjTpl3").addEventListener("click",()=>comicJsonTpl(3));if($("cjTpl6"))$("cjTpl6").addEventListener("click",()=>comicJsonTpl(6));if($("cjLoad"))$("cjLoad").addEventListener("click",comicLoadJson);
   if(!S.comicIdea3)S.comicIdea3={setup:"",problem:"",twist:""};
+  if($("comicKind")&&S.comicKind){$("comicKind").value=S.comicKind;}
+  comicPaintChars();
   if($("cbSetup"))$("cbSetup").value=S.comicIdea3.setup||"";
   if($("cbProblem"))$("cbProblem").value=S.comicIdea3.problem||"";
   if($("cbTwist"))$("cbTwist").value=S.comicIdea3.twist||"";
@@ -5717,10 +5755,13 @@ async function suggestComicIdea(){
 async function genComic(){
   const llmRun=(s,u)=>_llmRun(s,u,"ideas");
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
-  const kind=$("comicKind").value,look=$("comicLook").value,leadId=$("comicLead").value,setId=$("comicSet").value;var _cbS=($("cbSetup")?$("cbSetup").value:"").trim(),_cbP=($("cbProblem")?$("cbProblem").value:"").trim(),_cbT=($("cbTwist")?$("cbTwist").value:"").trim();var idea=[_cbS?"Setup: "+_cbS:"",_cbP?"Going wrong: "+_cbP:"",_cbT?"Twist: "+_cbT:""].filter(Boolean).join(". ");
+  const kind=$("comicKind").value,look=$("comicLook").value,leadId=$("comicLead").value,setId=$("comicSet").value;S.comicKind=kind;save();var _cbS=($("cbSetup")?$("cbSetup").value:"").trim(),_cbP=($("cbProblem")?$("cbProblem").value:"").trim(),_cbT=($("cbTwist")?$("cbTwist").value:"").trim();var idea=[_cbS?"Setup: "+_cbS:"",_cbP?"Going wrong: "+_cbP:"",_cbT?"Twist: "+_cbT:""].filter(Boolean).join(". ");
   const ko=COMIC_KINDS[kind]||COMIC_KINDS.strip3;const single=ko.panels===1;
   const cmech=COMEDY_MECHANICS.find(m=>m.n===S.comicMechanic)||null;const st=$("comicGenStatus");st.innerHTML=spinner("Writing the comic…");
   const lead=leadId?S.cast.find(c=>c.id===leadId):null;const set=setId?S.sets.find(x=>x.id===setId):null;
+  var castRefs=(S.comicCharRefs||[]).map(function(id){return (S.cast||[]).find(function(c){return c.id===id;});}).filter(Boolean);
+  if(lead&&!castRefs.some(function(c){return c.id===lead.id;}))castRefs.unshift(lead);
+  var castDNA=castRefs.map(function(c){return c.name+(c.nick?" \u201c"+c.nick+"\u201d":"")+(c.identity?": "+String(c.identity).slice(0,200):"");}).join(" | ");
   const mode=($("comicMode")?$("comicMode").value:(S.comicMode||"silent"));const dlg=(mode==="dialogue");
   const sys=STONERALIA_LAW+" "+VOICE_DNA+" You write COMICS — "+(single?"a single-panel Far Side-style cartoon: one image, one short deadpan caption, the whole joke in one frame.":"a "+ko.panels+"-panel comic strip built on a comedy arc — Setup, Trigger, Escalation, Complication, Peak Chaos, Payoff — compressed cleanly into "+ko.panels+" panels; each panel one readable beat that moves the story forward; cause and effect — every mistake makes the situation worse; escalate to peak chaos, then end on the hardest payoff: punchline, reveal, reversal, callback or visual gag.")+" Keep captions short and dry; lean visual."+(dlg?" DIALOGUE MODE: panels may include brief speech-bubble dialogue — natural casual voices, max 8 words per line, 1-2 lines per panel, label every speaker (Name: \"line\"). Chieff/Chieff is MOUTHLESS and never speaks — others talk around him. The visual gag must still carry the joke even without the words.":" The joke must read with the sound off — visual punchline, no dialogue, no speech bubbles.")+(lead&&/everystoner/i.test(lead.name||"")?" LEAD VOICE — The EveryStoner: casual, slightly dumb but not clueless, easily distracted, mildly overconfident, occasionally paranoid, accidentally clever, sincere even when his logic makes no sense.":"")+(cmech?" PRIMARY COMEDY MECHANIC: "+cmech.n+" — "+cmech.p+".":"");
   const ctx=(lead?"LEAD: "+lead.name+(lead.identity?" — "+lead.identity:"")+wardrobePieces(lead)+(lead.wardrobeNote?" Wardrobe: "+lead.wardrobeNote:"")+"\n":"")+(set?"LOCATION: "+set.name+(set.vibe?" — "+set.vibe:"")+(set.props&&set.props.length?" Recurring here: "+set.props.map(p=>p.name+(p.desc?" ("+p.desc+")":"")).join("; "):"")+"\n":"");
@@ -5728,7 +5769,7 @@ async function genComic(){
   try{
     const d=parseJSON(await llmRun(sys,usr));const ps=(d.panels||[]).slice(0,ko.panels);
     if(!ps.length)throw new Error("No panels came back.");
-    const comic={id:uid(),title:d.title||idea||"Untitled comic",kind,look,leadId,setId,idea,mode:mode,panels:ps.map((p,i)=>({id:uid(),n:i+1,caption:p.caption||"",dialogue:p.dialogue||"",visual:p.visual||"",url:""})),seed:Math.floor(Math.random()*1e9),ts:Date.now()};
+    const comic={id:uid(),title:d.title||idea||"Untitled comic",kind,look,leadId,setId,charRefs:(S.comicCharRefs||[]).slice(),idea,mode:mode,panels:ps.map((p,i)=>({id:uid(),n:i+1,caption:p.caption||"",dialogue:p.dialogue||"",visual:p.visual||"",url:""})),seed:Math.floor(Math.random()*1e9),ts:Date.now()};
     S.comics.unshift(comic);S.curComic=comic.id;save();renderComics();toast("Comic written — draw the panels.");
   }catch(e){st.innerHTML=errLine(e);}
 }

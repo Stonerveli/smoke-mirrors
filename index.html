@@ -385,7 +385,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   </div>
   <div class="card">
     <label class="fld">Prompt</label>
-    <textarea id="prompt" placeholder="Describe the shot…"></textarea><div style="text-align:right;margin-top:4px"><button class="btn ghost sm" id="promptClear" style="padding:4px 10px;font-size:11px">✕ Clear</button></div><button class="btn ghost sm" id="editUpload" style="margin-top:8px;width:100%">⬆ Upload an image to upscale / remove BG</button><input type="file" id="editFile" accept="image/*" style="display:none">
+    <textarea id="prompt" placeholder="Describe the shot…"></textarea><div id="studioSeedNote"></div><div style="text-align:right;margin-top:4px"><button class="btn ghost sm" id="promptClear" style="padding:4px 10px;font-size:11px">✕ Clear</button></div><button class="btn ghost sm" id="editUpload" style="margin-top:8px;width:100%">⬆ Upload an image to upscale / remove BG</button><input type="file" id="editFile" accept="image/*" style="display:none">
     <div class="tokenchips" id="tokenChips"></div>
   </div>
   <div class="card">
@@ -1077,7 +1077,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v9.95 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v9.97 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1102,7 +1102,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance"},datasets:[],dsActive:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance"},datasets:[],dsActive:"",
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -1542,6 +1542,7 @@ function go(name){
   if(name==="run")renderRun();
   if(name==="train")renderLab();
   if(name==="studio"||name==="board"||name==="comics"||name==="fight"||name==="story"||name==="train"||name==="chiefinese"||name==="shows"||name==="networks")try{renderHUD("view-"+name);}catch(e){}
+  if(name==="studio")try{var _sn=$("studioSeedNote");if(_sn){var _r=(S.studioSeedRefs||[]);_sn.innerHTML=_r.length?('<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px;color:var(--bud)">\U0001f455 '+_r.length+' product photo(s) locked as reference \u2014 <button class="btn ghost sm" style="padding:1px 8px" onclick="S.studioSeedRefs=[];save();go(&quot;studio&quot;)">clear</button></div>'):"";}}catch(e){}
   if(name==="socials")renderSocials();
   if(name==="brand")renderBrand();
   if(name==="board"){if(typeof mdRecipeFill==="function")mdRecipeFill();if(typeof rmsFill==="function")rmsFill();if(typeof cineFill==="function")cineFill();}
@@ -1816,7 +1817,7 @@ async function runGenerate(){
   const castItems=S.cast.filter(c=>prompt.toLowerCase().indexOf(("@"+c.name).toLowerCase())>-1);
   const setItem=S.sets.find(x=>x.id===setPicked)||null;
   const sceneText=identityNote(castItems)+setNote(setItem)+refNote(stashItems);
-  const refItems=[...castItems,...(setItem?[setItem]:[]),...stashItems];
+  var seedItems=(Array.isArray(S.studioSeedRefs)?S.studioSeedRefs:[]).map(function(u,i){return {id:"seed"+i,name:"product",views:[{label:"Product",src:u,auth:"outfit"}]};}); const refItems=[...seedItems,...castItems,...(setItem?[setItem]:[]),...stashItems];
   if(st.kind==="image"){input.num_images=parseInt($("numImages").value)||1;Object.assign(input,sizeFor(model,aspect));withRes(model,input);
     if(st.refs){const urls=flattenRefs(refItems,12);if(urls.length)input.image_urls=urls;}
     if(sceneText)input.prompt=prompt2+sceneText;}
@@ -2818,7 +2819,12 @@ function nextHint(viewId){
   else if(viewId==="view-train"){var d=(typeof dsGet==="function")?dsGet(S.dsActive):null;var n=d?dsCount(d):0;
    t=!d?"＋ New show dataset — name it, set the trigger word.":(d.trained?"Trained ✓ — tap Use in Studio and generate in-style.":(n<15?"Feed "+d.name+" — autopilot a shot list or ➡ Send images from The Cut ("+n+"/25).":(n<25?"Almost — "+n+"/25–35. A few more clean ones.":"The set is ready — hit Train (~$2), then save the file it returns.")));}
   else if(viewId==="view-chiefinese"){t=(S.slang&&S.slang.length)?"Generate a resident — your dictionary shapes how they talk.":"Load the starter pack, then add your own — the language grows the world.";}
-  else if(viewId==="view-networks"){var _n=(S.networks||[]).length;t=_n?"Tap a network → create its shows → bind cast + locations to it.":"";}
+  else if(viewId==="view-networks"){
+   var _shows=(typeof dsState==="function")?dsState().filter(function(d){return d.network;}).length:0;
+   var _bound=(S.cast||[]).filter(function(c){return c.network;}).length;
+   if(!_shows)t="No shows in any network yet — tap a network → ＋ Create shows, and pick its network.";
+   else if(!_bound)t="Bind cast to a network — open a character (🪪) and set its home network.";
+   else t="Networks are staffed — use Crossover Mode for guests, or Chiefin’ Season to drop a spot.";}
   else if(viewId==="view-shows"){var _L=(typeof dsState==="function")?dsState():[];var _nw=_L.filter(function(x){return (x.writers||[]).length;}).length;t=!_L.length?"＋ New series — name it, then give it a logline and a writer.":(_nw<_L.length?"Equip a writer on every show — 🔥 marks the best fits.":"Rooms are staffed — make something in Comics or Pre-Roll.");}
   else if(viewId==="view-run"){t="Roll the idea → make it → caption → post → ✅ Close the day. One lap.";}
  }catch(e){}
@@ -5117,8 +5123,133 @@ function cfPaint(d){
  h+='<div class="row" style="margin-top:6px"><button class="btn ghost sm" style="flex:1" onclick="cfApplyProd(\''+d.id+'\')">🎛 Apply production locks</button><button class="btn ghost sm" style="flex:1" onclick="cfCopy(\''+d.id+'\')">\u29c9 Copy bible</button></div>';
  h+='<button class="btn ghost sm" style="width:100%;margin-top:6px" onclick="cfForge(\''+d.id+'\')">\u21bb Re-forge</button><div id="cfStatus_'+d.id+'"></div></details>';
  return h;}
+function xoverGrant(id,scope,target,dur){
+ var c=(S.cast||[]).find(function(x){return x.id===id;});if(!c)return;
+ if(scope==="net"){c.netAccess=c.netAccess||[];if(c.netAccess.indexOf(target)<0)c.netAccess.push(target);}
+ else{c.guests=c.guests||[];if(c.guests.indexOf(target)<0)c.guests.push(target);}
+ c.appearances=c.appearances||[];
+ c.appearances.unshift({scope:scope,target:target,dur:dur||"guest",ts:Date.now()});
+ save();}
+function xoverRevoke(id,scope,target){
+ var c=(S.cast||[]).find(function(x){return x.id===id;});if(!c)return;
+ if(scope==="net"&&c.netAccess){var i=c.netAccess.indexOf(target);if(i>=0)c.netAccess.splice(i,1);}
+ if(scope==="show"&&c.guests){var j=c.guests.indexOf(target);if(j>=0)c.guests.splice(j,1);}
+ save();}
+function xoverReassign(id,newNet){
+ var c=(S.cast||[]).find(function(x){return x.id===id;});if(!c)return;
+ if(!confirm("PERMANENTLY move "+c.name+" to "+(newNet||"universe-wide")+"? This changes their home network. Their old home was: "+(c.network||"universe-wide")+"."))return;
+ c.appearances=c.appearances||[];c.appearances.unshift({scope:"reassign",target:newNet,from:c.network||"",dur:"permanent",ts:Date.now()});
+ c.network=newNet;save();renderXover();
+ toast(c.name+" reassigned to "+(newNet||"universe-wide")+".");}
+function renderXover(){
+ var host=$("xoverBody");if(!host)return;
+ var nets=netList(),cast=(S.cast||[]).filter(function(c){return c.name;});
+ if(!cast.length){host.innerHTML='<div class="card"><div class="hint" style="text-transform:none;letter-spacing:0">No characters yet — add cast first.</div></div>';return;}
+ var pick=S.xoverPick||"";
+ var picker='<label class="fld">Character</label><select onchange="S.xoverPick=this.value;save();renderXover();"><option value="">— pick someone —</option>'+cast.map(function(c){return '<option value="'+c.id+'"'+(c.id===pick?" selected":"")+">"+esc(c.name)+(c.network?" · "+esc(c.network):" · universe")+"</option>";}).join("")+"</select>";
+ var body="";
+ var c=cast.find(function(x){return x.id===pick;});
+ if(c){
+  var acc=(c.netAccess||[]),gs=(c.guests||[]);
+  body='<div class="card"><div style="font-weight:800;font-family:var(--slate)">'+esc(c.name)+'</div>'
+   +'<div class="hint" style="text-transform:none;letter-spacing:0;margin:2px 0 10px">Home network: '+esc(c.network||"universe-wide")+(c.show?" · home show: "+esc(c.show):"")+"</div>";
+  body+='<label class="fld">Guest access to networks</label><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">'
+   +nets.map(function(n){var on=acc.indexOf(n)>=0||n===c.network;
+     return '<button class="btn '+(on?"green":"ghost")+' sm" '+(n===c.network?'disabled style="opacity:.6"':'onclick="'+(acc.indexOf(n)>=0?"xoverRevoke(\''+c.id+'\',\'net\',\''+esc(n)+'\')":"xoverGrant(\''+c.id+'\',\'net\',\''+esc(n)+'\',\'arc\')")+';renderXover()"')+'>'+(n===c.network?"★ home":(acc.indexOf(n)>=0?"✓ ":"")+esc(n))+"</button>";}).join("")+"</div>";
+  var allShows=showList();
+  if(allShows.length){body+='<label class="fld" style="margin-top:10px">Guest access to specific shows</label><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">'
+   +allShows.map(function(sn){var on=gs.indexOf(sn)>=0;
+     return '<button class="btn '+(on?"green":"ghost")+' sm" onclick="'+(on?"xoverRevoke(\''+c.id+'\',\'show\',\''+esc(sn)+'\')":"xoverGrant(\''+c.id+'\',\'show\',\''+esc(sn)+'\',\'guest\')")+';renderXover()">'+(on?"✓ ":"")+esc(sn)+"</button>";}).join("")+"</div>";}
+  var hist=(c.appearances||[]).slice(0,6);
+  if(hist.length)body+='<label class="fld" style="margin-top:10px">Appearance history</label><div class="hint" style="text-transform:none;letter-spacing:0">'+hist.map(function(a){return (a.scope==="reassign"?"⇄ reassigned to "+esc(a.target):(a.scope==="net"?"📡 guest on network "+esc(a.target):"📺 guest on "+esc(a.target)))+" ("+esc(a.dur||"")+")";}).join("<br>")+"</div>";
+  body+='<button class="btn ghost sm" style="width:100%;margin-top:12px" onclick="var v=prompt(\'Permanently reassign home network to (blank=universe-wide):\','+"'"+"'"+'+(c.network||\'\'));if(v!==null)xoverReassign(\''+c.id+'\',v.trim());">⇄ Permanent reassignment…</button>';
+  body+="</div>";
+ }
+ host.innerHTML='<div class="card">'+picker+'</div>'+body;}
 function netOpenShows(net){S.comicNet=net;S.comicShow="";save();go("shows");}
 function netMakePromo(net){S.comicNet=net;S.comicShow="";save();go("comics");toast(net+" — build a promo. Network filter is set.");}
+var AD_TYPES=["Animated commercial","Product spot","Fake in-universe ad","Character endorsement","Streetwear drop","Network bumper","Sponsor tag","Product placement","Holiday campaign","Crossover campaign","Social reel","Brought-to-you-by segment"];
+var AD_FREQ=["Rare","Occasional","Regular","Campaign-heavy"];
+function adWardHtml(){
+ var w=(S.adWardrobe||[]);
+ var chips=w.length?('<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">'+w.map(function(im,i){
+   return '<div style="position:relative;width:64px;height:64px;border-radius:8px;overflow:hidden;border:1px solid var(--line)"><img src="'+im.src+'" style="width:100%;height:100%;object-fit:cover"><button onclick="adWardDel('+i+')" style="position:absolute;top:1px;right:1px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:4px;font-size:10px;width:16px;height:16px;cursor:pointer">'+'✕'+'</button>'+(im.label?'<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.6);color:#fff;font-size:8px;text-align:center">'+esc(im.label)+'</div>':'')+'</div>';
+  }).join("")+'</div>'):'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">No product photos yet '+'—'+' upload the drop or pull from your wardrobe.</div>';
+ return '<label class="fld" style="margin-top:10px">'+'👕'+' Product photos <span class="hint" style="text-transform:none;letter-spacing:0">'+'—'+' the exact garment renders into the spot</span></label>'
+  +'<div class="row"><button class="btn ghost sm" style="flex:1" onclick="document.getElementById(&quot;adWardFile&quot;).click()">'+'⬆'+' Upload new / future drop</button><button class="btn ghost sm" style="flex:1" onclick="adWardPick()">'+'👚'+' From wardrobe</button></div>'
+  +'<input type="file" id="adWardFile" accept="image/*" multiple style="display:none" onchange="adWardUpload(this)">'
+  +chips;}
+async function adWardUpload(inp){
+ var files=inp.files?Array.prototype.slice.call(inp.files):[];
+ if(!files.length)return;
+ if(!Array.isArray(S.adWardrobe))S.adWardrobe=[];
+ for(var i=0;i<files.length;i++){try{var src=await resizeImage(files[i],1024,0.82);S.adWardrobe.push({src:src,label:(files[i].name||"").replace(/\.[^.]+$/,"").slice(0,18)});}catch(e){}}
+ save();inp.value="";renderNetworks();
+ toast(files.length+" product photo"+(files.length===1?"":"s")+" added to the spot.");}
+function adWardDel(i){if(!Array.isArray(S.adWardrobe))return;S.adWardrobe.splice(i,1);save();renderNetworks();}
+function adWardPick(){
+ var st=(S.stash||[]).filter(function(x){return x.src||(x.views&&x.views[0]);});
+ if(!st.length){toast("No wardrobe items yet "+'—'+" add them in the wardrobe section, or upload here.",true);return;}
+ var h='<div style="font-weight:800;font-family:var(--slate);margin-bottom:6px">Pull from wardrobe</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">Tap pieces to add to this spot.</div>';
+ h+='<div style="display:flex;flex-wrap:wrap;gap:8px">'+st.map(function(x){var src=x.src||(x.views&&x.views[0].src);
+   return '<div style="width:76px;text-align:center;cursor:pointer" onclick="adWardFromStash(&quot;'+x.id+'&quot;)"><img src="'+src+'" style="width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--line)"><div style="font-size:9px;color:var(--bone-dim);margin-top:2px">'+esc((x.name||"").slice(0,14))+'</div></div>';
+  }).join("")+'</div>';
+ sendSheet(h);}
+function adWardFromStash(id){
+ var x=(S.stash||[]).find(function(s2){return s2.id===id;});if(!x)return;
+ var src=x.src||(x.views&&x.views[0]&&x.views[0].src);if(!src)return;
+ if(!Array.isArray(S.adWardrobe))S.adWardrobe=[];
+ S.adWardrobe.push({src:src,label:(x.name||"").slice(0,18)});
+ save();var sh=$("sendsheet");if(sh)sh.remove();renderNetworks();
+ toast((x.name||"Piece")+" added to the spot.");}
+async function adMake(){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var net=(($("adNet")||{}).value||"").trim();
+ var typ=(($("adType")||{}).value||"Product spot");
+ var prod=(($("adProduct")||{}).value||"").trim();
+ var st=$("adStatus");if(st)st.innerHTML=spinner("Writing the Chiefin\u2019 Season spot\u2026");
+ var castNames=net?castForNet(net).slice(0,6).map(function(c){return c.name;}):[];
+ var wardCount=(S.adWardrobe||[]).length; var wardNote=wardCount?(" PRODUCT PHOTOS: "+wardCount+" reference photo(s) of the ACTUAL garment are attached — the key-frame visual must feature THIS exact product; describe cut, colorway, graphics and logo placement faithfully and never substitute a generic item."):""; var sys=vibeCtx("lite")+wardNote+" You write CHIEFIN\u2019 SEASON commercials \u2014 Chiefin\u2019 Season is an in-universe premium cannabis-culture streetwear + lifestyle brand (NOT a network, an advertiser). The spot airs on the "+(net||"Stoneralia")+" network and must match that network\u2019s tone. Cannabis is atmosphere, never the whole joke. Keep it G-rated and platform-safe. HARD RULE: only use characters from this list if any: "+(castNames.join(", ")||"none \u2014 use unnamed talent")+". Never invent named characters. Return JSON ONLY: {\"title\":\"\",\"tagline\":\"under 8 words\",\"script\":\"the 15-30s spot, action + VO\",\"cta\":\"call to action\",\"visual\":\"a complete image prompt for the key frame in the house style\",\"platform\":\"where it posts\"}";
+ try{
+  var d=parseJSON(await _llmRun(sys,"PRODUCT/CAMPAIGN: "+(prod||typ)+" | TYPE: "+typ,"ideas"));
+  if(!d||!d.title)throw new Error("Spot came back empty \u2014 run it again.");
+  var ad={id:uid(),title:d.title,type:typ,net:net,product:prod||d.title,tagline:d.tagline||"",script:d.script||"",cta:d.cta||"",visual:d.visual||"",platform:d.platform||"",wardrobe:(S.adWardrobe||[]).slice(),status:"draft",ts:Date.now()};
+  if(!Array.isArray(S.ads))S.ads=[];S.ads.unshift(ad);S.adLast=ad;S.adWardrobe=[];save();
+  if(st)st.innerHTML="";renderNetworks();
+  toast("Spot ready \u2014 send it to Studio for the key frame or Pre-Roll for motion.");
+ }catch(e){if(st)st.innerHTML=errLine(e);}}
+function adSend(id,where){
+ var a=(S.ads||[]).find(function(x){return x.id===id;});if(!a)return;
+ if(where==="studio"){go("studio");var el=$("prompt");if(el)el.value=a.visual||"";try{if(a.wardrobe&&a.wardrobe.length){S.studioSeedRefs=a.wardrobe.map(function(w){return w.src;});save();}}catch(e){}toast("Key-frame prompt"+((a.wardrobe&&a.wardrobe.length)?" + "+a.wardrobe.length+" product ref(s)":"")+" loaded in Studio.");}
+ else if(where==="board"){go("board");var t=$("boardScript");if(t)t.value=[a.title,a.tagline,"",a.script,"",a.cta].filter(Boolean).join("\n");toast("Spot loaded into Pre-Roll.");}
+ else if(where==="copy"){rpCopyTxt([a.title,a.tagline,"",a.script,"",a.cta,a.platform?("Platform: "+a.platform):""].filter(Boolean).join("\n"));}}
+function adDel(id){if(!confirm("Delete this spot?"))return;S.ads=(S.ads||[]).filter(function(x){return x.id!==id;});save();renderNetworks();}
+function adCard(){
+ var nets=netList();
+ var nopts='<option value="">\u2014 network \u2014</option>'+nets.map(function(n){return '<option value="'+esc(n)+'"'+(n===(S.comicNet||"")?" selected":"")+">"+esc(n)+"</option>";}).join("");
+ var topts=AD_TYPES.map(function(t){return '<option value="'+esc(t)+'">'+esc(t)+"</option>";}).join("");
+ var h='<div class="card" style="border-left:3px solid var(--bud)"><label class="fld">\U0001f4e2 Chiefin\u2019 Season \u2014 commercial spot</label>'
+  +'<div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">In-universe brand ads, tuned to whichever network airs them. Occasional by default \u2014 not every episode.</div>'
+  +'<div class="row"><select id="adNet" style="flex:1">'+nopts+'</select><select id="adType" style="flex:1">'+topts+'</select></div>'
+  +'<input type="text" id="adProduct" placeholder="Product / campaign (e.g. Peace &amp; Pull hoodie drop)" style="margin-top:6px">'+adWardHtml()
+  +'<button class="btn green" style="width:100%;margin-top:8px" onclick="adMake()">\U0001f4e2 Write the spot</button><div id="adStatus"></div>';
+ var ads=(S.ads||[]);
+ if(ads.length){
+  var rows="";
+  ads.slice(0,8).forEach(function(a){
+   rows+='<div style="border-top:1px solid var(--line);padding:8px 0">';
+   rows+='<div style="font-weight:800">'+esc(a.title)+' <span class="hint" style="text-transform:none;letter-spacing:0">'+esc(a.net||"any")+' \u00b7 '+esc(a.type)+'</span></div>';
+   if(a.tagline)rows+='<div class="hint" style="text-transform:none;letter-spacing:0">\u201c'+esc(a.tagline)+'\u201d</div>';
+   rows+='<div class="row" style="margin-top:6px">';
+   rows+='<button class="btn ghost sm" style="flex:1" onclick="adSend(&quot;'+a.id+'&quot;,&quot;studio&quot;)">\U0001f5bc Key frame</button>';
+   rows+='<button class="btn ghost sm" style="flex:1" onclick="adSend(&quot;'+a.id+'&quot;,&quot;board&quot;)">\U0001f3ac Pre-Roll</button>';
+   rows+='<button class="btn ghost sm" onclick="adSend(&quot;'+a.id+'&quot;,&quot;copy&quot;)">\u29c9</button>';
+   rows+='<button class="btn ghost sm" onclick="adDel(&quot;'+a.id+'&quot;)">\u2715</button>';
+   rows+='</div></div>';
+  });
+  h+='<div style="margin-top:10px">'+rows+'</div>';
+ }
+ h+="</div>";return h;}
 function renderNetworks(){
  var host=$("networksBody");if(!host)return;
  var nets=(S.networks||[]);
@@ -5140,7 +5271,11 @@ function renderNetworks(){
    +(shows.length?'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">Shows: '+shows.map(esc).join(", ")+'</div>':'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">No shows yet — create one to start programming.</div>')
    +'<div class="row"><button class="btn green sm" style="flex:1" onclick="netOpenShows(\''+esc(n.name)+'\')">＋ Create / open shows</button><button class="btn ghost sm" style="flex:1" onclick="netMakePromo(\''+esc(n.name)+'\')">🎬 Generate programming</button></div>'
    +'</div>';
- }).join("");}
+ }).join("");
+ var head='<div class="card" style="border-left:3px solid var(--bud)"><label class="fld">🔁 Crossover Mode</label><div class="hint" style="text-transform:none;letter-spacing:0">Let a character guest on another network or show — home network never changes unless you reassign.</div></div>';
+ host.innerHTML+=head+'<div id="xoverBody"></div>'+adCard();
+ try{renderXover();}catch(e){}
+}
 function renderShows(){
  var host=$("showsBody");if(!host)return;
  var L=(typeof dsState==="function")?dsState():[];

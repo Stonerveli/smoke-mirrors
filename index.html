@@ -969,9 +969,9 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1'/></svg></span><h2>Setup</h2><span class="tag">Keys &amp; Models</span></div>
   <div class="card">
     <label class="fld">fal API key</label>
-    <input type="password" id="apiKey" placeholder="paste your fal key">
+    <input type="password" id="apiKey" placeholder="paste your fal key"><div class="row" style="margin-top:6px"><button class="btn ghost sm" onclick="keyTest('fal')">Test connection</button><span id="falKeyStat" class="hint" style="text-transform:none;letter-spacing:0;align-self:center"></span></div>
     <div class="row" style="margin-top:10px">
-      <button class="btn green" id="saveKey">Save key</button>
+      <button class="btn green" id="saveKey">Save key</button></div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px">⚠ Keys live only in this browser's local storage. Never paste them into prompts, screenshots, or shared documents.</div><div style="display:none">
       <button class="btn ghost" id="testKey">Test connection</button>
     </div>
     <div class="hint" style="margin-top:10px">Get one at <a href="https://fal.ai/dashboard/keys" target="_blank">fal.ai/dashboard/keys</a>. Stored only in this browser, on this device. Pay-per-generation, no subscription.</div>
@@ -996,7 +996,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <div class="tokenchips" id="brainProv"></div>
     <div id="openaiBlock" style="display:none">
       <label class="fld" style="margin-top:10px">OpenAI API key</label>
-      <input type="password" id="openaiKey" placeholder="sk-…">
+      <input type="password" id="openaiKey" placeholder="sk-…"><div class="row" style="margin-top:6px"><button class="btn ghost sm" onclick="keyTest('oa')">Test connection</button><span id="oaKeyStat" class="hint" style="text-transform:none;letter-spacing:0;align-self:center"></span></div>
       <label class="fld" style="margin-top:10px">OpenAI model</label>
       <select id="openaiModel">
         <option value="gpt-4o-mini">gpt-4o-mini — cheapest</option>
@@ -1070,14 +1070,14 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="card"><label class="fld">🛟 Backup &amp; restore</label>
   <div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Everything — canon, cast, comics, slang, datasets, LoRAs — lives in this browser’s storage. One backup file protects the whole universe.</div>
   <div id="bkMeter" style="margin-bottom:10px"></div>
-  <button class="btn green" style="width:100%" onclick="bkExport()">⬇ Export everything (.json)</button>
+  <button class="btn green" style="width:100%" onclick="bkExport()">⬇ Export everything (.json)</button><div id="bkMeta"></div>
   <label class="fld" style="margin-top:14px">Add characters / terms (merge \u2014 keeps everything you have)</label>
   <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:6px">Drop a cast pack here \u2014 adds new characters and slang without touching your existing work. Dupes are skipped.</div>
   <input type="file" accept=".json,application/json" onchange="castMerge(this)">
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v9.97 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v9.98 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1102,7 +1102,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance"},datasets:[],dsActive:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],allowExtras:true,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance"},datasets:[],dsActive:"",
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -1152,9 +1152,31 @@ function bkSlim(){
   if(i<10)return;
   if(it.url&&it.url.slice(0,5)==="data:"){it.url="";it.trimmed=true;n++;}});
  return n;}
+function keyStat(id,msg,ok){var el=$(id);if(el){el.textContent=msg;el.style.color=ok?"var(--bud)":"#e08a8a";}}
+async function keyTest(which){
+ try{
+  if(which==="fal"){
+   var k=(($("apiKey")||{}).value||"").trim()||S.apiKey;
+   if(!k){keyStat("falKeyStat","Missing",false);return;}
+   keyStat("falKeyStat","Testing…",true);
+   var r=await fetch("https://fal.run/fal-ai/any-llm",{method:"POST",headers:{"Authorization":"Key "+k,"Content-Type":"application/json"},body:"{}"});
+   if(r.status===401||r.status===403){keyStat("falKeyStat","Invalid key",false);}
+   else{keyStat("falKeyStat","Connected "+String.fromCharCode(10003),true);}
+  }else{
+   var k2=(($("openaiKey")||{}).value||"").trim()||S.openaiKey;
+   if(!k2){keyStat("oaKeyStat","Missing",false);return;}
+   keyStat("oaKeyStat","Testing…",true);
+   var r2=await fetch("https://api.openai.com/v1/models",{headers:{"Authorization":"Bearer "+k2}});
+   if(r2.status===200){keyStat("oaKeyStat","Connected "+String.fromCharCode(10003),true);}
+   else if(r2.status===401){keyStat("oaKeyStat","Invalid key",false);}
+   else{keyStat("oaKeyStat","Error ("+r2.status+")",false);}
+  }
+ }catch(e){keyStat(which==="fal"?"falKeyStat":"oaKeyStat","Error — network",false);}
+}
 function bkExport(){
  try{
-  var pay={app:"smoke-and-mirrors",exported:new Date().toISOString(),data:S};
+  S.lastBackup=Date.now();save();var _prev=0;try{(S.reel||[]).forEach(function(r){if(r&&r.src&&String(r.src).indexOf("data:")===0)_prev++;});}catch(e){}
+  var pay={app:"smoke-and-mirrors",exported:new Date().toISOString(),appVersion:"v9.98",fileVersion:2,previewsIncluded:_prev,falUrlsPreserved:true,data:S};
   var bl=new Blob([JSON.stringify(pay)],{type:"application/json"});
   var u=URL.createObjectURL(bl);var a=document.createElement("a");
   var d=new Date();var nm="smoke-mirrors-backup-"+d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0")+".json";
@@ -1198,6 +1220,7 @@ function bkImport(inp){
    var o=JSON.parse(String(r.result||""));
    var d=o&&o.data;
    if(!d||typeof d!=="object"||(d.reel===undefined&&d.cast===undefined&&d.apiKey===undefined))throw new Error("That file is not a Smoke & Mirrors backup.");
+   if(confirm("Create a safety backup of your CURRENT data first? (Recommended)"))try{bkExport();}catch(e){}
    if(!confirm("Replace EVERYTHING in this app with the backup from "+(o.exported||"unknown date")+"? Current data will be overwritten."))return;
    localStorage.setItem(LS,JSON.stringify(d));
    toast("Backup restored — reloading…");
@@ -1542,6 +1565,14 @@ function go(name){
   if(name==="run")renderRun();
   if(name==="train")renderLab();
   if(name==="studio"||name==="board"||name==="comics"||name==="fight"||name==="story"||name==="train"||name==="chiefinese"||name==="shows"||name==="networks")try{renderHUD("view-"+name);}catch(e){}
+  if(name==="settings")try{
+   var _bm=$("bkMeta");
+   if(_bm){var lb=S.lastBackup?new Date(S.lastBackup):null;var days=lb?Math.floor((Date.now()-S.lastBackup)/864e5):null;
+    var sz="~"+Math.round((JSON.stringify(S).length)/1024)+" KB";
+    _bm.innerHTML='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">'+(lb?("Last backup: "+lb.toLocaleDateString()+" (· "+sz+" · app v9.98)"):"No backup yet")+'</div>'+((days===null||days>7)?'<div class="hint" style="text-transform:none;letter-spacing:0;color:#e0b46a">'+String.fromCharCode(0x23F0)+' Over 7 days since a backup — Export first. Clean second. Restore carefully.</div>':"");}
+   if(S.apiKey&&$("apiKey"))$("apiKey").placeholder="saved "+String.fromCharCode(0x2022,0x2022,0x2022,0x2022)+String(S.apiKey).slice(-4);
+   if(S.openaiKey&&$("openaiKey"))$("openaiKey").placeholder="saved "+String.fromCharCode(0x2022,0x2022,0x2022,0x2022)+String(S.openaiKey).slice(-4);
+  }catch(e){}
   if(name==="studio")try{var _sn=$("studioSeedNote");if(_sn){var _r=(S.studioSeedRefs||[]);_sn.innerHTML=_r.length?('<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px;color:var(--bud)">\U0001f455 '+_r.length+' product photo(s) locked as reference \u2014 <button class="btn ghost sm" style="padding:1px 8px" onclick="S.studioSeedRefs=[];save();go(&quot;studio&quot;)">clear</button></div>'):"";}}catch(e){}
   if(name==="socials")renderSocials();
   if(name==="brand")renderBrand();
@@ -1821,7 +1852,7 @@ async function runGenerate(){
   if(st.kind==="image"){input.num_images=parseInt($("numImages").value)||1;Object.assign(input,sizeFor(model,aspect));withRes(model,input);
     if(st.refs){const urls=flattenRefs(refItems,12);if(urls.length)input.image_urls=urls;}
     if(sceneText)input.prompt=prompt2+sceneText;}
-  if(st.kind==="video"){
+  if(st.kind==="video"){var _dur=parseInt((($("duration")||{}).value))||8;var _lo=(_dur*0.05).toFixed(2),_hi=(_dur*0.40).toFixed(2);if(!confirm("Paid video · 1 clip · ~"+_dur+"s · est $"+_lo+"—$"+_hi+". Approve the plan before paying for the pixels?"))return;
     if(model.includes("kling")){input.duration=String($("duration").value);const cv=flattenRefs(refItems,1);if(cv[0])input.image_url=cv[0];}
     else{input.resolution=$("resolution").value;input.duration=String($("duration").value);if(aspect!=="auto")input.aspect_ratio=aspect;const urls=flattenRefs(refItems,4);if(urls.length)input.image_urls=urls;if($("genAudio").checked)input.generate_audio=true;}
     if(sceneText)input.prompt=prompt2+sceneText;}
@@ -2519,7 +2550,7 @@ async function cdMake(){
  var ask=term?("USE THIS EXISTING TERM: \u201c"+term.term+"\u201d = "+(term.meaning||"")+" (district: "+(term.district||"")+(term.example?"; example: "+term.example:"")+")")
   :"INVENT one brand-new Chiefinese term rooted in a specific district\u2019s life \u2014 it must sound like something people actually say.";
  var _roster=(S.cast||[]).filter(function(c){return c.name&&(c.status||'canon')!=='archived';}).map(function(c){return c.name+(c.nick?' (aka '+c.nick+')':'');});
- var _castrule=_roster.length?(' CAST ROSTER \u2014 the ONLY named characters you may use are: '+_roster.join(', ')+'. Do NOT invent or name any new character (no Rico, Ty, Marcus, etc). Anyone else in the skit must be an unnamed background role ("a customer", "a neighbor") with no name and no dialogue.'):' Do NOT invent named characters; use unnamed background roles only unless the word\u2019s own district resident is well known.';
+ var _castrule=(S.allowExtras===false&&_roster.length)?(' CAST ROSTER — ONLY these named characters may appear, and NO other people at all, named or unnamed: '+_roster.join(', ')+'.'):_roster.length?(' CAST ROSTER \u2014 the ONLY named characters you may use are: '+_roster.join(', ')+'. Do NOT invent or name any new character (no Rico, Ty, Marcus, etc). Anyone else in the skit must be an unnamed background role ("a customer", "a neighbor") with no name and no dialogue.'):' Do NOT invent named characters; use unnamed background roles only unless the word\u2019s own district resident is well known.';
  var sys=vibeCtx()+_castrule+' You are the CHIEFINESE DAILY room \u2014 Stoneralia\u2019s word-of-the-day micro-series. Write ONE episode. Hoodie Chieff NEVER speaks (signs, shades, stillness only). Slang is seasoning. The comedy comes from people using the word wrong, not from explaining it. Skit must be '+beats+' beats. Return JSON ONLY: {"title":"episode title","word":"the term","pronunciation":"say-it-like-this","district":"district it belongs to","hook":"first line, under 12 words, stops the scroll","definition":"what it actually means, one sentence","not_meaning":"what it does NOT mean, one funny sentence","example":"one line of natural dialogue using it","misunderstanding":"one sentence: how somebody gets it hilariously wrong","skit":[{"who":"character name","action":"what they physically do","line":"what they say, or empty for Chieff"}],"chiefin_truth":"the closing one-liner wisdom, quotable, under 15 words","card_prompt":"image prompt for the on-screen definition card in the house style","thumbnail":"thumbnail concept, one sentence","outro":"sign-off line","captions":{"ig":"","tiktok":"","x":""},"tags":"comma-separated hashtags"}';
  try{
   var p=parseJSON(await _llmRun(sys,ask+" | LENGTH: "+(CD_LEN[lenKey]||CD_LEN.standard)[0],"ideas"));
@@ -5319,6 +5350,13 @@ function jointCard(r){
  var pct=done/keys.length;
  var label=done===0?"Not lit — tap a step to spark it":(pct>=1?"Roach — that’s a wrap 🪶":"Burning — "+done+"/"+keys.length+" down");
  return '<div class="card" style="padding:10px 12px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:800;font-family:var(--slate)">The session</div><div class="hint" style="text-transform:none;letter-spacing:0">'+esc(label)+'</div></div>'+jointSVG(pct,done>0)+"</div>";}
+function pubCheckSheet(){
+ var items=["Correct Network selected","Correct Show selected","Season / Episode info set (when used)","Only approved Cast appears","Names spelled right (Chieff — two f\u2019s)","References + production locks applied","Correct platform size / crop","Caption + title ready","Chiefin\u2019 Season disclosure (if it\u2019s an ad)","Final export archived","Post marked Published"];
+ var h='<div style="font-weight:800;font-family:var(--slate);margin-bottom:4px">'+String.fromCharCode(0x2705)+' READY TO PUBLISH?</div>';
+ h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">Quick pass before the joint burns down:</div>';
+ h+=items.map(function(t){return '<div style="font-size:13px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.06)">'+String.fromCharCode(0x25B8)+' '+t+'</div>';}).join("");
+ h+='<div class="row" style="margin-top:12px"><button class="btn green" style="flex:1" onclick="S._pubOK=1;save();var sh=document.getElementById(&quot;sendsheet&quot;);if(sh)sh.remove();var b=document.getElementById(&quot;runDone&quot;);if(b)b.click();">'+String.fromCharCode(0x2705)+' All good — close the day</button><button class="btn ghost" onclick="var sh=document.getElementById(&quot;sendsheet&quot;);if(sh)sh.remove();">Not yet</button></div>';
+ sendSheet(h);}
 function roachAdd(r){
  if(!Array.isArray(S.roaches))S.roaches=[];
  var t=(r.lane==="comic")?((((S.comics&&S.comics[0])||{}).title)||((S.comicIdea3||{}).setup)||"Comic post"):"Clip post";
@@ -5369,7 +5407,7 @@ function renderRun(){
  W("runCap",runCaption);
  W("runCapCopy",function(){navigator.clipboard.writeText((runState().cap||{}).caption||"").then(function(){toast("Caption copied.");}).catch(function(){toast("Copy failed.",true);});});
  W("runTagCopy",function(){navigator.clipboard.writeText((runState().cap||{}).tags||"").then(function(){toast("Hashtags copied.");}).catch(function(){toast("Copy failed.",true);});});
- W("runDone",function(){var r2=runState();r2.steps.post=true;var t=runToday();
+ W("runDone",function(){if(!S._pubOK){pubCheckSheet();return;}S._pubOK=0;if(!Array.isArray(S.pubLog))S.pubLog=[];S.pubLog.unshift({ts:Date.now()});var r2=runState();r2.steps.post=true;var t=runToday();
   if(r2.lastDone!==t){var y=new Date();y.setDate(y.getDate()-1);var ys=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");
    r2.streak=(r2.lastDone===ys)?(r2.streak||0)+1:1;r2.lastDone=t;try{roachAdd(r2);}catch(e){}}
   socState().log.unshift({id:uid(),platform:r2.platform||"ig",what:(r2.lane==="comic"?(((S.comics&&S.comics[0])||{}).title||"Comic post"):"Clip post"),ts:Date.now(),src:"run"});save();renderRun();toast("Day closed — streak 🔥 "+r2.streak+" · roach #"+((S.roaches||[]).length)+" in the ashtray.");});
@@ -5969,6 +6007,7 @@ function renderComics(){
   h+='<label class="fld" style="margin-top:10px">Look</label><select id="comicLook"></select>';h+='<label class="fld" style="margin-top:10px">Comedy mechanic</label><select id="comicMechanic"></select>';h+='<label class="fld" style="margin-top:10px">Comedy mode</label><select id="comicMode"><option value="silent">Silent — visual gag, caption below</option><option value="dialogue">Dialogue — speech bubbles in panels</option></select><div class="hint" style="margin-top:4px;text-transform:none;letter-spacing:0">Dialogue is for talking characters (EveryStoner &amp; co). Chieff is mouthless — he stays silent either way.</div>';h+='<label class="fld" style="margin-top:10px">Resolution</label><select id="comicRes"><option value="1K">1K · standard</option><option value="2K">2K · sharper</option><option value="4K">4K · 2× price</option></select>';
   h+='<label class="fld" style="margin-top:10px">Lead character</label><select id="comicLead"></select>';
   h+='<label class="fld" style="margin-top:10px">Characters in this comic <span class="hint" style="text-transform:none;letter-spacing:0">\u2014 tap to lock their look into every panel</span></label><div class="tokenchips" id="comicChars"></div>';
+  h+='<button type="button" class="btn ghost sm" style="margin-top:6px" onclick="S.allowExtras=(S.allowExtras===false);save();renderComics();">'+(S.allowExtras===false?"\ud83d\udeab Extras OFF · cast only":"\ud83d\udc65 Extras ON · unnamed background allowed")+'</button>';
   h+='<label class="fld" style="margin-top:10px">Location</label><select id="comicSet"></select>';
   h+='<label class="fld" style="margin-top:12px">Idea builder</label>';h+='<div class="hint" style="margin:0 0 6px;text-transform:none;letter-spacing:0">Tap a spark to auto-fill, or write your own. Setup alone works — problem &amp; twist sharpen the joke.</div>';h+='<div id="comicSparks" class="tonerow" style="margin-bottom:8px"></div>';h+='<input type="text" id="cbSetup" placeholder="Setup — what is happening? (e.g. EveryStoner buys one blunt at 3AM)">';h+='<input type="text" id="cbProblem" placeholder="Going wrong — the goal or the problem (optional)" style="margin-top:6px">';h+='<input type="text" id="cbTwist" placeholder="Twist — the funny turn (optional; where the joke lives)" style="margin-top:6px"><button class="btn ghost sm" style="width:100%;margin-top:6px" onclick="twSuggest()">🎲 Suggest twists — tuned to this story</button><div id="twOut"></div>';h+='<div class="row" style="margin-top:8px"><button class="btn ghost sm" id="comicDice" style="flex:1">🎲 Surprise me</button><button class="btn ghost sm" id="comicIdeaBtn" style="flex:1">✦ AI gag</button></div><div id="comicIdeaStatus"></div>';
   h+='<button class="btn green" id="comicGen" style="margin-top:12px;width:100%">✦ Generate comic</button><div id="comicGenStatus"></div></div>';
@@ -6022,7 +6061,7 @@ async function genComic(){
   const mode=($("comicMode")?$("comicMode").value:(S.comicMode||"silent"));const dlg=(mode==="dialogue");
   var rosterNames=castRefs.map(function(c){return c.name+(c.nick?" (aka "+c.nick+")":"");});
   var castLock=castDNA?(" CHARACTERS IN THIS COMIC — use ONLY these, exactly as described, no one else: "+castDNA+". "):"";
-  var noInvent=" HARD RULE: do NOT invent, name, or add any new named character. "+(rosterNames.length?("The ONLY named characters allowed are: "+rosterNames.join(", ")+". Any other person in frame must be an unnamed, unspeaking background figure (\"a customer\", \"a neighbor\") — never given a name or dialogue."):"Do not put any named or speaking characters in the comic unless the idea names them; unnamed background figures only.")+" Never invent a name like Rico, Ty, Marcus, etc. If the story seems to need someone who is not in the cast, use an unnamed background role instead.";
+  var noInvent=(S.allowExtras===false)?" HARD RULE: ONLY the listed cast may appear — do NOT add ANY other people, named or unnamed. No background figures, no crowds, no passersby.":" HARD RULE: do NOT invent, name, or add any new named character. "+(rosterNames.length?("The ONLY named characters allowed are: "+rosterNames.join(", ")+". Any other person in frame must be an unnamed, unspeaking background figure (\"a customer\", \"a neighbor\") — never given a name or dialogue."):"Do not put any named or speaking characters in the comic unless the idea names them; unnamed background figures only.")+" Never invent a name like Rico, Ty, Marcus, etc. If the story seems to need someone who is not in the cast, use an unnamed background role instead.";
   const sys=STONERALIA_LAW+" "+VOICE_DNA+castLock+noInvent+" You write COMICS — "+(single?"a single-panel Far Side-style cartoon: one image, one short deadpan caption, the whole joke in one frame.":"a "+ko.panels+"-panel comic strip built on a comedy arc — Setup, Trigger, Escalation, Complication, Peak Chaos, Payoff — compressed cleanly into "+ko.panels+" panels; each panel one readable beat that moves the story forward; cause and effect — every mistake makes the situation worse; escalate to peak chaos, then end on the hardest payoff: punchline, reveal, reversal, callback or visual gag.")+" Keep captions short and dry; lean visual."+(dlg?" DIALOGUE MODE: panels may include brief speech-bubble dialogue — natural casual voices, max 8 words per line, 1-2 lines per panel, label every speaker (Name: \"line\"). Chieff/Chieff is MOUTHLESS and never speaks — others talk around him. The visual gag must still carry the joke even without the words.":" The joke must read with the sound off — visual punchline, no dialogue, no speech bubbles.")+(lead&&/everystoner/i.test(lead.name||"")?" LEAD VOICE — The EveryStoner: casual, slightly dumb but not clueless, easily distracted, mildly overconfident, occasionally paranoid, accidentally clever, sincere even when his logic makes no sense.":"")+(cmech?" PRIMARY COMEDY MECHANIC: "+cmech.n+" — "+cmech.p+".":"");
   const ctx=(lead?"LEAD: "+lead.name+(lead.identity?" — "+lead.identity:"")+wardrobePieces(lead)+(lead.wardrobeNote?" Wardrobe: "+lead.wardrobeNote:"")+"\n":"")+(set?"LOCATION: "+set.name+(set.vibe?" — "+set.vibe:"")+(set.props&&set.props.length?" Recurring here: "+set.props.map(p=>p.name+(p.desc?" ("+p.desc+")":"")).join("; "):"")+"\n":"");
   const usr=ctx+(idea?"IDEA: "+idea+"\n":"Invent an original gag true to the universe.\n")+"Write "+ko.panels+" panel"+(ko.panels>1?"s":"")+". For each panel: caption (short, dry — or empty)"+(dlg?", dialogue (the speech-bubble lines, format Name: \"line\" — or empty)":"")+" and visual (a COMPLETE ready-to-render image prompt for that panel"+(dlg?", describing the action and who is speaking":"")+"). Also a title. Return JSON only: {\"title\":\"\",\"panels\":[{\"caption\":\"\",\"dialogue\":\"\",\"visual\":\"\"}]}.";

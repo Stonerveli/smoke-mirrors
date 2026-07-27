@@ -1077,7 +1077,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v9.98 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v9.99 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1573,7 +1573,7 @@ function go(name){
    if(S.apiKey&&$("apiKey"))$("apiKey").placeholder="saved "+String.fromCharCode(0x2022,0x2022,0x2022,0x2022)+String(S.apiKey).slice(-4);
    if(S.openaiKey&&$("openaiKey"))$("openaiKey").placeholder="saved "+String.fromCharCode(0x2022,0x2022,0x2022,0x2022)+String(S.openaiKey).slice(-4);
   }catch(e){}
-  if(name==="studio")try{var _sn=$("studioSeedNote");if(_sn){var _r=(S.studioSeedRefs||[]);_sn.innerHTML=_r.length?('<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px;color:var(--bud)">\U0001f455 '+_r.length+' product photo(s) locked as reference \u2014 <button class="btn ghost sm" style="padding:1px 8px" onclick="S.studioSeedRefs=[];save();go(&quot;studio&quot;)">clear</button></div>'):"";}}catch(e){}
+  if(name==="studio")try{var _sn=$("studioSeedNote");if(_sn){var _r=(S.studioSeedRefs||[]);_sn.innerHTML=_r.length?('<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px;color:var(--bud)">👕 '+_r.length+' product photo(s) locked as reference \u2014 <button class="btn ghost sm" style="padding:1px 8px" onclick="S.studioSeedRefs=[];save();go(&quot;studio&quot;)">clear</button></div>'):"";}}catch(e){}
   if(name==="socials")renderSocials();
   if(name==="brand")renderBrand();
   if(name==="board"){if(typeof mdRecipeFill==="function")mdRecipeFill();if(typeof rmsFill==="function")rmsFill();if(typeof cineFill==="function")cineFill();}
@@ -5259,11 +5259,11 @@ function adCard(){
  var nets=netList();
  var nopts='<option value="">\u2014 network \u2014</option>'+nets.map(function(n){return '<option value="'+esc(n)+'"'+(n===(S.comicNet||"")?" selected":"")+">"+esc(n)+"</option>";}).join("");
  var topts=AD_TYPES.map(function(t){return '<option value="'+esc(t)+'">'+esc(t)+"</option>";}).join("");
- var h='<div class="card" style="border-left:3px solid var(--bud)"><label class="fld">\U0001f4e2 Chiefin\u2019 Season \u2014 commercial spot</label>'
+ var h='<div class="card" style="border-left:3px solid var(--bud)"><label class="fld">📢 Chiefin\u2019 Season \u2014 commercial spot</label>'
   +'<div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">In-universe brand ads, tuned to whichever network airs them. Occasional by default \u2014 not every episode.</div>'
   +'<div class="row"><select id="adNet" style="flex:1">'+nopts+'</select><select id="adType" style="flex:1">'+topts+'</select></div>'
   +'<input type="text" id="adProduct" placeholder="Product / campaign (e.g. Peace &amp; Pull hoodie drop)" style="margin-top:6px">'+adWardHtml()
-  +'<button class="btn green" style="width:100%;margin-top:8px" onclick="adMake()">\U0001f4e2 Write the spot</button><div id="adStatus"></div>';
+  +'<button class="btn green" style="width:100%;margin-top:8px" onclick="adMake()">📢 Write the spot</button><div id="adStatus"></div>';
  var ads=(S.ads||[]);
  if(ads.length){
   var rows="";
@@ -5272,8 +5272,8 @@ function adCard(){
    rows+='<div style="font-weight:800">'+esc(a.title)+' <span class="hint" style="text-transform:none;letter-spacing:0">'+esc(a.net||"any")+' \u00b7 '+esc(a.type)+'</span></div>';
    if(a.tagline)rows+='<div class="hint" style="text-transform:none;letter-spacing:0">\u201c'+esc(a.tagline)+'\u201d</div>';
    rows+='<div class="row" style="margin-top:6px">';
-   rows+='<button class="btn ghost sm" style="flex:1" onclick="adSend(&quot;'+a.id+'&quot;,&quot;studio&quot;)">\U0001f5bc Key frame</button>';
-   rows+='<button class="btn ghost sm" style="flex:1" onclick="adSend(&quot;'+a.id+'&quot;,&quot;board&quot;)">\U0001f3ac Pre-Roll</button>';
+   rows+='<button class="btn ghost sm" style="flex:1" onclick="adSend(&quot;'+a.id+'&quot;,&quot;studio&quot;)">🖼 Key frame</button>';
+   rows+='<button class="btn ghost sm" style="flex:1" onclick="adSend(&quot;'+a.id+'&quot;,&quot;board&quot;)">🎬 Pre-Roll</button>';
    rows+='<button class="btn ghost sm" onclick="adSend(&quot;'+a.id+'&quot;,&quot;copy&quot;)">\u29c9</button>';
    rows+='<button class="btn ghost sm" onclick="adDel(&quot;'+a.id+'&quot;)">\u2715</button>';
    rows+='</div></div>';
@@ -5979,14 +5979,14 @@ function comicNetPick(){
  var nets=netList();if(!nets.length)return "";
  var cur=S.comicNet||"";
  var opts='<option value="">\u2014 All networks \u2014</option>'+nets.map(function(n){return '<option value="'+esc(n)+'"'+(n===cur?" selected":"")+">"+esc(n)+"</option>";}).join("");
- return '<label class="fld">\U0001f4e1 Network <span class="hint" style="text-transform:none;letter-spacing:0">\u2014 Stoneralia Media House</span></label><select id="comicNet" onchange="comicNetSet(this.value)">'+opts+"</select>";}
+ return '<label class="fld">📡 Network <span class="hint" style="text-transform:none;letter-spacing:0">\u2014 Stoneralia Media House</span></label><select id="comicNet" onchange="comicNetSet(this.value)">'+opts+"</select>";}
 function comicNetSet(v){S.comicNet=v;S.comicShow="";save();renderComics();}
 function comicShowPick(){
  var net=S.comicNet||"";
  var shows=net?showsInNet(net):showList();
  var cur=S.comicShow||"";
  var opts='<option value="">\u2014 '+(net?"All "+esc(net)+" shows":"All shows")+' \u2014</option>'+shows.map(function(n){return '<option value="'+esc(n)+'"'+(n===cur?" selected":"")+">"+esc(n)+"</option>";}).join("");
- return '<label class="fld" style="margin-top:8px">\U0001f4fa Show <span class="hint" style="text-transform:none;letter-spacing:0">\u2014 filters cast + locations to this program</span></label><select id="comicShow" onchange="comicShowSet(this.value)">'+opts+"</select>";}
+ return '<label class="fld" style="margin-top:8px">📺 Show <span class="hint" style="text-transform:none;letter-spacing:0">\u2014 filters cast + locations to this program</span></label><select id="comicShow" onchange="comicShowSet(this.value)">'+opts+"</select>";}
 function comicShowSet(v){S.comicShow=v;save();renderComics();}
 function comicPaintChars(){
  var host=$("comicChars");if(!host)return;

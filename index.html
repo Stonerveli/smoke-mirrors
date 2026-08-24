@@ -1095,7 +1095,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.07 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.08 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1113,7 +1113,86 @@ function errStrip(msg){var d=document.getElementById("errstrip");
   d.appendChild(sp);d.appendChild(cp);d.appendChild(x);
   if(document.body)document.body.appendChild(d);else document.addEventListener("DOMContentLoaded",function(){document.body.appendChild(d);});}
  var t=document.getElementById("errstriptxt");if(t)t.textContent=msg;}
-const LS="smokemirrors_v1";try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){};
+const LS="smokemirrors_v1";
+/* ===== IndexedDB blob vault =====
+   localStorage holds only text + "idb:KEY" pointers.
+   Full data URLs live in IDB and are hydrated into memory at boot,
+   so every existing render path keeps working unchanged. */
+var IDB={db:null,ok:false,map:new Map(),rev:new Map(),pending:new Map(),name:"smokemirrors_blobs",store:"blobs"};
+function idbOpen(){
+ return new Promise(function(res){
+  try{
+   if(!window.indexedDB){IDB.ok=false;return res(false);}
+   var rq=indexedDB.open(IDB.name,1);
+   rq.onupgradeneeded=function(e){var db=e.target.result;if(!db.objectStoreNames.contains(IDB.store))db.createObjectStore(IDB.store);};
+   rq.onsuccess=function(e){IDB.db=e.target.result;IDB.ok=true;res(true);};
+   rq.onerror=function(){IDB.ok=false;res(false);};
+  }catch(e){IDB.ok=false;res(false);}
+ });}
+function idbTx(mode){return IDB.db.transaction(IDB.store,mode).objectStore(IDB.store);}
+function idbPut(k,v){return new Promise(function(res){try{var r=idbTx("readwrite").put(v,k);r.onsuccess=function(){res(true);};r.onerror=function(){res(false);};}catch(e){res(false);}});}
+function idbGetAll(){return new Promise(function(res){
+ try{var out={},st=idbTx("readonly"),c=st.openCursor();
+  c.onsuccess=function(e){var cur=e.target.result;if(cur){out[cur.key]=cur.value;cur.continue();}else res(out);};
+  c.onerror=function(){res(out);};
+ }catch(e){res({});}});}
+function idbDel(k){return new Promise(function(res){try{var r=idbTx("readwrite").delete(k);r.onsuccess=function(){res(true);};r.onerror=function(){res(false);};}catch(e){res(false);}});}
+function idbKeysInUse(o,acc){
+ acc=acc||new Set();
+ if(!o)return acc;
+ if(typeof o==="string"){
+  if(o.indexOf("idb:")===0){acc.add(o.slice(4));return acc;}
+  /* after hydration S holds real data URLs — resolve them back to their keys,
+     otherwise GC would think every blob is unused and wipe the vault */
+  if(o.indexOf("data:")===0){var k=IDB.rev.get(o);if(k)acc.add(k);return acc;}
+  return acc;}
+ if(Array.isArray(o)){o.forEach(function(v){idbKeysInUse(v,acc);});return acc;}
+ if(typeof o==="object"){for(var k in o)idbKeysInUse(o[k],acc);return acc;}
+ return acc;}
+function idbRefCount(o){
+ if(typeof o==="string")return (o.indexOf("idb:")===0||(o.indexOf("data:")===0&&o.length>2000))?1:0;
+ if(Array.isArray(o)){var n=0;o.forEach(function(v){n+=idbRefCount(v);});return n;}
+ if(o&&typeof o==="object"){var m=0;for(var k in o)m+=idbRefCount(o[k]);return m;}
+ return 0;}
+/* swap big data: URLs for idb: pointers (returns a NEW object; S itself untouched) */
+function smDehydrate(o){
+ if(typeof o==="string"){
+  if(o.indexOf("data:")===0&&o.length>2000){
+   var key=IDB.rev.get(o);
+   if(!key){key="b_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,9);
+    IDB.rev.set(o,key);IDB.map.set(key,o);IDB.pending.set(key,o);}
+   return "idb:"+key;
+  }
+  return o;}
+ if(Array.isArray(o))return o.map(smDehydrate);
+ if(o&&typeof o==="object"){var out={};for(var k in o)out[k]=smDehydrate(o[k]);return out;}
+ return o;}
+/* swap idb: pointers back to real data URLs (mutates in place) */
+function smHydrate(o){
+ if(Array.isArray(o)){for(var i=0;i<o.length;i++){
+   if(typeof o[i]==="string"&&o[i].indexOf("idb:")===0){var v=IDB.map.get(o[i].slice(4));if(v)o[i]=v;}
+   else smHydrate(o[i]);}
+  return o;}
+ if(o&&typeof o==="object"){for(var k in o){
+   if(typeof o[k]==="string"&&o[k].indexOf("idb:")===0){var v2=IDB.map.get(o[k].slice(4));if(v2)o[k]=v2;}
+   else smHydrate(o[k]);}
+  return o;}
+ return o;}
+function idbFlush(){
+ if(!IDB.ok||!IDB.pending.size)return Promise.resolve(0);
+ var items=Array.from(IDB.pending.entries());IDB.pending.clear();
+ return Promise.all(items.map(function(p){return idbPut(p[0],p[1]);})).then(function(){return items.length;});}
+/* drop blobs no longer referenced anywhere in S */
+function idbGC(){
+ if(!IDB.ok)return Promise.resolve(0);
+ var used=idbKeysInUse(S),dead=[];
+ /* distinguish "no images at all" (safe to GC) from "mapping failed" (never GC) */
+ var refs=idbRefCount(S);
+ if(refs>0&&!used.size){console.warn("idbGC: refusing — "+refs+" image refs but 0 resolved keys");return Promise.resolve(0);}
+ IDB.map.forEach(function(v,k){if(!used.has(k))dead.push(k);});
+ dead.forEach(function(k){var v=IDB.map.get(k);IDB.map.delete(k);if(v)IDB.rev.delete(v);});
+ return Promise.all(dead.map(idbDel)).then(function(){return dead.length;});}
+function lsBytes(){try{return (localStorage.getItem(LS)||"").length;}catch(e){return 0;}}try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){};
 const blank={
   apiKey:"",llmModel:"google/gemini-2.5-flash",llmProvider:"fal",openaiKey:"",openaiModel:"gpt-4o-mini",taskBrains:{lyrics:"fal:anthropic/claude-sonnet-4.5",suno:"openai:gpt-5.6-luna",storyboard:"openai:gpt-5.6-sol",ideas:"fal:anthropic/claude-sonnet-4.5",continuity:"fal:anthropic/claude-sonnet-4.5"},station:"image",
   picked:{image:"fal-ai/nano-banana-2",edit:"fal-ai/nano-banana-2/edit",video:"bytedance/seedance-2.5/reference-to-video",audio:"fal-ai/elevenlabs/sound-effects"},
@@ -1214,7 +1293,7 @@ function bkExport(){
  }catch(e){toast("Export failed: "+e.message,true);}}
 function castMerge(inp){
  var f=inp.files&&inp.files[0];if(!f)return;
- try{var used=JSON.stringify(S).length/1048576;
+ try{var used=lsBytes()/1048576;
   if(used>4.2&&!confirm("Storage is at "+used.toFixed(2)+" MB of ~5 MB. An import may fail or lose data.\n\nRecommended: Export everything, then Slim previews, THEN import.\n\nImport anyway?")){inp.value="";return;}
  }catch(e){}
  var r=new FileReader();
@@ -1275,7 +1354,8 @@ function bkPaint(){
  var col=pct>=80?"var(--red)":(pct>=60?"#c9a94a":"var(--bud)");
  el.innerHTML='<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--bone-dim)"><span>'+(Math.round(used/1048576*100)/100)+' MB used</span><span>~5 MB browser limit</span></div><div style="height:8px;border:1px solid var(--line);border-radius:999px;margin-top:4px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+col+'"></div></div><div id="bkPersist" class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px"></div>';
  try{if(navigator.storage&&navigator.storage.persisted)navigator.storage.persisted().then(function(p){var t=$("bkPersist");if(t)t.textContent=p?"✓ Android granted persistent storage — data protected from auto-eviction.":"⚠ Persistent storage not granted yet — install as app + revisit often to earn it.";});}catch(e){}}
-function save(){try{var j=JSON.stringify(S);localStorage.setItem(LS,j);
+function save(){try{var j=JSON.stringify(IDB.ok?smDehydrate(S):S);localStorage.setItem(LS,j);
+ if(IDB.ok)idbFlush();
  if(j.length>3800000&&!window.__smWarned){window.__smWarned=true;toast("Heads up: "+(Math.round(j.length/1048576*10)/10)+" MB of ~5 MB storage used — export a backup in Setup.",true);}
 }catch(e){
  var n=bkSlim();
@@ -1611,8 +1691,8 @@ function go(name){
   if(name==="settings")try{
    var _bm=$("bkMeta");
    if(_bm){var lb=S.lastBackup?new Date(S.lastBackup):null;var days=lb?Math.floor((Date.now()-S.lastBackup)/864e5):null;
-    var sz="~"+Math.round((JSON.stringify(S).length)/1024)+" KB";
-    _bm.innerHTML='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">'+(lb?("Last backup: "+lb.toLocaleDateString()+" (· "+sz+" · app v9.98)"):"No backup yet")+'</div>'+((days===null||days>7)?'<div class="hint" style="text-transform:none;letter-spacing:0;color:#e0b46a">'+String.fromCharCode(0x23F0)+' Over 7 days since a backup — Export first. Clean second. Restore carefully.</div>':"");}
+    var sz="~"+Math.round(lsBytes()/1024)+" KB";
+    _bm.innerHTML='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">'+(IDB.ok?("\U0001f5c4 Vault: "+IDB.map.size+" image"+(IDB.map.size===1?"":"s")+" in IndexedDB (outside the 5 MB limit)<br>"):"")+(lb?("Last backup: "+lb.toLocaleDateString()+" (· "+sz+" · app v9.98)"):"No backup yet")+'</div>'+((days===null||days>7)?'<div class="hint" style="text-transform:none;letter-spacing:0;color:#e0b46a">'+String.fromCharCode(0x23F0)+' Over 7 days since a backup — Export first. Clean second. Restore carefully.</div>':"");}
    if(S.apiKey&&$("apiKey"))$("apiKey").placeholder="saved "+String.fromCharCode(0x2022,0x2022,0x2022,0x2022)+String(S.apiKey).slice(-4);
    if(S.openaiKey&&$("openaiKey"))$("openaiKey").placeholder="saved "+String.fromCharCode(0x2022,0x2022,0x2022,0x2022)+String(S.openaiKey).slice(-4);
   }catch(e){}
@@ -6889,6 +6969,30 @@ function boot(){
   try{var _sp=$("splash");if(_sp){var _hl=document.querySelector('link[rel="apple-touch-icon"]')||document.querySelector('link[rel="icon"]');var _si=_sp.querySelector(".splash-logo");if(_hl&&_si)_si.src=_hl.href;setTimeout(function(){_sp.classList.add("gone");setTimeout(function(){_sp.style.display="none";},650);},1100);}}catch(e){}
 }
 boot();
+/* ===== IndexedDB boot: hydrate blobs into memory, migrate legacy inline images ===== */
+(function idbBoot(){
+ idbOpen().then(function(ok){
+  if(!ok){console.warn("IDB unavailable - staying on localStorage only");return;}
+  return idbGetAll().then(function(all){
+   var n=0;
+   for(var k in all){IDB.map.set(k,all[k]);IDB.rev.set(all[k],k);n++;}
+   smHydrate(S);
+   /* first run: existing data URLs still live inline in localStorage.
+      Dehydrate + flush moves them into IDB and shrinks localStorage immediately. */
+   var before=lsBytes();
+   try{localStorage.setItem(LS,JSON.stringify(smDehydrate(S)));}catch(e){}
+   return idbFlush().then(function(moved){
+    return idbGC().then(function(){
+     var after=lsBytes();
+     try{go(S.view||"studio");}catch(e){}
+     if(moved>0&&before-after>200000){
+      toast("Storage upgraded \u2014 "+moved+" image"+(moved===1?"":"s")+" moved to the vault. localStorage: "+(Math.round(before/1048576*100)/100)+" MB \u2192 "+(Math.round(after/1048576*100)/100)+" MB.");
+     }else if(n>0){try{go(S.view||"studio");}catch(e){}}
+    });
+   });
+  });
+ }).catch(function(e){console.warn("IDB boot failed, localStorage still active",e);});
+})();
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script>
 </body>

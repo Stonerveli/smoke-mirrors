@@ -1070,7 +1070,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <details class="collapse"><summary>Models in play</summary><div class="body">
     <p><b>Image</b> — <code>nano-banana-2</code>, <code>nano-banana-pro</code>, <code>gpt-image-2</code><br>
     <b>Image + Gear</b> — the <code>/edit</code> versions (take reference images)<br>
-    <b>Video</b> — <code>seedance-2.0</code>, <code>kling-video/v3/pro</code><br>
+    <b>Video</b> — <code>seedance-2.5</code> (default · iterate 480p, finals 720p), <code>seedance-2.0</code>, <code>kling-video/v3/pro</code><br>
     <b>Pre-Roll</b> — <code>gpt-image-2</code> only<br>
     <b>Brain</b> — <code>any-llm</code> (stylist + Seedance writer)</p>
     <p style="margin-top:8px">GPT Image-2 isn't a video model — it makes frames; Seedance/Kling animate them.</p>
@@ -1095,7 +1095,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.03 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.04 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1116,7 +1116,7 @@ function errStrip(msg){var d=document.getElementById("errstrip");
 const LS="smokemirrors_v1";try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){};
 const blank={
   apiKey:"",llmModel:"google/gemini-2.5-flash",llmProvider:"fal",openaiKey:"",openaiModel:"gpt-4o-mini",taskBrains:{lyrics:"fal:anthropic/claude-sonnet-4.5",suno:"openai:gpt-5.6-luna",storyboard:"openai:gpt-5.6-sol",ideas:"fal:anthropic/claude-sonnet-4.5",continuity:"fal:anthropic/claude-sonnet-4.5"},station:"image",
-  picked:{image:"fal-ai/nano-banana-2",edit:"fal-ai/nano-banana-2/edit",video:"bytedance/seedance-2.0/reference-to-video",audio:"fal-ai/elevenlabs/sound-effects"},
+  picked:{image:"fal-ai/nano-banana-2",edit:"fal-ai/nano-banana-2/edit",video:"bytedance/seedance-2.5/reference-to-video",audio:"fal-ai/elevenlabs/sound-effects"},
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
@@ -1154,6 +1154,11 @@ let S=load();
   S.netMig=1;
  }
  localStorage.setItem(LS,JSON.stringify(S));
+}catch(e){}})();
+(function sd25Mig(){try{
+ if(S.sd25Mig)return;
+ if(S.picked&&S.picked.video==="bytedance/seedance-2.0/reference-to-video")S.picked.video="bytedance/seedance-2.5/reference-to-video";
+ S.sd25Mig=1;localStorage.setItem(LS,JSON.stringify(S));
 }catch(e){}})();
 (function brainMig(){try{
  if(S.brainMig56)return;
@@ -1265,7 +1270,7 @@ const $=(id)=>document.getElementById(id);
 const MODEL_OPTS={
   image:[["fal-ai/nano-banana-2","Nano Banana 2"],["fal-ai/nano-banana-pro","Nano Banana Pro"],["openai/gpt-image-2","GPT Image 2"]],
   edit:[["fal-ai/nano-banana-2/edit","Nano Banana 2 · Edit"],["fal-ai/nano-banana-pro/edit","Nano Banana Pro · Edit"],["openai/gpt-image-2/edit","GPT Image 2 · Edit"]],
-  video:[["bytedance/seedance-2.0/reference-to-video","Seedance 2.0"],["fal-ai/kling-video/v3/pro/image-to-video","Kling 3.0 Pro"]],
+  video:[["bytedance/seedance-2.5/reference-to-video","Seedance 2.5 ★"],["bytedance/seedance-2.0/reference-to-video","Seedance 2.0"],["fal-ai/kling-video/v3/pro/image-to-video","Kling 3.0 Pro"]],
   audio:[["fal-ai/elevenlabs/sound-effects","ElevenLabs SFX"]]
 };
 const STATIONS={
@@ -1872,7 +1877,7 @@ async function runGenerate(){
   if(st.kind==="image"){input.num_images=parseInt($("numImages").value)||1;Object.assign(input,sizeFor(model,aspect));withRes(model,input);
     if(st.refs){const urls=flattenRefs(refItems,12);if(urls.length)input.image_urls=urls;}
     if(sceneText)input.prompt=prompt2+sceneText;}
-  if(st.kind==="video"){var _dur=parseInt((($("duration")||{}).value))||8;var _lo=(_dur*0.05).toFixed(2),_hi=(_dur*0.40).toFixed(2);if(!confirm("Paid video · 1 clip · ~"+_dur+"s · est $"+_lo+"—$"+_hi+". Approve the plan before paying for the pixels?"))return;
+  if(st.kind==="video"){var _dur=parseInt((($("duration")||{}).value))||8;var _lo=(_dur*0.05).toFixed(2),_hi=(_dur*0.47).toFixed(2);if(!confirm("Paid video · 1 clip · ~"+_dur+"s · est $"+_lo+"—$"+_hi+". Approve the plan before paying for the pixels?"))return;
     if(model.includes("kling")){input.duration=String($("duration").value);const cv=flattenRefs(refItems,1);if(cv[0])input.image_url=cv[0];}
     else{input.resolution=$("resolution").value;input.duration=String($("duration").value);if(aspect!=="auto")input.aspect_ratio=aspect;const urls=flattenRefs(refItems,4);if(urls.length)input.image_urls=urls;if($("genAudio").checked)input.generate_audio=true;}
     if(sceneText)input.prompt=prompt2+sceneText;}
@@ -3097,6 +3102,7 @@ const MODEL_COSTS={
  "fal-ai/nano-banana-pro/edit":"$0.15 per edit",
  "openai/gpt-image-2":"$0.02–0.17 per image (by quality)",
  "openai/gpt-image-2/edit":"$0.02–0.17 per image (by quality)",
+ "bytedance/seedance-2.5/reference-to-video":"$0.47/sec at 720p · $0.22/sec at 480p · native 30s, 50 refs, synced audio",
  "bytedance/seedance-2.0/reference-to-video":"$0.30/sec at 720p · ~$1.50 per 5-sec clip",
  "fal-ai/kling-video/v3/pro/image-to-video":"$0.11–0.17 per second"
 };
@@ -4815,7 +4821,7 @@ function formulaBeats(ep){const k=(ep.formula&&ep.formula!=="auto")?ep.formula:(
 /* ================= PHASE 2 — SCENE BOARD → PRODUCTION ================= */
 function lookStyleOf(ep){return ep.look==="custom"?(ep.lookCustom||""):((LOOKS[ep.look]||LOOKS.flat2d).style);}
 function sceneImgModel(hasRefs){return hasRefs?(S.picked.edit||"fal-ai/nano-banana-pro/edit"):(S.picked.image||"fal-ai/nano-banana-pro");}
-function sceneVidModel(){return S.picked.video||"bytedance/seedance-2.0/reference-to-video";}
+function sceneVidModel(){return S.picked.video||"bytedance/seedance-2.5/reference-to-video";}
 function matchSceneRefs(ep,s){
   if(s&&s.lockRefs&&s.lockRefs.length){
     const cast=[],wardrobe=[];let set=null;
@@ -5142,7 +5148,7 @@ async function fillBlanksSet(it){
 }
 /* ux fixes */
 /* ================= UX FIXES ================= */
-function _costFor(b){const dc=b.dataset.cost;if(!dc)return"";if(dc==="img")return costOf((S.picked&&S.picked.image)||"fal-ai/nano-banana-2");if(dc==="edit")return costOf((S.picked&&S.picked.edit)||"fal-ai/nano-banana-pro/edit");if(dc==="vid")return costOf((S.picked&&S.picked.video)||"bytedance/seedance-2.0/reference-to-video");return costOf(dc);}
+function _costFor(b){const dc=b.dataset.cost;if(!dc)return"";if(dc==="img")return costOf((S.picked&&S.picked.image)||"fal-ai/nano-banana-2");if(dc==="edit")return costOf((S.picked&&S.picked.edit)||"fal-ai/nano-banana-pro/edit");if(dc==="vid")return costOf((S.picked&&S.picked.video)||"bytedance/seedance-2.5/reference-to-video");return costOf(dc);}
 function paintAIButtons(root){if(!root||root.nodeType!==1)return;const list=[];if(root.tagName==="BUTTON")list.push(root);if(root.querySelectorAll)root.querySelectorAll("button").forEach(b=>list.push(b));list.forEach(b=>{const txt=(b.textContent||"").trim();const star=txt.indexOf("✦")>-1;if(star&&!b.dataset.aiPainted){b.classList.remove("ghost");b.classList.add("green");b.dataset.aiPainted="1";}if(!b.dataset.priced){let note="";if(b.dataset.cost){const cf=_costFor(b);if(cf)note="≈ "+cf;}else if(star&&txt.length>2){note=costOf((typeof S!=="undefined"&&S.llmModel)||"google/gemini-2.5-flash");}if(note){b.insertAdjacentHTML("beforeend",'<span style="display:block;font-weight:400;font-size:10px;letter-spacing:0;text-transform:none;opacity:.62;margin-top:3px">'+note+'</span>');b.dataset.priced="1";}}});}
 async function suggestLocations(){
   if(!S.apiKey){toast("Add your fal key in Setup for AI suggestions.",true);return;}

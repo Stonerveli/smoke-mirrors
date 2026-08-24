@@ -1095,7 +1095,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.08 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.09 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1349,10 +1349,9 @@ function bkImport(inp){
  r.readAsText(f);inp.value="";}
 function bkPaint(){
  var el=$("bkMeter");if(!el)return;
- var j="";try{j=JSON.stringify(S);}catch(e){}
- var used=j.length,cap=5*1024*1024,pct=Math.min(100,Math.round(used/cap*100));
+ var used=lsBytes(),cap=5*1024*1024,pct=Math.min(100,Math.round(used/cap*100));
  var col=pct>=80?"var(--red)":(pct>=60?"#c9a94a":"var(--bud)");
- el.innerHTML='<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--bone-dim)"><span>'+(Math.round(used/1048576*100)/100)+' MB used</span><span>~5 MB browser limit</span></div><div style="height:8px;border:1px solid var(--line);border-radius:999px;margin-top:4px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+col+'"></div></div><div id="bkPersist" class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px"></div>';
+ el.innerHTML='<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--bone-dim)"><span>'+(Math.round(used/1048576*100)/100)+' MB used</span><span>~5 MB browser limit</span></div>'+(IDB.ok?'<div style="font-size:11px;color:var(--bud);margin-top:2px">🗄 '+IDB.map.size+' image'+(IDB.map.size===1?'':'s')+' in the vault (unlimited, outside this bar)</div>':'')+'<div style="height:8px;border:1px solid var(--line);border-radius:999px;margin-top:4px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+col+'"></div></div><div id="bkPersist" class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px"></div>';
  try{if(navigator.storage&&navigator.storage.persisted)navigator.storage.persisted().then(function(p){var t=$("bkPersist");if(t)t.textContent=p?"✓ Android granted persistent storage — data protected from auto-eviction.":"⚠ Persistent storage not granted yet — install as app + revisit often to earn it.";});}catch(e){}}
 function save(){try{var j=JSON.stringify(IDB.ok?smDehydrate(S):S);localStorage.setItem(LS,j);
  if(IDB.ok)idbFlush();
@@ -1692,7 +1691,7 @@ function go(name){
    var _bm=$("bkMeta");
    if(_bm){var lb=S.lastBackup?new Date(S.lastBackup):null;var days=lb?Math.floor((Date.now()-S.lastBackup)/864e5):null;
     var sz="~"+Math.round(lsBytes()/1024)+" KB";
-    _bm.innerHTML='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">'+(IDB.ok?("\U0001f5c4 Vault: "+IDB.map.size+" image"+(IDB.map.size===1?"":"s")+" in IndexedDB (outside the 5 MB limit)<br>"):"")+(lb?("Last backup: "+lb.toLocaleDateString()+" (· "+sz+" · app v9.98)"):"No backup yet")+'</div>'+((days===null||days>7)?'<div class="hint" style="text-transform:none;letter-spacing:0;color:#e0b46a">'+String.fromCharCode(0x23F0)+' Over 7 days since a backup — Export first. Clean second. Restore carefully.</div>':"");}
+    _bm.innerHTML='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">'+(IDB.ok?("🗄 Vault: "+IDB.map.size+" image"+(IDB.map.size===1?"":"s")+" in IndexedDB (outside the 5 MB limit)<br>"):"")+(lb?("Last backup: "+lb.toLocaleDateString()+" (· "+sz+" · app v9.98)"):"No backup yet")+'</div>'+((days===null||days>7)?'<div class="hint" style="text-transform:none;letter-spacing:0;color:#e0b46a">'+String.fromCharCode(0x23F0)+' Over 7 days since a backup — Export first. Clean second. Restore carefully.</div>':"");}
    if(S.apiKey&&$("apiKey"))$("apiKey").placeholder="saved "+String.fromCharCode(0x2022,0x2022,0x2022,0x2022)+String(S.apiKey).slice(-4);
    if(S.openaiKey&&$("openaiKey"))$("openaiKey").placeholder="saved "+String.fromCharCode(0x2022,0x2022,0x2022,0x2022)+String(S.openaiKey).slice(-4);
   }catch(e){}
@@ -6985,6 +6984,7 @@ boot();
     return idbGC().then(function(){
      var after=lsBytes();
      try{go(S.view||"studio");}catch(e){}
+     try{bkPaint();}catch(e){}
      if(moved>0&&before-after>200000){
       toast("Storage upgraded \u2014 "+moved+" image"+(moved===1?"":"s")+" moved to the vault. localStorage: "+(Math.round(before/1048576*100)/100)+" MB \u2192 "+(Math.round(after/1048576*100)/100)+" MB.");
      }else if(n>0){try{go(S.view||"studio");}catch(e){}}

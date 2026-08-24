@@ -245,6 +245,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button data-go="cast"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='3.5'/><path d='M5.5 20a6.5 6.5 0 0 1 13 0'/><path d='M14.8 9.3l3.6-.6'/><circle cx='18.7' cy='8.6' r='.8' fill='currentColor' stroke='none'/><path d='M18.9 7.3c.7-.5.2-1.2.6-1.9'/></svg></span>Cast</button>
   <button data-go="chiefinese"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg></span>Chiefinese</button>
   <button data-go="networks"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='7' height='7' rx='1'/><rect x='14' y='3' width='7' height='7' rx='1'/><rect x='3' y='14' width='7' height='7' rx='1'/><rect x='14' y='14' width='7' height='7' rx='1'/></svg></span>Networks</button>
+  <button data-go="registry"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z'/><path d='M14 4v6h6'/><path d='M8 13h7'/><path d='M8 17h5'/></svg></span>Registry</button>
   <button data-go="shows"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='6' width='20' height='13' rx='2'/><path d='M8 3l4 3 4-3'/></svg></span>Shows</button>
   <button data-go="sets"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M3 15l5-4 4 3 3-2 6 5'/><circle cx='8' cy='9' r='1.3'/></svg></span>Sets</button>
   <button data-go="pipeline"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='6' cy='6' r='2'/><circle cx='18' cy='18' r='2'/><path d='M8 6h7a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h7'/></svg></span>Pipeline</button>
@@ -615,6 +616,22 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div id="castEditor" class="card" style="display:none"></div>
   <div id="castLockBar" style="margin-bottom:10px"></div><div id="castGrid"></div>
   <input type="file" id="assetFile" accept="image/*" style="display:none">
+</section>
+<!-- ===== REGISTRY ===== -->
+<section class="view" id="view-registry">
+  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z'/><path d='M14 4v6h6'/><path d='M8 13h7'/><path d='M8 17h5'/></svg></span><h2>IP Registry</h2><span class="tag">Source of truth</span></div>
+  <div class="hint" style="margin-bottom:12px">Create once. Register forever. Produce everywhere. Import the schema, visual tracks, and records &mdash; the registry documents canon, it never invents it.</div>
+  <div class="card">
+    <button class="btn green" id="regImport" style="width:100%">&#8681; Import registry JSON</button>
+    <input type="file" id="regFile" accept=".json,application/json" multiple style="display:none">
+    <div class="row" style="margin-top:8px">
+      <button class="btn ghost sm" id="regExport" style="flex:1">&#8679; Export all</button>
+      <button class="btn ghost sm" id="regWipe" style="flex:1">Clear registry</button>
+    </div>
+    <div class="hint" style="margin-top:8px" id="regLoaded">Nothing loaded.</div>
+  </div>
+  <div class="filterbar" id="regFilter"></div>
+  <div id="regBody"></div>
 </section>
 <!-- ===== SETS ===== -->
 <section class="view" id="view-sets">
@@ -1077,7 +1094,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v9.99 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.00 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1524,7 +1541,7 @@ async function svGenerate(){
   svSetMode((S.songvid&&S.songvid.mode)||"perform");
 })();
 var CUR_VIEW="episodes";
-const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",chief:"create",canon:"universe",cast:"universe",chiefinese:"universe",shows:"universe",networks:"universe",sets:"universe",projects:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
+const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",chief:"create",canon:"universe",cast:"universe",chiefinese:"universe",shows:"universe",networks:"universe",registry:"universe",sets:"universe",projects:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
 const GROUP_FIRST={create:"chief",universe:"canon",library:"pipeline",brand:"brand",setup:"settings"};
 function navLabel(v){var b=document.querySelector('nav button[data-go="'+v+'"]');if(b){var t=(b.textContent||"").trim();if(t)return t;}return v;}
 function renderSubTabs(){
@@ -1558,6 +1575,7 @@ function go(name){
   if(name==="vo")renderVO();
   if(name==="vibe")renderVibe();
   if(name==="chief")renderChief();
+  if(name==="registry")renderRegistry();
   if(name==="settings"&&typeof bkPaint==="function")bkPaint();
   if(name==="chiefinese")renderChiefinese();
   if(name==="shows")renderShows();
@@ -3273,6 +3291,154 @@ function castCard(it,kind){
   d.addEventListener("click",()=>openAsset(kind,it.id));
   return d;
 }
+/* ===== IP REGISTRY — reader v1 ===== */
+var REG_FILTER="ALL";
+var REG_OPEN=null;
+function regStore(){if(!S.reg)S.reg={schema:null,tracks:null,records:{}};if(!S.reg.records)S.reg.records={};return S.reg;}
+function regPrefix(id){return (id||"").split("-")[0]||"?";}
+function regCounts(){var r=regStore().records,m={};Object.keys(r).forEach(function(k){var p=regPrefix(k);m[p]=(m[p]||0)+1;});return m;}
+function regIngest(obj,fname){
+  var g=regStore();
+  if(obj&&obj.registry_id){g.records[obj.registry_id]=obj;return "record "+obj.registry_id;}
+  if(obj&&obj._id_prefix==="VIS"&&obj.tracks){g.tracks=obj;return "visual tracks ("+obj.tracks.length+")";}
+  if(obj&&obj.two_axes&&obj.required_fields){g.schema=obj;return "schema";}
+  if(Array.isArray(obj)){var n=0;obj.forEach(function(o){if(o&&o.registry_id){g.records[o.registry_id]=o;n++;}});if(n)return n+" records";}
+  return null;
+}
+function regLoadedLine(){
+  var g=regStore(),bits=[];
+  bits.push(g.schema?"Schema v2 \u2713":"Schema \u2014 missing");
+  bits.push(g.tracks?("Visual tracks \u2713 ("+g.tracks.tracks.length+")"):"Visual tracks \u2014 missing");
+  var c=regCounts(),tot=Object.keys(g.records).length;
+  bits.push(tot?(tot+" records: "+Object.keys(c).sort().map(function(p){return p+" "+c[p];}).join(" \u00b7 ")):"No records");
+  return bits.join(" \u2014 ");
+}
+function renderRegFilter(){
+  var host=$("regFilter");if(!host)return;
+  var c=regCounts(),keys=Object.keys(c).sort();
+  var g=regStore();
+  var tabs=[["ALL","All"]];
+  keys.forEach(function(p){tabs.push([p,p+" ("+c[p]+")"]);});
+  if(g.tracks)tabs.push(["VIS","Visual tracks"]);
+  if(g.schema)tabs.push(["SCHEMA","Schema"]);
+  if(tabs.length<=1){host.style.display="none";host.innerHTML="";return;}
+  host.style.display="flex";
+  host.innerHTML=tabs.map(function(t){return '<button data-rf="'+t[0]+'"'+(t[0]===REG_FILTER?' class="on"':'')+'>'+esc(t[1])+'</button>';}).join("");
+  host.querySelectorAll("[data-rf]").forEach(function(b){b.onclick=function(){REG_FILTER=b.getAttribute("data-rf");REG_OPEN=null;renderRegistry();};});
+}
+function regKV(k,v){
+  if(v===null||v===undefined||v==="")return "";
+  if(typeof v==="string")return '<div class="cn-sub" style="margin:4px 0"><b style="color:var(--acid,#9bff3b)">'+esc(k)+':</b> '+esc(v)+'</div>';
+  if(Array.isArray(v))return '<div style="margin:4px 0"><b class="cn-sub" style="color:var(--acid,#9bff3b)">'+esc(k)+'</b><ul style="margin:2px 0 0 16px;padding:0">'+v.map(function(x){return '<li class="cn-sub">'+esc(typeof x==="string"?x:JSON.stringify(x))+'</li>';}).join("")+'</ul></div>';
+  if(typeof v==="object")return '<div style="margin:6px 0"><b class="cn-sub" style="color:var(--acid,#9bff3b)">'+esc(k)+'</b><div style="margin-left:10px;border-left:1px solid #333;padding-left:8px">'+Object.keys(v).map(function(k2){return regKV(k2,v[k2]);}).join("")+'</div></div>';
+  return '<div class="cn-sub"><b>'+esc(k)+':</b> '+esc(String(v))+'</div>';
+}
+function regBadge(t,tone){return '<span class="tag"'+(tone?' style="background:'+tone+';color:#000"':'')+'>'+esc(t)+'</span>';}
+function regStatusTone(s){return ({Locked:"#9bff3b",Approved:"#7fd4ff",Candidate:"#ffd166",Concept:"#888",Retired:"#555"})[s]||"";}
+function regCard(rec){
+  var st=rec.asset_status||rec.status||"?";
+  return '<div class="canonrow" data-regopen="'+esc(rec.registry_id)+'" style="cursor:pointer">'+
+    '<div class="ph" style="display:flex;align-items:center;justify-content:center;font-size:10px;letter-spacing:1px">'+esc(regPrefix(rec.registry_id))+'</div>'+
+    '<div style="min-width:0"><div class="cn-name">'+esc(rec.name||rec.registry_id)+'</div>'+
+    '<div class="cn-sub">'+esc(rec.registry_id)+' \u00b7 '+esc(rec.category||"")+'</div>'+
+    '<div style="margin-top:4px">'+regBadge(st,regStatusTone(st))+(rec.canon_level?regBadge("L"+String(rec.canon_level).replace(/^L/,"")):"")+'</div></div></div>';
+}
+function regDetail(rec){
+  var g=regStore();
+  var split=rec.canon_split||{};
+  var story=split.story_canon||[],prod=split.production_canon||[];
+  function block(title,keys){
+    var body=keys.map(function(k){return rec[k]!==undefined?regKV(k,rec[k]):"";}).join("");
+    if(!body.trim())return "";
+    return '<div class="card" style="margin-top:10px"><div class="cn-name" style="margin-bottom:6px">'+title+'</div>'+body+'</div>';
+  }
+  var used={};story.concat(prod).forEach(function(k){used[k]=1;});
+  var meta=["registry_id","name","aliases","category","owner","studio","asset_status","canon_level","first_appearance","address"];
+  meta.forEach(function(k){used[k]=1;});
+  used["canon_split"]=1;
+  var rest=Object.keys(rec).filter(function(k){return !used[k]&&k.charAt(0)!=="_";});
+  return '<div class="card"><button class="btn ghost sm" id="regBack" style="width:100%;margin-bottom:10px">\u2190 Back to registry</button>'+
+    '<div class="cn-name" style="font-size:18px">'+esc(rec.name||"")+'</div>'+
+    '<div class="cn-sub">'+esc(rec.registry_id)+'</div></div>'+
+    block("Identity &amp; address",meta)+
+    (story.length?block("Story canon &mdash; what is true",story):"")+
+    (prod.length?block("Production canon &mdash; how it appears",prod):"")+
+    (rest.length?block("Other",rest):"")+
+    '<div class="card" style="margin-top:10px"><button class="btn ghost sm" id="regCopy" style="width:100%">Copy record JSON</button></div>';
+}
+function regTracksView(){
+  var g=regStore();if(!g.tracks)return '<div class="hint">No visual tracks loaded.</div>';
+  return g.tracks.tracks.map(function(t){
+    var st=t.asset_status||"?";
+    return '<div class="card" style="margin-bottom:10px"><div class="cn-name">'+esc(t.name)+'</div>'+
+      '<div class="cn-sub">'+esc(t.registry_id)+'</div>'+
+      '<div style="margin:6px 0">'+regBadge(st,regStatusTone(st))+(t.canon_level?regBadge(t.canon_level):"")+'</div>'+
+      regKV("assigned_to",t.assigned_to&&t.assigned_to.length?t.assigned_to:["\u2014 unassigned"])+
+      (t.style_core?regKV("style_core",t.style_core):"")+
+      (t.style_core_source?regKV("style_core",t.style_core_source):"")+
+      (t.blocking?regKV("blocking",t.blocking):"")+
+      (t.chieff_presentation?regKV("chieff_presentation",t.chieff_presentation):"")+
+      (t.does_not_apply?regKV("does_not_apply",t.does_not_apply):"")+
+      '</div>';
+  }).join("");
+}
+function regSchemaView(){
+  var g=regStore();if(!g.schema)return '<div class="hint">No schema loaded.</div>';
+  var s=g.schema,out="";
+  ["two_axes","canon_split","registry_id_format","prompt_descriptors","reference_plate_standard","asset_vault","continuity_qc","multishot_continuity","visual_tracks","scene_shot_system","reserved_architecture","workflow"].forEach(function(k){
+    if(s[k])out+='<div class="card" style="margin-bottom:10px"><div class="cn-name" style="margin-bottom:6px">'+esc(k.replace(/_/g," "))+'</div>'+regKV("",s[k]).replace('<b class="cn-sub" style="color:var(--acid,#9bff3b)"></b>','')+'</div>';
+  });
+  return out;
+}
+function renderRegistry(){
+  var g=regStore();
+  var li=$("regLoaded");if(li)li.textContent=regLoadedLine();
+  renderRegFilter();
+  var host=$("regBody");if(!host)return;
+  if(REG_OPEN&&g.records[REG_OPEN]){
+    host.innerHTML=regDetail(g.records[REG_OPEN]);
+    var bb=$("regBack");if(bb)bb.onclick=function(){REG_OPEN=null;renderRegistry();};
+    var cb=$("regCopy");if(cb)cb.onclick=function(){var t=JSON.stringify(g.records[REG_OPEN],null,2);if(navigator.clipboard)navigator.clipboard.writeText(t);toast("Record JSON copied.");};
+    return;
+  }
+  if(REG_FILTER==="VIS"){host.innerHTML=regTracksView();return;}
+  if(REG_FILTER==="SCHEMA"){host.innerHTML=regSchemaView();return;}
+  var ids=Object.keys(g.records).sort();
+  if(REG_FILTER!=="ALL")ids=ids.filter(function(k){return regPrefix(k)===REG_FILTER;});
+  if(!ids.length){host.innerHTML='<div class="hint">No records yet. Import CHR-0001_Chieff.json, REGISTRY_SCHEMA_v2.json and VISUAL_TRACKS.json above.</div>';return;}
+  host.innerHTML=ids.map(function(k){return regCard(g.records[k]);}).join("");
+  host.querySelectorAll("[data-regopen]").forEach(function(el){el.onclick=function(){REG_OPEN=el.getAttribute("data-regopen");renderRegistry();};});
+}
+(function(){
+  var b=$("regImport"),f=$("regFile");
+  if(b&&f)b.onclick=function(){f.click();};
+  if(f)f.onchange=function(){
+    var files=Array.prototype.slice.call(f.files||[]);if(!files.length)return;
+    var done=0,msgs=[];
+    files.forEach(function(file){
+      var rd=new FileReader();
+      rd.onload=function(){
+        try{var o=JSON.parse(rd.result);var m=regIngest(o,file.name);msgs.push(m||(file.name+": unrecognised"));}
+        catch(e){msgs.push(file.name+": bad JSON");}
+        done++;
+        if(done===files.length){save();renderRegistry();toast("Imported \u2014 "+msgs.join("; "));}
+      };
+      rd.readAsText(file);
+    });
+    f.value="";
+  };
+  var ex=$("regExport");
+  if(ex)ex.onclick=function(){
+    var g=regStore();
+    var payload={schema:g.schema,visual_tracks:g.tracks,records:g.records,exported:new Date().toISOString()};
+    var blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+    var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="stoneralia_registry.json";a.click();
+    toast("Registry exported.");
+  };
+  var w=$("regWipe");
+  if(w)w.onclick=function(){if(!confirm("Clear the whole registry from this device? Your JSON files are untouched."))return;S.reg={schema:null,tracks:null,records:{}};REG_OPEN=null;REG_FILTER="ALL";save();renderRegistry();toast("Registry cleared.");};
+})();
+
 function renderCast(){renderCastFilter();const lb=$("castLockBar");if(lb){lb.innerHTML='<button class="btn ghost sm" id="wardLock" style="width:100%">'+((S.wardrobeLock!==false)?"🔒 Chiefin’ Season wardrobe lock: ON":"🔓 Wardrobe lock: OFF — outfits may drift")+"</button>";var wb=$("wardLock");if(wb)wb.onclick=function(){S.wardrobeLock=(S.wardrobeLock!==false)?false:true;save();renderCast();toast((S.wardrobeLock!==false)?"Wardrobe locked across every prompt.":"Wardrobe lock off.");};}
   const host=$("castGrid");if(!host)return;
   if(!S.cast.length){host.innerHTML='<div class="empty"><div class="big">No cast yet</div>Add a character and lock their look. Chieff loads himself on first run.</div>';return;}

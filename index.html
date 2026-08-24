@@ -1095,7 +1095,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.01 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.02 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -3341,12 +3341,30 @@ function renderRegFilter(){
   host.innerHTML=tabs.map(function(t){return '<button data-rf="'+t[0]+'"'+(t[0]===REG_FILTER?' class="on"':'')+'>'+esc(t[1])+'</button>';}).join("");
   host.querySelectorAll("[data-rf]").forEach(function(b){b.onclick=function(){REG_FILTER=b.getAttribute("data-rf");REG_OPEN=null;renderRegistry();};});
 }
+function regLabel(k){return esc(String(k).replace(/^_/,"").replace(/_/g," "));}
+function regVal(s){
+  s=String(s);
+  if(s.length<=90)return esc(s);
+  return '<span class="regx" style="cursor:pointer">'+esc(s.slice(0,88))+'<span style="opacity:.55">\u2026 more</span><span class="regfull" style="display:none">'+esc(s.slice(88))+'</span></span>';
+}
 function regKV(k,v){
   if(v===null||v===undefined||v==="")return "";
-  if(typeof v==="string")return '<div class="cn-sub" style="margin:4px 0"><b style="color:var(--acid,#9bff3b)">'+esc(k)+':</b> '+esc(v)+'</div>';
-  if(Array.isArray(v))return '<div style="margin:4px 0"><b class="cn-sub" style="color:var(--acid,#9bff3b)">'+esc(k)+'</b><ul style="margin:2px 0 0 16px;padding:0">'+v.map(function(x){return '<li class="cn-sub">'+esc(typeof x==="string"?x:JSON.stringify(x))+'</li>';}).join("")+'</ul></div>';
-  if(typeof v==="object")return '<div style="margin:6px 0"><b class="cn-sub" style="color:var(--acid,#9bff3b)">'+esc(k)+'</b><div style="margin-left:10px;border-left:1px solid #333;padding-left:8px">'+Object.keys(v).map(function(k2){return regKV(k2,v[k2]);}).join("")+'</div></div>';
-  return '<div class="cn-sub"><b>'+esc(k)+':</b> '+esc(String(v))+'</div>';
+  var lbl=k?('<b style="color:var(--acid,#9bff3b)">'+regLabel(k)+':</b> '):"";
+  var hdr=k?('<b class="cn-sub" style="color:var(--acid,#9bff3b)">'+regLabel(k)+'</b>'):"";
+  if(typeof v==="string")return '<div class="cn-sub" style="margin:4px 0">'+lbl+regVal(v)+'</div>';
+  if(typeof v==="boolean"||typeof v==="number")return '<div class="cn-sub" style="margin:4px 0">'+lbl+esc(String(v))+'</div>';
+  if(Array.isArray(v)){
+    if(!v.length)return "";
+    var allStr=v.every(function(x){return typeof x!=="object"||x===null;});
+    if(allStr)return '<div style="margin:4px 0">'+hdr+'<ul style="margin:2px 0 0 16px;padding:0">'+v.map(function(x){return '<li class="cn-sub">'+regVal(x)+'</li>';}).join("")+'</ul></div>';
+    return '<div style="margin:6px 0">'+hdr+v.map(function(x,i){
+      var title=(x&&(x.name||x.id||x.asset_id))?String(x.name||x.id||x.asset_id):("#"+(i+1));
+      return '<div style="margin:6px 0 6px 10px;border-left:2px solid #2a2a2a;padding-left:9px"><div class="cn-sub" style="font-weight:700;opacity:.9">'+esc(title)+'</div>'+
+        Object.keys(x).filter(function(k2){return ["name","id","asset_id"].indexOf(k2)<0;}).map(function(k2){return regKV(k2,x[k2]);}).join("")+'</div>';
+    }).join("")+'</div>';
+  }
+  if(typeof v==="object")return '<div style="margin:6px 0">'+hdr+'<div style="margin-left:10px;border-left:1px solid #333;padding-left:8px">'+Object.keys(v).map(function(k2){return regKV(k2,v[k2]);}).join("")+'</div></div>';
+  return '<div class="cn-sub">'+lbl+esc(String(v))+'</div>';
 }
 function regBadge(t,tone){return '<span class="tag" style="border-radius:999px;padding:2px 9px;'+(tone?'background:'+tone+';color:#000;border-color:transparent':'')+'">'+esc(t)+'</span>';}
 function regStatusTone(s){return ({Locked:"#9bff3b",Approved:"#7fd4ff",Candidate:"#ffd166",Concept:"#888",Retired:"#555"})[s]||"";}
@@ -3358,24 +3376,43 @@ function regCard(rec){
     '<div class="cn-sub">'+esc(rec.registry_id)+' \u00b7 '+esc(rec.category||"")+'</div>'+
     '<div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap">'+regBadge(st,regStatusTone(st))+(rec.canon_level?regBadge("L"+String(rec.canon_level).replace(/^L/,"")):"")+'</div></div></div>';
 }
+var REG_META=["registry_id","name","aliases","category","owner","studio","asset_status","asset_status_scale","canon_level","first_appearance","address"];
+var REG_STORY=["identity","role","core_drive","personality","behavioral_rules","never_does","relationships","universe_canon_rules","production_rules"];
+var REG_PROD=["visual_canon","presentations","modes","shades_rule","prompt_descriptors","fourth_wall","reference_plate_standard","locked_design_rules","cameo_rule","asset_vault","continuity_qc"];
+var REG_SKIP=["canon_split"];
 function regDetail(rec){
   var g=regStore();
   var split=rec.canon_split||{};
-  var story=split.story_canon||[],prod=split.production_canon||[];
+  // union of declared split + defaults, deduped, only keys the record actually has
+  function collect(declared,fallback){
+    var seen={},out=[];
+    (Array.isArray(declared)?declared:[]).concat(fallback).forEach(function(k){
+      if(seen[k])return;seen[k]=1;
+      if(rec[k]!==undefined)out.push(k);
+    });
+    return out;
+  }
+  var story=collect(split.story_canon,REG_STORY);
+  var prod=collect(split.production_canon,REG_PROD);
+  // a key can only live in ONE section — story wins, prod second
+  var claimed={};
+  story.forEach(function(k){claimed[k]=1;});
+  prod=prod.filter(function(k){return !claimed[k];});
+  prod.forEach(function(k){claimed[k]=1;});
   function block(title,keys){
     var body=keys.map(function(k){return rec[k]!==undefined?regKV(k,rec[k]):"";}).join("");
     if(!body.trim())return "";
     return '<div class="card" style="margin-top:10px"><div class="cn-name" style="margin-bottom:6px">'+title+'</div>'+body+'</div>';
   }
-  var used={};story.concat(prod).forEach(function(k){used[k]=1;});
-  var meta=["registry_id","name","aliases","category","owner","studio","asset_status","canon_level","first_appearance","address"];
-  meta.forEach(function(k){used[k]=1;});
-  used["canon_split"]=1;
+  var used={};
+  Object.keys(claimed).forEach(function(k){used[k]=1;});
+  REG_META.forEach(function(k){used[k]=1;});
+  REG_SKIP.forEach(function(k){used[k]=1;});
   var rest=Object.keys(rec).filter(function(k){return !used[k]&&k.charAt(0)!=="_";});
   return '<div class="card"><button class="btn ghost sm" id="regBack" style="width:100%;margin-bottom:10px">\u2190 Back to registry</button>'+
     '<div class="cn-name" style="font-size:18px">'+esc(rec.name||"")+'</div>'+
     '<div class="cn-sub">'+esc(rec.registry_id)+'</div></div>'+
-    block("Identity &amp; address",meta)+
+    block("Identity &amp; address",REG_META)+
     (story.length?block("Story canon &mdash; what is true",story):"")+
     (prod.length?block("Production canon &mdash; how it appears",prod):"")+
     (rest.length?block("Other",rest):"")+
@@ -3414,6 +3451,7 @@ function renderRegistry(){
     host.innerHTML=regDetail(g.records[REG_OPEN]);
     var bb=$("regBack");if(bb)bb.onclick=function(){REG_OPEN=null;renderRegistry();};
     var cb=$("regCopy");if(cb)cb.onclick=function(){var t=JSON.stringify(g.records[REG_OPEN],null,2);if(navigator.clipboard)navigator.clipboard.writeText(t);toast("Record JSON copied.");};
+    host.querySelectorAll(".regx").forEach(function(el){el.onclick=function(){var f=el.querySelector(".regfull");if(!f)return;var open=f.style.display!=="none";f.style.display=open?"none":"inline";var m=el.querySelector("span[style*=\"opacity:.55\"]");if(m)m.style.display=open?"inline":"none";};});
     return;
   }
   if(REG_FILTER==="VIS"){host.innerHTML=regTracksView();return;}

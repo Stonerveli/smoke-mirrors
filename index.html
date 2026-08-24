@@ -1089,13 +1089,13 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Everything — canon, cast, comics, slang, datasets, LoRAs — lives in this browser’s storage. One backup file protects the whole universe.</div>
   <div id="bkMeter" style="margin-bottom:10px"></div>
   <button class="btn green" style="width:100%" onclick="bkExport()">⬇ Export everything (.json)</button><div id="bkMeta"></div>
-  <label class="fld" style="margin-top:14px">Add characters / terms (merge \u2014 keeps everything you have)</label>
+  <label class="fld" style="margin-top:14px">Add characters / locations / terms (merge \u2014 keeps everything you have)</label>
   <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:6px">Drop a cast pack here \u2014 adds new characters and slang without touching your existing work. Dupes are skipped.</div>
   <input type="file" accept=".json,application/json" onchange="castMerge(this)">
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.05 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.06 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1220,8 +1220,10 @@ function castMerge(inp){
    var o=JSON.parse(String(r.result||""));
    var incoming=(o&&o.cast)||(o&&o.data&&o.data.cast)||[];
    var inSlang=(o&&o.slang)||(o&&o.data&&o.data.slang)||[];
-   if(!Array.isArray(incoming)||!incoming.length){throw new Error("No characters found in that file.");}
-   var addC=0,skipC=0,addS=0;
+   var inLocs=(o&&o.locations)||(o&&o.sets)||(o&&o.data&&o.data.sets)||[];
+   if((!Array.isArray(incoming)||!incoming.length)&&(!Array.isArray(inLocs)||!inLocs.length)&&(!Array.isArray(inSlang)||!inSlang.length)){throw new Error("No characters, locations, or terms found in that file.");}
+   incoming=Array.isArray(incoming)?incoming:[];
+   var addC=0,skipC=0,addS=0,addL=0,skipL=0;
    incoming.forEach(function(c){
     if(!c||!c.name)return;
     if((S.cast||[]).some(function(x){return x.name.toLowerCase()===String(c.name).toLowerCase();})){skipC++;return;}
@@ -1233,8 +1235,15 @@ function castMerge(inp){
     if((S.slang||[]).some(function(x){return x.term.toLowerCase()===String(t.term).toLowerCase();}))return;
     S.slang.unshift({id:uid(),term:t.term,meaning:t.meaning||"",district:t.district||"Couchwick",origin:t.origin||"stoneralia_original",example:t.example||"",status:t.status||"draft",ts:Date.now()});
     addS++;});
+   (Array.isArray(inLocs)?inLocs:[]).forEach(function(L){
+    if(!L||!L.name)return;
+    if((S.sets||[]).some(function(x){return x.name.toLowerCase()===String(L.name).toLowerCase();})){skipL++;return;}
+    S.sets.unshift({id:uid(),name:L.name,vibe:L.vibe||L.description||"",district:L.district||"",
+     show:L.show||"",network:L.network||"",guests:Array.isArray(L.guests)?L.guests:[],
+     locType:L.type||L.locType||"",reg:L.reg||L.registry_id||"",status:L.status||"canon",src:"",views:[]});
+    addL++;});
    save();
-   toast(addC+" character"+(addC===1?"":"s")+" added"+(skipC?" \u00b7 "+skipC+" already existed":"")+(addS?" \u00b7 "+addS+" terms":"")+" \u2014 review in Cast, lock DNA when ready.");
+   toast((addC?addC+" character"+(addC===1?"":"s"):"")+(addL?(addC?" \u00b7 ":"")+addL+" location"+(addL===1?"":"s"):"")+(addS?" \u00b7 "+addS+" terms":"")+((skipC+skipL)?" \u00b7 "+(skipC+skipL)+" already existed":"")+" \u2014 merged. Review in Cast / Locations.");
    try{go("cast");}catch(e){}
   }catch(e){toast("Import failed: "+e.message,true);}
   inp.value="";

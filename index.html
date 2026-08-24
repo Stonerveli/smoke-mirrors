@@ -516,7 +516,8 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
       </select>
     </div>
     <div class="row" style="margin-bottom:10px">
-      <input type="text" id="stashCollection" placeholder="Collection (optional) — e.g. Peace & Pull">
+      <input type="text" id="stashCollection" placeholder="Collection (optional) — e.g. Peace &amp; Pull">
+      <input type="text" id="stashSet" list="stashSetList" placeholder="Set (optional) — matching fit" style="min-width:150px"><datalist id="stashSetList"></datalist>
       <select id="stashSeason" style="min-width:130px">
         <option value="All-season">All-season</option><option value="Spring">Spring</option><option value="Summer">Summer</option><option value="Fall">Fall</option><option value="Winter">Winter</option>
       </select>
@@ -1094,7 +1095,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.00 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.01 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -2382,6 +2383,14 @@ $("boardSeedance").addEventListener("click",async()=>{
 
 /* stash */
 function cat(it){return it.category||it.type||"piece";}
+/* ===== WARDROBE SLOTS & SETS ===== */
+const SLOT_MAP={Hats:"Headwear",Outerwear:"Outerwear",Tees:"Top",Hoodies:"Top",Tops:"Top",Sportswear:"Top",Joggers:"Bottom",Pants:"Bottom",Shorts:"Bottom",Tracksuits:"Full Look",Footwear:"Footwear",Accessories:"Accessory"};
+const SLOT_ORDER=["Headwear","Outerwear","Top","Full Look","Bottom","Footwear","Accessory","Unassigned"];
+function slotOf(it){if(!it)return "Unassigned";return it.slot||SLOT_MAP[cat(it)]||"Unassigned";}
+function setOf(it){return (it&&it.set)?String(it.set).trim():"";}
+function allSets(){var s=new Set();(S.stash||[]).forEach(function(it){var v=setOf(it);if(v)s.add(v);});return Array.from(s).sort();}
+function setPieces(name){return (S.stash||[]).filter(function(it){return setOf(it)===name;});}
+
 var STATUS_LEVELS={draft:["DRAFT","#8a8a8a"],ready:["REF READY","#d9a441"],canon:["CANON \u2713","var(--bud)"],archived:["ARCHIVED","#555"]};
 function stOf(o){return (o&&o.status)||"canon";}
 function stPill(o,fn,id){var k=stOf(o),v=STATUS_LEVELS[k]||STATUS_LEVELS.canon;
@@ -2410,6 +2419,8 @@ function renderEditor(){
   const vs=viewsOf(it);
   let h='<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div><div style="font-family:var(--slate);font-stretch:condensed;font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:.04em">'+esc(it.name)+'</div><div class="hint">'+esc(cat(it))+' · '+vs.length+' side'+(vs.length>1?'s':'')+' loaded</div></div><button class="btn sm ghost" id="edClose" style="margin-left:auto;flex:0">Done</button></div>';
   h+='<label class="fld">Name</label><input type="text" id="edName" value="'+esc(it.name)+'">';
+  h+='<div class="row" style="margin-top:8px"><select id="edSlot" style="flex:1"><option value="">Slot — auto ('+esc(SLOT_MAP[cat(it)]||"Unassigned")+')</option>'+SLOT_ORDER.map(function(s){return '<option value="'+s+'"'+((it.slot&&it.slot===s)?' selected':'')+'>'+s+'</option>';}).join("")+'</select>'+
+       '<input type="text" id="edSet" list="edSetList" placeholder="Set — matching fit" value="'+esc(setOf(it))+'" style="flex:1"><datalist id="edSetList">'+allSets().map(function(s){return '<option value="'+esc(s)+'">';}).join("")+'</datalist></div>';
   h+='<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(106px,1fr))">';
   vs.forEach((v,i)=>{h+='<div class="stash-item'+(i===0?' ismain':'')+'"><button class="x" data-i="'+i+'">✕</button>'+(i===0?'<span class="mainbadge">★ main</span>':'<button class="setmain" data-m="'+i+'">set main</button>')+'<img class="zoomable" src="'+v.src+'"><div class="meta"><div class="nm">'+esc(v.label)+'</div></div></div>';});
   h+='</div>';
@@ -2418,6 +2429,8 @@ function renderEditor(){
   $("stashEditor").innerHTML=h;
   $("edClose").addEventListener("click",closeEditor);
   $("edName").addEventListener("input",e=>{it.name=e.target.value;save();});$("edName").addEventListener("change",()=>{renderStash();});
+  const _es=$("edSlot");if(_es)_es.addEventListener("change",e=>{it.slot=e.target.value||"";save();renderStash();toast("Slot: "+slotOf(it));});
+  const _est=$("edSet");if(_est)_est.addEventListener("change",e=>{it.set=e.target.value.trim();save();renderStash();renderSetList();toast(it.set?("Added to set: "+it.set):"Removed from set.");});
   const lw=$("viewLabels");VIEW_LABELS.forEach(l=>{const c=document.createElement("span");c.className="chip"+(l===pendingLabel?" on":"");c.textContent=l;c.addEventListener("click",()=>{pendingLabel=l;renderEditor();});lw.appendChild(c);});
   $("stashEditor").querySelectorAll(".x").forEach(b=>b.addEventListener("click",()=>removeView(parseInt(b.dataset.i))));
   $("stashEditor").querySelectorAll(".setmain").forEach(b=>b.addEventListener("click",()=>setMainStash(parseInt(b.dataset.m))));
@@ -2435,10 +2448,12 @@ $("stashUrlBtn").addEventListener("click",async()=>{const name=$("stashName").va
   let color="";try{color=await avgColor(url);}catch(e){}addStash(name,$("stashCat").value,$("stashCollection").value.trim(),$("stashSeason").value,color,url.trim());});
 function addStash(name,category,collection,season,color,src){
   const id=uid();
-  S.stash.unshift({id,name,category,collection,season,color,src,views:[{label:"Front",src}]});save();
-  $("stashName").value="";$("stashCollection").value="";toast("Added — tap it to load back, sleeves & panels.");renderStashFilter();renderStash();
+  const setName=($("stashSet")&&$("stashSet").value.trim())||"";
+  S.stash.unshift({id,name,category,collection,season,color,src,set:setName,slot:(SLOT_MAP[category]||"Unassigned"),views:[{label:"Front",src}]});save();
+  $("stashName").value="";$("stashCollection").value="";toast("Added — tap it to load back, sleeves & panels.");renderStashFilter();renderStash();renderSetList();
 }
-function renderStashFilter(){
+function renderSetList(){var dl=$("stashSetList");if(!dl)return;dl.innerHTML=allSets().map(function(s){return '<option value="'+esc(s)+'">';}).join("");}
+function renderStashFilter(){renderSetList();
   const bar=$("stashFilter");const cats=["All",...new Set(S.stash.map(cat))];
   if(S.stash.length===0){bar.innerHTML="";return;}
   bar.innerHTML="";cats.forEach(c=>{const ch=document.createElement("span");ch.className="chip"+((S.stashFilter||"All")===c?" on":"");ch.textContent=c;
@@ -2452,7 +2467,7 @@ function renderStash(){
   items.forEach(it=>{const d=document.createElement("div");d.className="stash-item";
     const sw=it.color?'<span class="sw" style="background:'+it.color+'"></span>':'';
     const nv=viewsOf(it).length;const badge=nv>1?'<span class="vbadge">▦ '+nv+' sides</span>':'<span class="vbadge add">＋ add sides</span>';
-    d.innerHTML='<button class="x">✕</button>'+badge+'<img src="'+it.src+'"><div class="meta"><div class="nm">'+esc(it.name)+'</div><div class="ty">'+sw+esc(cat(it))+(it.collection?' · '+esc(it.collection):'')+'</div></div>';
+    d.innerHTML='<button class="x">✕</button>'+badge+'<img src="'+it.src+'"><div class="meta"><div class="nm">'+esc(it.name)+'</div><div class="ty">'+sw+esc(cat(it))+' · '+esc(slotOf(it))+(setOf(it)?' · \u2b21 '+esc(setOf(it)):'')+'</div></div>';
     d.querySelector(".x").addEventListener("click",e=>{e.stopPropagation();S.stash=S.stash.filter(x=>x.id!==it.id);pickedRefs.delete(it.id);S.board.charRefs=S.board.charRefs.filter(x=>x!==it.id);save();renderStashFilter();renderStash();closeEditor();});
     d.addEventListener("click",()=>openEditor(it.id));
     g.appendChild(d);});
@@ -3151,7 +3166,7 @@ function renderAssetEditor(){
     const _on=$("aOutfitNote");if(_on)_on.addEventListener("input",e=>{it.wardrobeNote=e.target.value;save();});
     const _fp=$("aFitPreset");if(_fp)_fp.addEventListener("change",e=>{const p=WARDROBE_PRESETS[e.target.value];if(!p)return;it.wardrobeNote=p.text;save();if(_on)_on.value=p.text;toast(p.name+" applied — tweak the wording to make it theirs.");});
     $("aSheet").addEventListener("click",()=>buildSheet(it));
-    const wc=$("aWardrobe");if(wc){if(!S.stash.length){wc.innerHTML='<span class="hint">Add pieces in The Stash to dress them.</span>';}else{wc.innerHTML="";S.stash.forEach(sp=>{const ch=document.createElement("span");ch.className="chip"+(((it.wardrobe||[]).includes(sp.id))?" on":"");ch.textContent=sp.name;ch.addEventListener("click",()=>{if(!it.wardrobe)it.wardrobe=[];const i=it.wardrobe.indexOf(sp.id);i>=0?it.wardrobe.splice(i,1):it.wardrobe.push(sp.id);save();ch.classList.toggle("on");});wc.appendChild(ch);});}}
+    const wc=$("aWardrobe");if(wc)renderWardrobePicker(wc,it);
     if($("aWardrobeNote"))$("aWardrobeNote").addEventListener("input",e=>{it.wardrobeNote=e.target.value;save();});
     if($("aDress"))$("aDress").addEventListener("click",()=>dressInGear(it));
     if($("aFill"))$("aFill").addEventListener("click",()=>fillBlanksCast(it));
@@ -3333,7 +3348,7 @@ function regKV(k,v){
   if(typeof v==="object")return '<div style="margin:6px 0"><b class="cn-sub" style="color:var(--acid,#9bff3b)">'+esc(k)+'</b><div style="margin-left:10px;border-left:1px solid #333;padding-left:8px">'+Object.keys(v).map(function(k2){return regKV(k2,v[k2]);}).join("")+'</div></div>';
   return '<div class="cn-sub"><b>'+esc(k)+':</b> '+esc(String(v))+'</div>';
 }
-function regBadge(t,tone){return '<span class="tag"'+(tone?' style="background:'+tone+';color:#000"':'')+'>'+esc(t)+'</span>';}
+function regBadge(t,tone){return '<span class="tag" style="border-radius:999px;padding:2px 9px;'+(tone?'background:'+tone+';color:#000;border-color:transparent':'')+'">'+esc(t)+'</span>';}
 function regStatusTone(s){return ({Locked:"#9bff3b",Approved:"#7fd4ff",Candidate:"#ffd166",Concept:"#888",Retired:"#555"})[s]||"";}
 function regCard(rec){
   var st=rec.asset_status||rec.status||"?";
@@ -3341,7 +3356,7 @@ function regCard(rec){
     '<div class="ph" style="display:flex;align-items:center;justify-content:center;font-size:10px;letter-spacing:1px">'+esc(regPrefix(rec.registry_id))+'</div>'+
     '<div style="min-width:0"><div class="cn-name">'+esc(rec.name||rec.registry_id)+'</div>'+
     '<div class="cn-sub">'+esc(rec.registry_id)+' \u00b7 '+esc(rec.category||"")+'</div>'+
-    '<div style="margin-top:4px">'+regBadge(st,regStatusTone(st))+(rec.canon_level?regBadge("L"+String(rec.canon_level).replace(/^L/,"")):"")+'</div></div></div>';
+    '<div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap">'+regBadge(st,regStatusTone(st))+(rec.canon_level?regBadge("L"+String(rec.canon_level).replace(/^L/,"")):"")+'</div></div></div>';
 }
 function regDetail(rec){
   var g=regStore();
@@ -3438,6 +3453,63 @@ function renderRegistry(){
   var w=$("regWipe");
   if(w)w.onclick=function(){if(!confirm("Clear the whole registry from this device? Your JSON files are untouched."))return;S.reg={schema:null,tracks:null,records:{}};REG_OPEN=null;REG_FILTER="ALL";save();renderRegistry();toast("Registry cleared.");};
 })();
+
+
+function renderWardrobePicker(host,ch_it){
+  if(!S.stash||!S.stash.length){host.innerHTML='<span class="hint">Add pieces in The Stash to dress them.</span>';return;}
+  host.innerHTML="";
+  var worn=ch_it.wardrobe||[];
+  function chipFor(sp){
+    var el=document.createElement("span");
+    el.className="chip"+(worn.includes(sp.id)?" on":"");
+    var st=setOf(sp);
+    el.innerHTML=esc(sp.name)+'<span style="opacity:.55;font-size:10px;margin-left:6px">'+esc(cat(sp))+'</span>'+(st?'<span style="opacity:.75;font-size:10px;margin-left:5px">\u2b21</span>':'');
+    el.title=(st?("Set: "+st+" \u00b7 "):"")+slotOf(sp)+" \u00b7 "+cat(sp);
+    el.addEventListener("click",function(){
+      if(!ch_it.wardrobe)ch_it.wardrobe=[];
+      var i=ch_it.wardrobe.indexOf(sp.id);
+      i>=0?ch_it.wardrobe.splice(i,1):ch_it.wardrobe.push(sp.id);
+      save();worn=ch_it.wardrobe;el.classList.toggle("on");
+    });
+    return el;
+  }
+  function header(txt,sub){
+    var h=document.createElement("div");
+    h.style.cssText="width:100%;font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.5;margin:10px 0 4px";
+    h.textContent=txt+(sub?(" \u00b7 "+sub):"");
+    host.appendChild(h);
+  }
+  function wearWholeSet(name){
+    var b=document.createElement("button");
+    b.className="btn ghost sm";b.style.cssText="width:100%;margin:2px 0 6px";
+    var ids=setPieces(name).map(function(p){return p.id;});
+    var allOn=ids.every(function(id){return (ch_it.wardrobe||[]).includes(id);});
+    b.textContent=allOn?("Remove the whole "+name):("Wear the whole "+name);
+    b.addEventListener("click",function(){
+      if(!ch_it.wardrobe)ch_it.wardrobe=[];
+      if(allOn){ch_it.wardrobe=ch_it.wardrobe.filter(function(id){return ids.indexOf(id)<0;});}
+      else{ids.forEach(function(id){if(ch_it.wardrobe.indexOf(id)<0)ch_it.wardrobe.push(id);});}
+      save();renderWardrobePicker(host,ch_it);
+    });
+    host.appendChild(b);
+  }
+  // sets first
+  var sets=allSets();
+  sets.forEach(function(name){
+    var ps=setPieces(name);
+    header("\u2b21 "+name, ps.length+" pieces");
+    wearWholeSet(name);
+    ps.slice().sort(function(a,b){return SLOT_ORDER.indexOf(slotOf(a))-SLOT_ORDER.indexOf(slotOf(b));}).forEach(function(sp){host.appendChild(chipFor(sp));});
+  });
+  // then loose pieces grouped by slot
+  var loose=S.stash.filter(function(sp){return !setOf(sp);});
+  SLOT_ORDER.forEach(function(slot){
+    var group=loose.filter(function(sp){return slotOf(sp)===slot;});
+    if(!group.length)return;
+    header(slot, group.length);
+    group.forEach(function(sp){host.appendChild(chipFor(sp));});
+  });
+}
 
 function renderCast(){renderCastFilter();const lb=$("castLockBar");if(lb){lb.innerHTML='<button class="btn ghost sm" id="wardLock" style="width:100%">'+((S.wardrobeLock!==false)?"🔒 Chiefin’ Season wardrobe lock: ON":"🔓 Wardrobe lock: OFF — outfits may drift")+"</button>";var wb=$("wardLock");if(wb)wb.onclick=function(){S.wardrobeLock=(S.wardrobeLock!==false)?false:true;save();renderCast();toast((S.wardrobeLock!==false)?"Wardrobe locked across every prompt.":"Wardrobe lock off.");};}
   const host=$("castGrid");if(!host)return;

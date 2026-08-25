@@ -1095,7 +1095,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.10 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.11 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -3249,7 +3249,7 @@ function renderAssetEditor(){
     h+='<label class="fld">Vibe — what this place feels like</label><textarea id="aVibe" style="min-height:74px" placeholder="late-night bodega, buzzing fluorescents, neon haze">'+esc(it.vibe||"")+'</textarea>';
     h+='<button class="btn ghost sm" id="aVibeBtn" style="margin-top:8px;width:100%">✦ Suggest a vibe</button><div id="aVibeStatus"></div><div id="aVibeSuggest"></div>';
     h+='<label class="fld" style="margin-top:14px">Set dressing &amp; recurring world</label><div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:6px">Objects and unnamed roles that make this place itself. Named people belong in Cast — never invented here.</div><div id="aPropList"></div>';
-    h+='<div class="row" style="margin-top:8px"><button class="btn ghost sm" id="aPropBtn" style="flex:1">✦ Set dressing</button><button class="btn ghost sm" id="aPropBtn2" style="flex:1">✦ Recurring extras</button><button class="btn ghost sm" id="aPropAdd" style="flex:0">＋ Add</button></div><div id="aPropStatus"></div><div id="aPropSuggest"></div>';
+    h+='<div class="row" style="margin-top:8px"><button class="btn ghost sm" id="aPropBtn" style="flex:1">✦ Set dressing</button><button class="btn ghost sm" id="aPropBtn2" style="flex:1">✦ Neighborhood people</button><button class="btn ghost sm" id="aPropAdd" style="flex:0">＋ Add</button></div><div id="aPropStatus"></div><div id="aPropSuggest"></div>';
     h+='<button class="btn ghost sm" id="aSetFill" style="margin-top:10px;width:100%">✦ Fill in the blanks (AI)</button><div id="aSetFillStatus"></div>';
     h+='<div class="row" style="margin-top:10px"><button class="btn ghost sm" id="aSuggest">✦ Suggest scenes (AI)</button><button class="btn green sm" id="aBuild" data-cost="img">✦ Build this location</button></div><div id="aSetStatus"></div><div id="aSetResult"></div>';
   }
@@ -3289,7 +3289,7 @@ function renderAssetEditor(){
     $("aVibeBtn").addEventListener("click",()=>suggestVibe(it));
     renderProps(it);
     if($("aPropBtn"))$("aPropBtn").addEventListener("click",()=>suggestProps(it,"dressing"));
-  if($("aPropBtn2"))$("aPropBtn2").addEventListener("click",()=>suggestProps(it,"extras"));
+  if($("aPropBtn2"))$("aPropBtn2").addEventListener("click",()=>suggestProps(it,"people"));
     if($("aPropAdd"))$("aPropAdd").addEventListener("click",()=>{const nm=window.prompt("Prop / character name:");if(!nm)return;const ds=window.prompt("The running bit (optional):")||"";if(!it.props)it.props=[];it.props.push({name:nm.trim(),desc:ds.trim()});save();renderProps(it);});
     if($("aSetFill"))$("aSetFill").addEventListener("click",()=>fillBlanksSet(it));
     $("aSuggest").addEventListener("click",()=>suggestScenes(it));
@@ -5230,13 +5230,26 @@ async function suggestProps(it,mode){
    sys=vibeCtx("lite")+castLock+" You dress LOCATIONS for a deadpan urban cannabis-culture comedy universe (Stoneralia). Return physical, VISIBLE set dressing — objects, fixtures, signage, vehicles, surfaces, weather, and small world details a camera could actually photograph. These feed image generation, so describe how each thing LOOKS. No people, no names, no jokes that only work in text.";
    usr="LOCATION: "+it.name+(it.vibe?" — "+it.vibe:"")+"\nGive 5 pieces of visible set dressing that make this place unmistakably itself. Each: short name + one line describing how it looks. Return JSON only: {\"props\":[{\"name\":\"\",\"desc\":\"\"}]}.";
   }else{
-   sys=vibeCtx("lite")+castLock+" You populate LOCATIONS with recurring UNNAMED background roles and objects for a deadpan urban cannabis-culture comedy universe (Stoneralia). Far Side energy: a running bit attached to a role or an object, never to an invented name. Recurring, reusable, funny.";
-   usr="LOCATION: "+it.name+(it.vibe?" — "+it.vibe:"")+"\nGive 4 recurring extras for this place — UNNAMED roles (e.g. 'the stoop regular', 'the double-parked driver') or objects with a running bit. NO invented names. Each: short label + one-line running bit. Return JSON only: {\"props\":[{\"name\":\"\",\"desc\":\"\"}]}.";
+   var existing=(S.cast||[]).filter(function(c){return c.name;}).map(function(c){return c.name+(c.identity?" ("+String(c.identity).slice(0,90)+")":"");});
+   sys=vibeCtx("lite")+" You propose NEW neighborhood characters for a deadpan urban cannabis-culture comedy universe (Stoneralia). Ensemble craft, sitcom lineage: every person is somebody the audience would recognize from their own block — a full human with a life, not a joke delivery device. Each one must have (a) a real role in this specific neighborhood, (b) a defined relationship to the block, (c) one honest flaw, (d) a reason people would want to watch them GROW over seasons. Warm, specific, human, funny because they are real. NEVER cruel, never a stereotype, never a punchline with a name on it."+
+    " ANTI-REPEAT RULE — these characters ALREADY EXIST and must NOT be duplicated, echoed, or lightly reskinned: "+(existing.join(" | ")||"(none yet)")+". Do not propose anyone who shares an archetype, running bit, speech pattern, or role with an existing character. If the obvious idea overlaps someone above, throw it out and go somewhere new."+
+    " These are PROPOSALS, not canon: the creator reviews and saves them. Never assume they are already in the world.";
+   usr="NEIGHBORHOOD: "+it.name+(it.vibe?" — "+it.vibe:"")+"\nPropose 4 NEW people who belong to this specific place and nowhere else. Each: name, their role/job on the block, their relationship to the neighborhood, one honest flaw, and the running thing that makes them them. Make them feel like somebody the audience already knows. Return JSON only: {\"props\":[{\"name\":\"\",\"desc\":\"role — relationship — flaw — running bit\"}]}.";
   }
   try{
     const d=parseJSON(await llmRun(sys,usr));const props=(d.props||[]).filter(p=>p&&p.name);
-    if(box){box.innerHTML="";props.forEach(p=>{const b=document.createElement("button");b.className="btn ghost sm";b.style.cssText="display:block;width:100%;text-align:left;margin-top:6px;white-space:normal;line-height:1.35";b.innerHTML='<b>'+esc(p.name)+'</b> — '+esc(p.desc||"");b.addEventListener("click",()=>{if(!it.props)it.props=[];it.props.push({name:p.name,desc:p.desc||""});save();renderProps(it);});box.appendChild(b);});
-      const hint=document.createElement("div");hint.className="hint";hint.style.marginTop="6px";hint.textContent="Tap to add — or Suggest again for more.";box.appendChild(hint);}
+    if(box){box.innerHTML="";props.forEach(p=>{const b=document.createElement("button");b.className="btn ghost sm";b.style.cssText="display:block;width:100%;text-align:left;margin-top:6px;white-space:normal;line-height:1.35";b.innerHTML='<b>'+esc(p.name)+'</b> — '+esc(p.desc||"")+(mode==="people"?'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:3px;color:var(--bud)">tap → adds to Cast as DRAFT</div>':'');
+       b.addEventListener("click",()=>{
+        if(mode==="people"){
+         if((S.cast||[]).some(function(c){return c.name.toLowerCase()===String(p.name).toLowerCase();})){toast(p.name+" is already in Cast.",true);return;}
+         S.cast.unshift({id:uid(),name:p.name,identity:(p.desc||""),nick:"",from:(it.district||""),show:(it.show||""),network:(it.network||""),guests:[],status:"draft",voice:"",side:"",powers:"",wardrobe:[],wardrobeNote:"",color:"",src:"",views:[]});
+         save();b.style.opacity=".45";b.disabled=true;
+         toast(p.name+" → Cast (DRAFT). Review, add DNA, then set Canon ✓.");
+        }else{
+         if(!it.props)it.props=[];it.props.push({name:p.name,desc:p.desc||""});save();renderProps(it);
+        }});
+       box.appendChild(b);});
+      const hint=document.createElement("div");hint.className="hint";hint.style.marginTop="6px";hint.textContent=(mode==="people"?"Tap to send to Cast as a DRAFT — nobody enters canon until you say so.":"Tap to add — or Suggest again for more.");box.appendChild(hint);}
     if(st)st.innerHTML="";
   }catch(e){if(st)st.innerHTML=errLine(e);}
 }

@@ -234,6 +234,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button data-go="run"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 21V4'/><path d='M5 4h13l-3 4.5L18 13H5'/></svg></span>Run</button>
   <button data-go="cloudtoons"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 17h11a3.5 3.5 0 0 0 .5-6.97A5 5 0 0 0 8 8.5 3.5 3.5 0 0 0 6 17z'/></svg></span>Cloudtoons</button>
   <button data-go="comics"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span>Comics</button>
+  <button data-go="sitcom"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='4' width='20' height='14' rx='2'/><path d='M8 21h8'/><path d='M12 18v3'/><path d='M7 9l3 2-3 2'/></svg></span>Sitcom</button>
   <button data-go="fight"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M13 2 4.5 13.5H11l-1 8.5 9.5-12.5H12z'/></svg></span>Fight</button>
 <button data-go="vibe"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4z'/><path d='M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z'/></svg></span>Vibe</button>
   <button data-go="smg"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg></span>SMG</button>
@@ -542,6 +543,35 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <input type="file" id="viewFile" accept="image/*" style="display:none">
   <div class="filterbar" id="stashFilter"></div>
   <div id="stashGrid"></div>
+</section>
+
+<!-- ===== 90s SITCOM CREATOR ===== -->
+<section class="view" id="view-sitcom">
+  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='4' width='20' height='14' rx='2'/><path d='M8 21h8'/><path d='M12 18v3'/></svg></span><h2>90s Sitcom</h2><span class="tag">Creator</span></div>
+  <div class="card">
+    <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:10px">Authentic period television grammar — story rhythm, standing sets, multi-cam staging, performance and audience timing. Not a VHS filter.</div>
+    <label class="fld">Who\u2019s in it <span id="sitCastCount" style="color:var(--bone-dim)"></span></label>
+    <div id="sitCast" class="tokenchips"></div>
+    <label class="fld" style="margin-top:10px">Standing set</label>
+    <select id="sitSet"></select>
+    <label class="fld" style="margin-top:10px">The situation \u2014 characters + what goes wrong</label>
+    <textarea id="sitSituation" style="min-height:70px" placeholder="e.g. the block\u2019s carnival committee meets in the living room and nobody agrees on the float"></textarea>
+    <label class="fld" style="margin-top:10px">Era · format</label>
+    <div class="row"><select id="sitEra" style="flex:1"></select><select id="sitFormat" style="flex:1"></select></div>
+    <div id="sitEraDef"></div>
+    <label class="fld" style="margin-top:10px">Production mode · broadcast profile</label>
+    <div class="row"><select id="sitMode" style="flex:1"></select><select id="sitBroadcast" style="flex:1"></select></div>
+    <div id="sitModeDef"></div>
+    <label class="fld" style="margin-top:10px">Studio audience</label>
+    <select id="sitAudience"></select>
+    <div id="sitAudDef"></div>
+    <label class="fld" style="margin-top:10px">Output</label>
+    <select id="sitOutput"></select>
+    <div id="sitOutDef"></div>
+    <button class="btn green" id="sitGo" style="width:100%;margin-top:12px">\u2726 Write it (AI) <span class="sub">pennies per call (text)</span></button>
+    <div id="sitStatus"></div>
+    <div id="sitOut"></div>
+  </div>
 </section>
 
 <!-- ===== STORY ===== -->
@@ -1095,7 +1125,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.14 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.15 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1251,7 +1281,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],allowExtras:true,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance25"},datasets:[],dsActive:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],allowExtras:true,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance25"},sitcom:{era:"general",format:"neighborhood",mode:"multi",broadcast:"original",audience:"on",output:"scene",cast:[],setId:"",situation:"",last:""},datasets:[],dsActive:"",
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -1697,7 +1727,7 @@ async function svGenerate(){
   svSetMode((S.songvid&&S.songvid.mode)||"perform");
 })();
 var CUR_VIEW="episodes";
-const VIEW_GROUP={studio:"create",board:"create",story:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",chief:"create",canon:"universe",cast:"universe",chiefinese:"universe",shows:"universe",networks:"universe",registry:"universe",sets:"universe",projects:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
+const VIEW_GROUP={studio:"create",board:"create",story:"create",sitcom:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",chief:"create",canon:"universe",cast:"universe",chiefinese:"universe",shows:"universe",networks:"universe",registry:"universe",sets:"universe",projects:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
 const GROUP_FIRST={create:"chief",universe:"canon",library:"pipeline",brand:"brand",setup:"settings"};
 function navLabel(v){var b=document.querySelector('nav button[data-go="'+v+'"]');if(b){var t=(b.textContent||"").trim();if(t)return t;}return v;}
 function renderSubTabs(){
@@ -1721,6 +1751,7 @@ function go(name){
   if(name==="stash"){renderStashFilter();renderStash();}
   if(name==="reel"){renderReel();renderTimeline();}
   if(name==="story")renderShots();
+  if(name==="sitcom")renderSitcom();
   if(name==="studio")renderRefs();
   if(name==="board")renderBoardChars();
   if(name==="csb")renderCSB();
@@ -6921,6 +6952,68 @@ function mogLaw(){
   " TEXT LOCK RULE: name the exact copy, where it sits, that it is correctly spelled, and that it is the only text in the piece."+
   " Shots are separate paragraphs, each opening with its timecode.";
 }
+/* ===== 90s SITCOM CREATOR ===== */
+var SIT_ERAS={
+ early:["Early 90s","ERA — EARLY 90s: silhouettes, hairstyles, set decoration, graphics and music conventions of the early decade; oversized cuts, bold blocks of colour, warm practical interiors."],
+ mid:["Mid 90s","ERA — MID 90s: the decade at its most confident; relaxed tailoring, brighter palettes, glossier title graphics, faster editing rhythm than the early years."],
+ late:["Late 90s","ERA — LATE 90s: cleaner lines, sleeker set decoration, restrained palettes, slicker broadcast graphics and a slightly quicker cut."],
+ general:["General 90s","ERA — GENERAL 90s: the decade’s shared television grammar without pinning to a single year."]
+};
+var SIT_FORMATS={
+ family:["Family","FORMAT — FAMILY: a household ensemble; the home is the engine, generational friction is the comedy."],
+ hangout:["Friends / Hangout","FORMAT — HANGOUT: a chosen-family ensemble orbiting one recurring gathering place; chemistry over plot."],
+ workplace:["Workplace","FORMAT — WORKPLACE: colleagues who cannot leave; hierarchy, incompetence and small stakes played large."],
+ neighborhood:["Neighborhood","FORMAT — NEIGHBORHOOD: the block itself is the cast; front stoops, shared businesses, everybody in everybody’s business."],
+ teen:["Teen / School","FORMAT — TEEN: school-year stakes played sincerely; adults as obstacles and occasional wisdom."],
+ romantic:["Romantic","FORMAT — ROMANTIC: will-they-won’t-they engine; the delay is the comedy."],
+ oddcouple:["Odd Couple","FORMAT — ODD COUPLE: two incompatible people forced to share a space; friction is the format."],
+ ensemble:["Ensemble","FORMAT — ENSEMBLE: no single lead; the comedy is the group’s collective behaviour."],
+ fish:["Fish-Out-of-Water","FORMAT — FISH-OUT-OF-WATER: one person in the wrong world, everyone else fluent in it."]
+};
+var SIT_MODES={
+ multi:["Multi-camera (default)","PRODUCTION MODE — TRADITIONAL MULTI-CAMERA: recurring standing sets, practical television-stage lighting, predominantly medium and medium-wide coverage, master shots establishing ensemble geography, close-ups reserved for important comedy beats, restrained camera movement, conventional television blocking, entrances and exits designed around the set, performances readable to both camera and audience. CAMERA GRAMMAR: wide master for geography, two-shot for exchanges, medium for dialogue, medium close-up for punchlines, reaction close-up, occasional insert for an important prop; static coverage, simple pans and gentle reframing, motivated push only when justified. Never impose modern prestige-TV cinematography. LIGHTING: broad television-stage illumination, actors consistently readable, practical motivated sources, modest contrast, warm interior character, minimal relighting between coverage."],
+ single:["Single-camera 90s","PRODUCTION MODE — 90s SINGLE-CAMERA: filmic single-camera coverage with period television discipline; more location freedom and cut variety, no studio audience geometry. Never silently mix multi-camera and single-camera grammar."]
+};
+var SIT_BROADCAST={
+ original:["Original broadcast","BROADCAST PROFILE — ORIGINAL BROADCAST: 4:3 framing, moderate broadcast softness, restrained highlight rolloff, analog-era television colour response, modest video noise, period-appropriate title graphics. A professionally produced broadcast image."],
+ syndicated:["Syndicated rerun","BROADCAST PROFILE — SYNDICATED RERUN: a slight extra generation of softness and colour shift, as re-aired later in the decade."],
+ vhs:["VHS recording","BROADCAST PROFILE — VHS RECORDING: a home-taped copy — tracking softness, mild chroma bleed, tape texture. Use only when the home-recording layer is wanted."],
+ remaster:["Modern remaster","BROADCAST PROFILE — MODERN REMASTER: 16:9 clean presentation that PRESERVES 90s sitcom staging, lighting and performance grammar. Period production, modern print."]
+};
+var SIT_AUDIENCE={
+ on:["Live audience (default)","LIVE STUDIO AUDIENCE — ON. Audience response is production grammar, not sound effects. TIMING LAW: never place laughter over the setup; the punchline lands FIRST, then the reaction hold, then the audience response, then the next line. Actors hold naturally when a significant laugh lands. Do NOT give every line a laugh: small jokes earn small responses, major punchlines earn larger ones, callbacks can earn recognition before the full laugh, physical comedy can trigger laughter on the visual impact rather than the dialogue, and important emotional moments may earn silence. Reactions must feel like one room of humans responding together — varied in intensity, never mechanical, never drowning dialogue. Available responses: light laughter, normal laughter, strong laughter, huge laugh, applause, entrance applause, recognition reaction, gasp, sympathetic aww, surprised reaction, anticipatory murmur, sustained laughter, callback recognition, end-of-scene applause. The audience joins the comedic rhythm without becoming a character."],
+ warm:["Warm / light audience","LIVE STUDIO AUDIENCE — ON, warm and restrained: smaller room energy, gentler responses, more silence between beats. All timing laws still apply: punchline first, then hold, then response."],
+ off:["No audience","LIVE STUDIO AUDIENCE — OFF: no laugh track and no audience reactions anywhere. Comedy plays on performance and timing alone."]
+};
+var SIT_OUTPUTS={
+ idea:["Idea — premise","OUTPUT — IDEA: a sitcom premise plus the episode engine beats it would run."],
+ episode:["Episode — full structure","OUTPUT — EPISODE: a complete structured episode: Cold Open, Opening Credits slot, Act I, Commercial Break, Act II, Resolution, Tag, End Credits. Carry an A-story and a B-story (a C-story only if it earns its place), plus at least one running gag and one callback."],
+ scene:["Scene — production-ready","OUTPUT — SCENE: one production-ready sitcom scene with entrances, blocking, performance beats, audience responses in their correct positions, and a clear final button."],
+ cold:["Cold open","OUTPUT — COLD OPEN: a standalone opening gag that resolves cleanly and hands off to the theme."],
+ tag:["Tag — end button","OUTPUT — TAG: a short end-of-episode comedy button, usually one location, one joke, one hold."],
+ credits:["Opening credits plan","OUTPUT — OPENING CREDITS: a theme/opening sequence plan — structure (character introduction, lifestyle montage, narrative mini-sequence, or cold-open-to-theme), cast order, character moments, title reveal and final ensemble button. Locked logos and typography come from approved assets when available."],
+ prompt:["Model-ready prompt","OUTPUT — PROMPT: a model-ready production prompt for the scene, written as timed shots followed by the production lock stack."],
+ pack:["Production pack","OUTPUT — PRODUCTION PACK: story structure, scene plan, the full production lock stack, references used, and generation instructions."]
+};
+function sitLaw(){
+ var c=S.sitcom||{};
+ var era=(SIT_ERAS[c.era]||SIT_ERAS.general)[1];
+ var fmt=(SIT_FORMATS[c.format]||SIT_FORMATS.neighborhood)[1];
+ var mode=(SIT_MODES[c.mode]||SIT_MODES.multi)[1];
+ var bc=(SIT_BROADCAST[c.broadcast]||SIT_BROADCAST.original)[1];
+ var aud=(SIT_AUDIENCE[c.audience]||SIT_AUDIENCE.on)[1];
+ var out=(SIT_OUTPUTS[c.output]||SIT_OUTPUTS.scene)[1];
+ return " You are the 90s SITCOM CREATOR for the Stoneralia universe. A convincing 90s sitcom is NOT created by adding scanlines — it is created by writing rhythm, character chemistry, standing-set geography, multi-camera staging, performance timing, audience timing, period production design and broadcast presentation working together."+
+  " "+era+" "+fmt+" "+mode+" "+bc+" "+aud+" "+out+
+  " STORY ENGINE: Normal Situation → Problem → Escalation → Complication → Peak Absurdity → Consequence → Payoff. Comedy must emerge from established character behaviour — never make a character temporarily stupid to manufacture a joke."+
+  " PERFORMANCE GRAMMAR: readable expressions, clean physical gestures, reaction holds, double takes, side-eye, delayed realisation, awkward silence, synchronised ensemble reactions, deliberate entrances, physical comedy with clear setup and payoff, and punchlines given room to breathe. Registered character behaviour always overrides generic sitcom behaviour."+
+  " SET ENGINE: treat the location as a standing set built for television — name its primary and secondary entrances, the audience-facing wall, each character’s zone, the hero furniture, recurring props and the comedy interaction points, and keep that geography consistent."+
+  " WARDROBE: derive from character canon + era + social context + scene. Characters look like people who happen to live in the period — never costume anyone as a museum exhibit, and never scatter nostalgia objects just to announce the decade."+
+  " ACT BREAK LAW: an act ends on a major complication, revelation, misunderstanding, strong punchline, decision, cliffhanger or visual gag — the story creates the break, never the runtime."+
+  " AUDIO LAYERS: dialogue dominant, then audience, set foley, room tone, transition stings, theme music. Sound effects support physical comedy without turning every movement into a cartoon effect."+
+  " PRODUCTION LOCK STACK — close the output with these resolved: Era, Format, Character, Wardrobe, Set, Performance, Camera, Lighting, Audience, Tone, State, Reference, Audio."+
+  " CANON LAW: registry canon always outranks creator defaults. Using a character here does NOT make their show a 90s sitcom — this is a production under a selected context, and it never rewrites canon.";
+}
 var CINE_RENDER={
  stoneralia_animated:["Stoneralia Animated","RENDER PROFILE — Stoneralia Animated: bold readable silhouettes, expressive 2D animation, urban + Caribbean-influenced detail, established character designs and wardrobe, comedy-friendly staging. Never photoreal humans."],
  stoneralia_cinematic:["Stoneralia Cinematic","RENDER PROFILE — Stoneralia Cinematic Animation: the established animated designs with deeper lighting, atmospheric depth, filmic framing, dramatic scale and stronger shadows."],
@@ -6961,6 +7054,73 @@ function cineFill(){
  if(pn)pn.style.display=S.cine.mograph?"block":"none";
  if(S.cine.mograph)chipDefLine("mogDef",chipDefFor("mog:"+(S.cine.mogStyle||"vector")));}
 function mogFlip(){if(!S.cine)S.cine={render:"stoneralia_animated",pace:"balanced",model:"seedance25"};S.cine.mograph=!S.cine.mograph;save();try{cineFill();}catch(e){}toast(S.cine.mograph?"Motion graphics mode \u2014 designed animation, lock stack, palette discipline.":"Live action mode \u2014 back to the cinematic render profiles.");}
+function sitSet(k,v){if(!S.sitcom)S.sitcom={};S.sitcom[k]=v;save();if(k!=="situation")renderSitcom();}
+function renderSitcom(){
+ if(!S.sitcom)S.sitcom={era:"general",format:"neighborhood",mode:"multi",broadcast:"original",audience:"on",output:"scene",cast:[],setId:"",situation:"",last:""};
+ var C=S.sitcom;
+ var cw=$("sitCast");
+ if(cw){
+  var roster=(S.cast||[]).filter(function(c){return c.name&&(c.status||"canon")!=="archived";});
+  cw.innerHTML=roster.length?roster.map(function(c){
+   var on=(C.cast||[]).indexOf(c.id)>=0;
+   return '<span class="chip'+(on?" on":"")+'" data-sitc="'+c.id+'">'+esc(c.name)+'</span>';
+  }).join(""):'<span class="hint">No cast yet \u2014 add characters in Cast first.</span>';
+  cw.onclick=function(e){var t=e.target;if(!t||!t.dataset||!t.dataset.sitc)return;
+   if(!Array.isArray(C.cast))C.cast=[];
+   var i=C.cast.indexOf(t.dataset.sitc);
+   if(i>=0)C.cast.splice(i,1);else C.cast.push(t.dataset.sitc);
+   save();renderSitcom();};
+ }
+ var cc=$("sitCastCount");if(cc)cc.textContent=(C.cast||[]).length?("\u00b7 "+C.cast.length+" selected"):"\u00b7 tap who\u2019s in the scene";
+ var ss=$("sitSet");
+ if(ss){var cur=C.setId||"";
+  ss.innerHTML='<option value="">\u2014 pick a standing set \u2014</option>'+(S.sets||[]).map(function(x){return '<option value="'+x.id+'"'+(cur===x.id?" selected":"")+'>'+esc(x.name)+'</option>';}).join("");
+  ss.onchange=function(){sitSet("setId",this.value);};}
+ function fill(id,tbl,key,def){var el=$(id);if(!el)return;
+  if(!el.options.length)Object.keys(tbl).forEach(function(k){el.add(new Option(tbl[k][0],k));});
+  el.value=C[key]||def;el.onchange=function(){sitSet(key,this.value);};}
+ fill("sitEra",SIT_ERAS,"era","general");
+ fill("sitFormat",SIT_FORMATS,"format","neighborhood");
+ fill("sitMode",SIT_MODES,"mode","multi");
+ fill("sitBroadcast",SIT_BROADCAST,"broadcast","original");
+ fill("sitAudience",SIT_AUDIENCE,"audience","on");
+ fill("sitOutput",SIT_OUTPUTS,"output","scene");
+ var tx=$("sitSituation");
+ if(tx){if(tx.value!==(C.situation||""))tx.value=C.situation||"";
+  tx.oninput=function(){C.situation=this.value;save();};}
+ chipDefLine("sitEraDef",(SIT_FORMATS[C.format]||SIT_FORMATS.neighborhood)[0]+": "+shortDef((SIT_FORMATS[C.format]||SIT_FORMATS.neighborhood)[1]));
+ chipDefLine("sitModeDef",shortDef((SIT_MODES[C.mode]||SIT_MODES.multi)[1]));
+ chipDefLine("sitAudDef",shortDef((SIT_AUDIENCE[C.audience]||SIT_AUDIENCE.on)[1]));
+ chipDefLine("sitOutDef",shortDef((SIT_OUTPUTS[C.output]||SIT_OUTPUTS.scene)[1]));
+ var go=$("sitGo");if(go)go.onclick=sitWrite;
+ var out=$("sitOut");
+ if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="sitCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="sitToBoard()">\ud83c\udfac To Pre-Roll</button></div>'):"";
+}
+function shortDef(t){var i=String(t).indexOf(": ");var v=i>0?String(t).slice(i+2):String(t);return v.split(". ")[0]+".";}
+function sitCopy(){navigator.clipboard.writeText((S.sitcom||{}).last||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
+function sitToBoard(){var t=(S.sitcom||{}).last||"";if(!t){toast("Nothing to send yet.",true);return;}
+ go("board");var b=$("boardScript");if(b){b.value=t;toast("Sent to Pre-Roll \u2014 write the board from here.");}}
+async function sitWrite(){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var C=S.sitcom||{};
+ if(!(C.situation||"").trim()){toast("Give it a situation first.",true);return;}
+ var st=$("sitStatus");if(st)st.innerHTML=spinner("Rolling tape\u2026");
+ try{
+  var chosen=(S.cast||[]).filter(function(c){return (C.cast||[]).indexOf(c.id)>=0;});
+  var roster=(S.cast||[]).filter(function(c){return c.name&&(c.status||"canon")!=="archived";}).map(function(c){return c.name;});
+  var setIt=(S.sets||[]).find(function(x){return x.id===C.setId;});
+  var castBlock=chosen.length?(" CAST IN THIS PRODUCTION (use these and only these as named characters): "+chosen.map(function(c){return c.name+(c.identity?" \u2014 "+String(c.identity).slice(0,220):"")+(c.voice?" | voice: "+String(c.voice).slice(0,120):"");}).join(" || ")):"";
+  var lock=" HARD ROSTER RULE: the only named characters that exist are: "+(roster.join(", ")||"(none)")+". Never invent a named character."+((S.allowExtras===false)?" No other people appear at all.":" Unnamed background roles are allowed (\"a neighbour\", \"the delivery guy\") but never named and never given canon.");
+  var setBlock=setIt?(" STANDING SET: "+setIt.name+(setIt.vibe?" \u2014 "+String(setIt.vibe).slice(0,320):"")):" STANDING SET: choose one consistent set from the established world and treat it as a built television set.";
+  var sys=vibeCtx("full",C.situation)+sitLaw()+castBlock+lock+setBlock+
+   " POSITIVE-ONLY PHRASING: write what you want present, never a list of what to avoid."+
+   " Write in clean plain text with clear section headers. No markdown tables. Audience responses appear inline in their correct positions, in brackets, e.g. [audience: strong laugh].";
+  var usr="SITUATION: "+C.situation.trim()+"\nDeliver the requested output in full.";
+  var res=await _llmRun(sys,usr);
+  C.last=String(res||"").trim();save();renderSitcom();
+  if(st)st.innerHTML="";
+ }catch(e){if(st)st.innerHTML=errLine(e);}
+}
 function cineLaw(){
  var c=S.cine||{};
  var r=(CINE_RENDER[c.render]||CINE_RENDER.stoneralia_animated)[1];

@@ -1095,7 +1095,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.12 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.13 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1114,6 +1114,55 @@ function errStrip(msg){var d=document.getElementById("errstrip");
   if(document.body)document.body.appendChild(d);else document.addEventListener("DOMContentLoaded",function(){document.body.appendChild(d);});}
  var t=document.getElementById("errstriptxt");if(t)t.textContent=msg;}
 const LS="smokemirrors_v1";
+/* ===== CHIP DEFINITIONS — what each selection actually does ===== */
+var CHIP_DEFS={
+ /* set / location reference angles */
+ "Wide":"Establishing shot — the whole place reads at a glance. Use it as the master plate for this location.",
+ "Detail":"One close feature that says everything — a stoop, a sign, a counter. Sells texture the wide shot can’t.",
+ "Alt Angle":"Same place from another side, so scenes here don’t all look identical.",
+ "Night":"After dark — the lighting version. Neon, streetlamps, matte-black mood.",
+ "Day":"Daylight version — flat, warm, everyday. The default for most scenes.",
+ "Empty Plate":"Clean background, no people. Drop characters onto it later without fighting the crowd.",
+ /* cast reference angles */
+ "Face":"Head-on portrait — the identity anchor. Tag this one ‘face’ authority.",
+ "3/4":"Angled three-quarter view — the most useful all-purpose reference for AI models.",
+ "Profile":"Full side view — locks nose, jaw, hairline shape.",
+ "Full Body":"Head to toe — proportions, height, stance, full outfit.",
+ "Back":"From behind — hood, hair, jacket back, silhouette.",
+ "Expression":"A specific emotion on the face — gives the model range beyond neutral.",
+ /* authority tags */
+ "auth:face":"This ref rules the FACE — identity comes from here, nothing else overrides it.",
+ "auth:hair":"This ref rules HAIR — cut, length, texture, hairline.",
+ "auth:body":"This ref rules BUILD — height, proportions, posture.",
+ "auth:outfit":"This ref rules CLOTHING — the exact garment renders from this image.",
+ "auth:pose":"This ref rules POSE — body position and gesture only.",
+ "auth:style":"This ref rules the ART STYLE — line weight, palette, rendering.",
+ "auth:prop":"This ref rules an OBJECT — the specific item in frame.",
+ /* brain providers */
+ "fal":"Text runs through fal — one key, many models, pennies per call.",
+ "openai":"Text runs through your OpenAI key — GPT-5.6 routes (Luna/Sol) bill to OpenAI, not fal.",
+ /* suno locks */
+ "Lock genre":"Keeps the genre fixed while everything else varies.",
+ "Lock vocal":"Keeps the vocal type and delivery fixed across versions.",
+ "Lock hook":"Keeps the hook identical — vary the verses around it.",
+ "Lock structure":"Keeps the song’s section order fixed.",
+ /* comic types */
+ "kind:single":"One panel, one joke, no build-up — the whole gag lives in a single image.",
+ "kind:strip3":"Setup → turn → punchline. The default daily rhythm.",
+ "kind:strip4":"Setup → build → turn → punchline. Room for one extra beat.",
+ "kind:strip6":"Six beats — a small scene with a middle, not just a joke.",
+ "kind:strip9":"Nine panels — a full short story arc on one page.",
+ "kind:strip12":"Twelve panels — the long page. A complete episode in comic form.",
+ /* comic looks */
+ "look:toon":"House style — thick uniform outlines, flat fills, matte black + bud green. Mobile-readable.",
+ "look:inked":"Inked comic book — crosshatching, heavier blacks, classic print feel.",
+ "look:manga":"Black-and-white manga — screentone shading, expressive dynamic linework.",
+ "look:zine":"Zine Punk — ratty scratchy line, photocopy grain, deliberately imperfect DIY energy.",
+ "look:kustom":"Kustom Lowbrow — dense pop-surrealism, airbrushed chrome and flame, candy colors on black.",
+ "look:painterly":"Painterly Cinematic — visible brushstrokes, chiaroscuro, backgrounds dissolving into paint."
+};
+function chipDefLine(id,text){var el=document.getElementById(id);if(!el)return;el.innerHTML=text?('<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:5px;color:var(--bud)">'+esc(text)+'</div>'):"";}
+function chipDefFor(v){try{return CHIP_DEFS[v]||"";}catch(e){return "";}}
 /* ===== IndexedDB blob vault =====
    localStorage holds only text + "idb:KEY" pointers.
    Full data URLs live in IDB and are hydrated into memory at boot,
@@ -1823,7 +1872,7 @@ function renderProjects(){
   const OAI_COST={"gpt-4o-mini":"Cheapest \u2014 ~$0.15 / $0.60 per 1M tokens. Well under 0.1\u00a2 per call.","gpt-4.1-mini":"Cheap & sharp \u2014 ~$0.40 / $1.60 per 1M. A fraction of a cent per call.","gpt-4o":"Mid \u2014 ~$2.50 / $10 per 1M. Around 1\u00a2 per call.","gpt-5":"Strong reasoning \u2014 ~$1.25 / $10 per 1M. About 1\u00a2 per call, a touch slower.","gpt-5.2":"Stronger \u2014 $1.75 / $14 per 1M. Roughly 1\u20132\u00a2 per call.","gpt-5.5":"Premium \u2014 $5 / $30 per 1M. Roughly 3\u20135\u00a2 per call. Save it for heavy lifting.","gpt-5.6-luna":"Newest family, cheapest tier \u2014 $1 / $6 per 1M. Well under 1\u00a2 per call. Great for captions, tags and quick rolls.","gpt-5.6-terra":"Newest, best value \u2014 $2.50 / $15 per 1M. Roughly 1\u20132\u00a2 per call. GPT-5.5-class work at about half the price.","gpt-5.6-sol":"Newest flagship \u2014 $5 / $30 per 1M. Roughly 3\u20135\u00a2 per call. Deepest reasoning; save it for bibles and boards."};
   const KNOWN=["gpt-4o-mini","gpt-4.1-mini","gpt-4o","gpt-5","gpt-5.2","gpt-5.5","gpt-5.6-luna","gpt-5.6-terra","gpt-5.6-sol"];
   const prov=$("brainProv");
-  function renderProv(){if(!prov)return;const cur=S.llmProvider||"fal";prov.innerHTML=[["fal","fal (any model)"],["openai","OpenAI (ChatGPT API)"]].map(o=>'<span class="chip'+(cur===o[0]?" on":"")+'" data-prov="'+o[0]+'">'+o[1]+'</span>').join("");const ob=$("openaiBlock");if(ob)ob.style.display=(cur==="openai")?"block":"none";}
+  function renderProv(){if(!prov)return;const cur=S.llmProvider||"fal";prov.innerHTML=[["fal","fal (any model)"],["openai","OpenAI (ChatGPT API)"]].map(o=>'<span class="chip'+(cur===o[0]?" on":"")+'" data-prov="'+o[0]+'">'+o[1]+'</span>').join("")+'<div id="provDef"></div>';chipDefLine("provDef",chipDefFor(cur));const ob=$("openaiBlock");if(ob)ob.style.display=(cur==="openai")?"block":"none";}
   if(prov)prov.onclick=function(e){const t=e.target;if(t&&t.dataset&&t.dataset.prov){S.llmProvider=t.dataset.prov;save();renderProv();toast("Brain set to "+(t.dataset.prov==="openai"?"OpenAI":"fal")+".");}};
   if($("openaiKey"))$("openaiKey").value=S.openaiKey||"";
   const msel=$("openaiModel"),mcus=$("openaiModelCustom"),cost=$("openaiCost");
@@ -3257,7 +3306,7 @@ function renderAssetEditor(){
   vs.forEach((v,i)=>{h+='<div class="stash-item'+(i===0?' ismain':'')+'"><button class="x" data-i="'+i+'">✕</button>'+(i===0?'<span class="mainbadge">★ main</span>':'<button class="setmain" data-m="'+i+'">set main</button>')+'<img class="zoomable" src="'+v.src+'"><div class="meta"><div class="nm">'+esc(v.label)+'</div><button class="authchip" data-a="'+i+'" style="font-size:9px;padding:2px 6px;margin-top:3px;border-radius:4px;border:1px solid '+(v.auth?'#d9a441':'var(--line)')+';background:none;color:'+(v.auth?'#d9a441':'var(--bone-dim)')+';cursor:pointer;width:100%">'+(v.auth?'🔒 '+v.auth:'authority: any')+'</button></div></div>';});
   if(!vs.length)h+='<div class="hint" style="padding:8px">No references yet — add some below so the AI stays consistent.</div>';
   h+='</div>';
-  h+='<label class="fld" style="margin-top:12px">Add a reference — pick the angle, then the photo</label><div class="tokenchips" id="aLabels"></div>';
+  h+='<label class="fld" style="margin-top:12px">Add a reference — pick the angle, then the photo</label><div class="tokenchips" id="aLabels"></div><div id="aLabelDef"></div>';
   h+='<div class="row" style="margin-top:10px"><button class="btn green sm" id="aUpload">⬆ Upload '+esc(aLabel)+'</button><button class="btn ghost sm" id="aUrl">🔗 URL</button></div>';
   $(aKind+"Editor").innerHTML=h;
   $("aClose").addEventListener("click",()=>closeAsset(aKind));
@@ -3296,6 +3345,7 @@ function renderAssetEditor(){
     $("aBuild").addEventListener("click",()=>buildLocation(it));
   }
   const lw=$("aLabels");labels.forEach(l=>{const c=document.createElement("span");c.className="chip"+(l===aLabel?" on":"");c.textContent=l;c.addEventListener("click",()=>{aLabel=l;renderAssetEditor();});lw.appendChild(c);});
+  chipDefLine("aLabelDef",chipDefFor(aLabel));
   $(aKind+"Editor").querySelectorAll(".x").forEach(b=>b.addEventListener("click",()=>{const i=parseInt(b.dataset.i);const t=assetOf();const v=viewsOf(t).filter(x=>x.src);t.views=v.filter((_,idx)=>idx!==i);t.src=t.views[0]?t.views[0].src:"";save();renderAssetEditor();renderCast();renderSets();}));
   $(aKind+"Editor").querySelectorAll(".setmain").forEach(b=>b.addEventListener("click",()=>setMainAsset(parseInt(b.dataset.m))));
   $(aKind+"Editor").querySelectorAll(".authchip").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();
@@ -3306,7 +3356,7 @@ function renderAssetEditor(){
     v2.auth=(cur>=AUTH_KINDS.length-1)?"":AUTH_KINDS[cur+1]||AUTH_KINDS[0];
     if(v2.auth==="" )delete v2.auth;
     save();renderAssetEditor();
-    toast(v2.auth?("This ref now rules "+v2.auth+" only 🔒"):"Ref untagged \u2014 general reference.");}));
+    toast(v2.auth?chipDefFor("auth:"+v2.auth):"Ref untagged \u2014 rides as a general reference, no single rule.");}));
   $("aUpload").addEventListener("click",()=>$("assetFile").click());
   $("aUrl").addEventListener("click",()=>{const u=window.prompt("Image URL for the "+aLabel+":");if(!u)return;if(!/^https?:\/\//.test(u)){toast("Needs to start with http.",true);return;}addAssetView(aLabel,u.trim());});
 }
@@ -4099,7 +4149,7 @@ function renderSpecialist(){
   const at=$("altType");
   if(at&&!at.dataset.built){at.innerHTML=["Remix","Acoustic","Live Performance","Radio Edit","Extended Version","Clean Version","Instrumental","A Cappella","Slowed Version","Faster Version","Cinematic Version","Orchestral Version","Lo-Fi Version","Genre Flip","Duet Version"].map(x=>'<option>'+esc(x)+'</option>').join("");at.dataset.built="1";}
   const vl=$("varLocks");
-  if(vl){vl.innerHTML=["Lock genre","Lock vocal","Lock hook","Lock structure"].map(x=>'<span class="chip'+(SPEC.locks.indexOf(x)>=0?" on":"")+'" data-lock="'+x+'">'+x+'</span>').join("");vl.onclick=e=>{const t=e.target;if(t.dataset&&t.dataset.lock){const i=SPEC.locks.indexOf(t.dataset.lock);if(i>=0)SPEC.locks.splice(i,1);else SPEC.locks.push(t.dataset.lock);t.classList.toggle("on");}};}
+  if(vl){vl.innerHTML=["Lock genre","Lock vocal","Lock hook","Lock structure"].map(x=>'<span class="chip'+(SPEC.locks.indexOf(x)>=0?" on":"")+'" data-lock="'+x+'">'+x+'</span>').join("")+'<div id="lockDef"></div>';chipDefLine("lockDef",(SPEC.locks||[]).map(function(l){return chipDefFor(l);}).filter(Boolean).join(" "));vl.onclick=e=>{const t=e.target;if(t.dataset&&t.dataset.lock){const i=SPEC.locks.indexOf(t.dataset.lock);if(i>=0)SPEC.locks.splice(i,1);else SPEC.locks.push(t.dataset.lock);t.classList.toggle("on");}};}
   if($("optBtn"))$("optBtn").onclick=sunoOptimize;
   if($("varBtn"))$("varBtn").onclick=sunoVariations;
   if($("altBtn"))$("altBtn").onclick=sunoAltVersion;
@@ -6421,8 +6471,8 @@ function renderComics(){
   h+='<div class="card"><label class="fld">JSON script — fill in the blanks</label><div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Write panels yourself — or paste a script another AI wrote — then load it as a renderable comic. caption = line under the panel · dialogue = speech bubbles · visual = the image prompt.</div><div class="row"><button class="btn ghost sm" id="cjTpl1" style="flex:1">1-panel</button><button class="btn ghost sm" id="cjTpl3" style="flex:1">3-panel</button><button class="btn ghost sm" id="cjTpl6" style="flex:1">6-panel</button></div><textarea id="comicJson" placeholder="Tap a template above, fill the blanks, then Load." style="min-height:140px;margin-top:8px;font-family:var(--mono);font-size:12px"></textarea><button class="btn ghost" id="cjLoad" style="margin-top:8px;width:100%">⤓ Load script → comic</button><div id="cjStatus"></div></div>';
   h+='<div style="margin-top:16px"><div class="hint">Your comics</div><div id="comicList" style="margin-top:8px"></div></div>';
   host.innerHTML=h;
-  const kk=$("comicKind");Object.keys(COMIC_KINDS).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=COMIC_KINDS[k].label;kk.appendChild(o);});kk.value=S.comicKind||"strip3";kk.addEventListener("change",e=>{S.comicKind=e.target.value;save();});
-  const lk=$("comicLook");Object.keys(COMIC_LOOKS).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=COMIC_LOOKS[k].label;lk.appendChild(o);});lk.value=S.comicLook||"toon";lk.addEventListener("change",e=>{S.comicLook=e.target.value;save();});const mk2=$("comicMechanic");if(mk2){mk2.innerHTML='<option value="">— auto / mix —</option>'+COMEDY_MECHANICS.map(m=>'<option value="'+esc(m.n)+'">'+esc(m.n)+'</option>').join("");mk2.value=S.comicMechanic||"";mk2.addEventListener("change",e=>{S.comicMechanic=e.target.value;save();});}if($("comicRes")){$("comicRes").value=S.imgRes||"1K";$("comicRes").addEventListener("change",e=>{S.imgRes=e.target.value;save();if($("imgRes"))$("imgRes").value=e.target.value;});}if($("comicMode")){$("comicMode").value=S.comicMode||"silent";$("comicMode").addEventListener("change",e=>{S.comicMode=e.target.value;save();});}
+  const kk=$("comicKind");Object.keys(COMIC_KINDS).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=COMIC_KINDS[k].label;kk.appendChild(o);});kk.value=S.comicKind||"strip3";kk.insertAdjacentHTML("afterend",'<div id="kindDef"></div>');chipDefLine("kindDef",chipDefFor("kind:"+(S.comicKind||"strip3")));kk.addEventListener("change",e=>{S.comicKind=e.target.value;save();chipDefLine("kindDef",chipDefFor("kind:"+e.target.value));});
+  const lk=$("comicLook");Object.keys(COMIC_LOOKS).forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=COMIC_LOOKS[k].label;lk.appendChild(o);});lk.value=S.comicLook||"toon";lk.insertAdjacentHTML("afterend",'<div id="lookDef"></div>');chipDefLine("lookDef",chipDefFor("look:"+(S.comicLook||"toon")));lk.addEventListener("change",e=>{S.comicLook=e.target.value;save();chipDefLine("lookDef",chipDefFor("look:"+e.target.value));});const mk2=$("comicMechanic");if(mk2){mk2.innerHTML='<option value="">— auto / mix —</option>'+COMEDY_MECHANICS.map(m=>'<option value="'+esc(m.n)+'">'+esc(m.n)+'</option>').join("");mk2.value=S.comicMechanic||"";mk2.addEventListener("change",e=>{S.comicMechanic=e.target.value;save();});}if($("comicRes")){$("comicRes").value=S.imgRes||"1K";$("comicRes").addEventListener("change",e=>{S.imgRes=e.target.value;save();if($("imgRes"))$("imgRes").value=e.target.value;});}if($("comicMode")){$("comicMode").value=S.comicMode||"silent";$("comicMode").addEventListener("change",e=>{S.comicMode=e.target.value;save();});}
   const ld=$("comicLead");ld.innerHTML='<option value="">— none —</option>'+castForNetShow(S.comicNet||"",S.comicShow||"").map(c=>'<option value="'+c.id+'">'+esc(c.name)+'</option>').join("");ld.value=S.comicLead||"";ld.addEventListener("change",e=>{S.comicLead=e.target.value;save();});
   const se=$("comicSet");se.innerHTML='<option value="">— none —</option>'+setsForNetShow(S.comicNet||"",S.comicShow||"").map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join("");se.value=S.comicSet||"";se.addEventListener("change",e=>{S.comicSet=e.target.value;save();});
   $("comicIdeaBtn").addEventListener("click",suggestComicIdea);

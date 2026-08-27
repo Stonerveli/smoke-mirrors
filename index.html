@@ -1155,7 +1155,21 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <input type="file" id="importFile" accept="application/json" style="display:none">
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
-  <div class="card"><label class="fld">🛟 Backup &amp; restore</label>
+  <div class="card">
+  <div style="font-weight:800;font-family:var(--slate);margin-bottom:6px">⚡ MODEL PLAYBOOK</div>
+  <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">Which model, when, and what it costs. Rates move — check fal for the current number.</div>
+  <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:8px">THE LADDER — iterate cheap, finish expensive</div>
+  <div class="hint" style="text-transform:none;letter-spacing:0">Draft every idea at the cheapest tier; only the keeper earns a full-price render. A 10-second shot: H3 Max ~$0.25 → Wan 3.0 480p $0.50 → Wan 720p $1.00 → Wan 1080p $2.00 → Seedance 2.5 $2.20–$4.70.</div>
+  <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:10px">VIDEO — pick by the job</div>
+  <div class="hint" style="text-transform:none;letter-spacing:0"><b>Wan 3.0</b> — the workhorse: 30s single take, native audio, references, up to 1080p, ~5× cheaper than Seedance.<br><b>Seedance 2.5</b> — hero shots only. 50 refs = best consistency in crowded scenes. Caps at 720p.<br><b>H3 Max</b> — cheapest motion. Animates ONE frame with lip-sync.<br><b>MiniMax H3</b> — 9 refs and legible on-screen text.<br><b>Flux Upscale</b> — finishing only; precise mode keeps faces exact.</div>
+  <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:10px">IMAGE — pick by the job</div>
+  <div class="hint" style="text-transform:none;letter-spacing:0"><b>Nano Banana 2</b> — house style, known-good.<br><b>Muse Image</b> — $0.01, plans before it renders. Use it when the image contains READABLE TEXT or when batching dozens of variants.<br><b>Recraft V4 Vector</b> — true SVG: print-ready apparel art straight out of the app.<br><b>Recraft V4</b> — exact RGB brand palette for on-brand batches.<br><b>Nano Banana Pro</b> — $0.15 finals.</div>
+  <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:10px">THREE SHORTCUTS</div>
+  <div class="hint" style="text-transform:none;letter-spacing:0"><b>1 · Keyframe then animate.</b> Build the frame in Studio with nano-banana (~$0.02, refs keep the character right), then animate with H3 Max. A 10s shot lands near $0.42 instead of $4.70.<br><b>2 · Draft at 480p, always.</b> Judge composition and motion cheap; resolution is the last decision, never the first.<br><b>3 · Upscaling isn’t always cheaper.</b> Flux at $0.14/sec beats generating on Wan at $0.10/sec only when you need 2K/4K or must rescue an existing keeper.</div>
+  <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:10px">HOUSE RULES</div>
+  <div class="hint" style="text-transform:none;letter-spacing:0">Text inside a video frame will garble — reserve its place in the prompt, composite the real wordmark in post.<br>Write what you WANT, never what you don’t — a named unwanted trait can summon it.<br>Free forever: scripting, boards, Chiefinese, comic scripts, templates. Only pixels cost money.</div>
+</div>
+<div class="card"><label class="fld">🛟 Backup &amp; restore</label>
   <div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Everything — canon, cast, comics, slang, datasets, LoRAs — lives in this browser’s storage. One backup file protects the whole universe.</div>
   <div id="bkMeter" style="margin-bottom:10px"></div>
   <button class="btn green" style="width:100%" onclick="bkExport()">⬇ Export everything (.json)</button><div id="bkMeta"></div>
@@ -1165,7 +1179,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.21 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.22 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1486,7 +1500,7 @@ const uid=()=>Math.random().toString(36).slice(2,9);
 const $=(id)=>document.getElementById(id);
 
 const MODEL_OPTS={
-  image:[["fal-ai/nano-banana-2","Nano Banana 2"],["meta/muse-image/text-to-image","Muse Image ⚡ $0.01 · best text"],["fal-ai/nano-banana-pro","Nano Banana Pro"],["openai/gpt-image-2","GPT Image 2"]],
+  image:[["fal-ai/nano-banana-2","Nano Banana 2"],["fal-ai/recraft/v4/text-to-vector","Recraft V4 ◆ SVG VECTOR (merch/print)"],["fal-ai/recraft/v4/text-to-image","Recraft V4 · brand raster $0.04"],["fal-ai/recraft/v4/pro/text-to-vector","Recraft V4 Pro · vector $0.30"],["fal-ai/recraft/v4/pro/text-to-image","Recraft V4 Pro · raster $0.25"],["meta/muse-image/text-to-image","Muse Image ⚡ $0.01 · best text"],["fal-ai/nano-banana-pro","Nano Banana Pro"],["openai/gpt-image-2","GPT Image 2"]],
   edit:[["fal-ai/nano-banana-2/edit","Nano Banana 2 · Edit"],["meta/muse-image/edit","Muse Image · Edit ⚡ $0.01"],["fal-ai/nano-banana-pro/edit","Nano Banana Pro · Edit"],["openai/gpt-image-2/edit","GPT Image 2 · Edit"]],
   video:[["bytedance/seedance-2.5/reference-to-video","Seedance 2.5 ★ (50 refs)"],["alibaba/wan-3.0/reference-to-video","Wan 3.0 ⚡ refs · 5× cheaper"],["alibaba/wan-3.0/image-to-video","Wan 3.0 · from a frame"],["alibaba/wan-3.0/text-to-video","Wan 3.0 · text only"],["blackforestlabs/flux-video-upscale","Flux Video Upscale (finish a keeper)"],["minimax/h3-max/image-to-video","H3 Max ⚡ cheap (from a frame)"],["minimax/h3-max/text-to-video","H3 Max ⚡ cheap (text only)"],["minimax/h3/reference-to-video","MiniMax H3 (9 refs, legible text)"],["bytedance/seedance-2.0/reference-to-video","Seedance 2.0"],["fal-ai/kling-video/v3/pro/image-to-video","Kling 3.0 Pro"]],
   audio:[["fal-ai/elevenlabs/sound-effects","ElevenLabs SFX"]]
@@ -3320,6 +3334,10 @@ const MODEL_COSTS={
  "fal-ai/birefnet/v2":"pennies per image",
  "google/gemini-2.5-pro":"pennies per call (text)",
  "google/gemini-2.5-flash":"fractions of a cent (text)",
+ "fal-ai/recraft/v4/text-to-vector":"$0.08 per vector · TRUE SVG, clean paths, no tracing · print-ready for apparel",
+ "fal-ai/recraft/v4/text-to-image":"$0.04 per image · exact RGB brand palette control, strong text rendering",
+ "fal-ai/recraft/v4/pro/text-to-vector":"$0.30 per vector · final production assets",
+ "fal-ai/recraft/v4/pro/text-to-image":"$0.25 per image · final production assets",
  "meta/muse-image/text-to-image":"$0.01 per image · agentic (plans, searches, self-corrects) · renders accurate text",
  "meta/muse-image/edit":"$0.01 per edit · targeted edits, multi-image composition, consistent across a series",
  "fal-ai/nano-banana-2":"$0.06–0.08 per image",

@@ -1140,7 +1140,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <details class="collapse"><summary>Models in play</summary><div class="body">
     <p><b>Image</b> — <code>nano-banana-2</code>, <code>nano-banana-pro</code>, <code>gpt-image-2</code><br>
     <b>Image + Gear</b> — the <code>/edit</code> versions (take reference images)<br>
-    <b>Video</b> — <code>seedance-2.5</code> (default · iterate 480p, finals 720p), <code>seedance-2.0</code>, <code>kling-video/v3/pro</code><br>
+    <b>Video</b> — <code>seedance-2.5</code> (default: 50 refs, best character consistency), <code>h3-max</code> (⚡ ~12× cheaper, animates one frame, native lip-sync · draft here), <code>minimax/h3</code> (9 refs, legible on-screen text), <code>seedance-2.0</code>, <code>kling-video/v3/pro</code><br>
     <b>Pre-Roll</b> — <code>gpt-image-2</code> only<br>
     <b>Brain</b> — <code>any-llm</code> (stylist + Seedance writer)</p>
     <p style="margin-top:8px">GPT Image-2 isn't a video model — it makes frames; Seedance/Kling animate them.</p>
@@ -1165,7 +1165,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.18 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.19 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1488,7 +1488,7 @@ const $=(id)=>document.getElementById(id);
 const MODEL_OPTS={
   image:[["fal-ai/nano-banana-2","Nano Banana 2"],["fal-ai/nano-banana-pro","Nano Banana Pro"],["openai/gpt-image-2","GPT Image 2"]],
   edit:[["fal-ai/nano-banana-2/edit","Nano Banana 2 · Edit"],["fal-ai/nano-banana-pro/edit","Nano Banana Pro · Edit"],["openai/gpt-image-2/edit","GPT Image 2 · Edit"]],
-  video:[["bytedance/seedance-2.5/reference-to-video","Seedance 2.5 ★"],["bytedance/seedance-2.0/reference-to-video","Seedance 2.0"],["fal-ai/kling-video/v3/pro/image-to-video","Kling 3.0 Pro"]],
+  video:[["bytedance/seedance-2.5/reference-to-video","Seedance 2.5 ★ (50 refs)"],["minimax/h3-max/image-to-video","H3 Max ⚡ cheap (from a frame)"],["minimax/h3-max/text-to-video","H3 Max ⚡ cheap (text only)"],["minimax/h3/reference-to-video","MiniMax H3 (9 refs, legible text)"],["bytedance/seedance-2.0/reference-to-video","Seedance 2.0"],["fal-ai/kling-video/v3/pro/image-to-video","Kling 3.0 Pro"]],
   audio:[["fal-ai/elevenlabs/sound-effects","ElevenLabs SFX"]]
 };
 const STATIONS={
@@ -2099,7 +2099,9 @@ async function runGenerate(){
   if(st.kind==="image"){input.num_images=parseInt($("numImages").value)||1;Object.assign(input,sizeFor(model,aspect));withRes(model,input);
     if(st.refs){const urls=flattenRefs(refItems,12);if(urls.length)input.image_urls=urls;}
     if(sceneText)input.prompt=prompt2+sceneText;}
-  if(st.kind==="video"){var _dur=parseInt((($("duration")||{}).value))||8;var _lo=(_dur*0.05).toFixed(2),_hi=(_dur*0.47).toFixed(2);if(!confirm("Paid video · 1 clip · ~"+_dur+"s · est $"+_lo+"—$"+_hi+". Approve the plan before paying for the pixels?"))return;
+  if(st.kind==="video"){var _dur=parseInt((($("duration")||{}).value))||8;
+    var _rate={"minimax/h3-max/image-to-video":[0.025,0.08],"minimax/h3-max/text-to-video":[0.025,0.08],"minimax/h3/reference-to-video":[0.26,0.26],"bytedance/seedance-2.5/reference-to-video":[0.22,0.47],"bytedance/seedance-2.0/reference-to-video":[0.30,0.30]}[model]||[0.05,0.47];
+    var _lo=(_dur*_rate[0]).toFixed(2),_hi=(_dur*_rate[1]).toFixed(2);if(!confirm("Paid video · 1 clip · ~"+_dur+"s · est $"+_lo+"—$"+_hi+". Approve the plan before paying for the pixels?"))return;
     if(model.includes("kling")){input.duration=String($("duration").value);const cv=flattenRefs(refItems,1);if(cv[0])input.image_url=cv[0];}
     else{input.resolution=$("resolution").value;input.duration=String($("duration").value);if(aspect!=="auto")input.aspect_ratio=aspect;const urls=flattenRefs(refItems,4);if(urls.length)input.image_urls=urls;if($("genAudio").checked)input.generate_audio=true;}
     if(sceneText)input.prompt=prompt2+sceneText;}
@@ -3325,6 +3327,9 @@ const MODEL_COSTS={
  "openai/gpt-image-2":"$0.02–0.17 per image (by quality)",
  "openai/gpt-image-2/edit":"$0.02–0.17 per image (by quality)",
  "bytedance/seedance-2.5/reference-to-video":"$0.47/sec at 720p · $0.22/sec at 480p · native 30s, 50 refs, synced audio",
+ "minimax/h3-max/image-to-video":"$0.04/sec at 768p · $0.025/sec at 480p (launch promo, doubles Sept 1) · animates ONE frame, native audio + lip-sync",
+ "minimax/h3-max/text-to-video":"$0.04/sec at 768p · $0.025/sec at 480p (launch promo, doubles Sept 1) · text only, no refs",
+ "minimax/h3/reference-to-video":"$0.26/sec at 2K · 9 image refs + 3 clips + 3 audio, renders legible text",
  "bytedance/seedance-2.0/reference-to-video":"$0.30/sec at 720p · ~$1.50 per 5-sec clip",
  "fal-ai/kling-video/v3/pro/image-to-video":"$0.11–0.17 per second"
 };

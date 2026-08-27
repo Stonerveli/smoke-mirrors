@@ -1156,6 +1156,17 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <p style="margin-top:10px">Stash photos count against ~5MB of browser storage. Export a backup before clearing browser data.</p>
   </div></details>
   <div class="card">
+  <div style="font-weight:800;font-family:var(--slate);margin-bottom:6px">◆ HOUSE STYLE LOCK <span class="hint" style="text-transform:none;letter-spacing:0">(Recraft V4)</span></div>
+  <div id="rcBody"></div>
+  <label class="fld" style="margin-top:10px">Style name</label>
+  <input type="text" id="rcName" placeholder="Stoneralia House">
+  <label class="fld" style="margin-top:10px">Build it from your images (1\u201310)</label>
+  <input type="file" accept="image/*" multiple onchange="rcCreate(this)">
+  <div id="rcStatus"></div>
+  <label class="fld" style="margin-top:10px">\u2026or paste a style ID from fal</label>
+  <div class="row"><input type="text" id="rcManual" placeholder="style id" style="flex:1"><button class="btn ghost sm" style="flex:0" onclick="rcSetManual()">Lock</button></div>
+ </div>
+ <div class="card">
   <div style="font-weight:800;font-family:var(--slate);margin-bottom:6px">⚡ MODEL PLAYBOOK</div>
   <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">Which model, when, and what it costs. Rates move — check fal for the current number.</div>
   <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:8px">THE LADDER — iterate cheap, finish expensive</div>
@@ -1179,7 +1190,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.22 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.23 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1335,7 +1346,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],allowExtras:true,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance25"},sitcom:{era:"general",format:"neighborhood",mode:"multi",broadcast:"original",audience:"on",output:"scene",cast:[],setId:"",situation:"",last:""},tpl:{mode:"photoreal",open:"",cast:[],setId:"",vars:{},out:""},templates:[],vlog:{type:"day",era:"modern",cam:"mixed",engine:"classic",edit:"natural",output:"short",cast:[],holder:"",setId:"",situation:"",last:""},datasets:[],dsActive:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],allowExtras:true,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance25"},sitcom:{era:"general",format:"neighborhood",mode:"multi",broadcast:"original",audience:"on",output:"scene",cast:[],setId:"",situation:"",last:""},rcStyle:{id:"",name:"",n:0},tpl:{mode:"photoreal",open:"",cast:[],setId:"",vars:{},out:""},templates:[],vlog:{type:"day",era:"modern",cam:"mixed",engine:"classic",edit:"natural",output:"short",cast:[],holder:"",setId:"",situation:"",last:""},datasets:[],dsActive:"",
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -1395,6 +1406,44 @@ function bkSlim(){
   if(i<10)return;
   if(it.url&&it.url.slice(0,5)==="data:"){it.url="";it.trimmed=true;n++;}});
  return n;}
+function rcStyleOn(){return !!((S.rcStyle||{}).id);}
+function rcPaint(){
+ var el=$("rcBody");if(!el)return;
+ var st=S.rcStyle||{id:"",name:"",n:0};
+ el.innerHTML=st.id
+  ? '<div class="hint" style="text-transform:none;letter-spacing:0;color:var(--bud)">◆ Locked: <b>'+esc(st.name||"House style")+'</b>'+(st.n?(" · from "+st.n+" reference"+(st.n===1?"":"s")):"")+'<br><span style="opacity:.7;font-family:var(--slate);font-size:11px">'+esc(String(st.id).slice(0,18))+'\u2026</span></div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">Every Recraft V4 generation now holds this look.</div><button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="rcClear()">Clear the style lock</button>'
+  : '<div class="hint" style="text-transform:none;letter-spacing:0">No style locked. Feed it 1\u201310 images of your look \u2014 it returns a reusable style ID and every Recraft V4 render holds that look. No training, no dataset.</div>';
+}
+function rcClear(){if(!confirm("Clear the house style lock?"))return;S.rcStyle={id:"",name:"",n:0};save();rcPaint();toast("Style lock cleared.");}
+function rcSetManual(){
+ var v=(($("rcManual")||{}).value||"").trim();
+ if(!v){toast("Paste a style ID first.",true);return;}
+ S.rcStyle={id:v,name:(($("rcName")||{}).value||"House style").trim()||"House style",n:0};save();rcPaint();
+ toast("Style locked.");
+}
+async function rcCreate(inp){
+ var files=inp&&inp.files?Array.from(inp.files).slice(0,10):[];
+ if(!files.length)return;
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);return;}
+ var st=$("rcStatus");if(st)st.innerHTML=spinner("Building the style\u2026");
+ try{
+  var urls=[];
+  for(var i=0;i<files.length;i++){
+   var small=await resizeImage(files[i],1280);
+   var blob=await (await fetch(small)).blob();
+   urls.push(await falUpload(blob,"style_"+(i+1)+".jpg","image/jpeg"));
+  }
+  var res=await falRun("fal-ai/recraft/v4/create-style",{image_urls:urls});
+  var sid=res&&(res.style_id||res.styleId||(res.data&&res.data.style_id));
+  if(!sid)throw new Error("No style ID came back \u2014 screenshot the response and tell me.");
+  S.rcStyle={id:sid,name:(($("rcName")||{}).value||"House style").trim()||"House style",n:urls.length};
+  save();rcPaint();
+  if(st)st.innerHTML="";
+  toast("Style locked from "+urls.length+" reference"+(urls.length===1?"":"s")+".");
+ }catch(e){
+  if(st)st.innerHTML=errLine(e);
+ }finally{if(inp)inp.value="";}
+}
 function keyStat(id,msg,ok){var el=$(id);if(el){el.textContent=msg;el.style.color=ok?"var(--bud)":"#e08a8a";}}
 async function keyTest(which){
  try{
@@ -1826,7 +1875,7 @@ function go(name){
   if(name==="run")renderRun();
   if(name==="train")renderLab();
   if(name==="studio"||name==="board"||name==="comics"||name==="fight"||name==="story"||name==="train"||name==="chiefinese"||name==="shows"||name==="networks")try{renderHUD("view-"+name);}catch(e){}
-  if(name==="settings")try{
+  if(name==="settings")try{rcPaint();
    var _bm=$("bkMeta");
    if(_bm){var lb=S.lastBackup?new Date(S.lastBackup):null;var days=lb?Math.floor((Date.now()-S.lastBackup)/864e5):null;
     var sz="~"+Math.round(lsBytes()/1024)+" KB";
@@ -2111,6 +2160,7 @@ async function runGenerate(){
   const sceneText=identityNote(castItems)+setNote(setItem)+refNote(stashItems);
   var seedItems=(Array.isArray(S.studioSeedRefs)?S.studioSeedRefs:[]).map(function(u,i){return {id:"seed"+i,name:"product",views:[{label:"Product",src:u,auth:"outfit"}]};}); const refItems=[...seedItems,...castItems,...(setItem?[setItem]:[]),...stashItems];
   if(st.kind==="image"){input.num_images=parseInt($("numImages").value)||1;Object.assign(input,sizeFor(model,aspect));withRes(model,input);
+    if(model.indexOf("recraft")>=0&&rcStyleOn())input.style_id=S.rcStyle.id;
     if(st.refs){const urls=flattenRefs(refItems,12);if(urls.length)input.image_urls=urls;}
     if(sceneText)input.prompt=prompt2+sceneText;}
   if(st.kind==="video"){var _dur=parseInt((($("duration")||{}).value))||8;

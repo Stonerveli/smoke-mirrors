@@ -417,8 +417,9 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <label class="fld">Settings</label>
     <div class="row">
       <div><label class="fld">Aspect</label><select id="aspect"><option value="auto">auto — model decides</option><option value="9:16">9:16 · TikTok · Reels · Shorts</option><option value="1:1">1:1 · Instagram feed · square</option><option value="4:5">4:5 · Instagram · Facebook portrait</option><option value="16:9">16:9 · YouTube · landscape</option><option value="2:3">2:3 · Pinterest · portrait</option><option value="3:2">3:2 · photo · landscape</option><option value="21:9">21:9 · cinematic widescreen</option></select></div>
+      <div style="width:100%;margin-bottom:10px"><label class="fld">\u26a1 What are you making? <span style="color:var(--bone-dim);text-transform:none;letter-spacing:0">tap one \u2014 sets the right model for the job</span></label><div class="tokenchips"><span class="chip" onclick="afStudio('draft')">Draft a shot</span><span class="chip" onclick="afStudio('hero')">Hero shot</span><span class="chip" onclick="afStudio('cheap')">Animate a frame</span><span class="chip" onclick="afStudio('house')">House-style image</span><span class="chip" onclick="afStudio('text')">Image with text</span><span class="chip" onclick="afStudio('vector')">Vector for merch</span></div></div>
       <div id="numWrap"><label class="fld">Count</label><select id="numImages"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
-      <div id="durWrap" style="display:none"><label class="fld">Duration (s) — per clip</label><select id="duration"><option>5</option><option>8</option><option>10</option><option>12</option><option>15</option></select><div class="hint">Max 15s (Seedance) / 10s (Kling) per clip. Build 1–10 min films by chaining clips in The Cut → CapCut.</div></div>
+      <div id="durWrap" style="display:none"><label class="fld">Duration (s) — per clip</label><select id="duration"><option>5</option><option>8</option><option>10</option><option>12</option><option>15</option></select><div style="margin-top:8px"><label class="fld">Prompt expansion</label><select id="promptExp" onchange="S.promptExp=this.value;save();"><option value="balanced">Balanced — detailed prompt, unsure of format</option><option value="disabled">Disabled — my prompt is already exact</option><option value="quality">Quality — short prompt, let it enrich</option></select></div><div style="margin-top:8px"><label class="fld">Seed — blank = random, reuse to repeat a hit</label><div class="row"><input type="text" id="seedField" placeholder="e.g. 428173" style="flex:1" oninput="S.seed=this.value.trim();save();"><button class="btn ghost sm" style="flex:0" onclick="seedRoll()">🎲</button></div><div id="lastSeedLine" class="hint" style="text-transform:none;letter-spacing:0"></div></div><div class="hint">Max 15s (Seedance) / 10s (Kling) per clip. Build 1–10 min films by chaining clips in The Cut → CapCut.</div></div>
       <div id="resWrap" style="display:none"><label class="fld">Resolution</label><select id="resolution"><option>720p</option><option>1080p</option></select></div>
       <div id="imgResWrap" style="display:none"><label class="fld">Resolution</label><select id="imgRes"><option value="1K">1K · standard</option><option value="2K">2K · sharper</option><option value="4K">4K · 2× price</option></select></div>
     </div>
@@ -558,6 +559,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 10l5-3v10l-5-3z'/><rect x='3' y='6' width='12' height='12' rx='2'/></svg></span><h2>Vlog</h2><span class="tag">Creator</span></div>
   <div class="card">
     <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:10px">A vlog is not cinematic footage with camera shake — it is a camera that has a reason to exist. Who holds it, why they\u2019re filming, and what they\u2019d point at next.</div>
+    <button type="button" class="btn ghost sm" style="width:100%;margin-bottom:10px" onclick="afVlog()">\u26a1 Do it for me <span class="sub">picks who films, where, the type &amp; the situation</span></button>
     <label class="fld">Who\u2019s in it <span id="vlgCastCount" style="color:var(--bone-dim)"></span></label>
     <div id="vlgCast" class="tokenchips"></div>
     <label class="fld" style="margin-top:10px">Who\u2019s holding the camera</label>
@@ -590,6 +592,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='4' width='20' height='14' rx='2'/><path d='M8 21h8'/><path d='M12 18v3'/></svg></span><h2>90s Sitcom</h2><span class="tag">Creator</span></div>
   <div class="card">
     <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:10px">Authentic period television grammar — story rhythm, standing sets, multi-cam staging, performance and audience timing. Not a VHS filter.</div>
+    <button type="button" class="btn ghost sm" style="width:100%;margin-bottom:10px" onclick="afSitcom()">\u26a1 Do it for me <span class="sub">picks cast, set, format &amp; a situation from your canon</span></button>
     <label class="fld">Who\u2019s in it <span id="sitCastCount" style="color:var(--bone-dim)"></span></label>
     <div id="sitCast" class="tokenchips"></div>
     <label class="fld" style="margin-top:10px">Standing set</label>
@@ -1187,8 +1190,12 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="hint" style="text-transform:none;letter-spacing:0"><b>Nano Banana 2</b> — house style, known-good.<br><b>Muse Image</b> — $0.01, plans before it renders. Use it when the image contains READABLE TEXT or when batching dozens of variants.<br><b>Recraft V4 Vector</b> — true SVG: print-ready apparel art straight out of the app.<br><b>Recraft V4</b> — exact RGB brand palette for on-brand batches.<br><b>Nano Banana Pro</b> — $0.15 finals.</div>
   <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:10px">THREE SHORTCUTS</div>
   <div class="hint" style="text-transform:none;letter-spacing:0"><b>1 · Keyframe then animate.</b> Build the frame in Studio with nano-banana (~$0.02, refs keep the character right), then animate with H3 Max. A 10s shot lands near $0.42 instead of $4.70.<br><b>2 · Draft at 480p, always.</b> Judge composition and motion cheap; resolution is the last decision, never the first.<br><b>3 · Upscaling isn’t always cheaper.</b> Flux at $0.14/sec beats generating on Wan at $0.10/sec only when you need 2K/4K or must rescue an existing keeper.</div>
+  <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:10px">LONGER PIECES — frame chaining</div>
+  <div class="hint" style="text-transform:none;letter-spacing:0">Video models drift late in a clip and always start slow then speed up. So: generate the shot → watch for the second it degrades → cut it there and keep only the clean opening → take a frame from that end point, clean it up in Studio, and generate the next section starting from it → when you join them, trim about 1 second off the front of the second clip so the pace matches. Chain as many as you need — that is how a 15-second model makes a minute.</div>
+  <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:10px">TEXT IN MOTION — it works now</div>
+  <div class="hint" style="text-transform:none;letter-spacing:0">H3 Max renders lettering cleanly if you ask correctly: declare each phrase as a complete pre-composed typeset layer that moves as one rigid piece, and let transitions come from crop edges, baselines and containers — never from animating individual letters. Name ONE motion spine (a line, a shape, a trajectory) that everything inherits. Write the beats as timestamps. Set prompt expansion to Disabled when your prompt is already exact.</div>
   <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:10px">HOUSE RULES</div>
-  <div class="hint" style="text-transform:none;letter-spacing:0">Text inside a video frame will garble — reserve its place in the prompt, composite the real wordmark in post.<br>Write what you WANT, never what you don’t — a named unwanted trait can summon it.<br>Free forever: scripting, boards, Chiefinese, comic scripts, templates. Only pixels cost money.</div>
+  <div class="hint" style="text-transform:none;letter-spacing:0">Text in video garbles only when you let the model build letters — pre-composed phrase layers render clean. Composite the real wordmark in post when spelling must be perfect.<br>Write what you WANT, never what you don’t — a named unwanted trait can summon it.<br>Free forever: scripting, boards, Chiefinese, comic scripts, templates. Only pixels cost money.</div>
 </div>
 <div class="card"><label class="fld">🛟 Backup &amp; restore</label>
   <div class="hint" style="margin:4px 0 8px;text-transform:none;letter-spacing:0">Everything — canon, cast, comics, slang, datasets, LoRAs — lives in this browser’s storage. One backup file protects the whole universe.</div>
@@ -1200,7 +1207,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.24 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.27 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1454,6 +1461,10 @@ async function rcCreate(inp){
   if(st)st.innerHTML=errLine(e);
  }finally{if(inp)inp.value="";}
 }
+function seedRoll(){var n=String(Math.floor(Math.random()*900000)+100000);S.seed=n;save();var f=$("seedField");if(f)f.value=n;toast("Seed set \u2014 same seed + same prompt repeats the result.");}
+function seedPaint(){var f=$("seedField");if(f&&f.value!==(S.seed||""))f.value=S.seed||"";
+ var p=$("promptExp");if(p&&S.promptExp)p.value=S.promptExp;
+ var l=$("lastSeedLine");if(l)l.innerHTML=S.lastSeed?("Last generation used seed <b>"+esc(String(S.lastSeed))+"</b> \u2014 paste it above to repeat."):"";}
 function keyStat(id,msg,ok){var el=$(id);if(el){el.textContent=msg;el.style.color=ok?"var(--bud)":"#e08a8a";}}
 async function keyTest(which){
  try{
@@ -1893,6 +1904,7 @@ function go(name){
    if(S.apiKey&&$("apiKey"))$("apiKey").placeholder="saved "+String.fromCharCode(0x2022,0x2022,0x2022,0x2022)+String(S.apiKey).slice(-4);
    if(S.openaiKey&&$("openaiKey"))$("openaiKey").placeholder="saved "+String.fromCharCode(0x2022,0x2022,0x2022,0x2022)+String(S.openaiKey).slice(-4);
   }catch(e){}
+  if(name==="studio")try{seedPaint();}catch(e){}
   if(name==="studio")try{var _sn=$("studioSeedNote");if(_sn){var _r=(S.studioSeedRefs||[]);_sn.innerHTML=_r.length?('<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px;color:var(--bud)">👕 '+_r.length+' product photo(s) locked as reference \u2014 <button class="btn ghost sm" style="padding:1px 8px" onclick="S.studioSeedRefs=[];save();go(&quot;studio&quot;)">clear</button></div>'):"";}}catch(e){}
   if(name==="socials")renderSocials();
   if(name==="brand")renderBrand();
@@ -2160,6 +2172,7 @@ $("genBtn").addEventListener("click",runGenerate);
 async function runGenerate(){
   const st=STATIONS[S.station];let model=currentModel();const prompt=$("prompt").value.trim();
   if(!model){toast("Pick a model.",true);return;}if(!prompt){toast("Write a prompt.",true);return;}
+  var _seed=(S.seed||"").trim();
   if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
   let _lora=null;if(S.loraOn&&S.activeLora&&st.kind==="image"&&!st.refs){_lora=(S.loras||[]).find(l=>l.id===S.activeLora)||null;if(_lora)model="fal-ai/flux-lora";}
   const prompt2=(_lora?_lora.trigger+", ":"")+prompt;
@@ -2169,11 +2182,13 @@ async function runGenerate(){
   const setItem=S.sets.find(x=>x.id===setPicked)||null;
   const sceneText=identityNote(castItems)+setNote(setItem)+refNote(stashItems);
   var seedItems=(Array.isArray(S.studioSeedRefs)?S.studioSeedRefs:[]).map(function(u,i){return {id:"seed"+i,name:"product",views:[{label:"Product",src:u,auth:"outfit"}]};}); const refItems=[...seedItems,...castItems,...(setItem?[setItem]:[]),...stashItems];
+  if(_seed&&/^\d+$/.test(_seed))input.seed=parseInt(_seed,10);
   if(st.kind==="image"){input.num_images=parseInt($("numImages").value)||1;Object.assign(input,sizeFor(model,aspect));withRes(model,input);
     if(model.indexOf("recraft")>=0&&rcStyleOn())input.style_id=S.rcStyle.id;
     if(st.refs){const urls=flattenRefs(refItems,12);if(urls.length)input.image_urls=urls;}
     if(sceneText)input.prompt=prompt2+sceneText;}
-  if(st.kind==="video"){var _dur=parseInt((($("duration")||{}).value))||8;
+  if(st.kind==="video"){
+    if(model.indexOf("h3")>=0&&S.promptExp)input.prompt_expansion=S.promptExp;var _dur=parseInt((($("duration")||{}).value))||8;
     var _rate={"alibaba/wan-3.0/reference-to-video":[0.05,0.20],"alibaba/wan-3.0/image-to-video":[0.05,0.20],"alibaba/wan-3.0/text-to-video":[0.05,0.20],"blackforestlabs/flux-video-upscale":[0.14,0.79],"minimax/h3-max/image-to-video":[0.025,0.08],"minimax/h3-max/text-to-video":[0.025,0.08],"minimax/h3/reference-to-video":[0.26,0.26],"bytedance/seedance-2.5/reference-to-video":[0.22,0.47],"bytedance/seedance-2.0/reference-to-video":[0.30,0.30]}[model]||[0.05,0.47];
     var _lo=(_dur*_rate[0]).toFixed(2),_hi=(_dur*_rate[1]).toFixed(2);if(!confirm("Paid video · 1 clip · ~"+_dur+"s · est $"+_lo+"—$"+_hi+". Approve the plan before paying for the pixels?"))return;
     if(model.includes("kling")){input.duration=String($("duration").value);const cv=flattenRefs(refItems,1);if(cv[0])input.image_url=cv[0];}
@@ -7113,6 +7128,104 @@ function mogLaw(){
   " TEXT LOCK RULE: name the exact copy, where it sits, that it is correctly spelled, and that it is the only text in the piece."+
   " Shots are separate paragraphs, each opening with its timecode.";
 }
+/* ===== DO IT FOR ME — canon-aware auto-fill ===== */
+function afPick(a){return a&&a.length?a[Math.floor(Math.random()*a.length)]:null;}
+function afRoster(){return (S.cast||[]).filter(function(c){return c.name&&(c.status||"canon")!=="archived";});}
+function afSets(){return (S.sets||[]).filter(function(x){return x.name;});}
+function afFill(t,map){var o=t;for(var k in map)o=o.split("{"+k+"}").join(map[k]);return o;}
+var AF_SITCOM=[
+ "{A} promises to handle one small thing at {LOC} and quietly makes it worse every time somebody checks in.",
+ "{A} and {B} both told a different story about the same night, and now everybody at {LOC} wants the truth.",
+ "Something at {LOC} breaks that nobody will admit to breaking, and {A} decides to investigate.",
+ "{A} is trying to have one normal conversation at {LOC} while {B} keeps interrupting with news nobody asked for.",
+ "{A} borrowed something from {B} and has to return it before {B} notices it is not in the same condition.",
+ "A visitor is coming to {LOC} and {A} insists on getting the place right, which nobody else agrees is necessary.",
+ "{A} gets one piece of good news and cannot tell anyone at {LOC} yet, which turns out to be impossible.",
+ "{B} asks {A} for a favour so small that saying no would be ridiculous, and it consumes the entire day."
+];
+var AF_VLOG=[
+ "{A} swears they can do one specific thing at {LOC} today and is documenting the attempt.",
+ "{A} walks {LOC} showing what actually happens on an ordinary afternoon here.",
+ "{A} has one errand at {LOC} that should take ten minutes.",
+ "{A} takes the camera through {LOC} and reacts to whatever they run into.",
+ "{A} explains a thing they are convinced everybody at {LOC} gets wrong.",
+ "{A} and {B} disagree about something small and take it to {LOC} to settle it."
+];
+function afCastPair(){
+ var r=afRoster();
+ if(!r.length)return {A:"the lead",B:"somebody from the block",ids:[]};
+ var a=afPick(r),b=afPick(r.filter(function(c){return c.id!==a.id;}))||null;
+ return {A:a.name,B:b?b.name:"somebody from the block",ids:b?[a.id,b.id]:[a.id],aObj:a,bObj:b};
+}
+function afSet(pref){
+ var st=afSets();if(!st.length)return null;
+ if(pref){var m=st.filter(function(x){return String(x.locType||"").toLowerCase().indexOf(pref)>=0;});if(m.length)return afPick(m);}
+ return afPick(st);
+}
+function afSitcom(){
+ var p=afCastPair(),loc=afSet("recurring")||afSet();
+ if(!S.sitcom)S.sitcom={};
+ S.sitcom.cast=p.ids;
+ S.sitcom.setId=loc?loc.id:"";
+ S.sitcom.format=afPick(["neighborhood","hangout","family","oddcouple","ensemble"]);
+ S.sitcom.era=S.sitcom.era||"general";
+ S.sitcom.mode="multi";
+ S.sitcom.broadcast=S.sitcom.broadcast||"original";
+ S.sitcom.audience="on";
+ S.sitcom.output=S.sitcom.output||"scene";
+ S.sitcom.situation=afFill(afPick(AF_SITCOM),{A:p.A,B:p.B,LOC:loc?loc.name:"the usual spot"});
+ save();renderSitcom();
+ toast("Filled from your canon "+String.fromCharCode(0x2014)+" edit anything, then write it.");
+}
+function afVlog(){
+ var p=afCastPair(),loc=afSet();
+ if(!S.vlog)S.vlog={};
+ S.vlog.cast=p.ids;
+ S.vlog.holder=p.ids[0]||"_op";S.vlog.holderTouched=0;
+ S.vlog.setId=loc?loc.id:"";
+ S.vlog.type=afPick(["day","street","challenge","friends","food","story"]);
+ S.vlog.era="modern";
+ S.vlog.cam=afPick(["selfie","mixed","walk"]);
+ S.vlog.engine=afPick(["classic","plan","ordinary"]);
+ S.vlog.edit=afPick(["natural","punchy"]);
+ S.vlog.output=S.vlog.output||"short";
+ S.vlog.situation=afFill(afPick(AF_VLOG),{A:p.A,B:p.B,LOC:loc?loc.name:"the block"});
+ save();renderVlog();
+ toast("Filled from your canon "+String.fromCharCode(0x2014)+" edit anything, then roll it.");
+}
+function afTemplate(){
+ var t=tplFind((S.tpl||{}).open);if(!t)return;
+ var p=afCastPair(),loc=afSet();
+ if(!S.tpl.vars)S.tpl.vars={};if(!S.tpl.vars[t.id])S.tpl.vars[t.id]={};
+ var v=S.tpl.vars[t.id];
+ (t.vars||[]).forEach(function(pr){
+  var k=pr[0];
+  if(k==="subject")v[k]=(S.tpl.mode==="stoneralia")?p.A:(pr[2]||"one person");
+  else if(k==="place")v[k]=loc?loc.name:(pr[2]||"one consistent place");
+  else if(k==="dur")v[k]=v[k]||pr[2]||"30";
+  else if(!v[k])v[k]=pr[2]||"";
+ });
+ if(S.tpl.mode==="stoneralia"){S.tpl.cast=p.ids.slice(0,1);S.tpl.setId=loc?loc.id:"";}
+ save();renderTemplates();
+ toast("Blanks filled "+String.fromCharCode(0x2014)+" review, then build.");
+}
+function afStudio(job){
+ if(!S.picked)S.picked={};
+ if(job==="draft"){S.station="video";S.picked.video="alibaba/wan-3.0/reference-to-video";S.promptExp="balanced";}
+ if(job==="hero"){S.station="video";S.picked.video="bytedance/seedance-2.5/reference-to-video";}
+ if(job==="cheap"){S.station="video";S.picked.video="minimax/h3-max/image-to-video";S.promptExp="balanced";}
+ if(job==="text"){S.station="image";S.picked.image="meta/muse-image/text-to-image";}
+ if(job==="vector"){S.station="image";S.picked.image="fal-ai/recraft/v4/text-to-vector";}
+ if(job==="house"){S.station="image";S.picked.image="fal-ai/nano-banana-2";}
+ save();try{syncStation();}catch(e){}try{seedPaint();}catch(e){}
+ var say={draft:"Wan 3.0 "+String.fromCharCode(0x00b7)+" iterate at 480p, cheap and fast.",
+  hero:"Seedance 2.5 "+String.fromCharCode(0x00b7)+" 50 refs, best consistency. Save it for the keeper.",
+  cheap:"H3 Max "+String.fromCharCode(0x00b7)+" animate one keyframe, lowest cost per second.",
+  text:"Muse Image "+String.fromCharCode(0x00b7)+" $0.01 and it renders readable text.",
+  vector:"Recraft V4 Vector "+String.fromCharCode(0x00b7)+" true SVG, print-ready.",
+  house:"Nano Banana 2 "+String.fromCharCode(0x00b7)+" your house style."};
+ toast(say[job]||"Set.");
+}
 /* ===== TEMPLATE LIBRARY ===== */
 var TPL_SEEDS=[
 {id:"tpl_ordinary",name:"Ordinary Day",purpose:"A quiet slice of one person\u2019s day. Emotion comes from small moments, never plot.",
@@ -7263,7 +7376,8 @@ function renderTemplates(){
  (t.vars||[]).forEach(function(p){
   h+='<label class="fld" style="margin-top:10px">'+esc(p[1])+'</label><input type="text" data-tplv="'+esc(p[0])+'" value="'+esc(tplVarVal(t,p[0])||"")+'" placeholder="'+esc(p[2]||"")+'">';
  });
- h+='<button class="btn green" style="width:100%;margin-top:12px" onclick="tplMake()">\u2726 Build the prompt <span class="sub">free \u00b7 no API call</span></button>';
+ h+='<button type="button" class="btn ghost sm" style="width:100%;margin-top:10px" onclick="afTemplate()">\u26a1 Do it for me <span class="sub">fills the blanks from your canon</span></button>';
+ h+='<button class="btn green" style="width:100%;margin-top:8px" onclick="tplMake()">\u2726 Build the prompt <span class="sub">free \u00b7 no API call</span></button>';
  if(t.own)h+='<button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="tplDelOwn(\''+t.id+'\')">Delete this template</button>';
  h+='</div>';
  if(st.out)h+='<div class="card" style="margin-top:12px"><label class="fld">Prompt</label><div style="white-space:pre-wrap;font-size:13px;line-height:1.5;margin-top:6px">'+esc(st.out)+'</div><div class="row" style="margin-top:10px"><button class="btn ghost sm" style="flex:1" onclick="tplCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="tplToBoard()">\ud83c\udfac To Pre-Roll</button></div></div>';
@@ -7636,10 +7750,13 @@ async function genMotion(){
   S.noMusic=(mode!=="music");save();
   var st=$("mdStatus");if(st)st.innerHTML=spinner("Directing the motion…");
   var audio=(mode==="silent")?"AUDIO: none — silent visual, no dialogue, no sound design.":((mode==="music")?"AUDIO: diegetic sound (ambience, foley, dialogue) plus a fitting score is allowed.":"AUDIO: diegetic sound ONLY — natural ambience, environmental foley, character dialogue, movement and object sounds. NO music, NO score, NO soundtrack of any kind (the artist adds his own music in post).");
-  var _endWarn=((S.cine||{}).mograph)?" ENDFRAME HONESTY: video models garble lettering. Write the wordmark into the prompt so the composition reserves its place and timing, but keep copy to one short bold word and expect to composite the real logo in post.":"";
+  var _textLaw=" ON-SCREEN TEXT (how to make lettering come out clean): declare every phrase up front as a COMPLETE, professionally typeset, pre-composed layer. Each phrase moves as one rigid component. Transitions come from containers, crop edges, baselines and masks that already exist on screen — never from the letters themselves: letters are never constructed, scrambled, morphed, glitched, regenerated, bent or animated individually. Directional blur belongs only on moving slabs and masks; zero blur whenever a phrase is readable. Keep copy short and bold. If a wordmark must be exact, still write it in so the composition reserves its place and timing.";
+  var _spineLaw=" MOTION SPINE: name ONE shape, line or trajectory that carries the entire piece (\"the motion spine is one continuous smoke line\", \"one diagonal brush stroke\", \"one red circle\"), and state it explicitly. Every element inherits that trajectory. Every transition inherits a line, pattern, material or path from what is already visible — that inheritance is what makes a sequence flow instead of cut. Give each passage ONE dominant transformation and ONE camera behaviour.";
+  var _tsLaw=" TIMESTAMPED SHOTS: write the piece as a timed list, one line per beat, in the form \"0.00-1.50  WHAT HAPPENS\" — the model follows timestamps closely, so state exactly what appears, what moves and when. End with an explicit HOLD beat: stop camera and layer movement, hold sharp and unchanged through the final frame.";
+  var _endWarn=((S.cine||{}).mograph)?(_textLaw+_spineLaw+_tsLaw):"";
   var _contLaw=" CONTINUITY LAWS (non-negotiable): (1) IDENTITY ANCHORS: give each character one unmistakable signature motif and restate it in EVERY shot they appear in; that motif is what makes separate shots read as the same character. (2) PERSISTENT OBJECTS: any object that must survive the sequence is tracked explicitly in every shot it exists in "+String.fromCharCode(0x2014)+" established, protected, paid off; never left unaccounted. (3) ENVIRONMENT INTEGRITY: anything dramatic introduced to the location resolves within its own shot so the location returns to its reference state. (4) CONJURED PROPS follow forge"+String.fromCharCode(0x2192)+"use"+String.fromCharCode(0x2192)+"destroy: created, used, and destroyed inside the same shot, hands explicitly cleared before the cut.";
   var _sd25=((S.cine||{}).model==="seedance25")?(" SEEDANCE 2.5 GRAMMAR: the model generates a NATIVE single take up to 30 seconds "+String.fromCharCode(0x2014)+" write the whole sequence as one continuous prompt, no stitching. When reference images are attached, call them with @tags (e.g. @lead, @location) and map each tag in the prompt. Dialogue and diegetic sound are generated natively: write brief in-world dialogue lines and per-shot sound design directly into the shots; specify the dialogue language explicitly before any line."):"";
-  var sys=vibeCtx("full",(($("boardScript")||{}).value||""))+" You are a cinematic motion director building ONE production-ready "+((CINE_MODELS[(S.cine||{}).model]||CINE_MODELS.seedance25)[0])+" video prompt from a storyboard script." + cineLaw() + mogLaw() + _sd25 + _contLaw + _endWarn + " Structure: short production header (visual style, total duration "+dur+"s, character + wardrobe continuity mandate), then timed shots — format [0.0s–1.5s] SHOT n — LABEL, then shot size + camera angle + camera movement, precise character blocking and facial performance, clothing and hair motion, object interaction, brief dialogue lines only where they fit the shot length, per-shot sound effects, and the cut or transition into the next shot. Shot timings must sum exactly to "+dur+" seconds. Keep every character’s face, proportions and locked Chiefin’ Season outfit IDENTICAL in every shot. End the prompt with this exact audio line: "+audio+" Return ONLY the finished prompt text, no commentary."+mdRecipeGuidance();
+  var sys=vibeCtx("full",(($("boardScript")||{}).value||""))+" You are a cinematic motion director building ONE production-ready "+((CINE_MODELS[(S.cine||{}).model]||CINE_MODELS.seedance25)[0])+" video prompt from a storyboard script." + cineLaw() + mogLaw() + _sd25 + _contLaw + _endWarn + (((S.picked||{}).video||"").indexOf("h3")>=0?" PLAIN-LANGUAGE PROMPTING: this model follows plain explanation better than structured data — write the prompt the way you would explain the piece to a person, not as JSON or a parameter dump.":"") + " Structure: short production header (visual style, total duration "+dur+"s, character + wardrobe continuity mandate), then timed shots — format [0.0s–1.5s] SHOT n — LABEL, then shot size + camera angle + camera movement, precise character blocking and facial performance, clothing and hair motion, object interaction, brief dialogue lines only where they fit the shot length, per-shot sound effects, and the cut or transition into the next shot. Shot timings must sum exactly to "+dur+" seconds. Keep every character’s face, proportions and locked Chiefin’ Season outfit IDENTICAL in every shot. End the prompt with this exact audio line: "+audio+" Return ONLY the finished prompt text, no commentary."+mdRecipeGuidance();
   var usr="STORYBOARD SCRIPT / BEATS:\n"+script+((($("boardTitle")||{}).value)?"\nTITLE: "+$("boardTitle").value:"")+((($("boardStyle")||{}).value)?"\nBOARD STYLE: "+$("boardStyle").value:"");
   try{
     var txt=(await _llmRun(sys,usr,"ideas")).trim();

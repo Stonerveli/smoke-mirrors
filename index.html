@@ -850,6 +850,16 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <button class="btn ghost sm" id="sunoSaveAsPreset" style="margin-top:8px;width:100%">★ Save current as my preset</button>
     <div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn ghost sm" id="sunoSaveProjBtn" style="flex:1">+ Save to drop</button><button class="btn ghost sm" id="sunoToCsbBtn" style="flex:1">→ Storyboard this</button></div>
     <div id="sunoStatus"></div><div id="sunoOut"></div>
+    <details class="collapse" style="margin-top:12px"><summary>🎵 Scratch track (AI audio — costs money)</summary><div class="body">
+      <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">Generates a full song up to 5 minutes with MiniMax Music 3. Use it for <b>mood beds and scratch tracks</b> to lay under a board — Suno stays your finals, because it gives you stems you can mix.</div>
+      <label class="fld">Style / production brief</label>
+      <textarea id="mmPrompt" style="min-height:60px" placeholder="e.g. slow piff-hop, dusty soul sample, 82 BPM, minor key, tape warmth, no bright synths"></textarea>
+      <label class="fld" style="margin-top:10px">Lyrics (leave empty for instrumental)</label>
+      <textarea id="mmLyrics" style="min-height:70px" placeholder="[Verse 1]\u2026"></textarea>
+      <button class="btn green" id="mmGo" style="width:100%;margin-top:10px" onclick="mmMake()">🎵 Generate scratch track <span class="sub">~$0.15 per song</span></button>
+      <div id="mmStatus"></div><div id="mmOut"></div>
+      <div class="hint" style="text-transform:none;letter-spacing:0;margin-top:10px;color:#c9a94a">License: MiniMax-Music3 allows commercial use but requires visible credit to "MiniMax-Music3", and publicly posted output must be disclosed as machine-generated. Keep that in mind before anything here goes on a release.</div>
+    </div></details>
     <details class="collapse" style="margin-top:12px"><summary>Saved song projects</summary><div class="body"><div id="sunoProjects"></div></div></details>
   </div>
   <div class="card">
@@ -1190,7 +1200,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.23 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.24 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -3928,6 +3938,35 @@ const SUNO_PRESETS=[
 let SUNO_LAST=null;
 function sunoPreset(id){return SUNO_PRESETS.find(p=>p.id===id)||(S.sunoUserPresets||[]).find(p=>p.id===id)||null;}
 function sunoDraft(){if(!S.sunoDraft)S.sunoDraft={preset:"",creator:"Auto / Recommend",use:"Standalone Single"};return S.sunoDraft;}
+async function mmMake(){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var p=(($("mmPrompt")||{}).value||"").trim();
+ if(!p){toast("Describe the track first.",true);return;}
+ var ly=(($("mmLyrics")||{}).value||"").trim();
+ if(!confirm("Generate a scratch track? ~$0.15 for up to 5 minutes."))return;
+ var st=$("mmStatus");if(st)st.innerHTML=spinner("Writing the track\u2026");
+ try{
+  var input={prompt:p};
+  if(ly)input.lyrics=ly;
+  var r=await falRun("minimax/music-3",input);
+  var url=(r&&(r.audio&&(r.audio.url||r.audio.file_url)))||(r&&(r.audio_url||r.audio_file&&r.audio_file.url))||(r&&r.output&&r.output.audio_url)||"";
+  if(!url)throw new Error("No audio came back \u2014 screenshot the response and tell me.");
+  if(!S.smgTracks)S.smgTracks=[];
+  S.smgTracks.unshift({id:uid(),url:url,prompt:p,ts:Date.now()});
+  S.smgTracks=S.smgTracks.slice(0,12);
+  save();mmPaint();
+  if(st)st.innerHTML="";
+  toast("Scratch track ready.");
+ }catch(e){if(st)st.innerHTML=errLine(e);}
+}
+function mmPaint(){
+ var el=$("mmOut");if(!el)return;
+ var t=(S.smgTracks||[]);
+ el.innerHTML=t.length?t.map(function(x){
+  return '<div class="card" style="margin-top:8px;padding:10px"><audio controls preload="none" style="width:100%" src="'+esc(x.url)+'"></audio><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">'+esc(String(x.prompt).slice(0,90))+'</div><div class="row" style="margin-top:6px"><a class="btn ghost sm" style="flex:1;text-align:center" href="'+esc(x.url)+'" target="_blank" rel="noopener">\u2b07 Open / save</a><button class="btn ghost sm" style="flex:0" onclick="mmDel(\''+x.id+'\')">\u2715</button></div></div>';
+ }).join(""):"";
+}
+function mmDel(id){S.smgTracks=(S.smgTracks||[]).filter(function(x){return x.id!==id;});save();mmPaint();}
 function sunoCopyText(t){navigator.clipboard.writeText(t).then(()=>toast("Copied.")).catch(()=>toast("Copy failed.",true));}
 function sunoCard(label,val){return '<label class="fld" style="margin-top:12px">'+label+'</label><div class="promptbox" id="sf_'+label.replace(/\W/g,'')+'">'+esc(val)+'</div><button class="btn ghost sm sunocopy" data-t="'+label.replace(/\W/g,'')+'" style="margin-top:6px">&#10696; Copy '+label+'</button>';}
 const SUNO_TONES=[["Texture & Quality (the feel)", ["Raspy", "Gravelly", "Smoky", "Breathy", "Metallic", "Grape-velvet", "Whisper", "Growly / Distorted", "Raw / Unpolished"]], ["Tone & Resonance (the sound)", ["Resonant", "Nasally", "Brassy", "Orotund", "Strident", "Dark / Low Register", "Bright / Forward", "Soulful / Gritty"]], ["Pitch & Movement", ["Sibilant", "Staccato", "Melifluous", "Tremulous", "Deadpan / Monotone", "Falsetto / High Melodic", "Layered / Harmonized"]]];
@@ -3945,6 +3984,7 @@ function renderSunoVTools(){
 function sunoVToolsLine(){if(!S.sunoVTools||!S.sunoVTools.length)return "";var map={};SUNO_VTOOLS.forEach(function(g){g[1].forEach(function(it){map[it.l]=it.note;});});return S.sunoVTools.map(function(l){return map[l]?(l+" ("+map[l]+")"):l;}).join("; ");}
 function renderSuno(){
   const d=sunoDraft();
+  try{mmPaint();}catch(e){}
   renderSunoTones();
   renderSunoVTools();
   const ps=$("sunoPreset");

@@ -236,6 +236,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button data-go="comics"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span>Comics</button>
   <button data-go="sitcom"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='4' width='20' height='14' rx='2'/><path d='M8 21h8'/><path d='M12 18v3'/><path d='M7 9l3 2-3 2'/></svg></span>Sitcom</button>
   <button data-go="vlog"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 10l5-3v10l-5-3z'/><rect x='3' y='6' width='12' height='12' rx='2'/></svg></span>Vlog</button>
+  <button data-go="comedy"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3a9 9 0 100 18 9 9 0 000-18z'/><path d='M8 14s1.5 2 4 2 4-2 4-2'/><path d='M9 9h.01M15 9h.01'/></svg></span>Comedy Lab</button>
   <button data-go="fight"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M13 2 4.5 13.5H11l-1 8.5 9.5-12.5H12z'/></svg></span>Fight</button>
 <button data-go="vibe"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4z'/><path d='M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z'/></svg></span>Vibe</button>
   <button data-go="smg"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg></span>SMG</button>
@@ -554,6 +555,36 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div id="tplBody"></div>
 </section>
 
+<!-- ===== COMEDY LAB ===== -->
+<section class="view" id="view-comedy">
+  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M8 14s1.5 2 4 2 4-2 4-2'/></svg></span><h2>Comedy Lab</h2><span class="tag">DNA</span></div>
+  <div class="card">
+    <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:10px">Build an original comedy property. <b>Family</b> = how the show operates. <b>DNA</b> = why it\u2019s funny. <b>Mixer</b> = proportion and intensity. Nothing here copies an existing show.</div>
+    <label class="fld">\u26a1 One-tap combos \u2014 blends that work together</label>
+    <div id="cdCombos" class="tokenchips" style="margin-bottom:4px"></div>
+    <div id="cdComboDef"></div>
+    <button type="button" class="btn ghost sm" style="width:100%;margin:10px 0" onclick="clAuto()">\ud83c\udfb2 Surprise me <span class="sub">random family + DNA blend</span></button>
+    <label class="fld">Creator family \u2014 how this kind of show operates</label>
+    <select id="cdFamily"></select>
+    <div id="cdFamilyDef"></div>
+    <label class="fld" style="margin-top:12px">Comedy DNA \u2014 tap up to 3 (first = primary)</label>
+    <div id="cdDna" class="tokenchips"></div>
+    <div id="cdDnaMix"></div>
+    <details class="collapse" style="margin-top:12px"><summary>Humor mixer \u2014 11 dials</summary><div class="body" id="cdDials"></div></details>
+    <label class="fld" style="margin-top:12px">Cast to build around (optional)</label>
+    <div id="cdCast" class="tokenchips"></div>
+    <label class="fld" style="margin-top:10px">Home location (optional)</label>
+    <select id="cdSet"></select>
+    <label class="fld" style="margin-top:10px">Brief \u2014 world, arena, or the itch you want to scratch</label>
+    <textarea id="cdBrief" style="min-height:64px" placeholder="e.g. a block association that has never once completed a meeting"></textarea>
+    <label class="fld" style="margin-top:10px">Develop</label>
+    <select id="cdOutput"></select>
+    <div id="cdOutputDef"></div>
+    <button class="btn green" id="cdGo" style="width:100%;margin-top:12px" onclick="clWrite()">\u2726 Develop it (AI) <span class="sub">pennies per call (text)</span></button>
+    <div id="cdStatus"></div><div id="cdOut"></div>
+  </div>
+</section>
+
 <!-- ===== VLOG CREATOR ===== -->
 <section class="view" id="view-vlog">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 10l5-3v10l-5-3z'/><rect x='3' y='6' width='12' height='12' rx='2'/></svg></span><h2>Vlog</h2><span class="tag">Creator</span></div>
@@ -595,7 +626,10 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='4' width='20' height='14' rx='2'/><path d='M8 21h8'/><path d='M12 18v3'/></svg></span><h2>90s Sitcom</h2><span class="tag">Creator</span></div>
   <div class="card">
     <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:10px">Authentic period television grammar — story rhythm, standing sets, multi-cam staging, performance and audience timing. Not a VHS filter.</div>
-    <button type="button" class="btn ghost sm" style="width:100%;margin-bottom:10px" onclick="afSitcom()">\u26a1 Do it for me <span class="sub">picks cast, set, format &amp; a situation from your canon</span></button>
+    <label class="fld">\u26a1 One-tap combos \u2014 engine + writers that reinforce each other</label>
+    <div id="sitCombos" class="tokenchips" style="margin-bottom:4px"></div>
+    <div id="sitComboDef"></div>
+    <button type="button" class="btn ghost sm" style="width:100%;margin:10px 0 10px" onclick="afSitcom()">\ud83c\udfb2 Do it for me <span class="sub">picks cast, set, format &amp; a situation from your canon</span></button>
     <label class="fld">Who\u2019s in it <span id="sitCastCount" style="color:var(--bone-dim)"></span></label>
     <div id="sitCast" class="tokenchips"></div>
     <label class="fld" style="margin-top:10px">Standing set</label>
@@ -1216,7 +1250,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.29 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.31 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1372,7 +1406,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],allowExtras:true,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance25"},sitcom:{engine:"",writers:[],era:"general",format:"neighborhood",mode:"multi",broadcast:"original",audience:"on",output:"scene",cast:[],setId:"",situation:"",last:""},rcStyle:{id:"",name:"",n:0},tpl:{mode:"photoreal",open:"",cast:[],setId:"",vars:{},out:""},templates:[],vlog:{writers:[],type:"day",era:"modern",cam:"mixed",engine:"classic",edit:"natural",output:"short",cast:[],holder:"",setId:"",situation:"",last:""},datasets:[],dsActive:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],allowExtras:true,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance25"},comedy:{family:"",dna:[],mix:null,output:"premise",brief:"",cast:[],setId:"",last:""},sitcom:{engine:"",writers:[],era:"general",format:"neighborhood",mode:"multi",broadcast:"original",audience:"on",output:"scene",cast:[],setId:"",situation:"",last:""},rcStyle:{id:"",name:"",n:0},tpl:{mode:"photoreal",open:"",cast:[],setId:"",vars:{},out:""},templates:[],vlog:{writers:[],type:"day",era:"modern",cam:"mixed",engine:"classic",edit:"natural",output:"short",cast:[],holder:"",setId:"",situation:"",last:""},datasets:[],dsActive:"",
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -1860,7 +1894,7 @@ async function svGenerate(){
   svSetMode((S.songvid&&S.songvid.mode)||"perform");
 })();
 var CUR_VIEW="episodes";
-const VIEW_GROUP={studio:"create",board:"create",story:"create",sitcom:"create",vlog:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",chief:"create",canon:"universe",cast:"universe",chiefinese:"universe",shows:"universe",networks:"universe",registry:"universe",sets:"universe",projects:"library",templates:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
+const VIEW_GROUP={studio:"create",board:"create",story:"create",sitcom:"create",vlog:"create",comedy:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",chief:"create",canon:"universe",cast:"universe",chiefinese:"universe",shows:"universe",networks:"universe",registry:"universe",sets:"universe",projects:"library",templates:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
 const GROUP_FIRST={create:"chief",universe:"canon",library:"pipeline",brand:"brand",setup:"settings"};
 function navLabel(v){var b=document.querySelector('nav button[data-go="'+v+'"]');if(b){var t=(b.textContent||"").trim();if(t)return t;}return v;}
 function renderSubTabs(){
@@ -1886,6 +1920,7 @@ function go(name){
   if(name==="story")renderShots();
   if(name==="sitcom")renderSitcom();
   if(name==="vlog")renderVlog();
+  if(name==="comedy")renderComedy();
   if(name==="templates")renderTemplates();
   if(name==="studio")renderRefs();
   if(name==="board")renderBoardChars();
@@ -3179,6 +3214,126 @@ var WRITERS={
  peele:["Jordan Peele — uneasy mundane","mundane situations turning quietly unsettling, hidden motives, symbolic tension"],
  coogler:["Ryan Coogler — community weight","community loyalty, cultural identity, generational emotional stakes"],
  macfarlane:["Seth MacFarlane — rapid absurdity","rapid absurd escalation, unexpected detours, ensemble chaos"]};
+/* ===== CURATED COMBOS — blends that actually work together ===== */
+var CL_COMBOS=[
+ {n:"The Meeting That Never Ends",w:"Sincere people vs. a procedure that cannot be reasoned with. The pettier the item, the longer the meeting.",f:"wmock",d:[["discomfort",50],["institution",30],["petty",20]],m:{dialogue:40,heart:55,elastic:20,conseq:35,aware:35,petty:75,dark:25,satire:55,absurd:30,react:75,callback:45}},
+ {n:"Everybody\u2019s Wrong",w:"Four small selfish threads, one collision, no lessons. Nobody grows, everybody returns next week.",f:"nothing",d:[["petty",50],["misunder",30],["callback",20]],m:{dialogue:65,heart:20,elastic:25,conseq:15,aware:45,petty:85,dark:30,satire:45,absurd:35,react:55,callback:65}},
+ {n:"The Schemers",w:"Confident idiots past every exit ramp. Each scene raises stakes and lowers judgement.",f:"dysf",d:[["escalate",50],["delusion",30],["dark",20]],m:{dialogue:80,heart:15,elastic:60,conseq:25,aware:20,petty:55,dark:55,satire:35,absurd:70,react:45,callback:50}},
+ {n:"Block Legends",w:"Warm hangout built on shared history. Comedy from how well these people know each other.",f:"hang",d:[["natural",45],["reaction",30],["callback",25]],m:{dialogue:55,heart:80,elastic:20,conseq:35,aware:50,petty:60,dark:15,satire:25,absurd:20,react:80,callback:60}},
+ {n:"The Ladder",w:"Status as the whole plot. Every scene decides who outranks whom, and the climb exposes them.",f:"polsat",d:[["status",50],["institution",30],["conseq",20]],m:{dialogue:90,heart:20,elastic:20,conseq:60,aware:60,petty:45,dark:55,satire:75,absurd:30,react:50,callback:45}},
+ {n:"Quiet Storm",w:"Light dialogue over heavy subject matter. The joke and the damage share a frame.",f:"darkcom",d:[["dark",50],["deadpan",30],["conseq",20]],m:{dialogue:40,heart:45,elastic:25,conseq:85,aware:45,petty:30,dark:80,satire:40,absurd:25,react:65,callback:40}},
+ {n:"Straight Faces",w:"Impossible beings arguing about chores. The gap between epic and domestic IS the joke.",f:"supmock",d:[["deadpan",50],["discomfort",30],["petty",20]],m:{dialogue:45,heart:55,elastic:80,conseq:25,aware:35,petty:80,dark:25,satire:30,absurd:65,react:75,callback:50}},
+ {n:"Household Escalation",w:"One parent escalating, one resigned partner, tangents allowed. Animation used for scale.",f:"animfam",d:[["escalate",40],["delusion",35],["natural",25]],m:{dialogue:70,heart:60,elastic:75,conseq:20,aware:30,petty:60,dark:30,satire:40,absurd:70,react:55,callback:55}},
+ {n:"Small Town, Big Argument",w:"Simple presentation, sharp argument. Follow one live absurdity to its logical end.",f:"animsat",d:[["satire",50],["charsat",30],["escalate",20]],m:{dialogue:65,heart:35,elastic:70,conseq:30,aware:45,petty:40,dark:50,satire:90,absurd:65,react:45,callback:45}},
+ {n:"Beautiful Losers",w:"Jokes stacked over a sad engine. They self-sabotage, apologise, repeat.",f:"animdram",d:[["delusion",40],["conseq",35],["dark",25]],m:{dialogue:60,heart:85,elastic:50,conseq:90,aware:65,petty:35,dark:70,satire:45,absurd:45,react:60,callback:75}},
+ {n:"Big Idea, Small People",w:"Rigorous high concept, exhausted selfish characters. Big premise, petty motivation.",f:"animsci",d:[["escalate",40],["deadpan",30],["dark",30]],m:{dialogue:70,heart:35,elastic:95,conseq:40,aware:55,petty:50,dark:60,satire:55,absurd:85,react:50,callback:55}},
+ {n:"Nothing Explains Itself",w:"Dream logic played sincerely. Lovable leads, upsetting nonsense, endings that refuse to explain.",f:"absurd",d:[["meta",40],["deadpan",30],["escalate",30]],m:{dialogue:35,heart:60,elastic:100,conseq:15,aware:55,petty:45,dark:40,satire:30,absurd:95,react:70,callback:30}}
+];
+function clCombo(i){
+ var c=CL_COMBOS[i];if(!c)return;
+ var C=clState();
+ C.family=c.f;
+ C.dna=c.d.map(function(p){return {k:p[0],w:p[1]};});
+ C.mix=JSON.parse(JSON.stringify(c.m));
+ save();var dl=$("cdDials");if(dl)dl.innerHTML="";renderComedy();
+ toast(c.n+" loaded \u2014 adjust anything, then develop.");
+}
+var CMIX_DIALS=[
+ ["dialogue","Dialogue energy","sparse and quiet","fast and overlapping"],
+ ["heart","Heart","cold, no comfort","warm, real affection"],
+ ["elastic","Reality elasticity","strictly grounded","anything can happen"],
+ ["conseq","Consequence persistence","full reset each time","damage carries forever"],
+ ["aware","Character self-awareness","completely unaware","fully self-aware"],
+ ["petty","Petty-stakes intensity","stakes are real","stakes are absurdly small"],
+ ["dark","Darkness","light throughout","genuinely dark"],
+ ["satire","Satire level","no argument","pointed argument"],
+ ["absurd","Absurdity","behavioural realism","full absurdity"],
+ ["react","Reaction emphasis","jokes carry it","reactions carry it"],
+ ["callback","Callback density","standalone scenes","layered callbacks"]
+];
+var CROOM_OUT={
+ premise:["Show premise + comedic thesis","Deliver: the show premise in one paragraph, then the COMEDIC THESIS \u2014 one sentence stating why this show is funny in a way no other show is, derived from the DNA mix, not from the setting."],
+ ensemble:["Ensemble architecture","Deliver the ensemble: each character\u2019s role in the comedy machine, what they want, what they believe, what they misunderstand, their status position, their hidden vulnerability, and the specific comedy only they can produce."],
+ collision:["Character collision matrix","For every important pairing, deliver: what each wants, what each believes, what each misunderstands, their status relationship, their personality incompatibility, each one\u2019s hidden vulnerability, their typical conflict, the comedy the pairing produces, how they escalate, who thinks they won, who actually won, and the long-term relationship consequence. Output as repeatable STORY ENGINES, not jokes."],
+ failure:["Failure engines","For each major character, deliver how they specifically tend to lose \u2014 the mechanism (overconfidence, insecurity, dishonesty, excessive competence, incompetence, pride, selfishness, desperation, misunderstanding, obsession, status-seeking, refusal to admit error, fixing what is already solved). Every character must fail DIFFERENTLY, and the failure must follow from who they are."],
+ episode:["Episode engine + story engines","Deliver the repeatable episode engine and 5 story engines this ensemble can run indefinitely, each stating which characters collide and which DNA module drives it."],
+ gags:["Running gags + recurring situations","Deliver running gags that mutate rather than repeat, recurring locations, and recurring situations the ensemble can be dropped into."],
+ season:["Season engine","Deliver the season engine: what accumulates, what resets, what changes permanently, and the arc that only becomes visible in retrospect."],
+ pilot:["Pilot concept","Deliver the pilot: cold open, A/B/C stories, the scene that proves the comedic thesis, the tag, and what the audience understands by the final frame."],
+ episodes:["Episode concepts (x6)","Deliver 6 episode concepts, each with title, A-story, B-story, the collision that drives it, and the DNA module in the lead."],
+ cold:["Cold opens (x5)","Deliver 5 cold opens that establish tone in under a minute and connect to nothing."],
+ script:["Scene / script pages","Deliver a full scene in script form with the ensemble\u2019s established voices, built on one collision and one DNA module."]
+};
+function cmixDefault(){return {dialogue:50,heart:50,elastic:40,conseq:40,aware:40,petty:50,dark:30,satire:40,absurd:40,react:50,callback:40};}
+function cdnaLaw(){
+ var C=S.comedy||{};
+ var picks=(C.dna||[]).filter(function(p){return CDNA[p.k];});
+ if(!picks.length)return "";
+ var tot=picks.reduce(function(a,p){return a+(p.w||0);},0)||1;
+ var out=" COMEDY DNA (why this is funny \u2014 this governs the humour; the Creator family governs how the show operates). Blend these mechanics in roughly these proportions: ";
+ out+=picks.map(function(p){
+  var e=CDNA[p.k],pct=Math.round((p.w||0)/tot*100);
+  var lines=[];
+  for(var i=0;i<CDNA_FIELDS.length;i++)lines.push(CDNA_FIELDS[i]+": "+e[i+2]);
+  return e[0]+" ("+pct+"%) \u2014 "+lines.join("; ");
+ }).join("  ||  ");
+ out+=". The highest-weighted module leads the comedic identity; the others colour it. ";
+ out+="CRITICAL PRINCIPLE: joke density is NOT comedy quality. Comedy may come from behaviour, silence, discomfort, reaction, escalation, character flaw, consequence and payoff rather than constant punchlines. ";
+ out+="Comedy must be CHARACTER-GENERATED: characters fail differently because their personalities, beliefs, flaws and status relationships differ. Never write interchangeable jokes that any character could say.";
+ return out;
+}
+function cmixLaw(){
+ var m=(S.comedy&&S.comedy.mix)||cmixDefault();
+ var band=function(v){return v<=20?"very low":v<=40?"low":v<=60?"medium":v<=80?"high":"very high";};
+ return " HUMOR MIX \u2014 set each dial as stated: "+CMIX_DIALS.map(function(d){
+  var v=(m[d[0]]===undefined)?50:m[d[0]];
+  return d[1]+" "+band(v)+" ("+v+"/100, where 0 = "+d[2]+" and 100 = "+d[3]+")";
+ }).join("; ")+".";
+}
+function cfamLaw(){var f=CFAM[(S.comedy||{}).family];return f?(" CREATOR FAMILY \u2014 "+f[0]+" ("+f[1]+"): "+f[2]+" This governs how the show OPERATES; it does not decide why it is funny."):"";}
+/* ===== COMEDY DNA ENGINE — why a production is funny (separate from format and look) ===== */
+var CDNA={
+ discomfort:["Social Discomfort","DNA-0001","comedy from social contracts being broken and nobody rescuing the moment","two people with incompatible ideas of what is appropriate","stalled sentences, over-explanation, apologies that make it worse","the awkwardness is never defused, only compounded","the discomfort is remembered next time they meet","the room reacts; the offender does not notice","a phrase somebody keeps using wrong","B-story mirrors the same social failure at a smaller scale","low","grounded","unaware","well-meaning","the offender loses status without knowing","they mistake politeness for agreement","partial reset — the memory lingers","cringe, never cruelty"],
+ petty:["Petty Stakes","DNA-0002","enormous energy spent on something that does not matter","two people who both refuse to let a trivial thing go","litigation of tiny details, precise wording, escalating formality","the trivial thing acquires disproportionate weight","the winner gains nothing; the loser remembers forever","bystanders treat it as genuinely important","the object of the dispute keeps reappearing","A and B stories are equally trivial and collide","low","grounded","semi-aware","selfish but not malicious","status is the actual prize","they win the argument and lose the point","full reset","no real harm"],
+ delusion:["Character Delusion","DNA-0003","a character believes something about themselves that is provably untrue","the deluded one versus the person who can see clearly","confident declarations undercut by what is visibly happening","the delusion demands bigger proof each time","reality arrives briefly and is immediately rationalised away","others react to the gap, not the claim","the same boast, repeated after each failure","B-story quietly proves the A-story delusion wrong","medium","grounded","unaware","harmless ego","self-appointed authority nobody granted","they are undone by the exact skill they claim to have","full reset — the delusion survives","affectionate"],
+ dysfunc:["Dysfunctional Ensemble","DNA-0004","a group that should not work together and cannot separate","everyone wants something incompatible from the same situation","overlapping talk, interruption, alliances that switch mid-scene","each attempt to fix it involves one more person","the group damage is shared and nobody apologises","the group reacts as one organism","a grudge that is referenced but never explained","A and B stories are two factions of the same group","low","slightly elastic","semi-aware","self-serving","status shifts constantly within the group","the plan collapses because they cannot cooperate for one minute","full reset","punching sideways only"],
+ institution:["Institutional Absurdity","DNA-0005","the system is the antagonist and it is nobody's fault","a sincere person against a procedure that cannot be reasoned with","policy language, forms, escalation to a manager who has no power","each solution creates one more required step","the rule wins; the human absorbs the cost","people accept insanity as normal","a rule that everyone quotes and nobody has read","B-story is a smaller absurdity of the same institution","medium","grounded","semi-aware","decent people, bad system","the institution outranks everyone","they defeat the person and lose to the process","full reset","satirical, never nihilistic"],
+ status:["Status Comedy","DNA-0006","every scene is a negotiation of who outranks whom","a high-status character forced to need a low-status one","name-dropping, credentials, seating positions, who speaks last","each move to claim status costs a little dignity","status lost publicly is not recovered","the room registers the shift before the loser does","a title or nickname that stings","A-story is status gained, B-story is status lost","low","grounded","aware","competitive","status IS the plot engine","they climb, and the climb exposes them","partial reset","comic humiliation, not degradation"],
+ reaction:["Reaction Comedy","DNA-0007","the laugh belongs to whoever is NOT talking","one person doing something absurd and one person watching it","silence, a look, a delayed reply, a single word","the reactor is pushed to finally respond","the reaction becomes the event","reaction is the primary comedic instrument — hold on faces","a look that recurs whenever a specific person speaks","B-story gives the reactor something of their own","medium","grounded","aware","patient","the calm one holds quiet authority","they break, and breaking is the payoff","full reset","gentle"],
+ deadpan:["Deadpan","DNA-0008","extraordinary content delivered in a completely ordinary register","someone treating a crisis as an errand","flat delivery, understatement, no comic emphasis","the escalation is never acknowledged in the voice","consequences are stated as scheduling problems","nobody signals that anything is funny","an understated phrase applied to increasingly large events","the B-story is treated with identical flatness","low","elastic","unaware","matter-of-fact","calm equals control","they are undone by finally reacting","full reset","dry"],
+ dark:["Dark Irony","DNA-0009","the joke and the damage occupy the same frame","comic intention meeting real consequence","light dialogue over heavy subject matter","the stakes rise while the tone stays casual","harm sticks and is referenced later","characters underreact to serious events","a cheerful phrase that gets grimmer each use","B-story is the human cost of the A-story joke","medium","grounded","semi-aware","morally compromised","survival outranks status","they get exactly what they wanted","no reset — consequences carry","never cruel to the powerless"],
+ escalate:["Absurd Escalation","DNA-0010","a reasonable first step taken to an unreasonable conclusion","two people who both refuse to be the one who stops","short lines, rapid agreement, momentum over sense","every scene raises the stakes and lowers the judgement","the aftermath is enormous and briefly acknowledged","onlookers stop objecting and start participating","the phrase that authorised the whole thing","A and B escalations collide at the peak","low","elastic","unaware","reckless","whoever escalates hardest leads","they succeed at the wrong thing","full reset","absurd, not mean"],
+ meta:["Meta Comedy","DNA-0011","the form of the thing is part of the joke","a character who notices the structure versus one who does not","genre-accurate dialogue with one voice commenting on it","the format itself escalates","breaking the format has in-world cost","characters react to the storytelling, not just the story","a running observation about how this keeps happening","B-story parodies the A-story format","medium","very elastic","aware","playful","the one who sees the structure holds power","the format betrays them","full reset","never smug"],
+ satire:["Social Satire","DNA-0012","a real absurdity followed to its logical end","the true believer versus the sceptic","argument as comedy, positions stated plainly","the premise is pushed until it exposes itself","the argument, not the character, takes the damage","characters embody positions and react as such","a slogan that curdles","B-story is the counter-argument","low","elastic","semi-aware","argumentative","the loudest position dominates until it collapses","the position defeats itself","full reset","punch at power, never at victims"],
+ charsat:["Character-Based Satire","DNA-0013","a person embodying a whole social type without becoming a cartoon","the type meeting someone immune to it","speech patterns of the type, precisely observed","the type is tested and doubles down","the type survives; the people around them pay","others recognise the type before naming it","the tell that gives them away every time","B-story shows the type from another angle","medium","grounded","unaware","self-justifying","the type assumes rank it has not earned","the trait that made them succeed ruins them","partial reset","specific, never a slur"],
+ callback:["Callback Comedy","DNA-0014","information planted early, detonated late","people with different pieces of the same history","references that only land if you were paying attention","each repeat mutates and grows","past events are permanent and quotable","the audience laughs before the characters do","a gag that returns transformed every time","B-story plants what the A-story pays off","medium","grounded","semi-aware","forgetful","whoever remembers the detail wins","the forgotten detail returns for them","no reset — history accumulates","rewards attention"],
+ misunder:["Misunderstanding","DNA-0015","two people having different conversations and not noticing","a shared word meaning two different things","confident agreement about incompatible things","each clarification makes it worse","the wrong conclusion gets acted on","observers see the gap and say nothing","a phrase both parties interpret differently","B-story is the mirror misunderstanding","medium","grounded","unaware","earnest","whoever is more certain leads","being right in the wrong conversation","full reset","never humiliating"],
+ conseq:["Consequence Comedy","DNA-0016","the joke is what happens afterwards","a character who acts and a character who has to live with it","promises made lightly and quoted later","the fallout compounds across scenes","damage is permanent and referenced","the reaction arrives one scene later than expected","a debt, favour or object that keeps returning","B-story is last week's consequence","medium","grounded","aware","accountable eventually","status is the ability to avoid consequences","they cannot outrun the small thing","no reset","fair"],
+ natural:["Awkward Naturalism","DNA-0017","real behaviour observed closely enough to be funny","two ordinary people negotiating an ordinary moment badly","overlaps, false starts, unfinished sentences, silence","nothing escalates — it just continues too long","the moment simply ends and is never mentioned","reactions are small, real and honest","a habit rather than a gag","B-story is another ordinary moment, same texture","high","grounded","semi-aware","human","status is unspoken","they fail by being ordinary","full reset","warm"]
+};
+var CDNA_FIELDS=["Comedy engine","Character collision","Dialogue engine","Escalation engine","Consequence engine","Reaction engine","Running-gag engine","A/B relationship","Heart level","Reality elasticity","Character awareness","Moral behaviour","Status engine","Failure engine","Episode reset","Taboo boundary"];
+/* ===== CREATOR FAMILIES — how this KIND of show operates ===== */
+var CFAM={
+ wmock:["Workplace Mockumentary","FAM-0001","A crew is filming a workplace nobody would choose to document. Talking-head confessionals, lens-awareness, documentary geography of desks and back rooms, the boredom made visible. Stories are small and internal to the building."],
+ wens:["Workplace Ensemble","FAM-0002","A team bound by a job and a hierarchy. Shift structure, competing competencies, an authority figure with limited real power, and personal lives leaking into professional space."],
+ hang:["Hangout / Social Circle","FAM-0003","A chosen group and a recurring gathering place. Plot is minimal; the engine is relationship history, shared ritual, and roles everyone has silently agreed to play."],
+ nothing:["Nothing-Matters Social Comedy","FAM-0004","Small independent threads about trivial social questions, converging by coincidence. No growth, no lesson, no sentiment. The rules of ordinary life examined too closely."],
+ dysf:["Dysfunctional Ensemble","FAM-0005","A group of people with poor judgement and total confidence, running schemes out of one home base. Alliances shift per scene, plans collapse, nobody improves."],
+ metaens:["Meta Ensemble","FAM-0006","A group inside an institution where episodes adopt whole genres and formats. Self-aware structure, homage executed accurately, one character who narrates the trope out loud."],
+ polsat:["Political / Institutional Satire","FAM-0007","Competence theatre inside an institution. Fast profane crisis management, briefing rooms and corridors, every decision reversible, reputations one sentence from ruin."],
+ darkcom:["Dark Comedy","FAM-0008","Ordinary comic texture next to genuine danger. The mundane scenes play funny; the stakes are real and permanent; the tone can turn inside a single cut."],
+ pov:["POV / Internal Comedy","FAM-0009","We hear what characters actually think while they say something else. The gap between internal monologue and spoken line is the entire engine."],
+ supmock:["Supernatural Mockumentary","FAM-0010","Impossible beings filmed dealing with chores, rent and petty status. Documentary crew present; the extraordinary is treated as tedious admin."],
+ animfam:["Adult Animated Family","FAM-0011","A household unit with an escalating parent, a resigned partner and children with distinct comic engines. Suburban geography, tangents allowed, animation used for scale not realism."],
+ animsat:["Adult Animated Satire","FAM-0012","Simple presentation, sharp argument. A town or community as the arena, a live absurdity as the subject, and a plot that becomes an essay without saying so."],
+ animsci:["Animated Sci-Fi Comedy","FAM-0013","A rigorous high-concept premise per episode executed with real internal logic, populated by exhausted selfish characters. Big idea, petty motivation."],
+ animdram:["Animated Character Dramedy","FAM-0014","Jokes stacked densely over genuine sadness. Background sight gags, an industry or social milieu, characters who self-sabotage and repeat the pattern."],
+ absurd:["Absurdist Animation","FAM-0015","Short-form dream logic played sincerely. Simple lovable leads, upsetting nonsense, abrupt tonal shifts, endings that refuse to explain."],
+ coming:["Adult Coming-of-Age Animation","FAM-0016","Embarrassing honesty about growing up, with internal states externalised as characters. Bodily, candid, affectionate, never contemptuous."],
+ animwork:["Animated Workplace / Espionage","FAM-0017","A competent-at-the-job, disastrous-at-life ensemble in a heightened profession. Overlapping dialogue, running arguments across scenes, weaponised catchphrases."],
+ metaanim:["Meta Animated Ensemble","FAM-0018","A high-concept premise mined for anachronism and parody, with a self-aware cast and a format that comments on itself."],
+ animdrama:["Adult Dramatic Animation","FAM-0019","Genre played with full weight and real consequence; humour and warmth make the brutal turns land harder."]
+};
 /* ===== COMEDY ENGINES — how the joke is BUILT (mechanism, not voice) ===== */
 var COMEDY_ENGINES={
  mock:["Mockumentary workplace","COMEDY ENGINE — MOCKUMENTARY WORKPLACE: a documentary crew is present and everyone knows it. Talking-head asides where characters explain themselves and reveal more than they mean to; glances directly at the lens after somebody says something insane; long unbearable pauses left in; comedy from social contracts being violated in a room nobody can leave."],
@@ -7639,6 +7794,97 @@ function cineFill(){
  if(pn)pn.style.display=S.cine.mograph?"block":"none";
  if(S.cine.mograph)chipDefLine("mogDef",chipDefFor("mog:"+(S.cine.mogStyle||"vector")));}
 function mogFlip(){if(!S.cine)S.cine={render:"stoneralia_animated",pace:"balanced",model:"seedance25"};S.cine.mograph=!S.cine.mograph;save();try{cineFill();}catch(e){}toast(S.cine.mograph?"Motion graphics mode \u2014 designed animation, lock stack, palette discipline.":"Live action mode \u2014 back to the cinematic render profiles.");}
+function clState(){if(!S.comedy)S.comedy={family:"",dna:[],mix:null,output:"premise",brief:"",cast:[],setId:"",last:""};if(!S.comedy.mix)S.comedy.mix=cmixDefault();return S.comedy;}
+function clSet(k,v){var C=clState();C[k]=v;save();if(k!=="brief")renderComedy();}
+function clDnaTap(k){var C=clState();if(!Array.isArray(C.dna))C.dna=[];
+ var i=C.dna.findIndex(function(p){return p.k===k;});
+ if(i>=0)C.dna.splice(i,1);
+ else{if(C.dna.length>=3){toast("Three max \u2014 primary, secondary, accent.",true);return;}
+  C.dna.push({k:k,w:C.dna.length===0?50:(C.dna.length===1?30:20)});}
+ save();renderComedy();}
+function clWeight(k,v){var C=clState();var p=(C.dna||[]).find(function(x){return x.k===k;});if(p){p.w=parseInt(v,10)||0;save();var el=$("cdw_"+k);if(el)el.textContent=p.w+"%";}}
+function clDial(k,v){var C=clState();C.mix[k]=parseInt(v,10);save();var el=$("cdd_"+k);if(el)el.textContent=C.mix[k];}
+function clAuto(){
+ var C=clState();
+ var fams=Object.keys(CFAM),dnas=Object.keys(CDNA);
+ C.family=afPick(fams);
+ var a=afPick(dnas),b=afPick(dnas.filter(function(x){return x!==a;})),c=afPick(dnas.filter(function(x){return x!==a&&x!==b;}));
+ C.dna=[{k:a,w:50},{k:b,w:30},{k:c,w:20}];
+ C.mix=cmixDefault();
+ var r=afRoster();if(r.length)C.cast=r.slice(0,4).map(function(x){return x.id;});
+ var st=afSets();if(st.length)C.setId=afPick(st).id;
+ save();renderComedy();
+ toast("Family + DNA blend set \u2014 adjust anything, then develop.");
+}
+function renderComedy(){
+ var C=clState();
+ var cb=$("cdCombos");
+ if(cb){cb.innerHTML=CL_COMBOS.map(function(c,i){
+   var on=(C.family===c.f&&(C.dna||[]).length===c.d.length&&C.dna.every(function(p,j){return p.k===c.d[j][0];}));
+   return '<span class="chip'+(on?" on":"")+'" onclick="clCombo('+i+')">'+esc(c.n)+'</span>';}).join("");
+  var act=CL_COMBOS.filter(function(c){return C.family===c.f&&(C.dna||[]).length&&C.dna[0].k===c.d[0][0];})[0];
+  chipDefLine("cdComboDef",act?act.w:"Tap one to load a family, a DNA blend and a starting mix in one go.");}
+ var f=$("cdFamily");
+ if(f){if(!f.options.length){f.add(new Option("\u2014 pick a family \u2014",""));Object.keys(CFAM).forEach(function(k){f.add(new Option(CFAM[k][0],k));});}
+  f.value=C.family||"";f.onchange=function(){clSet("family",this.value);};}
+ chipDefLine("cdFamilyDef",C.family?CFAM[C.family][2]:"Not set \u2014 the family decides how the show operates, not why it\u2019s funny.");
+ var dn=$("cdDna");
+ if(dn){dn.innerHTML=Object.keys(CDNA).map(function(k){
+   var on=(C.dna||[]).some(function(p){return p.k===k;});
+   return '<span class="chip'+(on?" on":"")+'" onclick="clDnaTap(\''+k+'\')">'+esc(CDNA[k][0])+'</span>';}).join("");}
+ var mx=$("cdDnaMix");
+ if(mx){
+  mx.innerHTML=(C.dna||[]).length?((C.dna).map(function(p,i){
+   var role=i===0?"Primary":(i===1?"Secondary":"Accent");
+   return '<div style="margin-top:8px"><div class="hint" style="text-transform:none;letter-spacing:0">'+role+': <b>'+esc(CDNA[p.k][0])+'</b> \u00b7 <span id="cdw_'+p.k+'">'+p.w+'%</span></div><input type="range" min="5" max="80" value="'+p.w+'" style="width:100%" oninput="clWeight(\''+p.k+'\',this.value)"></div>';
+  }).join("")+'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">'+esc(CDNA[C.dna[0].k][2])+'</div>'):'<div class="hint" style="text-transform:none;letter-spacing:0">No DNA picked \u2014 tap up to three above.</div>';}
+ var dl=$("cdDials");
+ if(dl&&!dl.innerHTML)dl.innerHTML=CMIX_DIALS.map(function(d){
+  var v=C.mix[d[0]];
+  return '<div style="margin-bottom:10px"><div class="hint" style="text-transform:none;letter-spacing:0">'+esc(d[1])+' \u00b7 <span id="cdd_'+d[0]+'">'+v+'</span><br><span style="opacity:.6">0 = '+esc(d[2])+' \u00b7 100 = '+esc(d[3])+'</span></div><input type="range" min="0" max="100" value="'+v+'" style="width:100%" oninput="clDial(\''+d[0]+'\',this.value)"></div>';
+ }).join("");
+ var cw=$("cdCast");
+ if(cw){var r=afRoster();
+  cw.innerHTML=r.length?r.map(function(c){return '<span class="chip'+((C.cast||[]).indexOf(c.id)>=0?" on":"")+'" data-cdc="'+c.id+'">'+esc(c.name)+'</span>';}).join(""):'<span class="hint">No cast yet \u2014 optional.</span>';
+  cw.onclick=function(e){var t=e.target;if(!t||!t.dataset||!t.dataset.cdc)return;
+   if(!Array.isArray(C.cast))C.cast=[];
+   var i=C.cast.indexOf(t.dataset.cdc);if(i>=0)C.cast.splice(i,1);else C.cast.push(t.dataset.cdc);
+   save();renderComedy();};}
+ var ss=$("cdSet");
+ if(ss){ss.innerHTML='<option value="">\u2014 none \u2014</option>'+(S.sets||[]).map(function(x){return '<option value="'+x.id+'"'+(C.setId===x.id?" selected":"")+'>'+esc(x.name)+'</option>';}).join("");
+  ss.onchange=function(){clSet("setId",this.value);};}
+ var ob=$("cdOutput");
+ if(ob){if(!ob.options.length)Object.keys(CROOM_OUT).forEach(function(k){ob.add(new Option(CROOM_OUT[k][0],k));});
+  ob.value=C.output||"premise";ob.onchange=function(){clSet("output",this.value);};}
+ chipDefLine("cdOutputDef",shortDef(CROOM_OUT[C.output||"premise"][1]));
+ var tx=$("cdBrief");
+ if(tx){if(tx.value!==(C.brief||""))tx.value=C.brief||"";tx.oninput=function(){C.brief=this.value;save();};}
+ var o=$("cdOut");
+ if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="clCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="clToBible()">\ud83d\udcd6 Keep as a note</button></div>'):"";
+}
+function clCopy(){navigator.clipboard.writeText((S.comedy||{}).last||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
+function clToBible(){var t=(S.comedy||{}).last||"";if(!t){toast("Nothing yet.",true);return;}
+ if(!Array.isArray(S.notes))S.notes=[];
+ S.notes.unshift({id:uid(),ts:Date.now(),title:"Comedy Lab \u00b7 "+(CROOM_OUT[(S.comedy||{}).output||"premise"][0]),body:t});
+ save();toast("Kept as a note.");}
+async function clWrite(){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var C=clState();
+ if(!(C.dna||[]).length){toast("Pick at least one Comedy DNA.",true);return;}
+ var st=$("cdStatus");if(st)st.innerHTML=spinner("Working the room\u2026");
+ try{
+  var chosen=(S.cast||[]).filter(function(c){return (C.cast||[]).indexOf(c.id)>=0;});
+  var setIt=(S.sets||[]).find(function(x){return x.id===C.setId;});
+  var castBlock=chosen.length?(" EXISTING CAST TO BUILD AROUND (use these, do not rename them): "+chosen.map(function(c){return c.name+(c.identity?" \u2014 "+String(c.identity).slice(0,200):"");}).join(" || ")+". You MAY propose additional new characters where the ensemble needs them; mark any new one as NEW."):" No existing cast supplied \u2014 create an original ensemble from scratch.";
+  var setBlock=setIt?(" HOME LOCATION: "+setIt.name+(setIt.vibe?" \u2014 "+String(setIt.vibe).slice(0,240):"")+"."):"";
+  var orig=" ORIGINALITY RULE: this must be an ORIGINAL property. Never imitate, name, or reproduce any existing show, its characters, premises, dialogue or running gags. The mechanics above are abstract tools, not references to copy.";
+  var sys=vibeCtx("full",C.brief||"")+" You are the WRITERS\u2019 ROOM for Smoke & Mirrors, developing an original comedy property."+cfamLaw()+cdnaLaw()+cmixLaw()+castBlock+setBlock+orig+" "+CROOM_OUT[C.output||"premise"][1]+" Plain text, clear headers, no markdown tables.";
+  var usr="BRIEF: "+((C.brief||"").trim()||"(none given \u2014 derive the arena from the family, DNA and cast)")+"\nDeliver the requested development work in full.";
+  var res=await _llmRun(sys,usr);
+  C.last=String(res||"").trim();save();renderComedy();
+  if(st)st.innerHTML="";
+ }catch(e){if(st)st.innerHTML=errLine(e);}
+}
 function vlgSet(k,v){if(!S.vlog)S.vlog={};S.vlog[k]=v;save();if(k!=="situation")renderVlog();}
 function renderVlog(){
  if(!S.vlog)S.vlog={type:"day",era:"modern",cam:"mixed",engine:"classic",edit:"natural",output:"short",cast:[],holder:"",setId:"",situation:"",last:""};
@@ -7724,6 +7970,26 @@ async function vlgWrite(){
   if(st)st.innerHTML="";
  }catch(e){if(st)st.innerHTML=errLine(e);}
 }
+/* engine + writers pairings that reinforce each other */
+var SIT_COMBOS=[
+ {n:"Block Mockumentary",w:"Camera-aware neighbourhood comedy \u2014 talking heads, glances at the lens, chaos underneath.",e:"mock",f:"neighborhood",r:["martin","foxx"]},
+ {n:"Petty Court",w:"A trivial dispute litigated to death. No lessons, full reset, everybody wrong.",e:"nothing",f:"neighborhood",r:["norm","rock"]},
+ {n:"Uncs Unleashed",w:"Bad idea, total confidence, physical escalation past every exit.",e:"depraved",f:"oddcouple",r:["marlon","griffin"]},
+ {n:"Sunday Dinner",w:"Household authority, generational friction, warm landing after honest jokes.",e:"famdoc",f:"family",r:["bernie","foxx"]},
+ {n:"The Committee",w:"An earnest organiser vs. people who will not cooperate. Institutional absurdity, warm centre.",e:"optimist",f:"workplace",r:["gervais","sykes"]},
+ {n:"The Long Con",w:"Information planted early, detonated late. Rewards paying attention.",e:"callback",f:"ensemble",r:["chappelle","norm"]},
+ {n:"Straight Face",w:"Absurd content, flat delivery, nobody signals the joke. Objects do the work.",e:"deadpan",f:"oddcouple",r:["atkinson","cleese"]},
+ {n:"Heavy Laughs",w:"Real weight under the jokes \u2014 funny first, then it lands somewhere true.",e:"melancholy",f:"neighborhood",r:["pryor","chappelle"]},
+ {n:"Corner Store Cringe",w:"One social rule violated, no rescue, the room squirms and nobody backs down.",e:"cringe",f:"hangout",r:["gervais","sykes"]},
+ {n:"Format Night",w:"The episode borrows a whole genre and one character keeps naming it out loud.",e:"meta",f:"ensemble",r:["keenan","macfarlane"]}
+];
+function sitCombo(i){
+ var c=SIT_COMBOS[i];if(!c)return;
+ if(!S.sitcom)S.sitcom={};
+ S.sitcom.engine=c.e;S.sitcom.format=c.f;S.sitcom.writers=c.r.slice(0,2);
+ save();renderSitcom();
+ toast(c.n+" loaded \u2014 "+wrNames(c.r).join(" + ")+".");
+}
 function sitEngine(k){if(!S.sitcom)S.sitcom={};S.sitcom.engine=(S.sitcom.engine===k)?"":k;save();renderSitcom();
  toast(S.sitcom.engine?("Engine: "+COMEDY_ENGINES[k][0]+"."):"Engine cleared \u2014 house comedy only.");}
 function sitWriter(k){if(!S.sitcom)S.sitcom={};if(!Array.isArray(S.sitcom.writers))S.sitcom.writers=[];
@@ -7772,6 +8038,12 @@ function renderSitcom(){
  chipDefLine("sitModeDef",shortDef((SIT_MODES[C.mode]||SIT_MODES.multi)[1]));
  chipDefLine("sitAudDef",shortDef((SIT_AUDIENCE[C.audience]||SIT_AUDIENCE.on)[1]));
  chipDefLine("sitOutDef",shortDef((SIT_OUTPUTS[C.output]||SIT_OUTPUTS.scene)[1]));
+ var cbx=$("sitCombos");
+ if(cbx){cbx.innerHTML=SIT_COMBOS.map(function(c,i){
+   var on=(C.engine===c.e&&C.format===c.f);
+   return '<span class="chip'+(on?" on":"")+'" onclick="sitCombo('+i+')">'+esc(c.n)+'</span>';}).join("");
+  var act=SIT_COMBOS.filter(function(c){return C.engine===c.e&&C.format===c.f;})[0];
+  chipDefLine("sitComboDef",act?act.w:"Tap one to set the format, the comedy engine and the writers room together.");}
  var eb=$("sitEngines");
  if(eb){var er=ENG_FOR_SITCOM[C.format]||ENG_FOR_SITCOM.neighborhood;
   var extra=(C.engine&&er.indexOf(C.engine)<0)?[C.engine]:[];

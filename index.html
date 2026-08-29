@@ -611,6 +611,9 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <label class="fld" style="margin-top:10px">Studio audience</label>
     <select id="sitAudience"></select>
     <div id="sitAudDef"></div>
+    <label class="fld" style="margin-top:10px">Comedy engine \u2014 how the joke is built</label>
+    <div id="sitEngines" class="tokenchips"></div>
+    <div id="sitEngineDef"></div>
     <label class="fld" style="margin-top:10px">Writers room \u2014 whose craft writes it</label>
     <div id="sitWriters" class="tokenchips"></div>
     <div id="sitWriterDef"></div>
@@ -1213,7 +1216,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.28 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.29 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1369,7 +1372,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],allowExtras:true,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance25"},sitcom:{writers:[],era:"general",format:"neighborhood",mode:"multi",broadcast:"original",audience:"on",output:"scene",cast:[],setId:"",situation:"",last:""},rcStyle:{id:"",name:"",n:0},tpl:{mode:"photoreal",open:"",cast:[],setId:"",vars:{},out:""},templates:[],vlog:{writers:[],type:"day",era:"modern",cam:"mixed",engine:"classic",edit:"natural",output:"short",cast:[],holder:"",setId:"",situation:"",last:""},datasets:[],dsActive:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],allowExtras:true,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance25"},sitcom:{engine:"",writers:[],era:"general",format:"neighborhood",mode:"multi",broadcast:"original",audience:"on",output:"scene",cast:[],setId:"",situation:"",last:""},rcStyle:{id:"",name:"",n:0},tpl:{mode:"photoreal",open:"",cast:[],setId:"",vars:{},out:""},templates:[],vlog:{writers:[],type:"day",era:"modern",cam:"mixed",engine:"classic",edit:"natural",output:"short",cast:[],holder:"",setId:"",situation:"",last:""},datasets:[],dsActive:"",
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -3176,6 +3179,35 @@ var WRITERS={
  peele:["Jordan Peele — uneasy mundane","mundane situations turning quietly unsettling, hidden motives, symbolic tension"],
  coogler:["Ryan Coogler — community weight","community loyalty, cultural identity, generational emotional stakes"],
  macfarlane:["Seth MacFarlane — rapid absurdity","rapid absurd escalation, unexpected detours, ensemble chaos"]};
+/* ===== COMEDY ENGINES — how the joke is BUILT (mechanism, not voice) ===== */
+var COMEDY_ENGINES={
+ mock:["Mockumentary workplace","COMEDY ENGINE — MOCKUMENTARY WORKPLACE: a documentary crew is present and everyone knows it. Talking-head asides where characters explain themselves and reveal more than they mean to; glances directly at the lens after somebody says something insane; long unbearable pauses left in; comedy from social contracts being violated in a room nobody can leave."],
+ optimist:["Earnest optimist vs. bureaucracy","COMEDY ENGINE — EARNEST OPTIMIST: a relentlessly sincere lead who genuinely loves this place, colliding with institutional absurdity and apathetic colleagues. The joke is that they mean it. Warmth underneath, never cynicism on top."],
+ procedural:["High-energy ensemble in a rigid structure","COMEDY ENGINE — STRUCTURED ENSEMBLE: an official procedure or hierarchy provides the frame; the comedy is people running elaborate bits, competitions and personal nonsense inside a structure that is supposed to be serious. Rapid joke density, tight ensemble chemistry, an authority figure who is unexpectedly weird."],
+ hangout:["Hangout chemistry","COMEDY ENGINE — HANGOUT: no plot required. A group in a recurring space, low stakes, jokes built entirely on how well these specific people know each other. Callbacks to shared history, everyone with a defined role in the dynamic."],
+ nothing:["Petty threads that collide","COMEDY ENGINE — PETTY CONVERGENCE: three or four small selfish threads run in parallel and crash into each other at the end. No lessons, no growth, no hugging. The comedy is minor social rules examined far too closely and characters who will not let a trivial thing go."],
+ callback:["Dense callback farce","COMEDY ENGINE — DENSE CALLBACK FARCE: layered information comedy. Plant a detail early, pay it off much later; running gags that mutate each time; a narrator who contradicts what characters claim; jokes buried in the background for people watching twice. Every character is deluded about their own competence."],
+ depraved:["Depraved schemers escalating","COMEDY ENGINE — DEPRAVED ESCALATION: awful people with total confidence pursue a bad idea past every exit ramp. Each scene raises the stakes and lowers the morality. Nobody learns, everybody loses, and they are ready to do it again immediately."],
+ meta:["Genre-parody / meta format","COMEDY ENGINE — META FORMAT: the episode adopts and parodies a whole genre or format, with characters half-aware they are inside one. Homage-accurate craft plus commentary on the trope, plus a character who names what is happening out loud."],
+ cringe:["Social-contract violation (improv discomfort)","COMEDY ENGINE — CRINGE: a character insists on being technically correct about a minor social rule and detonates the room. Slow escalation of awkwardness, no rescue, and the audience squirms while nobody on screen backs down."],
+ dense:["Rapid-fire satire, joke-per-second","COMEDY ENGINE — RAPID-FIRE SATIRE: maximum joke density; absurd asides, surreal cutaways, corporate and industry satire, whiplash tonal turns. If a line is not a joke it is setting one up two lines later."],
+ famdoc:["Family mockumentary","COMEDY ENGINE — FAMILY MOCKUMENTARY: parallel household threads, talking-head confessionals, generational misunderstanding, and a warm resolution that lands because the jokes were honest first."],
+ deadpan:["Deadpan supernatural mundane","COMEDY ENGINE — DEADPAN MUNDANE: extraordinary beings dealing with utterly ordinary problems — chores, rent, petty status disputes — played completely straight. The gap between the epic and the domestic IS the joke."],
+ profane:["Insult virtuosity under pressure","COMEDY ENGINE — INSULT VIRTUOSITY: fast, baroque, creative verbal cruelty among people who need each other professionally. Status anxiety, panic-driven improvisation, and elaborately constructed put-downs delivered at speed."],
+ whiplash:["Comedy adjacent to real danger","COMEDY ENGINE — TONAL WHIPLASH: the comedy sits directly beside genuine violence or dread. Awkward mundane scenes play funny until the stakes intrude; the humour comes from characters treating a horrifying situation like a scheduling problem."],
+ topical:["Fast topical satire","COMEDY ENGINE — TOPICAL SATIRE: crude simple presentation carrying sharp argument. Take a live cultural absurdity, follow it to its most ridiculous logical conclusion, and let the plot become an essay without ever admitting it."],
+ nihil:["Sci-fi nihilist adventure","COMEDY ENGINE — SCI-FI NIHILISM: high-concept premise executed with real rigour, undercut by characters who are exhausted, selfish and aware nothing matters. Big idea, petty motivation, emotionally devastating aside dropped mid-chaos."],
+ melancholy:["Jokes over a sad engine","COMEDY ENGINE — MELANCHOLY COMEDY: rapid absurd jokes and background sight-gags stacked on top of genuine sadness. Characters self-sabotage, apologise, and repeat the pattern. The funniest episode carries the heaviest line."],
+ candid:["Embarrassing candour","COMEDY ENGINE — CANDOUR: says out loud what everyone actually experiences and never admits. Bodily, awkward, sincere, affectionate. Externalise the internal voice as a character if it helps."],
+ cutaway:["Cutaway gag machine","COMEDY ENGINE — CUTAWAY MACHINE: the A-plot is a delivery system for tangents. Non-sequitur flashbacks, jokes held far past comfort, and a family dynamic loose enough to hang anything on."],
+ overlap:["Overlapping-dialogue workplace","COMEDY ENGINE — OVERLAPPING DIALOGUE: everyone talks at once, nobody listens, running arguments continue across scenes, and a catchphrase gets weaponised. Competence in the job, disaster in the relationships."],
+ towns:["Long-running town satire","COMEDY ENGINE — TOWN SATIRE: a deep bench of recurring locals, an institution to skewer each time, sight gags in the background, and a family core that keeps it warm."],
+ pun:["Gentle pun-forward family","COMEDY ENGINE — GENTLE PUNS: kind-hearted family, wordplay everywhere, small business stakes, weird children played with affection and never contempt. Nobody is cruel."],
+ surreal:["Internet surrealism","COMEDY ENGINE — SURREALISM: short, strange, dreamlike logic played sincerely. Simple lovable leads wandering into upsetting nonsense, tonal shifts without warning, and an ending that refuses to explain itself."],
+ decon:["Genre deconstruction with real stakes","COMEDY ENGINE — DECONSTRUCTION: an established genre played faithfully until consequences arrive with full weight. Jokes and character warmth make the brutal turns land harder."]
+};
+function engLaw(k){var e=COMEDY_ENGINES[k];return e?(" "+e[1]+" Apply this mechanism to THIS world and THESE characters \u2014 the structure only, never borrowed dialogue, characters or premises."):"";}
+var ENG_FOR_SITCOM={neighborhood:["hangout","nothing","mock"],family:["famdoc","pun","towns"],hangout:["hangout","nothing","meta"],workplace:["mock","optimist","overlap"],teen:["meta","candid","decon"],romantic:["nothing","cringe","hangout"],oddcouple:["cringe","depraved","overlap"],ensemble:["procedural","dense","callback"],fish:["deadpan","meta","surreal"]};
 /* which writers suit which job — [lead, sharpener] */
 var WR_FOR_SITCOM={
  neighborhood:["martin","foxx"], family:["bernie","foxx"], hangout:["shawn","griffin"],
@@ -7212,6 +7244,7 @@ function afSitcom(){
  S.sitcom.broadcast=S.sitcom.broadcast||"original";
  S.sitcom.audience="on";
  S.sitcom.output=S.sitcom.output||"scene";
+ S.sitcom.engine=afPick(ENG_FOR_SITCOM[S.sitcom.format]||ENG_FOR_SITCOM.neighborhood);
  S.sitcom.writers=(WR_FOR_SITCOM[S.sitcom.format]||WR_FOR_SITCOM.neighborhood).slice(0,2);
  S.sitcom.situation=afFill(afPick(AF_SITCOM),{A:p.A,B:p.B,LOC:loc?loc.name:"the usual spot"});
  save();renderSitcom();
@@ -7691,6 +7724,8 @@ async function vlgWrite(){
   if(st)st.innerHTML="";
  }catch(e){if(st)st.innerHTML=errLine(e);}
 }
+function sitEngine(k){if(!S.sitcom)S.sitcom={};S.sitcom.engine=(S.sitcom.engine===k)?"":k;save();renderSitcom();
+ toast(S.sitcom.engine?("Engine: "+COMEDY_ENGINES[k][0]+"."):"Engine cleared \u2014 house comedy only.");}
 function sitWriter(k){if(!S.sitcom)S.sitcom={};if(!Array.isArray(S.sitcom.writers))S.sitcom.writers=[];
  var a=S.sitcom.writers,i=a.indexOf(k);
  if(i>=0)a.splice(i,1); else {if(a.length>=2){toast("Two max \u2014 one leads, one sharpens.",true);return;}a.push(k);}
@@ -7737,6 +7772,12 @@ function renderSitcom(){
  chipDefLine("sitModeDef",shortDef((SIT_MODES[C.mode]||SIT_MODES.multi)[1]));
  chipDefLine("sitAudDef",shortDef((SIT_AUDIENCE[C.audience]||SIT_AUDIENCE.on)[1]));
  chipDefLine("sitOutDef",shortDef((SIT_OUTPUTS[C.output]||SIT_OUTPUTS.scene)[1]));
+ var eb=$("sitEngines");
+ if(eb){var er=ENG_FOR_SITCOM[C.format]||ENG_FOR_SITCOM.neighborhood;
+  var extra=(C.engine&&er.indexOf(C.engine)<0)?[C.engine]:[];
+  eb.innerHTML=er.concat(extra).map(function(k){
+   return '<span class="chip'+(C.engine===k?" on":"")+'" onclick="sitEngine(\''+k+'\')">'+(er.indexOf(k)>=0?String.fromCharCode(0x1f525)+' ':'')+esc(COMEDY_ENGINES[k][0])+'</span>';}).join("");
+  chipDefLine("sitEngineDef",C.engine?shortDef(COMEDY_ENGINES[C.engine][1]):"None picked \u2014 straight Stoneralia comedy. Tap one to borrow its structure.");}
  var wb=$("sitWriters");
  if(wb){var recs=WR_FOR_SITCOM[C.format]||WR_FOR_SITCOM.neighborhood;
   wb.innerHTML=wrPickerHTML(C.writers,recs,"sitWriter");
@@ -7762,7 +7803,7 @@ async function sitWrite(){
   var lock=" HARD ROSTER RULE: the only named characters that exist are: "+(roster.join(", ")||"(none)")+". Never invent a named character."+((S.allowExtras===false)?" No other people appear at all.":" Unnamed background roles are allowed (\"a neighbour\", \"the delivery guy\") but never named and never given canon.");
   var setBlock=setIt?(" STANDING SET: "+setIt.name+(setIt.vibe?" \u2014 "+String(setIt.vibe).slice(0,320):"")):" STANDING SET: no set chosen — use the classic sitcom apartment living room: a central couch facing a bulky old TV, a kitchen nook behind, the front door upstage with a coat rack, warm practical lamps, framed pictures, and a big window with a painted city backdrop. Treat it as a built television set with consistent geography.";
   var _wr=(C.writers&&C.writers.length)?C.writers:(WR_FOR_SITCOM[C.format]||WR_FOR_SITCOM.neighborhood);
-  var sys=vibeCtx("full",C.situation)+sitLaw()+wrLaw(_wr,"90s sitcom")+castBlock+lock+setBlock+
+  var sys=vibeCtx("full",C.situation)+sitLaw()+engLaw(C.engine)+wrLaw(_wr,"90s sitcom")+castBlock+lock+setBlock+
    " POSITIVE-ONLY PHRASING: write what you want present, never a list of what to avoid."+
    " Write in clean plain text with clear section headers. No markdown tables. Audience responses appear inline in their correct positions, in brackets, e.g. [audience: strong laugh].";
   var usr="SITUATION: "+C.situation.trim()+"\nDeliver the requested output in full.";

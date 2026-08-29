@@ -237,6 +237,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button data-go="sitcom"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='4' width='20' height='14' rx='2'/><path d='M8 21h8'/><path d='M12 18v3'/><path d='M7 9l3 2-3 2'/></svg></span>Sitcom</button>
   <button data-go="vlog"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 10l5-3v10l-5-3z'/><rect x='3' y='6' width='12' height='12' rx='2'/></svg></span>Vlog</button>
   <button data-go="comedy"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3a9 9 0 100 18 9 9 0 000-18z'/><path d='M8 14s1.5 2 4 2 4-2 4-2'/><path d='M9 9h.01M15 9h.01'/></svg></span>Comedy Lab</button>
+  <button data-go="sketch"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5h16v11H4z'/><path d='M9 20l3-4 3 4'/><path d='M8 9l2 2 4-4'/></svg></span>Sketch</button>
   <button data-go="fight"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M13 2 4.5 13.5H11l-1 8.5 9.5-12.5H12z'/></svg></span>Fight</button>
 <button data-go="vibe"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4z'/><path d='M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z'/></svg></span>Vibe</button>
   <button data-go="smg"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg></span>SMG</button>
@@ -555,11 +556,45 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div id="tplBody"></div>
 </section>
 
+<!-- ===== SKETCH COMEDY GROUP CREATOR ===== -->
+<section class="view" id="view-sketch">
+  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5h16v11H4z'/><path d='M9 20l3-4 3 4'/></svg></span><h2>Sketch</h2><span class="tag">Creator</span></div>
+  <div class="card">
+    <details class="collapse" style="margin-bottom:12px"><summary>❓ How to use this</summary><div class="body">
+      <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px"><b>Use this for sketch comedy</b> — short pieces built on a GAME, not scenes from a show. Start with an observation, find the Game, then write it.</div>
+      <div style="font-size:13.5px;line-height:1.7">1. Type an <b>observation</b> — anything you noticed. It does not need to be a joke.<br>2. Leave <b>Output</b> on <b>Game finder</b> and tap Develop. You get 5 possible Games.<br>3. Pick the one you like, paste it back into the observation box.<br>4. Switch Output to <b>Write a full sketch</b> and tap Develop.<br>5. Switch to <b>Table read</b> and tap again — it tells you honestly what is not working.<br>6. Rewrite, or move on. Not every idea survives, and that is the point.</div>
+      <div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px;color:#c9a94a">The <b>Game</b> is the repeatable mechanism that makes a premise funny more than once. No Game, no sketch — the app will tell you so.</div>
+    </div></details>
+    <label class="fld">⚡ One-tap starts</label>
+    <div id="skCombos" class="tokenchips" style="margin-bottom:4px"></div>
+    <div id="skComboDef"></div>
+    <label class="fld" style="margin-top:12px">Show mode</label>
+    <select id="skMode"></select>
+    <div id="skModeDef"></div>
+    <label class="fld" style="margin-top:10px">Sketch type (optional)</label>
+    <select id="skType"></select>
+    <label class="fld" style="margin-top:10px">Length</label>
+    <select id="skLength"></select>
+    <details class="collapse" style="margin-top:12px"><summary>Show philosophy — 10 dials</summary><div class="body" id="skPhil"></div></details>
+    <label class="fld" style="margin-top:12px">Performers / cast (optional)</label>
+    <div id="skCast" class="tokenchips"></div>
+    <label class="fld" style="margin-top:10px">Setting (optional)</label>
+    <select id="skSet"></select>
+    <label class="fld" style="margin-top:10px">Observation, idea or situation</label>
+    <textarea id="skObs" style="min-height:70px" placeholder="e.g. people who say ‘no worries if not’ and absolutely mean the opposite"></textarea>
+    <label class="fld" style="margin-top:10px">Output</label>
+    <select id="skOutput"></select>
+    <div id="skOutputDef"></div>
+    <button class="btn green" style="width:100%;margin-top:12px" onclick="skWrite()">✦ Develop it (AI) <span class="sub">pennies per call (text)</span></button>
+    <div id="skStatus"></div><div id="skOut"></div>
+  </div>
+</section>
+
 <!-- ===== COMEDY LAB ===== -->
 <section class="view" id="view-comedy">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M8 14s1.5 2 4 2 4-2 4-2'/></svg></span><h2>Comedy Lab</h2><span class="tag">DNA</span></div>
   <div class="card">
-    <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:10px">Build an original comedy property. <b>Family</b> = how the show operates. <b>DNA</b> = why it\u2019s funny. <b>Mixer</b> = proportion and intensity. Nothing here copies an existing show.</div>
+<details class="collapse" style="margin-bottom:12px"><summary>❓ How to use this</summary><div class="body"><div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px"><b>Use this to INVENT A NEW SHOW</b> — its premise, its ensemble, and why it’s funny. You’ll use it a few times ever, not daily.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">1</span>Tap a <b>one-tap combo</b> (start with Block Legends). That sets the family, the DNA blend and all the dials for you.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">2</span>Tap the <b>cast</b> you want it built around. Optional, but better with your own people.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">3</span>Type one line in the <b>brief</b> — the arena or the itch. e.g. “a block association that never finishes a meeting”.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">4</span>Leave <b>Develop</b> on “Show premise + comedic thesis” and tap <b>Develop it</b>.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">5</span>Read it. Then change <b>Develop</b> to <b>Character collision matrix</b> and tap again — now you get how each pair of your people makes comedy.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">6</span>Then run <b>Failure engines</b>. That’s the one that makes stories write themselves later.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">7</span>Keep anything good with <b>Keep as a note</b>.</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px;color:#c9a94a">Family = what kind of show. DNA = why it’s funny. Mixer = how much of each. The combo sets all three, so you never have to learn the words.</div></div></details>    <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:10px">Build an original comedy property. <b>Family</b> = how the show operates. <b>DNA</b> = why it\u2019s funny. <b>Mixer</b> = proportion and intensity. Nothing here copies an existing show.</div>
     <label class="fld">\u26a1 One-tap combos \u2014 blends that work together</label>
     <div id="cdCombos" class="tokenchips" style="margin-bottom:4px"></div>
     <div id="cdComboDef"></div>
@@ -589,7 +624,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 <section class="view" id="view-vlog">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 10l5-3v10l-5-3z'/><rect x='3' y='6' width='12' height='12' rx='2'/></svg></span><h2>Vlog</h2><span class="tag">Creator</span></div>
   <div class="card">
-    <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:10px">A vlog is not cinematic footage with camera shake — it is a camera that has a reason to exist. Who holds it, why they\u2019re filming, and what they\u2019d point at next.</div>
+<details class="collapse" style="margin-bottom:12px"><summary>❓ How to use this</summary><div class="body"><div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px"><b>Use this for camera-in-hand content</b> — the format that actually performs on IG and TikTok.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">1</span>Tap <b>🎲 Do it for me</b>, or set it yourself.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">2</span>Tap <b>who’s in it</b>, then choose <b>who holds the camera</b> — that one choice changes everything about the piece.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">3</span>Pick the <b>location</b> and type what they’re doing and why the camera is on.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">4</span>Pick <b>Output</b>: Short for a reel, Video prompt to feed a video model.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">5</span>Tap <b>Roll it</b>.</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px;color:#c9a94a">Silent characters stay silent — a character who doesn’t address the camera in canon still won’t here.</div></div></details>    <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:10px">A vlog is not cinematic footage with camera shake — it is a camera that has a reason to exist. Who holds it, why they\u2019re filming, and what they\u2019d point at next.</div>
     <button type="button" class="btn ghost sm" style="width:100%;margin-bottom:10px" onclick="afVlog()">\u26a1 Do it for me <span class="sub">picks who films, where, the type &amp; the situation</span></button>
     <label class="fld">Who\u2019s in it <span id="vlgCastCount" style="color:var(--bone-dim)"></span></label>
     <div id="vlgCast" class="tokenchips"></div>
@@ -625,7 +660,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 <section class="view" id="view-sitcom">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='4' width='20' height='14' rx='2'/><path d='M8 21h8'/><path d='M12 18v3'/></svg></span><h2>90s Sitcom</h2><span class="tag">Creator</span></div>
   <div class="card">
-    <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:10px">Authentic period television grammar — story rhythm, standing sets, multi-cam staging, performance and audience timing. Not a VHS filter.</div>
+<details class="collapse" style="margin-bottom:12px"><summary>❓ How to use this</summary><div class="body"><div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px"><b>Use this to WRITE ONE SCENE</b> with characters you already have. This is the everyday one.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">1</span>Tap a <b>one-tap combo</b> (try Uncs Unleashed). It sets format, comedy engine and the writers room together.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">2</span>Tap <b>who’s in it</b> from your cast, and pick a <b>standing set</b>.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">3</span>Type the <b>situation</b> — characters plus what goes wrong.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">4</span>Pick your <b>Output</b>: Scene to write one, Episode for the full structure, Video prompt to feed a video model.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">5</span>Tap <b>Write it</b>. Everything above is editable if you want to steer it.</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px;color:#c9a94a">Or just tap 🎲 Do it for me and it fills all of it from your canon.</div></div></details>    <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:10px">Authentic period television grammar — story rhythm, standing sets, multi-cam staging, performance and audience timing. Not a VHS filter.</div>
     <label class="fld">\u26a1 One-tap combos \u2014 engine + writers that reinforce each other</label>
     <div id="sitCombos" class="tokenchips" style="margin-bottom:4px"></div>
     <div id="sitComboDef"></div>
@@ -1250,7 +1285,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.31 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.33 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1406,7 +1441,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],allowExtras:true,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance25"},comedy:{family:"",dna:[],mix:null,output:"premise",brief:"",cast:[],setId:"",last:""},sitcom:{engine:"",writers:[],era:"general",format:"neighborhood",mode:"multi",broadcast:"original",audience:"on",output:"scene",cast:[],setId:"",situation:"",last:""},rcStyle:{id:"",name:"",n:0},tpl:{mode:"photoreal",open:"",cast:[],setId:"",vars:{},out:""},templates:[],vlog:{writers:[],type:"day",era:"modern",cam:"mixed",engine:"classic",edit:"natural",output:"short",cast:[],holder:"",setId:"",situation:"",last:""},datasets:[],dsActive:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],allowExtras:true,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance25"},sketch:{mode:"ensemble",phil:null,type:"",length:"short",output:"game",obs:"",cast:[],setId:"",last:""},comedy:{family:"",dna:[],mix:null,output:"premise",brief:"",cast:[],setId:"",last:""},sitcom:{engine:"",writers:[],era:"general",format:"neighborhood",mode:"multi",broadcast:"original",audience:"on",output:"scene",cast:[],setId:"",situation:"",last:""},rcStyle:{id:"",name:"",n:0},tpl:{mode:"photoreal",open:"",cast:[],setId:"",vars:{},out:""},templates:[],vlog:{writers:[],type:"day",era:"modern",cam:"mixed",engine:"classic",edit:"natural",output:"short",cast:[],holder:"",setId:"",situation:"",last:""},datasets:[],dsActive:"",
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -1894,7 +1929,7 @@ async function svGenerate(){
   svSetMode((S.songvid&&S.songvid.mode)||"perform");
 })();
 var CUR_VIEW="episodes";
-const VIEW_GROUP={studio:"create",board:"create",story:"create",sitcom:"create",vlog:"create",comedy:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",chief:"create",canon:"universe",cast:"universe",chiefinese:"universe",shows:"universe",networks:"universe",registry:"universe",sets:"universe",projects:"library",templates:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
+const VIEW_GROUP={studio:"create",board:"create",story:"create",sitcom:"create",vlog:"create",comedy:"create",sketch:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",chief:"create",canon:"universe",cast:"universe",chiefinese:"universe",shows:"universe",networks:"universe",registry:"universe",sets:"universe",projects:"library",templates:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
 const GROUP_FIRST={create:"chief",universe:"canon",library:"pipeline",brand:"brand",setup:"settings"};
 function navLabel(v){var b=document.querySelector('nav button[data-go="'+v+'"]');if(b){var t=(b.textContent||"").trim();if(t)return t;}return v;}
 function renderSubTabs(){
@@ -1921,6 +1956,7 @@ function go(name){
   if(name==="sitcom")renderSitcom();
   if(name==="vlog")renderVlog();
   if(name==="comedy")renderComedy();
+  if(name==="sketch")renderSketch();
   if(name==="templates")renderTemplates();
   if(name==="studio")renderRefs();
   if(name==="board")renderBoardChars();
@@ -3214,6 +3250,79 @@ var WRITERS={
  peele:["Jordan Peele — uneasy mundane","mundane situations turning quietly unsettling, hidden motives, symbolic tension"],
  coogler:["Ryan Coogler — community weight","community loyalty, cultural identity, generational emotional stakes"],
  macfarlane:["Seth MacFarlane — rapid absurdity","rapid absurd escalation, unexpected detours, ensemble chaos"]};
+/* ===== SKETCH COMEDY GROUP CREATOR ===== */
+var SKG_SHOWMODES={
+ ensemble:["Ensemble Sketch Show","SKG-0001","A troupe of equals; sketches rotate cast functions and nobody is permanent furniture."],
+ character:["Character-Driven","SKG-0002","Built on recurring original characters with repeatable games and defined return conditions."],
+ absurdist:["Absurdist","SKG-0003","Dream logic played sincerely; internal rules are consistent even when reality is not."],
+ social:["Social Satire","SKG-0004","Everyday human behaviour examined until the contradiction shows."],
+ cultural:["Cultural Satire","SKG-0005","Traditions, trends and shared cultural habits are the target."],
+ workplace:["Workplace","SKG-0006","One institution as the arena; hierarchy and procedure generate the games."],
+ parody:["Parody / Media","SKG-0007","Formats and conventions are the target \u2014 the underlying rules, never a specific property."],
+ experimental:["Experimental","SKG-0008","Structure itself is the playground; format-breaking is a tool with purpose."],
+ street:["Street / Guerrilla","SKG-0009","Real locations, real reactions, minimal apparatus."],
+ narrative:["Narrative","SKG-0010","Sketches connect into a through-line across the episode."],
+ animated:["Animated","SKG-0011","Animation allows scale, transformation and impossible physical comedy."],
+ mixed:["Mixed-Format","SKG-0012","Deliberately varied \u2014 the identity is the range itself."]
+};
+var SKG_TYPES=["Ensemble character","Two-person character","Solo character piece","Premise-driven","Conceptual","Escalation","Social observation","Cultural satire","Political / topical","Institutional satire","Media parody","Genre parody","Fake commercial","Fake TV program","Interview / talk","News / current affairs","Recurring character","Recurring format","Musical","Physical comedy","Surreal","Absurdist","Dark comedy","Cinematic / location","Studio / stage","Audience-facing","Pre-taped","Format-breaking","Interconnected","Micro / transitional"];
+var SKG_PREMISE=["character flaw","social behaviour","cultural observation","misunderstanding","status conflict","bizarre rule","inappropriate reaction","institutional stupidity","obsession","literal interpretation","hidden agenda","reversal","escalating lie","inconvenient truth","mundane situation treated seriously","ridiculous situation treated normally","genre collision","media parody","product parody","commercial parody"];
+var SKG_EXITS=["Hard button","Reversal","Callback","Character reveal","Sudden consequence","Logical extreme","Smash cut","Walk-off","Visual button","Anti-climax","Format break","Reality break","Musical button","Transition into next sketch","Return to an earlier sketch","Credits interruption","Deliberate unresolved ending"];
+var SKG_ROLES=["Straight person","Instigator","Authority","Chaos agent","Deadpan anchor","Overcommitted character","Physical performer","Character specialist","Transformation performer","Socially awkward performer","High-status performer","Low-status performer","Narrator / host","Utility performer"];
+var SKG_FORMATS=["fake commercial","news segment","talk show","game show","interview","instructional video","public-access program","corporate training video","courtroom","panel show","trailer","political broadcast","documentary","award show","children\u2019s programming","music performance","product demonstration"];
+var SKG_LENGTHS={micro:["Micro (15\u201360 sec)","15 to 60 seconds"],short:["Short (1\u20133 min)","1 to 3 minutes"],standard:["Standard (3\u20136 min)","3 to 6 minutes"],extended:["Extended (6\u201310 min)","6 to 10 minutes"]};
+var SKG_PHIL=[
+ ["premise","Premise clarity","direct","mysterious"],
+ ["reality","Reality","grounded","surreal"],
+ ["perf","Performance","naturalistic","theatrical"],
+ ["structure","Structure","traditional game","experimental"],
+ ["satire","Satire","low","aggressive"],
+ ["dark","Darkness","light","dark"],
+ ["prod","Production","stage","cinematic location"],
+ ["cont","Continuity","independent sketches","interconnected"],
+ ["aud","Audience relationship","invisible","directly addressed"],
+ ["end","Ending behaviour","clean button","anti-ending / transition"]
+];
+var SKG_OUT={
+ premise:["Premises \u2014 generate ideas","Deliver 6 original sketch premises. For each: the normal reality, the comic disruption, and the Game in ONE clear sentence. Premises must generate BEHAVIOUR, not merely supply a topic for jokes."],
+ game:["Game finder \u2014 turn an observation into games","Take the observation and deliver 5 candidate Games. For each: normal reality, comic disruption, the repeatable mechanism in one sentence, what pattern the audience learns to expect, and how it could vary. Then recommend the strongest and say why."],
+ sketch:["Write a full sketch","Write the complete original sketch in script form. State the Game in one sentence at the top, then the script. Follow Establish \u2192 Confirm \u2192 Heighten \u2192 Complicate \u2192 Break \u2192 Exit. Every beat must reveal something NEW about the Game."],
+ beats:["Beat sheet","Deliver the beat sheet: premise, Game in one sentence, each repetition with what it varies and how it heightens, the breaking point, and the chosen exit with the reason it fits this Game."],
+ character:["Sketch character","Develop an original sketch character: posture, voice, rhythm, confidence, social status, worldview, physical behaviour, wardrobe, verbal habits, emotional baseline and central contradiction. Not a catchphrase machine."],
+ recurring:["Recurring character engine","Build the reusable character: core comic flaw, worldview, repeatable Game, typical environment, relationships, escalation pattern, audience expectation, variation strategy, return conditions and retirement condition. Then give 3 distinct situations that vary the Game rather than repeating it with different nouns."],
+ format:["Recurring format","Build a recurring FORMAT (not a character). Give its familiar structure, the rules it borrows, and 3 subjects that vary inside it."],
+ ad:["Fake commercial","Develop an original fake advertisement: product/service, consumer problem, promise, hidden absurdity, demonstration, escalation, testimonial or spokesperson, disclaimer, brand personality and final button. It must reveal something comedic about people, culture or marketing."],
+ episode:["Full episode","Assemble a complete episode: cold open, opening/host, strong sketch, short transitional piece, character or format sketch, experimental sketch, recurring segment, final major sketch, callback/closing button. Alternate length, energy, format, cast combinations and intensity \u2014 never two identical rhythms back to back. Note which callbacks connect and which sketches stay deliberately independent."],
+ room:["Writers\u2019 room \u2014 develop + evaluate","Run the room: observation \u2192 premise candidates \u2192 game candidates \u2192 best game (say why) \u2192 character assignment \u2192 beats \u2192 heightening \u2192 exit candidates \u2192 draft. You are permitted and expected to REJECT weak premises \u2014 say plainly which ideas do not have a Game and should be abandoned."],
+ table:["Table read \u2014 revision notes","Evaluate the sketch honestly: where the first laugh should land, where the audience understands the Game, repeated beats, dead sections, unnecessary dialogue, unclear motivation, the strongest laugh, the escalation ceiling, whether the ending arrives at the right moment, and performer opportunities. Output REVISION NOTES \u2014 do not pretend a first draft works."],
+ identity:["Group identity","Develop the group\u2019s identity: comedic thesis, group personality, preferred reality level, satirical perspective, performance strengths, recurring formats, recurring characters, visual presentation philosophy, episode rhythm, boundaries and signature escalation types."],
+ pack:["Production pack","Deliver script + cast functions + performance beats + production requirements."]
+};
+function skgLaw(){
+ var C=S.sketch||{};
+ var m=SKG_SHOWMODES[C.mode]||SKG_SHOWMODES.ensemble;
+ var ph=C.phil||skgPhilDefault();
+ var band=function(v){return v<=20?"strongly "+"":v<=40?"leaning ":v<=60?"balanced ":v<=80?"leaning ":"strongly ";};
+ var philTxt=SKG_PHIL.map(function(d){var v=(ph[d[0]]===undefined)?50:ph[d[0]];
+  return d[1]+": "+v+"/100 (0 = "+d[2]+", 100 = "+d[3]+")";}).join("; ");
+ return " You are the SKETCH COMEDY GROUP CREATOR. Sketch comedy is NOT a sitcom with shorter scenes \u2014 every sketch needs its own premise, comedic GAME, escalation, internal rules, rhythm, payoff and exit."+
+  " SHOW MODE \u2014 "+m[0]+": "+m[2]+
+  " THE GAME (first-class system): for the sketch, identify NORMAL REALITY (what would ordinarily happen), COMIC DISRUPTION (the behaviour, belief, rule or situation that breaks it), the GAME (the repeatable comedic mechanism, expressible in ONE clear sentence), the PATTERN the audience learns to expect, the VARIATION (how each repetition differs), the HEIGHTENING (how each repetition becomes more revealing, difficult, absurd or consequential), the BREAKING POINT (how far the premise logically stretches) and the EXIT. If the Game cannot be stated in one sentence, the sketch is not ready \u2014 say so."+
+  " HEIGHTENING: Establish \u2192 Confirm \u2192 Heighten \u2192 Complicate \u2192 Break \u2192 Exit. Never repeat the same joke louder; every beat reveals something new."+
+  " EXIT: leave shortly after the strongest natural payoff. Sketch comedy is allowed to leave \u2014 do not force a traditional story resolution."+
+  " COMMITMENT PRINCIPLE: characters treat the sketch reality as real. The stranger the premise, the more valuable sincere commitment becomes. Performers must NOT signal \u201cwe know this is ridiculous\u201d \u2014 let the audience discover it through behaviour."+
+  " STRAIGHT PERSON: establishes normal reality, questions the behaviour, provides resistance, measures escalation and may accidentally feed the Game. Never boring \u2014 their disbelief, fear, curiosity or eventual participation is part of the comedy."+
+  " STATUS: track who believes they have power, who actually does, who wants approval, who controls the situation, who understands what is happening and who does not \u2014 and whether status reverses. Status changes are comedic beats."+
+  " DIALOGUE serves the Game: rapid exchanges, deadpan, awkward pauses, interruption, overlap, repetition with variation, escalating specificity, formal language on ridiculous subjects, casual language on serious ones, underreaction, overreaction. Never interchangeable setup/punchline dialogue written to raise joke density."+
+  " PHYSICAL COMEDY obeys the sketch\u2019s established reality: reaction, posture, prop interaction, spatial misunderstanding, entrances and exits, failed action, delayed consequence, background behaviour, silent reaction."+
+  " PARODY targets the underlying CONVENTION \u2014 identify the recognisable rules of the format, then exaggerate, invert, expose or misunderstand ONE of them. Never reproduce copyrighted characters, dialogue, scenes, logos or protected worlds."+
+  " TOPICAL WORK: separate the TOPICAL REFERENCE (what happened) from the COMEDIC PREMISE (the human behaviour, contradiction, institution or absurdity that makes it worth satirising). Recognition of a current event is NOT itself a joke."+
+  " PERFORMANCE SHOWCASE: rotate opportunities across the ensemble \u2014 transformation, deadpan, straight work, high and low status, physical, verbal, improvisational energy, musical ability, dramatic commitment, absurd commitment, subtle reaction. Never build an ensemble where one performer takes every dominant role and the rest become furniture."+
+  " SHOW PHILOSOPHY (set each as stated): "+philTxt+"."+
+  " ORIGINALITY CHECK before delivering: is the premise original, is the Game distinct, are the characters original, does the escalation emerge from THIS premise, is the dialogue character-specific, does the ending belong to this sketch, and does it resemble an existing famous sketch too closely? If it depends on recognising somebody else\u2019s sketch, rewrite it."+
+  " QUALITY FLAGS \u2014 name any that apply and fix them: premise without a Game, repetition without heightening, random absurdity, excessive exposition, interchangeable characters, joke overload, weak ending, sketch overstaying its premise.";
+}
+function skgPhilDefault(){return {premise:30,reality:45,perf:55,structure:35,satire:50,dark:35,prod:50,cont:30,aud:25,end:45};}
 /* ===== CURATED COMBOS — blends that actually work together ===== */
 var CL_COMBOS=[
  {n:"The Meeting That Never Ends",w:"Sincere people vs. a procedure that cannot be reasoned with. The pettier the item, the longer the meeting.",f:"wmock",d:[["discomfort",50],["institution",30],["petty",20]],m:{dialogue:40,heart:55,elastic:20,conseq:35,aware:35,petty:75,dark:25,satire:55,absurd:30,react:75,callback:45}},
@@ -7587,6 +7696,7 @@ function renderTemplates(){
  var st=S.tpl,t=tplFind(st.open);
  var h="";
  if(!t){
+  h+='<details class="collapse" style="margin-bottom:12px"><summary>\❓ How to use this</summary><div class="body"><div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px"><b>Use this for reusable prompt shapes</b> \— the same skeleton, different subject every time.</div><div style="font-size:13.5px;line-height:1.7">1. Open a template.<br>2. Pick <b>Photoreal</b> (generic, outside the universe) or <b>Stoneralia</b> (your cast, your locations, your render profile).<br>3. Tap <b>\u26a1 Do it for me</b> to fill the blanks, or type them yourself.<br>4. Tap <b>Build the prompt</b> \— free, no API call.<br>5. <b>Copy</b> it, or send it <b>To Pre-Roll</b>.</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px;color:#c9a94a">Paste your own prompt at the bottom of the list \— wrap swappable parts in {braces} and they become fillable blanks.</div></div></details>';
   h+='<div class="card"><div class="hint" style="text-transform:none;letter-spacing:0">Reusable prompt skeletons. Pick one, fill the blanks, build. Every template runs in <b>Photoreal</b> or <b>Stoneralia</b> mode.</div></div>';
   h+=tplAll().map(function(x){
    return '<div class="card" style="margin-top:10px"><div style="font-family:var(--slate);font-weight:800;font-size:14px">'+esc(x.name)+(x.own?' <span class="tag">yours</span>':'')+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:3px">'+esc(x.purpose||"")+'</div><button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="tplOpen(\''+x.id+'\')">Open</button></div>';
@@ -7794,6 +7904,88 @@ function cineFill(){
  if(pn)pn.style.display=S.cine.mograph?"block":"none";
  if(S.cine.mograph)chipDefLine("mogDef",chipDefFor("mog:"+(S.cine.mogStyle||"vector")));}
 function mogFlip(){if(!S.cine)S.cine={render:"stoneralia_animated",pace:"balanced",model:"seedance25"};S.cine.mograph=!S.cine.mograph;save();try{cineFill();}catch(e){}toast(S.cine.mograph?"Motion graphics mode \u2014 designed animation, lock stack, palette discipline.":"Live action mode \u2014 back to the cinematic render profiles.");}
+var SK_COMBOS=[
+ {n:"Find the Game",w:"You have an observation but no sketch yet. This turns it into 5 possible mechanisms.",m:"ensemble",o:"game",t:"",l:"short"},
+ {n:"Fake Commercial",w:"An original product that reveals something true about people or marketing.",m:"parody",o:"ad",t:"Fake commercial",l:"micro"},
+ {n:"Straight Man Breaks",w:"One normal person, one impossible situation, resistance that slowly becomes participation.",m:"ensemble",o:"sketch",t:"Two-person character",l:"short"},
+ {n:"Institution Gone Wrong",w:"Procedure applied with total sincerity to something insane.",m:"workplace",o:"sketch",t:"Institutional satire",l:"standard"},
+ {n:"Absurd Played Straight",w:"Dream logic with consistent internal rules and complete commitment.",m:"absurdist",o:"sketch",t:"Surreal",l:"short"},
+ {n:"Recurring Character",w:"Build a character with a repeatable Game and rules for when they return.",m:"character",o:"recurring",t:"Recurring character",l:"short"},
+ {n:"Format Parody",w:"Target the conventions of a format, not any specific property.",m:"parody",o:"format",t:"Media parody",l:"short"},
+ {n:"Build an Episode",w:"Assemble a full show with alternating rhythm, energy and cast combinations.",m:"mixed",o:"episode",t:"",l:"standard"},
+ {n:"Honest Table Read",w:"Paste a sketch you already wrote and get real revision notes.",m:"ensemble",o:"table",t:"",l:"short"},
+ {n:"Group Identity",w:"Define what makes YOUR troupe recognisable across every sketch.",m:"ensemble",o:"identity",t:"",l:"short"}
+];
+function skState(){if(!S.sketch)S.sketch={mode:"ensemble",phil:null,type:"",length:"short",output:"game",obs:"",cast:[],setId:"",last:""};if(!S.sketch.phil)S.sketch.phil=skgPhilDefault();return S.sketch;}
+function skSet(k,v){var C=skState();C[k]=v;save();if(k!=="obs")renderSketch();}
+function skPhilSet(k,v){var C=skState();C.phil[k]=parseInt(v,10);save();var el=$("skp_"+k);if(el)el.textContent=C.phil[k];}
+function skCombo(i){var c=SK_COMBOS[i];if(!c)return;var C=skState();
+ C.mode=c.m;C.output=c.o;C.type=c.t;C.length=c.l;save();renderSketch();toast(c.n+" \u2014 "+c.w);}
+function skCopy(){navigator.clipboard.writeText((S.sketch||{}).last||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
+function skToNote(){var t=(S.sketch||{}).last||"";if(!t){toast("Nothing yet.",true);return;}
+ if(!Array.isArray(S.notes))S.notes=[];
+ S.notes.unshift({id:uid(),ts:Date.now(),title:"Sketch \u00b7 "+SKG_OUT[(S.sketch||{}).output||"game"][0],body:t});save();toast("Kept as a note.");}
+function renderSketch(){
+ var C=skState();
+ var cb=$("skCombos");
+ if(cb){cb.innerHTML=SK_COMBOS.map(function(c,i){
+   var on=(C.output===c.o&&C.mode===c.m);
+   return '<span class="chip'+(on?" on":"")+'" onclick="skCombo('+i+')">'+esc(c.n)+'</span>';}).join("");
+  var act=SK_COMBOS.filter(function(c){return C.output===c.o&&C.mode===c.m;})[0];
+  chipDefLine("skComboDef",act?act.w:"Tap one to set the show mode, sketch type, length and output together.");}
+ var m=$("skMode");
+ if(m){if(!m.options.length)Object.keys(SKG_SHOWMODES).forEach(function(k){m.add(new Option(SKG_SHOWMODES[k][0],k));});
+  m.value=C.mode;m.onchange=function(){skSet("mode",this.value);};}
+ chipDefLine("skModeDef",SKG_SHOWMODES[C.mode][2]);
+ var t=$("skType");
+ if(t){if(!t.options.length){t.add(new Option("\u2014 let it choose \u2014",""));SKG_TYPES.forEach(function(x){t.add(new Option(x,x));});}
+  t.value=C.type||"";t.onchange=function(){skSet("type",this.value);};}
+ var l=$("skLength");
+ if(l){if(!l.options.length)Object.keys(SKG_LENGTHS).forEach(function(k){l.add(new Option(SKG_LENGTHS[k][0],k));});
+  l.value=C.length;l.onchange=function(){skSet("length",this.value);};}
+ var ph=$("skPhil");
+ if(ph&&!ph.innerHTML)ph.innerHTML=SKG_PHIL.map(function(d){var v=C.phil[d[0]];
+  return '<div style="margin-bottom:10px"><div class="hint" style="text-transform:none;letter-spacing:0">'+esc(d[1])+' \u00b7 <span id="skp_'+d[0]+'">'+v+'</span><br><span style="opacity:.6">0 = '+esc(d[2])+' \u00b7 100 = '+esc(d[3])+'</span></div><input type="range" min="0" max="100" value="'+v+'" style="width:100%" oninput="skPhilSet(\''+d[0]+'\',this.value)"></div>';}).join("");
+ var cw=$("skCast");
+ if(cw){var r=afRoster();
+  cw.innerHTML=r.length?r.map(function(c){return '<span class="chip'+((C.cast||[]).indexOf(c.id)>=0?" on":"")+'" data-skc="'+c.id+'">'+esc(c.name)+'</span>';}).join(""):'<span class="hint">No cast yet \u2014 optional; it can create original performers.</span>';
+  cw.onclick=function(e){var x=e.target;if(!x||!x.dataset||!x.dataset.skc)return;
+   if(!Array.isArray(C.cast))C.cast=[];
+   var i=C.cast.indexOf(x.dataset.skc);if(i>=0)C.cast.splice(i,1);else C.cast.push(x.dataset.skc);
+   save();renderSketch();};}
+ var ss=$("skSet");
+ if(ss){ss.innerHTML='<option value="">\u2014 none \u2014</option>'+(S.sets||[]).map(function(x){return '<option value="'+x.id+'"'+(C.setId===x.id?" selected":"")+'>'+esc(x.name)+'</option>';}).join("");
+  ss.onchange=function(){skSet("setId",this.value);};}
+ var ob=$("skOutput");
+ if(ob){if(!ob.options.length)Object.keys(SKG_OUT).forEach(function(k){ob.add(new Option(SKG_OUT[k][0],k));});
+  ob.value=C.output;ob.onchange=function(){skSet("output",this.value);};}
+ chipDefLine("skOutputDef",shortDef(SKG_OUT[C.output][1]));
+ var tx=$("skObs");
+ if(tx){if(tx.value!==(C.obs||""))tx.value=C.obs||"";tx.oninput=function(){C.obs=this.value;save();};}
+ var o=$("skOut");
+ if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="skCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="skToNote()">\ud83d\udcdd Keep as a note</button></div>'):"";
+}
+async function skWrite(){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var C=skState();
+ if(!(C.obs||"").trim()){toast("Give it an observation or idea first.",true);return;}
+ var st=$("skStatus");if(st)st.innerHTML=spinner("Working the room\u2026");
+ try{
+  var chosen=(S.cast||[]).filter(function(c){return (C.cast||[]).indexOf(c.id)>=0;});
+  var setIt=(S.sets||[]).find(function(x){return x.id===C.setId;});
+  var castBlock=chosen.length?(" PERFORMERS AVAILABLE (rotate comedic functions across them \u2014 nobody takes every dominant role): "+chosen.map(function(c){return c.name+(c.identity?" \u2014 "+String(c.identity).slice(0,180):"");}).join(" || ")+". They may play ORIGINAL sketch characters distinct from themselves."):" No performers supplied \u2014 create an original ensemble and assign comedic functions.";
+  var setBlock=setIt?(" SETTING: "+setIt.name+(setIt.vibe?" \u2014 "+String(setIt.vibe).slice(0,200):"")+"."):"";
+  var typeBlock=C.type?(" SKETCH TYPE: "+C.type+"."):"";
+  var lenBlock=" LENGTH: "+SKG_LENGTHS[C.length][1]+" \u2014 length follows premise strength; never stretch a short Game to fill runtime.";
+  var sys=vibeCtx("full",C.obs)+skgLaw()+typeBlock+lenBlock+castBlock+setBlock+
+   " ORIGINALITY: everything must be original to this world \u2014 original characters, premises, dialogue and running elements."+
+   " "+SKG_OUT[C.output][1]+" Plain text, clear headers, script format where a script is requested. No markdown tables.";
+  var usr="OBSERVATION / IDEA: "+C.obs.trim()+"\nDeliver the requested work in full.";
+  var res=await _llmRun(sys,usr);
+  C.last=String(res||"").trim();save();renderSketch();
+  if(st)st.innerHTML="";
+ }catch(e){if(st)st.innerHTML=errLine(e);}
+}
 function clState(){if(!S.comedy)S.comedy={family:"",dna:[],mix:null,output:"premise",brief:"",cast:[],setId:"",last:""};if(!S.comedy.mix)S.comedy.mix=cmixDefault();return S.comedy;}
 function clSet(k,v){var C=clState();C[k]=v;save();if(k!=="brief")renderComedy();}
 function clDnaTap(k){var C=clState();if(!Array.isArray(C.dna))C.dna=[];

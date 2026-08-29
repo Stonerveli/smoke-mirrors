@@ -578,6 +578,9 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <label class="fld" style="margin-top:10px">Editing energy</label>
     <select id="vlgEdit"></select>
     <div id="vlgEditDef"></div>
+    <label class="fld" style="margin-top:10px">Writers room \u2014 whose craft writes it</label>
+    <div id="vlgWriters" class="tokenchips"></div>
+    <div id="vlgWriterDef"></div>
     <label class="fld" style="margin-top:10px">Output</label>
     <select id="vlgOutput"></select>
     <div id="vlgOutDef"></div>
@@ -608,6 +611,9 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <label class="fld" style="margin-top:10px">Studio audience</label>
     <select id="sitAudience"></select>
     <div id="sitAudDef"></div>
+    <label class="fld" style="margin-top:10px">Writers room \u2014 whose craft writes it</label>
+    <div id="sitWriters" class="tokenchips"></div>
+    <div id="sitWriterDef"></div>
     <label class="fld" style="margin-top:10px">Output</label>
     <select id="sitOutput"></select>
     <div id="sitOutDef"></div>
@@ -1207,7 +1213,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.27 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.28 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1363,7 +1369,7 @@ const blank={
   stash:[],story:{title:"",body:""},shots:[],reel:[],timeline:[],
   board:{script:"",grade:"auto",grid:"3x3",style:"frames",charRefs:[],adjust:[],lastUrl:""},imgRes:"1K",fight:{framework:"12",sheetKey:"duel",hero:"",villain:"",extras:[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}],loc:"",locCustom:"",angle:"auto",grade:"auto",film:"auto",emo:"",discipline:"auto",styleRefs:"",ftype:"auto",archetype:"auto",scenario:"auto",camstruct:"auto",tone:"auto",envuse:"auto",beatEdits:{}},
   stashFilter:"All",
-  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],allowExtras:true,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance25"},sitcom:{era:"general",format:"neighborhood",mode:"multi",broadcast:"original",audience:"on",output:"scene",cast:[],setId:"",situation:"",last:""},rcStyle:{id:"",name:"",n:0},tpl:{mode:"photoreal",open:"",cast:[],setId:"",vars:{},out:""},templates:[],vlog:{type:"day",era:"modern",cam:"mixed",engine:"classic",edit:"natural",output:"short",cast:[],holder:"",setId:"",situation:"",last:""},datasets:[],dsActive:"",
+  cast:[],sets:[],castInit:false,customGenres:[],sunoProjects:[],sunoDraft:{preset:"",creator:"Auto / Recommend",use:"Standalone Single"},sunoAdv:{},sunoUserPresets:[],sunoStruct:[],csb:{cat:"Auto / Recommend",mode:"Auto / Recommend",use:"Auto",format:"Auto",panels:"Auto",runtime:"Auto",aspect:"Auto",treatment:"Auto",camera:"Auto",dialogue:"Auto",audio:"Auto",ending:"Auto",chieff:"Auto",title:"",logline:"",concept:"",beats:"",avoid:"",styleRefs:"",castIds:[],setId:"",tempLoc:"",projects:[]},episodes:[],currentEp:null,castFilter:"All",lawIndex:0,chieffSightings:0,ctSeason:"hidden",ctHidden:false,ctLead:"",ctMechanic:"",ctMode:"side",comics:[],curComic:null,comicKind:"strip3",comicLook:"toon",comicLead:"",comicSet:"",comicMechanic:"",comicIdea3:{setup:"",problem:"",twist:""},comicKind:"",comicCharRefs:[],comicMode:"silent",vo:{script:"",voice:"",speed:1,pitch:0,format:"mp3",lastUrl:"",lastName:"",lastDur:0},vibe:{mode:"describe",tool:"auto",input:"",json:"",lib:[]},run:{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null},socials:{accounts:[],log:[]},wardrobeLock:true,noMusic:true,recipes:[],mv:null,rp:null,brand:{avatars:[],out:null},loras:[],activeLora:"",loraOn:false,slang:[],roaches:[],daily:{log:[],last:null},networks:[],netMig:0,ads:[],adWardrobe:[],allowExtras:true,cine:{render:"stoneralia_animated",pace:"balanced",model:"seedance25"},sitcom:{writers:[],era:"general",format:"neighborhood",mode:"multi",broadcast:"original",audience:"on",output:"scene",cast:[],setId:"",situation:"",last:""},rcStyle:{id:"",name:"",n:0},tpl:{mode:"photoreal",open:"",cast:[],setId:"",vars:{},out:""},templates:[],vlog:{writers:[],type:"day",era:"modern",cam:"mixed",engine:"classic",edit:"natural",output:"short",cast:[],holder:"",setId:"",situation:"",last:""},datasets:[],dsActive:"",
   projects:[],activeProject:"",navGroup:"create",songvid:{mode:"perform",lastUrl:"",lastName:""},canon:{notes:""},assetFilter:"all",frDismissed:false,
   mediaModels:{tts:"fal-ai/elevenlabs/tts/eleven-v3",lipsync:"veed/fabric-1.0",sfx:"fal-ai/elevenlabs/sound-effects"}
 };
@@ -3170,6 +3176,39 @@ var WRITERS={
  peele:["Jordan Peele — uneasy mundane","mundane situations turning quietly unsettling, hidden motives, symbolic tension"],
  coogler:["Ryan Coogler — community weight","community loyalty, cultural identity, generational emotional stakes"],
  macfarlane:["Seth MacFarlane — rapid absurdity","rapid absurd escalation, unexpected detours, ensemble chaos"]};
+/* which writers suit which job — [lead, sharpener] */
+var WR_FOR_SITCOM={
+ neighborhood:["martin","foxx"], family:["bernie","foxx"], hangout:["shawn","griffin"],
+ workplace:["gervais","cleese"], teen:["keenan","marlon"], romantic:["sykes","rock"],
+ oddcouple:["cleese","damon"], ensemble:["keenan","shawn"], fish:["emurphy","norm"]
+};
+var WR_FOR_VLOG={
+ day:["martin","chappelle"], street:["martin","rock"], friends:["shawn","griffin"],
+ challenge:["marlon","griffin"], bts:["chappelle","norm"], food:["griffin","foxx"],
+ travel:["cmurphy","emurphy"], event:["keenan","marlon"], story:["cmurphy","pryor"],
+ character:["damon","martin"], workday:["gervais","sykes"], update:["rock","norm"]
+};
+function wrNames(keys){return (keys||[]).map(function(k){return WRITERS[k]?WRITERS[k][0].split(" \u2014 ")[0]:k;});}
+function wrLaw(keys,ctx){
+ keys=(keys||[]).filter(function(k){return WRITERS[k];}).slice(0,2);
+ if(!keys.length)return "";
+ var names=wrNames(keys);
+ var crafts=keys.map(function(k){return WRITERS[k][1];});
+ return " WRITERS ROOM"+(ctx?(" ("+ctx+")"):"")+": channel the CRAFT of "+names.join(" + ")+" \u2014 "+crafts.join("; ")+
+  ". Translate that craft into THIS world and THESE characters: their rhythm, their comic logic, their sense of what a scene is really about. "+
+  (names.length>1?(names[0]+" leads the voice; "+names[1]+" sharpens it. "):"")+
+  "Channel the craft only \u2014 never imitate their actual voices, never reuse their jokes, never mention them.";
+}
+function wrPickerHTML(cur,recs,setter){
+ var keys=Object.keys(WRITERS);
+ var chips=recs.map(function(k){
+  return '<span class="chip'+((cur||[]).indexOf(k)>=0?" on":"")+'" onclick="'+setter+'(\''+k+'\')">'+String.fromCharCode(0x1f525)+' '+esc(WRITERS[k][0].split(" \u2014 ")[0])+'</span>';
+ }).join("");
+ var others=keys.filter(function(k){return recs.indexOf(k)<0&&(cur||[]).indexOf(k)>=0;}).map(function(k){
+  return '<span class="chip on" onclick="'+setter+'(\''+k+'\')">'+esc(WRITERS[k][0].split(" \u2014 ")[0])+'</span>';
+ }).join("");
+ return chips+others;
+}
 function wroomLaw(){
  var d=(typeof dsGet==="function")?dsGet(S.dsActive):null;
  var W=(d&&d.writers)||[];
@@ -7173,6 +7212,7 @@ function afSitcom(){
  S.sitcom.broadcast=S.sitcom.broadcast||"original";
  S.sitcom.audience="on";
  S.sitcom.output=S.sitcom.output||"scene";
+ S.sitcom.writers=(WR_FOR_SITCOM[S.sitcom.format]||WR_FOR_SITCOM.neighborhood).slice(0,2);
  S.sitcom.situation=afFill(afPick(AF_SITCOM),{A:p.A,B:p.B,LOC:loc?loc.name:"the usual spot"});
  save();renderSitcom();
  toast("Filled from your canon "+String.fromCharCode(0x2014)+" edit anything, then write it.");
@@ -7189,6 +7229,7 @@ function afVlog(){
  S.vlog.engine=afPick(["classic","plan","ordinary"]);
  S.vlog.edit=afPick(["natural","punchy"]);
  S.vlog.output=S.vlog.output||"short";
+ S.vlog.writers=(WR_FOR_VLOG[S.vlog.type]||WR_FOR_VLOG.day).slice(0,2);
  S.vlog.situation=afFill(afPick(AF_VLOG),{A:p.A,B:p.B,LOC:loc?loc.name:"the block"});
  save();renderVlog();
  toast("Filled from your canon "+String.fromCharCode(0x2014)+" edit anything, then roll it.");
@@ -7613,6 +7654,10 @@ function renderVlog(){
  chipDefLine("vlgCamDef",shortDef((VLG_CAMS[C.cam]||VLG_CAMS.mixed)[1]));
  chipDefLine("vlgEditDef",shortDef((VLG_EDITS[C.edit]||VLG_EDITS.natural)[1]));
  chipDefLine("vlgOutDef",shortDef((VLG_OUTPUTS[C.output]||VLG_OUTPUTS.short)[1]));
+ var wb=$("vlgWriters");
+ if(wb){var recs=WR_FOR_VLOG[C.type]||WR_FOR_VLOG.day;
+  wb.innerHTML=wrPickerHTML(C.writers,recs,"vlgWriter");
+  chipDefLine("vlgWriterDef",(C.writers&&C.writers.length)?("Writing in the craft of "+wrNames(C.writers).join(" + ")+"."):("Nobody equipped \u2014 it will use the recommended room: "+wrNames(recs).join(" + ")+"."));}
  var go=$("vlgGo");if(go)go.onclick=vlgWrite;
  var out=$("vlgOut");
  if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="vlgCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="vlgToBoard()">\ud83c\udfac To Pre-Roll</button></div>'):"";
@@ -7636,7 +7681,8 @@ async function vlgWrite(){
   var castBlock=chosen.length?(" PEOPLE PRESENT (use these and only these as named people): "+chosen.map(function(c){return c.name+(c.identity?" \u2014 "+String(c.identity).slice(0,220):"")+(c.voice?" | voice: "+String(c.voice).slice(0,120):"");}).join(" || ")):"";
   var lock=" HARD ROSTER RULE: the only named characters that exist are: "+(roster.join(", ")||"(none)")+". Never invent a named character."+((S.allowExtras===false)?" No other people appear at all.":" Unnamed people are allowed (\"a guy at the counter\", \"somebody\u2019s cousin\") but never named and never given canon.");
   var setBlock=setIt?(" LOCATION: "+setIt.name+(setIt.vibe?" \u2014 "+String(setIt.vibe).slice(0,320):"")+". Show it as it actually looks through a creator\u2019s camera, not as a production plate."):" LOCATION: pick one consistent place from the established world and shoot it as it actually looks on camera.";
-  var sys=vibeCtx("full",C.situation)+vlgLaw()+" CAMERA HOLDER: "+holdTxt+"."+castBlock+lock+setBlock+
+  var _wr=(C.writers&&C.writers.length)?C.writers:(WR_FOR_VLOG[C.type]||WR_FOR_VLOG.day);
+  var sys=vibeCtx("full",C.situation)+vlgLaw()+wrLaw(_wr,"vlog")+" CAMERA HOLDER: "+holdTxt+"."+castBlock+lock+setBlock+
    " POSITIVE-ONLY PHRASING: write what is present, never a list of what to avoid."+
    " Plain text, clear section headers, no markdown tables. Spoken lines written out as they would actually be said.";
   var usr="WHAT\u2019S HAPPENING: "+C.situation.trim()+"\nDeliver the requested output in full.";
@@ -7645,6 +7691,14 @@ async function vlgWrite(){
   if(st)st.innerHTML="";
  }catch(e){if(st)st.innerHTML=errLine(e);}
 }
+function sitWriter(k){if(!S.sitcom)S.sitcom={};if(!Array.isArray(S.sitcom.writers))S.sitcom.writers=[];
+ var a=S.sitcom.writers,i=a.indexOf(k);
+ if(i>=0)a.splice(i,1); else {if(a.length>=2){toast("Two max \u2014 one leads, one sharpens.",true);return;}a.push(k);}
+ save();renderSitcom();toast(a.length?("Writing in the craft of "+wrNames(a).join(" + ")+"."):"Writers cleared \u2014 house voice only.");}
+function vlgWriter(k){if(!S.vlog)S.vlog={};if(!Array.isArray(S.vlog.writers))S.vlog.writers=[];
+ var a=S.vlog.writers,i=a.indexOf(k);
+ if(i>=0)a.splice(i,1); else {if(a.length>=2){toast("Two max \u2014 one leads, one sharpens.",true);return;}a.push(k);}
+ save();renderVlog();toast(a.length?("Writing in the craft of "+wrNames(a).join(" + ")+"."):"Writers cleared \u2014 house voice only.");}
 function sitSet(k,v){if(!S.sitcom)S.sitcom={};S.sitcom[k]=v;save();if(k!=="situation")renderSitcom();}
 function renderSitcom(){
  if(!S.sitcom)S.sitcom={era:"general",format:"neighborhood",mode:"multi",broadcast:"original",audience:"on",output:"scene",cast:[],setId:"",situation:"",last:""};
@@ -7683,6 +7737,10 @@ function renderSitcom(){
  chipDefLine("sitModeDef",shortDef((SIT_MODES[C.mode]||SIT_MODES.multi)[1]));
  chipDefLine("sitAudDef",shortDef((SIT_AUDIENCE[C.audience]||SIT_AUDIENCE.on)[1]));
  chipDefLine("sitOutDef",shortDef((SIT_OUTPUTS[C.output]||SIT_OUTPUTS.scene)[1]));
+ var wb=$("sitWriters");
+ if(wb){var recs=WR_FOR_SITCOM[C.format]||WR_FOR_SITCOM.neighborhood;
+  wb.innerHTML=wrPickerHTML(C.writers,recs,"sitWriter");
+  chipDefLine("sitWriterDef",(C.writers&&C.writers.length)?("Writing in the craft of "+wrNames(C.writers).join(" + ")+"."):("Nobody equipped \u2014 it will use the recommended room: "+wrNames(recs).join(" + ")+"."));}
  var go=$("sitGo");if(go)go.onclick=sitWrite;
  var out=$("sitOut");
  if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="sitCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="sitToBoard()">\ud83c\udfac To Pre-Roll</button></div>'):"";
@@ -7703,7 +7761,8 @@ async function sitWrite(){
   var castBlock=chosen.length?(" CAST IN THIS PRODUCTION (use these and only these as named characters): "+chosen.map(function(c){return c.name+(c.identity?" \u2014 "+String(c.identity).slice(0,220):"")+(c.voice?" | voice: "+String(c.voice).slice(0,120):"");}).join(" || ")):"";
   var lock=" HARD ROSTER RULE: the only named characters that exist are: "+(roster.join(", ")||"(none)")+". Never invent a named character."+((S.allowExtras===false)?" No other people appear at all.":" Unnamed background roles are allowed (\"a neighbour\", \"the delivery guy\") but never named and never given canon.");
   var setBlock=setIt?(" STANDING SET: "+setIt.name+(setIt.vibe?" \u2014 "+String(setIt.vibe).slice(0,320):"")):" STANDING SET: no set chosen — use the classic sitcom apartment living room: a central couch facing a bulky old TV, a kitchen nook behind, the front door upstage with a coat rack, warm practical lamps, framed pictures, and a big window with a painted city backdrop. Treat it as a built television set with consistent geography.";
-  var sys=vibeCtx("full",C.situation)+sitLaw()+castBlock+lock+setBlock+
+  var _wr=(C.writers&&C.writers.length)?C.writers:(WR_FOR_SITCOM[C.format]||WR_FOR_SITCOM.neighborhood);
+  var sys=vibeCtx("full",C.situation)+sitLaw()+wrLaw(_wr,"90s sitcom")+castBlock+lock+setBlock+
    " POSITIVE-ONLY PHRASING: write what you want present, never a list of what to avoid."+
    " Write in clean plain text with clear section headers. No markdown tables. Audience responses appear inline in their correct positions, in brackets, e.g. [audience: strong laugh].";
   var usr="SITUATION: "+C.situation.trim()+"\nDeliver the requested output in full.";

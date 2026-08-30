@@ -226,6 +226,9 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 <div class="appwrap">
 <nav>
   <button class="grp" data-grp-sel="create"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l2.4 6.1L21 11.5l-6.6 2.4L12 21l-2.4-7.1L3 11.5l6.6-2.4z'/></svg></span>Media House</button>
+  <button class="grp" data-grp-sel="write"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20h16'/><path d='M6 16l9.5-9.5a2 2 0 013 3L9 19l-4 1z'/></svg></span>Write</button>
+  <button class="grp" data-grp-sel="visual"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='14' rx='2'/><path d='M3 15l5-4 4 3 3-2 6 5'/></svg></span>Visualize</button>
+  <button class="grp" data-grp-sel="audio"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18V6l10-2v12'/><circle cx='6' cy='18' r='3'/><circle cx='16' cy='16' r='3'/></svg></span>Audio</button>
   <button class="grp" data-grp-sel="universe"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M3 12h18'/><path d='M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18'/></svg></span>Universe</button>
   <button class="grp" data-grp-sel="library"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 7l8-4 8 4-8 4z'/><path d='M4 12l8 4 8-4'/><path d='M4 17l8 4 8-4'/></svg></span>Library</button>
   <button class="grp" data-grp-sel="brand"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7z'/><path d='M9.5 12l2 2 3.5-4'/></svg></span>Brand Lab</button>
@@ -1286,7 +1289,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.45 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.48 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1930,8 +1933,25 @@ async function svGenerate(){
   svSetMode((S.songvid&&S.songvid.mode)||"perform");
 })();
 var CUR_VIEW="episodes";
-const VIEW_GROUP={studio:"create",board:"create",story:"create",sitcom:"create",vlog:"create",comedy:"create",sketch:"create",media:"create",smg:"create",csb:"create",cloudtoons:"create",comics:"create",fight:"create",episodes:"create",reel:"create",songvid:"create",vo:"create",vibe:"create",run:"create",chief:"create",canon:"universe",cast:"universe",chiefinese:"universe",shows:"universe",networks:"universe",registry:"universe",sets:"universe",projects:"library",templates:"library",socials:"brand",brand:"brand",train:"brand",stash:"library",assets:"library",pipeline:"library",settings:"setup"};
-const GROUP_FIRST={create:"chief",universe:"canon",library:"pipeline",brand:"brand",setup:"settings"};
+const VIEW_GROUP={
+  /* CREATE — where you start */
+  chief:"create",run:"create",studio:"create",vibe:"create",
+  /* WRITE — develop the idea */
+  story:"write",episodes:"write",comedy:"write",sketch:"write",sitcom:"write",vlog:"write",fight:"write",
+  /* VISUALIZE — turn writing into pictures */
+  board:"visual",csb:"visual",comics:"visual",cloudtoons:"visual",songvid:"visual",
+  /* AUDIO */
+  smg:"audio",vo:"audio",media:"audio",
+  /* WORLD — registered truth */
+  canon:"universe",cast:"universe",sets:"universe",shows:"universe",networks:"universe",chiefinese:"universe",registry:"universe",
+  /* PRODUCTION */
+  projects:"library",pipeline:"library",assets:"library",stash:"library",templates:"library",reel:"library",
+  /* BRAND / PUBLISH */
+  socials:"brand",brand:"brand",train:"brand",
+  /* SETTINGS */
+  settings:"setup"
+};
+const GROUP_FIRST={create:"chief",write:"story",visual:"board",audio:"smg",universe:"canon",library:"projects",brand:"brand",setup:"settings"};
 function navLabel(v){var b=document.querySelector('nav button[data-go="'+v+'"]');if(b){var t=(b.textContent||"").trim();if(t)return t;}return v;}
 function renderSubTabs(){
   var host=$("subtabs");if(!host)return;var g=S.navGroup||"create";
@@ -2713,7 +2733,9 @@ async function refineRun(view,instruction){
   if(!out){toast("Nothing came back.",true);return;}
   /* keep the original as a linked artifact — lineage ready for Part 9 */
   var parentId=cur.art;
-  var child=creatorArtifact(view,"script","Refined: "+instruction.slice(0,32),out,{});
+  var parent=parentId?artGet(parentId):null;
+  var child=creatorArtifact(view,(parent&&parent.type)||"script","Refined: "+instruction.slice(0,32),out,{});
+  if(child){child.version=((parent&&parent.version)||1)+1;child.branch=(parent&&parent.branch)||"main";child.changeSummary=instruction.slice(0,80);artSave(child);}
   if(parentId&&child)artLink(parentId,child.id);
   cur.set(out);
   if(view==="sketch")S.sketch.lastArt=child?child.id:parentId;
@@ -2861,6 +2883,152 @@ function reviewOpen(view){
  if(!id){toast("Nothing to review yet.",true);return;}
  var a=artGet(id);
  if(a&&a.review&&!reviewOutdated(a))reviewShow(id);else reviewRun(id);
+}
+/* ============================================================
+   UX PASS 9 — VERSION HISTORY + BRANCHING
+   Version = same artifact evolving. Branch = alternate direction.
+   Derived = a different artifact type (Part 5). Never collapsed.
+   ============================================================ */
+function vhRoot(a){
+ if(!a)return null;
+ var seen={};
+ while(a.parentId&&!seen[a.id]){
+  seen[a.id]=1;
+  var p=artGet(a.parentId);
+  if(!p||p.type!==a.type)break;   /* a type change means DERIVED, not a version */
+  a=p;
+ }
+ return a;
+}
+function vhChain(artId){
+ var a=artGet(artId);if(!a)return [];
+ var root=vhRoot(a);
+ var out=[],stack=[root];
+ while(stack.length){
+  var cur=stack.shift();
+  if(!cur)continue;
+  out.push(cur);
+  (cur.derivedIds||[]).forEach(function(id){
+   var c=artGet(id);
+   if(c&&c.type===cur.type)stack.push(c);   /* same type = a version/branch */
+  });
+ }
+ return out.sort(function(x,y){return (y.created||0)-(x.created||0);});
+}
+function vhLabel(a,root){
+ if(!a)return "";
+ var n=(a.id===root.id)?1:((a.version&&a.version>1)?a.version:null);
+ return (a.branch&&a.branch!=="main"?(a.branch+" "):"v")+(n||"");
+}
+function vhCheckpoint(view,label){
+ var cur=refineCurrent(view);if(!cur||!cur.text){toast("Nothing to checkpoint.",true);return null;}
+ var parentId=cur.art;
+ var parent=parentId?artGet(parentId):null;
+ var child=creatorArtifact(view,(parent&&parent.type)||"script",label||"Checkpoint",cur.text,{});
+ if(child){
+  child.version=((parent&&parent.version)||1)+1;
+  child.branch=(parent&&parent.branch)||"main";
+  child.changeSummary=label||"Manual checkpoint";
+  artSave(child);
+  if(parentId)artLink(parentId,child.id);
+  if(view==="sketch")S.sketch.lastArt=child.id;
+  if(view==="sitcom")S.sitcom.lastArt=child.id;
+  if(view==="vlog")S.vlog.lastArt=child.id;
+  if(view==="comedy")S.comedy.lastArt=child.id;
+  save();
+ }
+ toast("Checkpoint saved.");
+ return child;
+}
+function vhRestore(view,artId){
+ var src=artGet(artId);if(!src)return null;
+ var cur=refineCurrent(view);if(!cur)return null;
+ /* restore NEVER deletes later versions — it creates a new one from the old */
+ var child=creatorArtifact(view,src.type,"Restored",src.body,{});
+ if(child){
+  var head=cur.art?artGet(cur.art):null;
+  child.version=((head&&head.version)||1)+1;
+  child.branch=(head&&head.branch)||"main";
+  child.changeSummary="Restored from "+(src.changeSummary||src.title||"an earlier version");
+  artSave(child);
+  if(head)artLink(head.id,child.id);
+  cur.set(src.body);
+  if(view==="sketch")S.sketch.lastArt=child.id;
+  if(view==="sitcom")S.sitcom.lastArt=child.id;
+  if(view==="vlog")S.vlog.lastArt=child.id;
+  if(view==="comedy")S.comedy.lastArt=child.id;
+  save();cur.re();
+ }
+ var sh=$("sendsheet");if(sh)sh.remove();
+ toast("Restored as a new version \u2014 nothing was deleted.");
+ return child;
+}
+function vhBranch(view,artId,name){
+ var src=artGet(artId);if(!src)return null;
+ var cur=refineCurrent(view);if(!cur)return null;
+ var bn=(name||"").trim()||("Alt "+String.fromCharCode(65+Math.min(25,vhChain(artId).filter(function(x){return x.branch&&x.branch!=="main";}).length)));
+ var child=creatorArtifact(view,src.type,bn,src.body,{});
+ if(child){
+  child.branch=bn;child.version=1;
+  child.changeSummary="Branched from "+(src.changeSummary||"v"+(src.version||1));
+  artSave(child);artLink(src.id,child.id);
+  cur.set(src.body);
+  if(view==="sketch")S.sketch.lastArt=child.id;
+  if(view==="sitcom")S.sitcom.lastArt=child.id;
+  if(view==="vlog")S.vlog.lastArt=child.id;
+  if(view==="comedy")S.comedy.lastArt=child.id;
+  save();cur.re();
+ }
+ var sh=$("sendsheet");if(sh)sh.remove();
+ toast("Branch \u201c"+bn+"\u201d created \u2014 the original direction is untouched.");
+ return child;
+}
+function vhCompare(idA,idB){
+ var a=artGet(idA),b=artGet(idB);
+ if(!a||!b)return null;
+ var la=String(a.body||"").split(/\n+/),lb=String(b.body||"").split(/\n+/);
+ var setA={},setB={};
+ la.forEach(function(x){setA[x.trim()]=1;});
+ lb.forEach(function(x){setB[x.trim()]=1;});
+ var removed=la.filter(function(x){return x.trim()&&!setB[x.trim()];});
+ var added=lb.filter(function(x){return x.trim()&&!setA[x.trim()];});
+ return {removed:removed.slice(0,12),added:added.slice(0,12),
+  removedCount:removed.length,addedCount:added.length};
+}
+function vhCompareShow(view,idA,idB){
+ var d=vhCompare(idA,idB);if(!d)return;
+ var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:6px">What changed</div>';
+ h+='<div style="font-family:var(--slate);color:#d46a6a;font-size:11px;margin-top:6px">REMOVED ('+d.removedCount+')</div>';
+ h+=d.removed.length?d.removed.map(function(x){return '<div style="font-size:12.5px;padding:2px 0;opacity:.75">'+esc(x.slice(0,140))+"</div>";}).join(""):'<div class="hint" style="text-transform:none;letter-spacing:0">Nothing removed.</div>';
+ h+='<div style="font-family:var(--slate);color:var(--bud);font-size:11px;margin-top:8px">ADDED ('+d.addedCount+')</div>';
+ h+=d.added.length?d.added.map(function(x){return '<div style="font-size:12.5px;padding:2px 0">'+esc(x.slice(0,140))+"</div>";}).join(""):'<div class="hint" style="text-transform:none;letter-spacing:0">Nothing added.</div>';
+ h+='<button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="vhOpen(&quot;'+view+'&quot;)">Back to history</button>';
+ sendSheet(h);
+}
+function vhOpen(view){
+ var cur=refineCurrent(view);
+ if(!cur||!cur.art){toast("No history yet \u2014 create something first.",true);return;}
+ var chain=vhChain(cur.art);
+ if(!chain.length){toast("No history yet.",true);return;}
+ var root=vhRoot(artGet(cur.art));
+ var m=uxMode();
+ var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:2px">'+(m==="simple"?"History":"Version history")+'</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">Nothing here is ever deleted.</div>';
+ chain.forEach(function(a){
+  var isCur=(a.id===cur.art);
+  var rv=a.review?(" \u00b7 "+a.review.status):"";
+  var ap=(a.status==="approved")?" \u00b7 Approved":"";
+  h+='<div class="card" style="margin-bottom:6px;padding:9px'+(isCur?";border-left:3px solid var(--bud)":"")+'">'
+   +'<div style="font-family:var(--slate);font-size:12px">'+esc(vhLabel(a,root))+(isCur?" \u00b7 Current":"")+esc(rv+ap)+'</div>'
+   +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:2px">'+esc(a.changeSummary||a.title||"Original draft")+'</div>'
+   +'<div class="row" style="margin-top:6px">'
+   +(isCur?"":'<button class="btn ghost sm" style="flex:1;font-size:11px" onclick="vhRestore(&quot;'+view+'&quot;,&quot;'+a.id+'&quot;)">Restore</button>')
+   +(isCur?"":'<button class="btn ghost sm" style="flex:1;font-size:11px" onclick="vhCompareShow(&quot;'+view+'&quot;,&quot;'+a.id+'&quot;,&quot;'+cur.art+'&quot;)">Compare</button>')
+   +'<button class="btn ghost sm" style="flex:1;font-size:11px" onclick="vhBranch(&quot;'+view+'&quot;,&quot;'+a.id+'&quot;,&quot;&quot;)">'+(m==="simple"?"Try alternate":"Branch")+'</button>'
+   +'</div></div>';
+ });
+ h+='<button class="btn ghost sm" style="width:100%;margin-top:6px" onclick="vhCheckpoint(&quot;'+view+'&quot;,&quot;Manual checkpoint&quot;)">\uff0b Save checkpoint</button>';
+ sendSheet(h);
 }
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];
@@ -4027,6 +4195,12 @@ function renderChief(){
  if(S.reel&&S.reel[0])cont.push(["🎞 Latest in The Cut","reel"]);
  if(S.run&&S.run.streak)cont.push(["🔥 Streak "+S.run.streak,"run"]);
  if(cont.length)h+='<label class="fld">Continue creating</label><div class="tonerow" style="margin:4px 0 12px">'+cont.map(function(x){return '<button type="button" class="tonechip" data-ccv="'+x[1]+'">'+x[0]+"</button>";}).join("")+"</div>";
+ /* WHERE AM I — current + next, the recurring pattern */
+ var _sum=apSummary();
+ if(_sum&&_sum.stageLabel){
+  h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">'
+   +'<b>Current:</b> '+esc(_sum.stageLabel)+(_sum.next?(' \u00b7 <b>Next:</b> '+esc(_sum.next.label)):"")+'</div>';
+ }
  /* CONTINUE WORKING — the returning-user path (Part 3) */
  var sum=apSummary();
  if(sum&&sum.name){
@@ -8869,7 +9043,7 @@ function renderSketch(){
  var tx=$("skObs");
  if(tx){if(tx.value!==(C.obs||""))tx.value=C.obs||"";tx.oninput=function(){C.obs=this.value;save();};}
  var o=$("skOut");
- if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="skCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="refineOpen(&quot;sketch&quot;)">\u270e Refine</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.sketch||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="skToNote()">\ud83d\udcdd Note</button></div>'):"";
+ if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="skCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="refineOpen(&quot;sketch&quot;)">\u270e Refine</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.sketch||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" <button class="btn ghost sm" style="flex:1" onclick="reviewOpen(&quot;sketch&quot;)">\u2713 Review</button><button class="btn ghost sm" style="flex:1" onclick="vhOpen(&quot;sketch&quot;)">\u21ba History</button><button class="btn ghost sm" style="flex:1" onclick="skToNote()">\ud83d\udcdd Note</button></div>'):"";
 }
 async function skWrite(){
  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
@@ -8960,7 +9134,7 @@ function renderComedy(){
  var tx=$("cdBrief");
  if(tx){if(tx.value!==(C.brief||""))tx.value=C.brief||"";tx.oninput=function(){C.brief=this.value;save();};}
  var o=$("cdOut");
- if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="clCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="refineOpen(&quot;comedy&quot;)">\u270e Refine</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.comedy||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="clToBible()">\ud83d\udcd6 Note</button></div>'):"";
+ if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="clCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="refineOpen(&quot;comedy&quot;)">\u270e Refine</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.comedy||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" <button class="btn ghost sm" style="flex:1" onclick="reviewOpen(&quot;comedy&quot;)">\u2713 Review</button><button class="btn ghost sm" style="flex:1" onclick="vhOpen(&quot;comedy&quot;)">\u21ba History</button><button class="btn ghost sm" style="flex:1" onclick="clToBible()">\ud83d\udcd6 Note</button></div>'):"";
 }
 function clCopy(){navigator.clipboard.writeText((S.comedy||{}).last||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
 function clToBible(){var t=(S.comedy||{}).last||"";if(!t){toast("Nothing yet.",true);return;}
@@ -9041,7 +9215,7 @@ function renderVlog(){
   chipDefLine("vlgWriterDef",(C.writers&&C.writers.length)?("Writing in the craft of "+wrNames(C.writers).join(" + ")+"."):("Nobody equipped \u2014 it will use the recommended room: "+wrNames(recs).join(" + ")+"."));}
  var go=$("vlgGo");if(go)go.onclick=vlgWrite;
  var out=$("vlgOut");
- if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="vlgCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="refineOpen(&quot;vlog&quot;)">\u270e Refine</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.vlog||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="vlgToBoard()">\ud83c\udfac Pre-Roll</button></div>'):"";
+ if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="vlgCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="refineOpen(&quot;vlog&quot;)">\u270e Refine</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.vlog||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" <button class="btn ghost sm" style="flex:1" onclick="reviewOpen(&quot;vlog&quot;)">\u2713 Review</button><button class="btn ghost sm" style="flex:1" onclick="vhOpen(&quot;vlog&quot;)">\u21ba History</button><button class="btn ghost sm" style="flex:1" onclick="vlgToBoard()">\ud83c\udfac Pre-Roll</button></div>'):"";
 }
 function vlgCopy(){navigator.clipboard.writeText((S.vlog||{}).last||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
 function vlgToBoard(){var t=(S.vlog||{}).last||"";if(!t){toast("Nothing to send yet.",true);return;}
@@ -9160,7 +9334,7 @@ function renderSitcom(){
   chipDefLine("sitWriterDef",(C.writers&&C.writers.length)?("Writing in the craft of "+wrNames(C.writers).join(" + ")+"."):("Nobody equipped \u2014 it will use the recommended room: "+wrNames(recs).join(" + ")+"."));}
  var go=$("sitGo");if(go)go.onclick=sitWrite;
  var out=$("sitOut");
- if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="sitCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="refineOpen(&quot;sitcom&quot;)">\u270e Refine</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.sitcom||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="sitToBoard()">\ud83c\udfac Pre-Roll</button></div>'):"";
+ if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="sitCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="refineOpen(&quot;sitcom&quot;)">\u270e Refine</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.sitcom||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" <button class="btn ghost sm" style="flex:1" onclick="reviewOpen(&quot;sitcom&quot;)">\u2713 Review</button><button class="btn ghost sm" style="flex:1" onclick="vhOpen(&quot;sitcom&quot;)">\u21ba History</button><button class="btn ghost sm" style="flex:1" onclick="sitToBoard()">\ud83c\udfac Pre-Roll</button></div>'):"";
 }
 function shortDef(t){var i=String(t).indexOf(": ");var v=i>0?String(t).slice(i+2):String(t);return v.split(". ")[0]+".";}
 function sitCopy(){navigator.clipboard.writeText((S.sitcom||{}).last||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}

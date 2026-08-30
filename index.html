@@ -1291,7 +1291,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.52 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.54 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -3131,6 +3131,29 @@ function sheetMake(castId,kind){
  sendSheet(h);
 }
 function sheetCopy(){navigator.clipboard.writeText(S.lastSheet||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
+/* ============================================================
+   FIGHT CHOREOGRAPHY — structure presets that produce ORIGINALS
+   ============================================================ */
+var FIGHT_SHAPES={
+ onetake:["One continuous take","STRUCTURE — ONE UNBROKEN TAKE: a single moving camera from first frame to last. No cut, no hidden transition, no axis reset, no speed ramp. The camera leads, arcs around contact and steps over fallen bodies, always keeping the geography readable. Every exchange happens on one continuous path through the space."],
+ gauntlet:["Gauntlet — one at a time","STRUCTURE — GAUNTLET: opponents arrive in a stated order along a confined route. The lead fights forward; the space behind fills with people who stay down. Each engagement resolves before the next begins, and the geography advances in one direction throughout."],
+ chase:["Chase — never stops moving","STRUCTURE — MOVING DUEL: neither fighter nor camera ever stops. Every contact redirects velocity rather than halting it — recoils, overshoots and corrections feed the next attack. No face-off, no recovery hold, no frozen frame, no hit-stop."],
+ arena:["Arena — fixed geography","STRUCTURE — FIXED ARENA: the space is established early and never violated. Named landmarks stay in their positions and take progressive damage that persists. The camera may move freely, but the audience always knows where everyone is relative to those landmarks."],
+ phases:["Phased — escalating rounds","STRUCTURE — PHASES: the fight moves through distinct rounds. Each phase changes one variable — range, terrain, a prop entering or breaking, or a shift in who holds the advantage. State what changes at each transition."],
+ ambush:["Ambush — reversal","STRUCTURE — AMBUSH AND REVERSAL: it opens with one side clearly losing. A single specific moment turns it — a grip that fails, a prop that comes free, a mistake in the attacker's rhythm — and the second half inverts the first."]
+};
+function fightShapeLaw(){
+ var F=S.fight||{};
+ var sh=FIGHT_SHAPES[F.shape];
+ return sh?(" "+sh[1]):"";
+}
+function fightPropLaw(){
+ var F=S.fight||{};
+ var raw=String(F.props||"").trim();
+ if(!raw)return propLedgerLaw([]);
+ var items=raw.split(/[,;\n]+/).map(function(x){return x.trim();}).filter(Boolean).slice(0,10);
+ return propLedgerLaw(items);
+}
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];
 function uxMode(){return (UX_MODES.indexOf(S.uxMode)>=0)?S.uxMode:"pro";}
@@ -3592,6 +3615,8 @@ function flExtra(i,k,val){const F=S.fight;if(!Array.isArray(F.extras))F.extras=[
 function flMigrate(){const F=S.fight;let ch=false;
  if(F.typeId!==undefined){const m=FL_LEGACY[F.typeId];if(m)for(const k in m){if(F[k]===undefined||F[k]==="auto"||F[k]==="")F[k]=m[k];}delete F.typeId;ch=true;}
  if(F.discipline&&!FL_DISC[F.discipline]){const m=FL_DISC_LEGACY[F.discipline];if(m)for(const k in m){if(F[k]===undefined||F[k]==="auto"||F[k]==="")F[k]=m[k];}F.discipline="auto";ch=true;}
+ if(F.shape===undefined)F.shape="";
+ if(F.props===undefined)F.props="";
  if(!Array.isArray(F.extras))F.extras=[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}];
  while(F.extras.length<4)F.extras.push({c:"",side:"auto"});
  if(F.sideA!==undefined||F.sideB!==undefined){if(F.sideA)F.extras[0].c=F.sideA;if(F.sideB)F.extras[1].c=F.sideB;delete F.sideA;delete F.sideB;ch=true;}
@@ -3678,7 +3703,7 @@ CAMERA: ${c.cam}. Apply the Camera & Structure choice above and keep consistent 
 PHYSICS: realistic momentum and weight transfer, visible impact force, motion blur on fast limbs, secondary cloth and hair physics, sweat particles, heavy breathing and fatigue micro-movements, real gravity at all times.
 ENVIRONMENT: ${envLine}
 AUDIO (diegetic only): impacts, footwork, fabric, breath, environmental hits \u2014 no music.
-RULES: ${soloEngagementLaw()} ${propLedgerLaw([])} ${refIgnoreLaw()} ${originalityLaw("fight sequence")} Single coherent 10\u201315s high-motion sequence (or clean storyboarded multi-shot flow). No gore, no excessive blood, no disappearing props, no changing costumes, no unreadable combat. Hold the same characters, wardrobe and location across every beat. Replace @Image1 / @Image2 with your Hero / Villain reference images (Seedance 2.0 reference-to-video syntax).`;
+RULES: ${fightShapeLaw()} ${soloEngagementLaw()} ${fightPropLaw()} ${refIgnoreLaw()} ${originalityLaw("fight sequence")} Single coherent 10\u201315s high-motion sequence (or clean storyboarded multi-shot flow). No gore, no excessive blood, no disappearing props, no changing costumes, no unreadable combat. Hold the same characters, wardrobe and location across every beat. Replace @Image1 / @Image2 with your Hero / Villain reference images (Seedance 2.0 reference-to-video syntax).`;
 }
 function flBuildPeak(){
  const c=flCtx(),F=S.fight,disc=FL_DISC[F.discipline]||FL_DISC.auto;
@@ -3753,6 +3778,9 @@ function renderFight(){
  h+='<div id="flDiscDesc" class="hint" style="margin-top:4px'+(_d?"":";display:none")+'">'+esc(_d)+'</div>';
  h+='<label class="fld" style="margin-top:10px">Fighter archetype</label><select onchange="flField(\'archetype\',this.value)">'+flOpts(FL_ARCH,F.archetype)+'</select></div>';
  h+='<div class="card" style="margin-top:10px"><label class="fld">Scenario</label><select onchange="flField(\'scenario\',this.value)">'+flOpts(FL_SCEN,F.scenario)+'</select>';
+ h+='<label class="fld" style="margin-top:10px">Choreography shape</label><select onchange="flField(&quot;shape&quot;,this.value)"><option value="">\u2014 let it choose \u2014</option>'+Object.keys(FIGHT_SHAPES).map(function(k){return '<option value="'+k+'"'+(F.shape===k?" selected":"")+'>'+esc(FIGHT_SHAPES[k][0])+'</option>';}).join('')+'</select>';
+ if(F.shape)h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px;color:var(--bud)">'+esc(shortDef(FIGHT_SHAPES[F.shape][1]))+'</div>';
+ h+='<label class="fld" style="margin-top:10px">Props in play <span style="text-transform:none;letter-spacing:0;color:var(--bone-dim)">comma separated \u2014 each one gets counted and owned</span></label><input type="text" placeholder="one umbrella, one tray, one knife\u2026" value="'+esc(F.props||"")+'" oninput="flField2(&quot;props&quot;,this.value)">';
  h+='<label class="fld" style="margin-top:10px">Tone / treatment</label><select onchange="flField(\'tone\',this.value)">'+flOpts(FL_TONE,F.tone)+'</select>';
  h+='<label class="fld" style="margin-top:10px">Location (from your Sets)</label><select onchange="flLoc(this.value)">'+locSel+'</select>';
  if(F.loc==="__custom")h+='<input type="text" placeholder="Custom location\u2026" value="'+esc(F.locCustom||"")+'" oninput="flField2(\'locCustom\',this.value)" style="margin-top:8px">';
@@ -8792,6 +8820,88 @@ var TPL_SEEDS=[
  style:"One continuous take, no cuts. Handheld with intent \u2014 the operator is a participant, not a tripod. Practical light sources only, motivated by the location.",
  audio:"Performance audio and room only \u2014 voice, breath, footsteps, the space\u2019s own reverb.",
  close:"The unbroken take is the point \u2014 never cut, never jump."},
+{id:"tpl_intro",name:"Character Intro",purpose:"Reveal one character \u2014 detail, then body, then face, then hero. The introduction format.",
+ vars:[["subject","Who is being introduced","one character"],["place","Where","an environment that fits them"],["signature","Their one signature move","a small deliberate gesture that fits their personality"],["dur","Seconds","15"]],
+ beats:["Open close on a defining detail \u2014 footwear, hands, a hem, an accessory. They enter frame or settle into position. The camera tracks slowly upward while hair and cloth move naturally.",
+  "Reveal more in a medium-wide from behind, the side or three-quarter. They stand composed inside the environment. The camera arcs to bring the silhouette around.",
+  "Continue the arc until the face comes into view. Hold the reveal a beat longer than comfortable.",
+  "Tight portrait. They perform their one signature action \u2014 minimal and intentional, matching their personality. Nothing else moves.",
+  "Pull to a full-body hero frame that presents the whole design and silhouette.",
+  "They settle into a final pose and hold it. Clean end on the hold."],
+ style:"Premium presentation matching the reference\u2019s rendering style. Clean silhouette, elegant staging, subtle secondary motion in hair and cloth, atmospheric depth, controlled lighting. Camera moves smoothly and with intent \u2014 detail, to partial, to face, to hero. Never chaotic.",
+ audio:"Environment and cloth only \u2014 footsteps, fabric, wind, distant ambience.",
+ close:"The environment supports the character without competing with them."},
+{id:"tpl_trailer",name:"Reveal Trailer",purpose:"Game-trailer energy \u2014 action cut against bold typography cards.",
+ vars:[["subject","The character","one character"],["codename","Their title or codename","their codename"],["ability","Their signature ability or move","their signature move"],["dur","Seconds","15"]],
+ beats:["Extreme close-up on the face, calm and focused, part of it naturally obscured. Shallow depth, subtle push-in.",
+  "Their signature effect ignites \u2014 around the eyes, the hands, the body or their equipment. The gaze lifts as it peaks.",
+  "Hard graphic-match to a bright editorial card: a huge circular colour field, oversized condensed type, thin technical circles, tiny interface marks. The typography reads FIRST, then the character enters beside or in front of it.",
+  "Smash cut to the environment. Wide and dramatic as they dash, leap, land or burst forward.",
+  "Fast close on the defining ability or gesture, sharp subject against streaking foreground.",
+  "Second typography card, cleaner and punchier \u2014 bold type, diagonal slashes, accent bars, strong parallax. Type first, character second.",
+  "Return to action from a new aggressive angle. Low, tracking or a short orbit.",
+  "The hero moment \u2014 their most iconic movement. Stabilise briefly at the peak, then collapse into a smear or silhouette.",
+  "Final identity card: pale field, enormous translucent concentric circles, fine arcs, tiny markings. Full-body hero pose overlapping the name in huge condensed type. A large dark circular emblem behind them holds a ghosted motif of who they are."],
+ style:"Bold editorial motion design against cinematic action. Oversized condensed typography, clean pale fields, huge circular colour blocks, thin technical diagrams, halftone texture, scan lines, sweeping energy strokes, strong foreground parallax. Every cut introduces a clearly different composition.",
+ audio:"Percussive score built to the cut \u2014 restrained tension rising into hits, with clear accents on every typography card and a final stinger.",
+ close:"Typography is always legible before any character layer crosses it."},
+{id:"tpl_showcase",name:"Beat-Synced Showcase",purpose:"One character, five worlds, cut to a track. Environment variety is the point.",
+ vars:[["subject","The character","one character"],["worlds","Five environments (comma separated)","five places from their world"],["dur","Seconds","15"]],
+ beats:["Environment one \u2014 six rapid angles: wide establishing, aerial, low, side, tracking, hero frame.",
+  "Environment two \u2014 six new angles, different atmosphere, lighting and scale entirely.",
+  "Environment three \u2014 six new angles, including at least one close environmental detail.",
+  "Environment four \u2014 six new angles, changing the spatial relationship to the subject.",
+  "Environment five \u2014 six final angles, ending on the strongest hero frame."],
+ style:"Cinematic burst cuts. Every cut reveals a new angle, distance, composition or spatial relationship \u2014 never repeat a framing. Mix static, push-in, pull-back, tracking, orbit and crane. Character movement stays subtle; the environments do the work.",
+ audio:"Cuts, camera accents and environment changes land on strong beats and musical accents. The track controls the pacing.",
+ close:"Exactly five environments, six shots each, thirty shots total. No outfit changes, no duplication, no morphing."},
+{id:"tpl_hypercut",name:"Day Hypercut",purpose:"A whole day compressed into one beat-synced rush. Titles land per shot.",
+ vars:[["subject","Who it follows","one person"],["routine","What their day is","their ordinary routine start to finish"],["place","Where it happens","their neighbourhood"],["dur","Seconds","15"]],
+ beats:["Extreme close on what starts the day \u2014 the object that wakes them. One title card opens beside it.",
+  "They move with controlled urgency \u2014 quick starts, brisk steps, decisive reaches. A title fills a progress bar as they rise.",
+  "The preparation beat \u2014 washing, dressing, eating. Use an occlusion (a towel, a door, a lid) to hard-cut the wardrobe change.",
+  "They gather what they carry and leave. Each item gets a small icon that follows it.",
+  "Transit \u2014 the journey through the place, cut to the beat, the environment changing light as they go.",
+  "Arrival and the long middle, time-lapsed to dusk behind them.",
+  "Home. The reverse of the opening: things set down, light switched off, a soft shutdown title as it fades."],
+ style:"Clean digital-pop interface graphics anchored to scene perspective, never floating: translucent panels, status lights, progress bars, cursors, soft scanlines. Exactly one title per shot, cleared before the next. Keep interface off faces and hands.",
+ audio:"Beat-locked. Crisp foley throughout, no dialogue. Any words on screen are graphics, not speech.",
+ close:"Carried objects persist correctly \u2014 what they hold, wear and set down stays consistent shot to shot."},
+{id:"tpl_povloop",name:"POV Ride",purpose:"First-person motion through a place. Built for long loops.",
+ vars:[["vehicle","What they\u2019re in or on","the vehicle"],["place","Where they travel","the route"],["hazard","What they nearly hit","an obstacle that forces a decision"],["dur","Seconds","30"]],
+ beats:["Enter already at speed. The controls read clearly in the lower frame while the world bends around the edges.",
+  "The route opens up \u2014 the environment explodes outward from the vanishing point.",
+  "Traffic or terrain converges. A gap is closing; they commit to it and clear it.",
+  "The route narrows and turns. One hard control input, then a stronger response as they carve through.",
+  "It bursts into the widest view of the whole run. The hazard cuts across; they slip past it with inches to spare.",
+  "The final straight. One last acceleration, everything stretching into radial light. End at peak speed, still moving, another obstacle appearing ahead."],
+ style:"First-person point of view, camera fixed at eye level inside the vehicle. Ultra-wide curved perspective with the dashboard and frame wrapping the edges. The camera may vibrate, pitch and lean only with believable physical forces. Intense distance-dependent motion blur outside while the controls and immediate route stay readable.",
+ audio:"Engine or effort sounds, mechanical detail synchronised to every input, rushing air, surface texture, deep vibration. No dialogue.",
+ close:"Ends still in motion so it loops cleanly \u2014 never a stop, never a fade."},
+{id:"tpl_editorial",name:"Editorial Panel Set",purpose:"A character page \u2014 who they are, in premium layout. The about-me format.",
+ vars:[["subject","The character","the character"],["title","Their title in big type","their name"],["subtitle","The line under it","what they are"],["accent","Their accent colour","their signature colour"],["dur","Panels","7"]],
+ beats:["Panel: the character large on the right, their title in oversized type on the LEFT, subtitle beneath it.",
+  "Panel: character on the LEFT, title on the right. Alternate strictly from here.",
+  "Panel: character right, title left, with a detail of their signature object integrated into the layout.",
+  "Panel: character left, title right, shot in three-quarter profile.",
+  "Panel: character right, title left, their most characteristic posture.",
+  "Panel: character left, title right, a forward-facing power frame.",
+  "Panel: character right, title left, the quietest frame of the set."],
+ style:"Premium editorial layout over character art. Oversized expressive lettering in the panel\u2019s own accent colour, kept clear of the face with strong negative space around it. Small interface typography, thin grids, tiny data marks, progress bars and restrained geometric decoration. Large clean areas of darkness rather than filling every space.",
+ audio:"Silent \u2014 this is a layout, not a film.",
+ close:"Hierarchy is character first, title second, interface data third. Every panel looks like a different page from the same publication."},
+{id:"tpl_fashion",name:"Fashion Film",purpose:"The garment in motion \u2014 a pose sequence in one unbroken take.",
+ vars:[["subject","Who wears it","one figure"],["garment","The piece","the drop"],["place","Where","a minimal studio with hard light and a glossy floor"],["dur","Seconds","15"]],
+ beats:["Centred frontal medium close-up. They face forward, one hand at the hair. Restrained push-in.",
+  "They turn three-quarter and lift the chin, then lower the gaze as both hands settle near the collar. The camera arcs down and pauses.",
+  "They rotate to a strict profile, then roll one shoulder forward so the garment edge catches the side light. The camera whips past and settles close.",
+  "They gather a fold of the garment, then release it and turn back over the shoulder. The camera dives to torso level and rises.",
+  "A low pose \u2014 the garment reads against the floor. The camera moves fast at floor level and holds on the foreshortening.",
+  "They rise into a three-quarter stance, one hand at the collarbone. The camera slides across the waistline, then eases into a portrait hold.",
+  "A final full-body pose looking down into the lens. End on a clean wide hold under a last flash."],
+ style:"One uninterrupted take. The camera follows a single physically continuous path, accelerating between poses and braking sharply on every lock. Hard frontal flashes, sharp side rim light, faint haze, glossy floor reflections.",
+ audio:"Shutter clicks, breath, hair movement, fabric rustle.",
+ close:"One continuous figure with stable identity, proportions and wardrobe throughout. Every pose is different \u2014 none repeats."},
 {id:"tpl_interview",name:"Street Interview",purpose:"One question, real people, honest answers \u2014 the cheapest format that always works.",
  vars:[["question","The question","the one question being asked"],["place","Where","a busy block"],["subject","Who is asked","people passing by"],["dur","Seconds","30"]],
  beats:["The question is asked on camera, plainly, no preamble.",

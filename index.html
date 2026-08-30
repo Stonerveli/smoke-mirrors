@@ -565,6 +565,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
       <div style="font-size:13.5px;line-height:1.7">1. Type an <b>observation</b> — anything you noticed. It does not need to be a joke.<br>2. Leave <b>Output</b> on <b>Game finder</b> and tap Develop. You get 5 possible Games.<br>3. Pick the one you like, paste it back into the observation box.<br>4. Switch Output to <b>Write a full sketch</b> and tap Develop.<br>5. Switch to <b>Table read</b> and tap again — it tells you honestly what is not working.<br>6. Rewrite, or move on. Not every idea survives, and that is the point.</div>
       <div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px;color:#c9a94a">The <b>Game</b> is the repeatable mechanism that makes a premise funny more than once. No Game, no sketch — the app will tell you so.</div>
     </div></details>
+    <div class="row" style="margin-bottom:8px"><button type="button" class="btn ghost sm" style="flex:1" onclick="smartFill('sketch')">\u2726 Smart Fill <span class="sub">use what the project already knows</span></button></div>
     <label class="fld">⚡ One-tap starts</label>
     <div id="skCombos" class="tokenchips" style="margin-bottom:4px"></div>
     <div id="skComboDef"></div>
@@ -598,7 +599,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <label class="fld">\u26a1 One-tap combos \u2014 blends that work together</label>
     <div id="cdCombos" class="tokenchips" style="margin-bottom:4px"></div>
     <div id="cdComboDef"></div>
-    <button type="button" class="btn ghost sm" style="width:100%;margin:10px 0" onclick="clAuto()">\ud83c\udfb2 Surprise me <span class="sub">random family + DNA blend</span></button>
+    <div class="row" style="margin-bottom:8px"><button type="button" class="btn ghost sm" style="flex:1" onclick="smartFill('comedy')">\u2726 Smart Fill <span class="sub">use what the project already knows</span></button></div><button type="button" class="btn ghost sm" style="width:100%;margin:0 0 10px" onclick="clAuto()">\ud83c\udfb2 Surprise me <span class="sub">random family + DNA blend</span></button>
     <label class="fld">Creator family \u2014 how this kind of show operates</label>
     <select id="cdFamily"></select>
     <div id="cdFamilyDef"></div>
@@ -625,7 +626,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 10l5-3v10l-5-3z'/><rect x='3' y='6' width='12' height='12' rx='2'/></svg></span><h2>Vlog</h2><span class="tag">Creator</span></div>
   <div class="card">
 <details class="collapse" style="margin-bottom:12px"><summary>❓ How to use this</summary><div class="body"><div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px"><b>Use this for camera-in-hand content</b> — the format that actually performs on IG and TikTok.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">1</span>Tap <b>🎲 Do it for me</b>, or set it yourself.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">2</span>Tap <b>who’s in it</b>, then choose <b>who holds the camera</b> — that one choice changes everything about the piece.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">3</span>Pick the <b>location</b> and type what they’re doing and why the camera is on.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">4</span>Pick <b>Output</b>: Short for a reel, Video prompt to feed a video model.</div><div style="font-size:13.5px;padding:5px 0 5px 26px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)"><span style="position:absolute;left:0;top:5px;width:19px;height:19px;background:var(--bud);color:#0b0b0b;font-family:var(--slate);font-weight:700;font-size:11px;border-radius:5px;display:flex;align-items:center;justify-content:center">5</span>Tap <b>Roll it</b>.</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px;color:#c9a94a">Silent characters stay silent — a character who doesn’t address the camera in canon still won’t here.</div></div></details>    <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:10px">A vlog is not cinematic footage with camera shake — it is a camera that has a reason to exist. Who holds it, why they\u2019re filming, and what they\u2019d point at next.</div>
-    <button type="button" class="btn ghost sm" style="width:100%;margin-bottom:10px" onclick="afVlog()">\u26a1 Do it for me <span class="sub">picks who films, where, the type &amp; the situation</span></button>
+    <div class="row" style="margin-bottom:8px"><button type="button" class="btn ghost sm" style="flex:1" onclick="smartFill('vlog')">\u2726 Smart Fill <span class="sub">use what the project already knows</span></button></div><button type="button" class="btn ghost sm" style="width:100%;margin-bottom:10px" onclick="afVlog()">\ud83c\udfb2 Surprise me <span class="sub">picks who films, where, the type &amp; the situation</span></button>
     <label class="fld">Who\u2019s in it <span id="vlgCastCount" style="color:var(--bone-dim)"></span></label>
     <div id="vlgCast" class="tokenchips"></div>
     <label class="fld" style="margin-top:10px">Who\u2019s holding the camera</label>
@@ -664,7 +665,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <label class="fld">\u26a1 One-tap combos \u2014 engine + writers that reinforce each other</label>
     <div id="sitCombos" class="tokenchips" style="margin-bottom:4px"></div>
     <div id="sitComboDef"></div>
-    <button type="button" class="btn ghost sm" style="width:100%;margin:10px 0 10px" onclick="afSitcom()">\ud83c\udfb2 Do it for me <span class="sub">picks cast, set, format &amp; a situation from your canon</span></button>
+    <div class="row" style="margin-bottom:8px"><button type="button" class="btn ghost sm" style="flex:1" onclick="smartFill('sitcom')">\u2726 Smart Fill <span class="sub">use what the project already knows</span></button></div><button type="button" class="btn ghost sm" style="width:100%;margin:0 0 10px" onclick="afSitcom()">\ud83c\udfb2 Surprise me <span class="sub">picks cast, set, format &amp; a situation from your canon</span></button>
     <label class="fld">Who\u2019s in it <span id="sitCastCount" style="color:var(--bone-dim)"></span></label>
     <div id="sitCast" class="tokenchips"></div>
     <label class="fld" style="margin-top:10px">Standing set</label>
@@ -1285,7 +1286,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.37 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.39 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1958,6 +1959,7 @@ function go(name){
   if(name==="comedy")renderComedy();
   if(name==="sketch")renderSketch();
   try{apbMount();}catch(e){}
+  try{if(MODE_CFG[name])modeRender(name);}catch(e){}
   try{if(VIEW_GROUP[name]==="create"&&name!=="chief")recTouch("station",name,navLabel(name)||name,name);}catch(e){}
   if(name==="templates")renderTemplates();
   if(name==="studio")renderRefs();
@@ -2326,6 +2328,108 @@ function apbMount(){
  var html=apbHTML();
  if(!html)return;
  sec.insertAdjacentHTML("afterbegin",html);
+}
+/* ============================================================
+   UX PASS 4 — SIMPLE / GUIDED / PRO (one engine, three depths)
+   Visibility layer only. No Creator logic is duplicated.
+   ============================================================ */
+var MODE_CFG={
+ sketch:{card:"view-sketch",
+  simple:["skCast","skObs","skOutput"],
+  guided:[["Who\u2019s in it",["skCast"]],["What did you notice?",["skObs"]],["What kind of sketch?",["skMode","skType","skLength"]],["What should I make?",["skOutput"]]],
+  all:["skCombos","skMode","skType","skLength","skPhil","skCast","skSet","skObs","skOutput"]},
+ sitcom:{card:"view-sitcom",
+  simple:["sitCast","sitSet","sitSituation","sitOutput"],
+  guided:[["Who\u2019s in it",["sitCast"]],["Where does it happen?",["sitSet"]],["What\u2019s the situation?",["sitSituation"]],["What kind of show?",["sitFormat","sitEngines"]],["What should I write?",["sitOutput"]]],
+  all:["sitCombos","sitCast","sitSet","sitSituation","sitEra","sitFormat","sitMode","sitBroadcast","sitAudience","sitEngines","sitWriters","sitOutput"]},
+ vlog:{card:"view-vlog",
+  simple:["vlgCast","vlgHolder","vlgSituation","vlgOutput"],
+  guided:[["Who\u2019s in it",["vlgCast"]],["Who holds the camera?",["vlgHolder"]],["Where?",["vlgSet"]],["What are they doing?",["vlgSituation"]],["What should I make?",["vlgOutput"]]],
+  all:["vlgCast","vlgHolder","vlgSet","vlgSituation","vlgType","vlgEra","vlgCam","vlgEngine","vlgEdit","vlgOutput"]},
+ comedy:{card:"view-comedy",
+  simple:["cdCombos","cdCast","cdBrief","cdOutput"],
+  guided:[["Pick a starting point",["cdCombos"]],["Who\u2019s it built around?",["cdCast"]],["What\u2019s the arena?",["cdBrief"]],["What should I develop?",["cdOutput"]]],
+  all:["cdCombos","cdFamily","cdDna","cdDials","cdCast","cdSet","cdBrief","cdOutput"]}
+};
+function modeBlockEls(id){
+ var el=$(id);if(!el)return [];
+ var out=[el];
+ var prev=el.previousElementSibling;
+ if(prev&&prev.tagName==="LABEL"&&prev.className.indexOf("fld")>=0)out.push(prev);
+ var nxt=el.nextElementSibling;
+ if(nxt&&nxt.id&&/Def$/.test(nxt.id))out.push(nxt);
+ return out;
+}
+function modeShow(id,on){modeBlockEls(id).forEach(function(e){e.style.display=on?"":"none";});}
+function modeApply(view){
+ var cfg=MODE_CFG[view];if(!cfg)return;
+ var m=uxMode();
+ var g=S.guidedStep||{};
+ cfg.all.forEach(function(id){modeShow(id,true);});
+ /* details/collapse blocks (philosophy, dials) hide outside Pro */
+ var sec=$(cfg.card);
+ if(sec)sec.querySelectorAll("details.collapse").forEach(function(d){
+   if(d.querySelector("summary")&&/How to use this/.test(d.querySelector("summary").textContent))return;
+   d.style.display=(m==="pro")?"":"none";});
+ if(m==="pro")return;
+ if(m==="simple"){
+  cfg.all.forEach(function(id){if(cfg.simple.indexOf(id)<0)modeShow(id,false);});
+  return;
+ }
+ /* guided: reveal one group at a time */
+ var step=Math.max(0,Math.min((g[view]||0),cfg.guided.length-1));
+ var visible=[];
+ for(var i=0;i<=step;i++)visible=visible.concat(cfg.guided[i][1]);
+ cfg.all.forEach(function(id){if(visible.indexOf(id)<0)modeShow(id,false);});
+}
+function modeBarHTML(view){
+ var m=uxMode(),cfg=MODE_CFG[view];
+ var chip=function(k,l){return '<span class="chip'+(m===k?" on":"")+'" onclick="modeSet(\''+k+'\',\''+view+'\')">'+l+"</span>";};
+ var h='<div class="tokenchips" style="margin-bottom:6px">'+chip("simple","Simple")+chip("guided","Guided")+chip("pro","Pro")+'</div>';
+ if(m==="guided"&&cfg){
+  var g=S.guidedStep||{},step=Math.max(0,Math.min((g[view]||0),cfg.guided.length-1));
+  h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:6px">Step '+(step+1)+' of '+cfg.guided.length+' \u00b7 <b>'+esc(cfg.guided[step][0])+'</b></div>'
+   +'<div class="row" style="margin-bottom:8px">'
+   +(step>0?'<button class="btn ghost sm" style="flex:1" onclick="modeStep(\''+view+'\',-1)">Back</button>':"")
+   +(step<cfg.guided.length-1?'<button class="btn ghost sm" style="flex:1" onclick="modeStep(\''+view+'\',1)">Next</button>':'<span class="hint" style="flex:1;text-transform:none;letter-spacing:0">All set \u2014 create below.</span>')
+   +'</div>';
+ }
+ if(m==="simple")h+='<button type="button" class="btn ghost sm" style="width:100%;margin-bottom:8px" onclick="modeSet(\'pro\',\''+view+'\')">Customize \u2014 show every control</button>';
+ return h;
+}
+function modeSet(m,view){uxSetMode(m);if(m==="guided"){if(!S.guidedStep)S.guidedStep={};S.guidedStep[view]=0;save();}modeRender(view);}
+function modeStep(view,d){
+ if(!S.guidedStep)S.guidedStep={};
+ var cfg=MODE_CFG[view];if(!cfg)return;
+ var cur=S.guidedStep[view]||0;
+ S.guidedStep[view]=Math.max(0,Math.min(cur+d,cfg.guided.length-1));
+ save();modeRender(view);
+}
+function modeRender(view){
+ var cfg=MODE_CFG[view];if(!cfg)return;
+ var sec=$(cfg.card);if(!sec)return;
+ var host=sec.querySelector("#modeBar_"+view);
+ if(!host){
+  var card=sec.querySelector(".card");if(!card)return;
+  card.insertAdjacentHTML("afterbegin",'<div id="modeBar_'+view+'"></div>');
+  host=sec.querySelector("#modeBar_"+view);
+ }
+ host.innerHTML=modeBarHTML(view);
+ modeApply(view);
+}
+/* SMART FILL (context) vs SURPRISE ME (random) — kept distinct */
+function smartFill(view){
+ var ctx=ctxResolve(["project","cast","world"]);
+ var used=[];
+ var castIds=(ctx.cast||[]).map(function(c){return c.id;});
+ var setId=(ctx.world||{}).id||"";
+ if(!castIds.length&&!setId){toast("Nothing registered on the active project yet \u2014 try Surprise me.",true);return false;}
+ if(view==="sitcom"){if(!S.sitcom)S.sitcom={};if(castIds.length){S.sitcom.cast=castIds.slice(0,3);used.push("cast");}if(setId){S.sitcom.setId=setId;used.push("location");}save();renderSitcom();}
+ if(view==="vlog"){if(!S.vlog)S.vlog={};if(castIds.length){S.vlog.cast=castIds.slice(0,3);S.vlog.holder=castIds[0];used.push("cast");}if(setId){S.vlog.setId=setId;used.push("location");}save();renderVlog();}
+ if(view==="sketch"){var C=skState();if(castIds.length){C.cast=castIds.slice(0,4);used.push("cast");}if(setId){C.setId=setId;used.push("location");}save();renderSketch();}
+ if(view==="comedy"){var K=clState();if(castIds.length){K.cast=castIds.slice(0,4);used.push("cast");}if(setId){K.setId=setId;used.push("location");}save();renderComedy();}
+ toast("Smart Fill \u2014 inherited "+used.join(" + ")+" from the active project.");
+ return true;
 }
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];

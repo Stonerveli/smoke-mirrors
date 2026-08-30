@@ -569,6 +569,10 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <label class="fld">⚡ One-tap starts</label>
     <div id="skCombos" class="tokenchips" style="margin-bottom:4px"></div>
     <div id="skComboDef"></div>
+    <label class="fld" style="margin-top:12px">Performers / cast (optional)</label>
+    <div id="skCast" class="tokenchips"></div>
+    <label class="fld" style="margin-top:10px">Setting (optional)</label>
+    <select id="skSet"></select>
     <label class="fld" style="margin-top:12px">Show mode</label>
     <select id="skMode"></select>
     <div id="skModeDef"></div>
@@ -577,10 +581,6 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <label class="fld" style="margin-top:10px">Length</label>
     <select id="skLength"></select>
     <details class="collapse" style="margin-top:12px"><summary>Show philosophy — 10 dials</summary><div class="body" id="skPhil"></div></details>
-    <label class="fld" style="margin-top:12px">Performers / cast (optional)</label>
-    <div id="skCast" class="tokenchips"></div>
-    <label class="fld" style="margin-top:10px">Setting (optional)</label>
-    <select id="skSet"></select>
     <label class="fld" style="margin-top:10px">Observation, idea or situation</label>
     <textarea id="skObs" style="min-height:70px" placeholder="e.g. people who say ‘no worries if not’ and absolutely mean the opposite"></textarea>
     <label class="fld" style="margin-top:10px">Output</label>
@@ -600,6 +600,10 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <div id="cdCombos" class="tokenchips" style="margin-bottom:4px"></div>
     <div id="cdComboDef"></div>
     <div class="row" style="margin-bottom:8px"><button type="button" class="btn ghost sm" style="flex:1" onclick="smartFill('comedy')">\u2726 Smart Fill <span class="sub">use what the project already knows</span></button></div><button type="button" class="btn ghost sm" style="width:100%;margin:0 0 10px" onclick="clAuto()">\ud83c\udfb2 Surprise me <span class="sub">random family + DNA blend</span></button>
+    <label class="fld" style="margin-top:12px">Cast to build around (optional)</label>
+    <div id="cdCast" class="tokenchips"></div>
+    <label class="fld" style="margin-top:10px">Home location (optional)</label>
+    <select id="cdSet"></select>
     <label class="fld">Creator family \u2014 how this kind of show operates</label>
     <select id="cdFamily"></select>
     <div id="cdFamilyDef"></div>
@@ -607,10 +611,6 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
     <div id="cdDna" class="tokenchips"></div>
     <div id="cdDnaMix"></div>
     <details class="collapse" style="margin-top:12px"><summary>Humor mixer \u2014 11 dials</summary><div class="body" id="cdDials"></div></details>
-    <label class="fld" style="margin-top:12px">Cast to build around (optional)</label>
-    <div id="cdCast" class="tokenchips"></div>
-    <label class="fld" style="margin-top:10px">Home location (optional)</label>
-    <select id="cdSet"></select>
     <label class="fld" style="margin-top:10px">Brief \u2014 world, arena, or the itch you want to scratch</label>
     <textarea id="cdBrief" style="min-height:64px" placeholder="e.g. a block association that has never once completed a meeting"></textarea>
     <label class="fld" style="margin-top:10px">Develop</label>
@@ -1286,7 +1286,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.42 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.44 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -2416,6 +2416,7 @@ function modeRender(view){
  }
  host.innerHTML=ctxBadgeHTML()+modeBarHTML(view);
  modeApply(view);
+ try{shellDecorate(view);}catch(e){}
 }
 /* SMART FILL (context) vs SURPRISE ME (random) — kept distinct */
 function smartFill(view){
@@ -2642,6 +2643,86 @@ function ctxBadgeHTML(){
  return '<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px;cursor:pointer" onclick="ctxInspect()">'
   +(warn?'<span style="color:#c9a94a">\u26a0 Context conflict</span>':'<span style="color:var(--bud)">\u2713 Context loaded</span>')
   +' <span style="opacity:.55">\u00b7 '+pkg.fields.length+' known \u00b7 tap to inspect</span></div>';
+}
+/* ============================================================
+   UX PASS 7 — UNIFIED CREATOR SHELL
+   Same studio language. Different creative machinery.
+   ============================================================ */
+var CREATOR_SHELL={
+ sketch:{purpose:"Build ensemble sketches around a premise, a game, heightening and an exit.",action:"Develop",
+  who:["skCast"],where:["skSet"],what:["skObs"],how:["skMode","skType","skLength","skPhil"],output:["skOutput"]},
+ sitcom:{purpose:"Write scenes with period television grammar \u2014 staging, performance and audience timing.",action:"Write",
+  who:["sitCast"],where:["sitSet"],what:["sitSituation"],how:["sitEra","sitFormat","sitMode","sitBroadcast","sitAudience","sitEngines","sitWriters"],output:["sitOutput"]},
+ vlog:{purpose:"Camera-in-hand production \u2014 who holds it, why they\u2019re filming, what they point at next.",action:"Roll",
+  who:["vlgCast","vlgHolder"],where:["vlgSet"],what:["vlgSituation"],how:["vlgType","vlgEra","vlgCam","vlgEngine","vlgEdit"],output:["vlgOutput"]},
+ comedy:{purpose:"Develop an original comedy property \u2014 its family, its DNA and why it is funny.",action:"Develop",
+  who:["cdCast"],where:["cdSet"],what:["cdBrief"],how:["cdFamily","cdDna","cdDials"],output:["cdOutput"]}
+};
+var SHELL_LABELS={who:"WHO",where:"WHERE",what:"WHAT",how:"HOW",output:"OUTPUT"};
+function shellDecorate(view){
+ var cfg=CREATOR_SHELL[view];if(!cfg)return;
+ var sec=$(MODE_CFG[view]?MODE_CFG[view].card:("view-"+view));if(!sec)return;
+ sec.querySelectorAll(".shellhead").forEach(function(e){e.remove()});
+ if(uxMode()==="guided")return; /* guided already narrates its own steps */
+ ["who","where","what","how","output"].forEach(function(cat){
+  var ids=cfg[cat]||[];
+  for(var i=0;i<ids.length;i++){
+   var el=$(ids[i]);
+   if(!el||el.style.display==="none")continue;
+   var anchor=el.previousElementSibling;
+   if(anchor&&anchor.tagName==="LABEL"&&anchor.className.indexOf("fld")>=0)el=anchor;
+   el.insertAdjacentHTML("beforebegin",'<div class="shellhead" style="font-family:var(--slate);color:var(--bud);font-size:10.5px;letter-spacing:1.2px;margin:12px 0 2px;opacity:.75">'+SHELL_LABELS[cat]+'</div>');
+   return;
+  }
+ });
+}
+/* REFINE — targeted revision that never destroys the original */
+var REFINE_QUICK=["Funnier","Shorter","Tighter pacing","Stronger ending","More character-driven","Darker","Warmer","Less exposition"];
+function refineOpen(view){
+ var cur=refineCurrent(view);
+ if(!cur||!cur.text){toast("Nothing to refine yet.",true);return;}
+ var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:2px">Refine</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">The current version is kept \u2014 this creates a revision.</div>'
+  +'<div class="tokenchips" style="margin-bottom:8px">'
+  +REFINE_QUICK.map(function(q){return '<span class="chip" onclick="refineRun(\''+view+'\',\''+q+'\')">'+q+"</span>";}).join("")
+  +'</div><input type="text" id="refineCustom" placeholder="or say exactly what to change\u2026" style="width:100%">'
+  +'<button class="btn green sm" style="width:100%;margin-top:8px" onclick="refineRun(\''+view+'\',(document.getElementById(&quot;refineCustom&quot;)||{}).value)">Refine it</button>';
+ sendSheet(h);
+}
+function refineCurrent(view){
+ if(view==="sketch")return {text:(S.sketch||{}).last||"",set:function(v){skState().last=v;},art:(S.sketch||{}).lastArt||"",re:renderSketch};
+ if(view==="sitcom")return {text:(S.sitcom||{}).last||"",set:function(v){S.sitcom.last=v;},art:(S.sitcom||{}).lastArt||"",re:renderSitcom};
+ if(view==="vlog")return {text:(S.vlog||{}).last||"",set:function(v){S.vlog.last=v;},art:(S.vlog||{}).lastArt||"",re:renderVlog};
+ if(view==="comedy")return {text:(S.comedy||{}).last||"",set:function(v){S.comedy.last=v;},art:(S.comedy||{}).lastArt||"",re:renderComedy};
+ return null;
+}
+async function refineRun(view,instruction){
+ var sh=$("sendsheet");if(sh)sh.remove();
+ instruction=String(instruction||"").trim();
+ if(!instruction){toast("Say what to change.",true);return;}
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var cur=refineCurrent(view);if(!cur||!cur.text)return;
+ toast("Refining \u2014 the current version is kept.");
+ try{
+  var sys="You are revising an existing piece of work for the Smoke & Mirrors studio."
+   +" TARGETED REVISION RULE: change ONLY what the instruction requires. Preserve everything that already works \u2014 the premise, the character voices, the structure and any strong sections must survive unless the instruction explicitly targets them."
+   +" Return the FULL revised piece in the same format and structure as the original, not a description of your changes and not a diff.";
+  var usr="INSTRUCTION: "+instruction+"\n\nCURRENT VERSION:\n"+cur.text;
+  var res=await _llmRun(sys,usr);
+  var out=String(res||"").trim();
+  if(!out){toast("Nothing came back.",true);return;}
+  /* keep the original as a linked artifact — lineage ready for Part 9 */
+  var parentId=cur.art;
+  var child=creatorArtifact(view,"script","Refined: "+instruction.slice(0,32),out,{});
+  if(parentId&&child)artLink(parentId,child.id);
+  cur.set(out);
+  if(view==="sketch")S.sketch.lastArt=child?child.id:parentId;
+  if(view==="sitcom")S.sitcom.lastArt=child?child.id:parentId;
+  if(view==="vlog")S.vlog.lastArt=child?child.id:parentId;
+  if(view==="comedy")S.comedy.lastArt=child?child.id:parentId;
+  save();cur.re();
+  toast("Revised \u2014 previous version kept in lineage.");
+ }catch(e){toast("Refine failed: "+e.message,true);}
 }
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];
@@ -8650,7 +8731,7 @@ function renderSketch(){
  var tx=$("skObs");
  if(tx){if(tx.value!==(C.obs||""))tx.value=C.obs||"";tx.oninput=function(){C.obs=this.value;save();};}
  var o=$("skOut");
- if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="skCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.sketch||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="skToNote()">\ud83d\udcdd Note</button></div>'):"";
+ if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="skCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="refineOpen(&quot;sketch&quot;)">\u270e Refine</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.sketch||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="skToNote()">\ud83d\udcdd Note</button></div>'):"";
 }
 async function skWrite(){
  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
@@ -8741,7 +8822,7 @@ function renderComedy(){
  var tx=$("cdBrief");
  if(tx){if(tx.value!==(C.brief||""))tx.value=C.brief||"";tx.oninput=function(){C.brief=this.value;save();};}
  var o=$("cdOut");
- if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="clCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.comedy||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="clToBible()">\ud83d\udcd6 Note</button></div>'):"";
+ if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="clCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="refineOpen(&quot;comedy&quot;)">\u270e Refine</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.comedy||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="clToBible()">\ud83d\udcd6 Note</button></div>'):"";
 }
 function clCopy(){navigator.clipboard.writeText((S.comedy||{}).last||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
 function clToBible(){var t=(S.comedy||{}).last||"";if(!t){toast("Nothing yet.",true);return;}
@@ -8822,7 +8903,7 @@ function renderVlog(){
   chipDefLine("vlgWriterDef",(C.writers&&C.writers.length)?("Writing in the craft of "+wrNames(C.writers).join(" + ")+"."):("Nobody equipped \u2014 it will use the recommended room: "+wrNames(recs).join(" + ")+"."));}
  var go=$("vlgGo");if(go)go.onclick=vlgWrite;
  var out=$("vlgOut");
- if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="vlgCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.vlog||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="vlgToBoard()">\ud83c\udfac Pre-Roll</button></div>'):"";
+ if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="vlgCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="refineOpen(&quot;vlog&quot;)">\u270e Refine</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.vlog||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="vlgToBoard()">\ud83c\udfac Pre-Roll</button></div>'):"";
 }
 function vlgCopy(){navigator.clipboard.writeText((S.vlog||{}).last||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
 function vlgToBoard(){var t=(S.vlog||{}).last||"";if(!t){toast("Nothing to send yet.",true);return;}
@@ -8941,7 +9022,7 @@ function renderSitcom(){
   chipDefLine("sitWriterDef",(C.writers&&C.writers.length)?("Writing in the craft of "+wrNames(C.writers).join(" + ")+"."):("Nobody equipped \u2014 it will use the recommended room: "+wrNames(recs).join(" + ")+"."));}
  var go=$("sitGo");if(go)go.onclick=sitWrite;
  var out=$("sitOut");
- if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="sitCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.sitcom||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="sitToBoard()">\ud83c\udfac Pre-Roll</button></div>'):"";
+ if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="sitCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="refineOpen(&quot;sitcom&quot;)">\u270e Refine</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.sitcom||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="sitToBoard()">\ud83c\udfac Pre-Roll</button></div>'):"";
 }
 function shortDef(t){var i=String(t).indexOf(": ");var v=i>0?String(t).slice(i+2):String(t);return v.split(". ")[0]+".";}
 function sitCopy(){navigator.clipboard.writeText((S.sitcom||{}).last||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}

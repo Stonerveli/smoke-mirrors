@@ -1285,7 +1285,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.33 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.37 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1957,6 +1957,8 @@ function go(name){
   if(name==="vlog")renderVlog();
   if(name==="comedy")renderComedy();
   if(name==="sketch")renderSketch();
+  try{apbMount();}catch(e){}
+  try{if(VIEW_GROUP[name]==="create"&&name!=="chief")recTouch("station",name,navLabel(name)||name,name);}catch(e){}
   if(name==="templates")renderTemplates();
   if(name==="studio")renderRefs();
   if(name==="board")renderBoardChars();
@@ -2028,6 +2030,308 @@ function smFallbackCopy(t){try{var ta=document.createElement("textarea");ta.valu
 function smCopyBackup(){var data=JSON.stringify(S);try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(data).then(function(){toast("Backup copied to clipboard.");},function(){smFallbackCopy(data);});}else{smFallbackCopy(data);}}catch(e){smFallbackCopy(data);}}
 function smRestore(text){var parsed;try{parsed=JSON.parse(text);}catch(e){toast("That isn\u2019t valid backup text.",true);return;}if(!parsed||typeof parsed!=="object"||Array.isArray(parsed)){toast("That isn\u2019t a Smoke & Mirrors backup.",true);return;}var known=["cast","sets","csb","board","apiKey","comics","episodes","fight","sunoStruct","taskBrains"],ok=false,i;for(i=0;i<known.length;i++){if(known[i] in parsed){ok=true;break;}}if(!ok&&!confirm("This doesn\u2019t look like a Smoke & Mirrors backup. Import it anyway?"))return;if(!confirm("Restore this backup? It replaces everything currently in the app."))return;try{localStorage.setItem(LS,JSON.stringify(parsed));toast("Restored \u2014 reloading\u2026");setTimeout(function(){location.reload();},700);}catch(e){toast("Restore failed (storage full?): "+(e.message||e),true);}}
 function smImportFile(file){if(!file)return;var reader=new FileReader();reader.onload=function(){smRestore(String(reader.result||""));};reader.onerror=function(){toast("Couldn\u2019t read that file.",true);};reader.readAsText(file);}
+/* ============================================================
+   UX PASS 1 — SHARED WORKFLOW ARCHITECTURE (no UI; primitives only)
+   Sits ABOVE existing systems. Reuses S.projects / S.activeProject.
+   ============================================================ */
+
+/* (1) WORKFLOW REGISTRY — production type decides its own stages */
+var WF_STAGES={
+ idea:["Idea","The rough concept exists."],
+ develop:["Develop","Structure it \u2014 premise, beats, ensemble, game."],
+ write:["Write","Produce the actual script or text."],
+ review:["Review","Evaluate what works and what does not."],
+ storyboard:["Storyboard","Turn writing into a visual plan."],
+ generate:["Generate","Produce the media."],
+ cut:["Cut","Assemble the pieces."],
+ publish:["Publish","Prepare for distribution."]
+};
+var WORKFLOWS={
+ sketch:{label:"Sketch",stages:["idea","develop","write","review","storyboard","generate","cut","publish"],station:"sketch"},
+ sitcom:{label:"Sitcom",stages:["idea","develop","write","review","storyboard","generate","cut","publish"],station:"sitcom"},
+ vlog:{label:"Vlog",stages:["idea","write","review","storyboard","generate","cut","publish"],station:"vlog"},
+ show:{label:"Show / Series",stages:["idea","develop","review"],station:"comedy"},
+ episode:{label:"Episode",stages:["idea","develop","write","review","storyboard","generate","cut","publish"],station:"episodes"},
+ story:{label:"Story",stages:["idea","develop","write","review"],station:"story"},
+ comic:{label:"Comic",stages:["idea","write","generate","review","publish"],station:"comics"},
+ image:{label:"Image / Design",stages:["idea","generate","review","publish"],station:"studio"},
+ video:{label:"Short / Reel",stages:["idea","write","storyboard","generate","cut","review","publish"],station:"board"},
+ ad:{label:"Ad / Commercial",stages:["idea","write","review","storyboard","generate","cut","publish"],station:"vibe"},
+ music:{label:"Music",stages:["idea","develop","generate","review","publish"],station:"smg"},
+ musicvideo:{label:"Music Video",stages:["idea","write","storyboard","generate","cut","review","publish"],station:"songvid"}
+};
+function wfFor(type){return WORKFLOWS[type]||null;}
+function wfStages(type){var w=wfFor(type);return w?w.stages.slice():["idea","generate","review","publish"];}
+function wfHas(type,stage){return wfStages(type).indexOf(stage)>=0;}
+function wfNext(type,stage){
+ var st=wfStages(type),i=st.indexOf(stage);
+ if(i<0)return st[0]||null;
+ return (i+1<st.length)?st[i+1]:null;
+}
+function wfStationFor(type){var w=wfFor(type);return w?w.station:"studio";}
+function wfLabel(stage){return (WF_STAGES[stage]||[stage,""])[0];}
+function wfProgress(type,done){
+ done=done||[];
+ return wfStages(type).map(function(k){
+  return {stage:k,label:wfLabel(k),state:(done.indexOf(k)>=0?"complete":"available")};
+ });
+}
+
+/* (2) ACTIVE PROJECT CONTEXT — extends the EXISTING project record.
+       No second project system: workflow state is stored on S.projects[n]. */
+function apGet(){return projActive();}
+function apEnsureWf(p){
+ if(!p)return null;
+ if(!p.wf)p.wf={type:p.wfType||"",stage:"",done:[],artifactId:"",branch:"main",version:1};
+ if(!Array.isArray(p.wf.done))p.wf.done=[];
+ return p.wf;
+}
+function apSetType(type){var p=apGet();if(!p)return null;var w=apEnsureWf(p);w.type=type;if(!w.stage)w.stage=wfStages(type)[0];p.updated=Date.now();save();return w;}
+function apSetStage(stage,opts){
+ var p=apGet();if(!p)return null;var w=apEnsureWf(p);
+ w.stage=stage;
+ if(opts&&opts.complete&&w.done.indexOf(stage)<0)w.done.push(stage);
+ p.updated=Date.now();save();return w;
+}
+function apCompleteStage(stage){return apSetStage(stage,{complete:true});}
+function apNextStep(){
+ var p=apGet();if(!p)return null;var w=apEnsureWf(p);
+ if(!w.type)return null;
+ var n=wfNext(w.type,w.stage||wfStages(w.type)[0]);
+ return n?{stage:n,label:wfLabel(n),station:wfStationFor(w.type)}:null;
+}
+function apSummary(){
+ var p=apGet();if(!p)return null;var w=apEnsureWf(p);
+ var nx=apNextStep();
+ return {id:p.id,name:p.name,type:w.type||"",typeLabel:(wfFor(w.type)||{}).label||"",
+  stage:w.stage||"",stageLabel:w.stage?wfLabel(w.stage):"",done:w.done.slice(),
+  artifactId:w.artifactId||"",branch:w.branch||"main",version:w.version||1,
+  next:nx,progress:w.type?wfProgress(w.type,w.done):[]};
+}
+
+/* (3) ARTIFACT CONTRACT — one shape every station can produce and consume.
+       Projectless artifacts are allowed (creativity before paperwork). */
+function artMake(o){
+ o=o||{};
+ return {
+  id:o.id||("art_"+uid()),
+  type:o.type||"text",
+  title:o.title||"",
+  body:o.body||"",
+  structured:o.structured||null,
+  station:o.station||"",
+  creator:o.creator||"",
+  productionType:o.productionType||"",
+  projectId:(o.projectId!==undefined)?o.projectId:((apGet()||{}).id||""),
+  castIds:o.castIds||[],
+  setIds:o.setIds||[],
+  refs:o.refs||[],
+  stage:o.stage||"",
+  parentId:o.parentId||"",
+  derivedIds:[],
+  contextSnapshot:o.contextSnapshot||null,
+  review:null,
+  branch:o.branch||"main",
+  version:o.version||1,
+  status:o.status||"draft",
+  created:Date.now(),
+  updated:Date.now()
+ };
+}
+function artSave(a){
+ if(!a||!a.id)return null;
+ if(!Array.isArray(S.artifacts))S.artifacts=[];
+ var i=S.artifacts.findIndex(function(x){return x.id===a.id;});
+ a.updated=Date.now();
+ if(i>=0)S.artifacts[i]=a;else S.artifacts.unshift(a);
+ if(S.artifacts.length>300)S.artifacts=S.artifacts.slice(0,300);
+ save();return a;
+}
+function artGet(id){return (S.artifacts||[]).find(function(x){return x.id===id;})||null;}
+function artByProject(pid){return (S.artifacts||[]).filter(function(x){return x.projectId===pid;});}
+function artLink(parentId,childId){
+ var p=artGet(parentId),c=artGet(childId);
+ if(!p||!c)return false;
+ if(p.derivedIds.indexOf(childId)<0)p.derivedIds.push(childId);
+ c.parentId=parentId;artSave(p);artSave(c);return true;
+}
+
+/* (4) CONTEXT RESOLVER (stub) — stations ask for only what they need.
+       Reads existing sources of truth. Never becomes a second Canon. */
+function ctxResolve(need){
+ need=need||[];
+ var want=function(k){return need.length===0||need.indexOf(k)>=0;};
+ var p=apGet(),w=p?apEnsureWf(p):null;
+ var out={origins:{}};
+ if(want("project")&&p){out.project={id:p.id,name:p.name,concept:p.concept||""};out.origins.project="PROJECT";}
+ if(want("production")&&w&&w.type){out.production={type:w.type,label:(wfFor(w.type)||{}).label||"",stage:w.stage||""};out.origins.production="PROJECT";}
+ if(want("cast")){
+  var ids=(w&&w.castIds)||[];
+  var cast=(S.cast||[]).filter(function(c){return ids.length?ids.indexOf(c.id)>=0:false;});
+  if(cast.length){out.cast=cast.map(function(c){return {id:c.id,name:c.name,identity:c.identity||"",voice:c.voice||""};});out.origins.cast="PROJECT";}
+ }
+ if(want("world")){
+  var sid=(w&&w.setId)||"";
+  var st=(S.sets||[]).find(function(x){return x.id===sid;});
+  if(st){out.world={id:st.id,name:st.name,vibe:st.vibe||""};out.origins.world="CANON";}
+ }
+ if(want("visual")){
+  var r=(S.cine||{}).render||"";
+  if(r){out.visual={render:r};out.origins.visual="SYSTEM";}
+ }
+ return out;
+}
+function ctxHealth(need){
+ var c=ctxResolve(need||[]);
+ var missing=(need||[]).filter(function(k){return !c[k];});
+ return {state:missing.length?(c.project?"partial":"partial"):"ready",missing:missing,resolved:c};
+}
+
+/* ============================================================
+   UX PASS 2 — INTENT ROUTER (config, not a chain of ifs)
+   ============================================================ */
+var INTENTS=[
+ {id:"sketch",label:"Sketch",type:"sketch",why:"A short self-contained comedic situation built on a repeatable game.",
+  kw:["sketch","skit","bit","game","fake commercial","fake ad","parody","spoof"]},
+ {id:"sitcom",label:"Sitcom",type:"sitcom",why:"A scene with your cast on a standing set, played to an audience.",
+  kw:["sitcom","scene","episode of","multi-cam","studio audience","laugh track","apartment"]},
+ {id:"vlog",label:"Vlog",type:"vlog",why:"Camera-in-hand footage where someone is filming and knows it.",
+  kw:["vlog","vlogging","day in the life","behind the scenes","bts","point the camera","filming himself","filming herself"]},
+ {id:"show",label:"Show / Series",type:"show",why:"A whole property \u2014 premise, ensemble and why it is funny.",
+  kw:["show","series","invent a show","new show","property","pilot","format","ensemble"]},
+ {id:"episode",label:"Episode",type:"episode",why:"A full installment of an existing show.",
+  kw:["episode","ep ","full episode","installment","act one","act two"]},
+ {id:"story",label:"Develop an Idea",type:"story",why:"Turn a rough idea into structured material before writing it.",
+  kw:["idea","develop","concept","brainstorm","figure out","story","plot","premise"]},
+ {id:"comic",label:"Comic",type:"comic",why:"Panels with dialogue \u2014 the daily format.",
+  kw:["comic","strip","panel","panels","daily","chiefinese"]},
+ {id:"image",label:"Image / Design",type:"image",why:"A single still \u2014 art, design, graphic or reference.",
+  kw:["image","picture","art","design","graphic","logo","poster","render","still","vector","merch"]},
+ {id:"video",label:"Short / Reel",type:"video",why:"Short-form video built from a shot board.",
+  kw:["reel","short","clip","video","tiktok","shorts","short form","b-roll"]},
+ {id:"ad",label:"Ad / Commercial",type:"ad",why:"A spot selling something, with a hook and a button.",
+  kw:["ad","advert","commercial","spot","promo","campaign","drop film"]},
+ {id:"music",label:"Music",type:"music",why:"A song, beat or scratch track.",
+  kw:["song","music","track","beat","lyrics","hook","verse","instrumental"]},
+ {id:"musicvideo",label:"Music Video",type:"musicvideo",why:"Visuals cut to a track.",
+  kw:["music video","visualizer","perform","performance video"]}
+];
+function irScore(text,intent){
+ var t=" "+String(text||"").toLowerCase()+" ";
+ var sc=0;
+ intent.kw.forEach(function(k){
+  if(t.indexOf(" "+k)>=0||t.indexOf(k+" ")>=0)sc+=(k.indexOf(" ")>=0?3:2);
+ });
+ return sc;
+}
+function irRoute(text){
+ var ranked=INTENTS.map(function(i){return {intent:i,score:irScore(text,i)};})
+  .sort(function(a,b){return b.score-a.score;});
+ var top=ranked[0];
+ var confident=top&&top.score>0&&(!ranked[1]||top.score>ranked[1].score);
+ var chosen=(top&&top.score>0)?top.intent:null;
+ if(!chosen)return {ok:false,reason:"no clear intent",alternatives:INTENTS.slice(0,6).map(function(i){return {id:i.id,label:i.label};})};
+ return {
+  ok:true,
+  intentId:chosen.id,
+  label:chosen.label,
+  type:chosen.type,
+  station:wfStationFor(chosen.type),
+  why:chosen.why,
+  confident:!!confident,
+  stages:wfStages(chosen.type),
+  needs:irNeeds(chosen.type),
+  alternatives:ranked.slice(1,4).filter(function(r){return r.score>0;}).map(function(r){return {id:r.intent.id,label:r.intent.label};})
+ };
+}
+function irNeeds(type){
+ var map={
+  sketch:["cast","world"],sitcom:["cast","world"],vlog:["cast","world"],
+  show:["cast"],episode:["cast","world"],story:[],comic:["cast"],
+  image:[],video:["cast","world"],ad:[],music:[],musicvideo:["cast"]
+ };
+ return map[type]||[];
+}
+function irById(id){var i=INTENTS.find(function(x){return x.id===id;});if(!i)return null;
+ return {ok:true,intentId:i.id,label:i.label,type:i.type,station:wfStationFor(i.type),why:i.why,confident:true,stages:wfStages(i.type),needs:irNeeds(i.type),alternatives:[]};}
+function irApply(route,opts){
+ if(!route||!route.ok)return null;
+ opts=opts||{};
+ var p=apGet();
+ if(p){apSetType(route.type);apSetStage(route.stages[0]);}
+ S.lastRoute={intentId:route.intentId,type:route.type,station:route.station,ts:Date.now()};
+ save();
+ if(opts.navigate!==false)go(route.station);
+ return route;
+}
+/* ============================================================
+   UX PASS 3 — ACTIVE PROJECT BAR + CONTINUE / RECENT / FAVORITES
+   ============================================================ */
+function recTouch(kind,id,label,station){
+ if(!label)return;
+ if(!Array.isArray(S.recents))S.recents=[];
+ S.recents=S.recents.filter(function(r){return !(r.kind===kind&&r.id===id);});
+ S.recents.unshift({kind:kind,id:id||"",label:String(label).slice(0,60),station:station||"",ts:Date.now()});
+ if(S.recents.length>12)S.recents=S.recents.slice(0,12);
+ save();
+}
+function recList(n){return (S.recents||[]).slice(0,n||5);}
+function favToggle(station){
+ if(!Array.isArray(S.favs))S.favs=[];
+ var i=S.favs.indexOf(station);
+ if(i>=0)S.favs.splice(i,1);else{if(S.favs.length>=8){toast("Eight favourites max.",true);return false;}S.favs.push(station);}
+ save();return S.favs.indexOf(station)>=0;
+}
+function favHas(station){return (S.favs||[]).indexOf(station)>=0;}
+function favList(){return (S.favs||[]).slice();}
+function apbHTML(){
+ var sum=apSummary();
+ if(!sum||!sum.name)return "";
+ var nx=sum.next;
+ var line=esc(sum.name)+(sum.typeLabel?(' <span style="opacity:.6">\u00b7 '+esc(sum.typeLabel)+'</span>'):"")
+  +(sum.stageLabel?(' <span style="opacity:.6">\u00b7 '+esc(sum.stageLabel)+'</span>'):"");
+ var nextTxt=nx?('Next \u2192 '+esc(nx.label)):"";
+ return '<div id="apbar" style="position:sticky;top:0;z-index:60;background:rgba(12,12,12,.96);border-bottom:1px solid rgba(255,255,255,.08);padding:7px 12px;font-size:12.5px;line-height:1.35;backdrop-filter:blur(6px)">'
+  +'<div style="display:flex;align-items:center;gap:8px">'
+  +'<div style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" onclick="apbExpand()">'+line+'</div>'
+  +(nx?('<button class="btn ghost sm" style="flex:0;padding:3px 8px;font-size:11px" onclick="apbGoNext()">'+nextTxt+'</button>'):"")
+  +'</div><div id="apbMore" style="display:none;margin-top:6px"></div></div>';
+}
+function apbExpand(){
+ var m=$("apbMore");if(!m)return;
+ if(m.style.display==="block"){m.style.display="none";m.innerHTML="";return;}
+ var sum=apSummary();if(!sum)return;
+ var prog=(sum.progress||[]).map(function(p){
+  var mark=p.state==="complete"?"\u2713":(p.stage===sum.stage?"\u25cf":"\u25cb");
+  return '<span style="opacity:'+(p.state==="complete"?".9":(p.stage===sum.stage?"1":".45"))+'">'+mark+" "+esc(p.label)+"</span>";
+ }).join(' <span style="opacity:.25">\u2192</span> ');
+ m.innerHTML='<div style="font-size:11.5px;line-height:1.7">'+prog+'</div>'
+  +'<div class="row" style="margin-top:6px"><button class="btn ghost sm" style="flex:1;font-size:11px" onclick="go(\'projects\')">Projects</button><button class="btn ghost sm" style="flex:1;font-size:11px" onclick="go(\'chief\')">Chief Command</button></div>';
+ m.style.display="block";
+}
+function apbGoNext(){
+ var nx=apNextStep();if(!nx)return;
+ apSetStage(nx.stage);
+ go(nx.station);
+ toast("Now: "+nx.label+".");
+}
+function apbMount(){
+ var sec=document.querySelector(".view.active");
+ var old=$("apbar");if(old)old.remove();
+ if(!sec)return;
+ var groups=["create","library"];
+ var v=sec.id.replace("view-","");
+ if(groups.indexOf(VIEW_GROUP[v])<0)return;
+ if(v==="chief")return;
+ var html=apbHTML();
+ if(!html)return;
+ sec.insertAdjacentHTML("afterbegin",html);
+}
+/* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
+var UX_MODES=["simple","guided","pro"];
+function uxMode(){return (UX_MODES.indexOf(S.uxMode)>=0)?S.uxMode:"pro";}
+function uxSetMode(m){if(UX_MODES.indexOf(m)<0)return uxMode();S.uxMode=m;save();return m;}
+
 function projActive(){return (S.projects||[]).find(function(p){return p.id===S.activeProject;})||null;}
 function projCreate(name,concept){var p={id:uid(),name:(name||"New Drop").trim()||"New Drop",concept:(concept||"").trim(),created:Date.now(),updated:Date.now(),items:[]};if(!S.projects)S.projects=[];S.projects.unshift(p);S.activeProject=p.id;save();return p;}
 function projAttach(type,title,content){var p=projActive();if(!p){p=projCreate("New Drop","");toast("Started \u201cNew Drop\u201d \u2014 rename it in Projects.");}p.items.unshift({id:uid(),type:type,title:(title||type),content:(content||""),created:Date.now()});p.updated=Date.now();save();toast("Saved to "+p.name+".");var v=$("view-projects");if(v&&v.classList.contains("active"))renderProjects();return true;}
@@ -3122,6 +3426,40 @@ function chiefQuick(tool){
  save();go("vibe");
  setTimeout(function(){try{if(typeof vibeSetDom==="function")vibeSetDom();if(typeof vibeGenerate==="function")vibeGenerate();}catch(e){}},120);
  toast("Wondervizion on it — review the preview and tap Apply when it lands.");}
+function chiefIntent(id){
+ var r=irById(id);if(!r)return;
+ var idea=chiefIdeaVal();
+ var why=$("chiefWhy");
+ if(why)why.innerHTML='<b>'+esc(r.label)+'</b> \u2014 '+esc(r.why)+'<br><span style="opacity:.7">'+esc(r.stages.map(wfLabel).join(" \u2192 "))+'</span>';
+ irApply(r);
+ if(idea)chiefStash(r,idea);
+ toast(r.label+" \u2014 "+wfLabel(r.stages[0])+" first.");
+}
+function chiefStash(r,idea){
+ /* hand the typed idea to the destination station's own brief field */
+ try{
+  var t=r.type;
+  if(t==="sketch"){skState().obs=idea;save();try{renderSketch();}catch(e){}}
+  else if(t==="sitcom"){if(!S.sitcom)S.sitcom={};S.sitcom.situation=idea;save();try{renderSitcom();}catch(e){}}
+  else if(t==="vlog"){if(!S.vlog)S.vlog={};S.vlog.situation=idea;save();try{renderVlog();}catch(e){}}
+  else if(t==="show"){clState().brief=idea;save();try{renderComedy();}catch(e){}}
+  else if(t==="video"){var b=$("boardScript");if(b)b.value=idea;}
+ }catch(e){}
+}
+function chiefRecommend(){
+ var idea=chiefIdeaVal();
+ var why=$("chiefWhy");
+ if(!idea){if(why)why.innerHTML="";return null;}
+ var r=irRoute(idea);
+ if(!r.ok){
+  if(why)why.innerHTML='<span style="opacity:.75">Not sure what that is yet \u2014 tap one above and I\u2019ll take you there.</span>';
+  return null;
+ }
+ if(why)why.innerHTML='<b>Recommended: '+esc(r.label)+'</b> \u2014 '+esc(r.why)
+  +'<br><span style="opacity:.7">'+esc(r.stages.map(wfLabel).join(" \u2192 "))+'</span>'
+  +'<div class="row" style="margin-top:6px"><button class="btn green sm" style="flex:1" onclick="chiefIntent(\''+r.intentId+'\')">Use '+esc(r.label)+'</button></div>';
+ return r;
+}
 function chiefPro(){
  if(!S.vibe)S.vibe={mode:"describe",tool:"auto",input:"",json:"",lib:[]};
  var idea=chiefIdeaVal();if(idea){if(idea.charAt(0)==="{"){S.vibe.mode="json";S.vibe.json=idea;}else{S.vibe.mode="describe";S.vibe.input=idea;}save();}
@@ -3154,11 +3492,44 @@ function renderChief(){
  if(S.reel&&S.reel[0])cont.push(["🎞 Latest in The Cut","reel"]);
  if(S.run&&S.run.streak)cont.push(["🔥 Streak "+S.run.streak,"run"]);
  if(cont.length)h+='<label class="fld">Continue creating</label><div class="tonerow" style="margin:4px 0 12px">'+cont.map(function(x){return '<button type="button" class="tonechip" data-ccv="'+x[1]+'">'+x[0]+"</button>";}).join("")+"</div>";
+ /* CONTINUE WORKING — the returning-user path (Part 3) */
+ var sum=apSummary();
+ if(sum&&sum.name){
+  var nx=sum.next;
+  h+='<label class="fld">Continue working</label><div class="card" style="margin:4px 0 12px;border-left:3px solid var(--bud);padding:10px">'
+   +'<div style="font-family:var(--slate);font-weight:800;font-size:14px">'+esc(sum.name)+'</div>'
+   +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:2px">'
+   +(sum.typeLabel?esc(sum.typeLabel):"No production type set")
+   +(sum.stageLabel?(" \u00b7 stopped at "+esc(sum.stageLabel)):"")+'</div>'
+   +(nx?('<button class="btn green sm" style="width:100%;margin-top:8px" onclick="apbGoNext()">Continue \u2192 '+esc(nx.label)+'</button>')
+       :('<button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="go(\'projects\')">Open project</button>'))
+   +'</div>';
+ }
+ /* WHAT ARE WE MAKING — intent routes (Part 2) */
+ h+='<label class="fld">What are we making?</label><div class="tonerow" style="margin:4px 0 6px">'
+  +INTENTS.map(function(i){return '<button type="button" class="tonechip" data-intent="'+i.id+'">'+esc(i.label)+"</button>";}).join("")
+  +'</div><div id="chiefWhy" class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:12px"></div>';
+ /* FAVOURITES */
+ var fv=favList();
+ if(fv.length){
+  h+='<label class="fld">Favourites</label><div class="tonerow" style="margin:4px 0 12px">'
+   +fv.map(function(v){return '<button type="button" class="tonechip" data-ccv="'+v+'">\u2605 '+esc(navLabel(v)||v)+"</button>";}).join("")+"</div>";
+ }
+ /* RECENT */
+ var rc=recList(5).filter(function(r){return r.station&&r.station!=="chief";});
+ if(rc.length){
+  h+='<label class="fld">Recent</label><div class="tonerow" style="margin:4px 0 12px">'
+   +rc.map(function(r){return '<button type="button" class="tonechip" data-ccv="'+esc(r.station)+'">'+esc(r.label)+"</button>";}).join("")+"</div>";
+ }
  var qs=[["📚 Comic","comics"],["⚡ 15s clip","board"],["🎵 Song","smg"],["🧍 Character","cast"],["📦 Release","socials"],["🧵 Merch","brand"],["🏁 Daily Run","run"]];
- h+='<label class="fld">Quick starts</label><div class="tonerow" style="margin:4px 0 12px">'+qs.map(function(x){return '<button type="button" class="tonechip" data-ccv="'+x[1]+'">'+x[0]+"</button>";}).join("")+"</div>";
+ h+='<label class="fld">Jump straight in</label><div class="tonerow" style="margin:4px 0 12px">'+qs.map(function(x){return '<button type="button" class="tonechip" data-ccv="'+x[1]+'">'+x[0]+"</button>";}).join("")+"</div>";
  h+='<div id="chiefOut"></div>';
  host.innerHTML=h;
  host.querySelectorAll("[data-ccv]").forEach(function(b){b.addEventListener("click",function(){go(b.getAttribute("data-ccv"));});});
+ host.querySelectorAll("[data-intent]").forEach(function(b){b.addEventListener("click",function(){chiefIntent(b.getAttribute("data-intent"));});});
+ var ta=$("chiefIdea");
+ if(ta&&!ta._irBound){ta._irBound=1;ta.addEventListener("input",function(){try{chiefRecommend();}catch(e){}});}
+ try{chiefRecommend();}catch(e){}
  chiefPaintPlan();}
 function sendSheet(html){
  var d=$("sendsheet");if(d)d.remove();

@@ -1286,7 +1286,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.39 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.42 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -2414,7 +2414,7 @@ function modeRender(view){
   card.insertAdjacentHTML("afterbegin",'<div id="modeBar_'+view+'"></div>');
   host=sec.querySelector("#modeBar_"+view);
  }
- host.innerHTML=modeBarHTML(view);
+ host.innerHTML=ctxBadgeHTML()+modeBarHTML(view);
  modeApply(view);
 }
 /* SMART FILL (context) vs SURPRISE ME (random) — kept distinct */
@@ -2430,6 +2430,218 @@ function smartFill(view){
  if(view==="comedy"){var K=clState();if(castIds.length){K.cast=castIds.slice(0,4);used.push("cast");}if(setId){K.setId=setId;used.push("location");}save();renderComedy();}
  toast("Smart Fill \u2014 inherited "+used.join(" + ")+" from the active project.");
  return true;
+}
+/* ============================================================
+   UX PASS 5 — UNIVERSAL SEND TO + ARTIFACT PORTABILITY
+   Compatibility is a config map, not scattered per-station rules.
+   ============================================================ */
+var SEND_DEST={
+ board:{label:"Pre-Roll",station:"board",why:"Turn writing into a timed shot board.",accept:["script","scene","premise","beats","sketch","episode"]},
+ csb:{label:"Storyboard (CSB)",station:"csb",why:"Full visual sequence planning.",accept:["script","scene","sketch","episode","song"]},
+ studio:{label:"Studio",station:"studio",why:"Generate the actual media.",accept:["shot","prompt","image","storyboard"]},
+ comics:{label:"Comics",station:"comics",why:"Lay it out as panels.",accept:["script","scene","sketch","premise"]},
+ vo:{label:"Voiceover",station:"vo",why:"Perform the dialogue.",accept:["script","scene","sketch","episode"]},
+ smg:{label:"SMG",station:"smg",why:"Score it or write the track.",accept:["script","scene","premise","song"]},
+ reel:{label:"The Cut",station:"reel",why:"Assemble the footage.",accept:["video","clip"]},
+ socials:{label:"Socials",station:"socials",why:"Prepare it for publishing \u2014 does not post.",accept:["video","image","comic","final"]},
+ stash:{label:"Stash",station:"stash",why:"Hold it as a reference. Not canon, not approved.",accept:["*"]},
+ projects:{label:"Project",station:"projects",why:"File it with the active production.",accept:["*"]},
+ sketch:{label:"Sketch Creator",station:"sketch",why:"Develop it as a sketch.",accept:["premise","idea","show"]},
+ sitcom:{label:"Sitcom Creator",station:"sitcom",why:"Write it as a sitcom scene.",accept:["premise","idea","show"]},
+ vlog:{label:"Vlog Creator",station:"vlog",why:"Shoot it as a vlog.",accept:["premise","idea"]}
+};
+function sendCompat(a){
+ if(!a)return [];
+ var t=a.type||"text";
+ var out=[];
+ Object.keys(SEND_DEST).forEach(function(k){
+  var d=SEND_DEST[k];
+  if(d.accept.indexOf("*")>=0||d.accept.indexOf(t)>=0)out.push({id:k,label:d.label,station:d.station,why:d.why});
+ });
+ /* recommended = the active project's next workflow stage, when it maps to a destination */
+ var stageMap={storyboard:"board",generate:"studio",cut:"reel",publish:"socials",write:"sketch"};
+ var recId=null;
+ var sum=apSummary();
+ if(sum&&sum.type){
+  /* walk forward to the next stage that actually has a destination (Review has none) */
+  var st=wfStages(sum.type),i=st.indexOf(sum.stage||st[0]);
+  for(var k=i+1;k<st.length;k++){if(stageMap[st[k]]){recId=stageMap[st[k]];break;}}
+ }
+ out.forEach(function(o){o.recommended=(o.id===recId);});
+ out.sort(function(x,y){return (y.recommended?1:0)-(x.recommended?1:0);});
+ return out;
+}
+function sendTo(artId,destId){
+ var a=artGet(artId),d=SEND_DEST[destId];
+ if(!a||!d)return null;
+ /* SOURCE IS NEVER DESTROYED — a derived artifact is created and linked */
+ var child=artSave(artMake({
+  type:(destId==="board"||destId==="csb")?"storyboard":(destId==="studio"?"prompt":a.type),
+  title:a.title?(a.title+" \u2192 "+d.label):d.label,
+  body:a.body,structured:a.structured,station:d.station,
+  productionType:a.productionType,projectId:a.projectId,
+  castIds:a.castIds,setIds:a.setIds,refs:a.refs,
+  parentId:a.id,contextSnapshot:a.contextSnapshot,stage:""
+ }));
+ artLink(a.id,child.id);
+ /* carry the content into the destination's own input, structured where possible */
+ try{
+  if(destId==="board"){var b=$("boardScript");if(b)b.value=a.body;else{if(!S.board)S.board={};S.board.script=a.body;save();}}
+  if(destId==="comics"){if(!S.comicDraft)S.comicDraft={};S.comicDraft.seed=a.body;save();}
+  if(destId==="sketch"){skState().obs=a.body;save();}
+  if(destId==="sitcom"){if(!S.sitcom)S.sitcom={};S.sitcom.situation=a.body;save();}
+  if(destId==="vlog"){if(!S.vlog)S.vlog={};S.vlog.situation=a.body;save();}
+  if(destId==="stash"){if(!Array.isArray(S.stash))S.stash=[];S.stash.unshift({id:uid(),kind:"note",title:a.title||"From Send To",body:a.body,ts:Date.now()});save();}
+  if(destId==="projects"){try{projAttach("note",a.title||"Artifact",a.body);}catch(e){}}
+ }catch(e){}
+ recTouch("artifact",child.id,child.title,d.station);
+ S.lastSend={from:a.id,to:child.id,dest:destId,ts:Date.now()};save();
+ return child;
+}
+function sendOpen(artId){
+ var a=artGet(artId);
+ if(!a){toast("Nothing to send.",true);return;}
+ var list=sendCompat(a);
+ if(!list.length){toast("No compatible destinations for this yet.",true);return;}
+ var m=uxMode();
+ var show=(m==="simple")?list.slice(0,4):list;
+ var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:2px">Send to</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">'+esc(a.title||a.type)+' \u2014 the original stays where it is.</div>';
+ show.forEach(function(o){
+  h+='<button class="btn ghost sm" style="width:100%;margin-bottom:6px;text-align:left" onclick="sendGo(\''+a.id+'\',\''+o.id+'\')">'
+   +(o.recommended?"\u2605 ":"")+esc(o.label)
+   +'<span class="sub" style="display:block;opacity:.7">'+esc(o.why)+'</span></button>';
+ });
+ sendSheet(h);
+}
+function sendGo(artId,destId){
+ var c=sendTo(artId,destId);
+ var sh=$("sendsheet");if(sh)sh.remove();
+ if(!c){toast("Could not send that.",true);return;}
+ var d=SEND_DEST[destId];
+ go(d.station);
+ toast("Sent to "+d.label+" \u2014 original kept.");
+}
+/* creators register their output as a portable artifact */
+function creatorArtifact(view,type,title,body,extra){
+ if(!body)return null;
+ extra=extra||{};
+ var a=artSave(artMake({
+  type:type,title:title,body:body,station:view,
+  productionType:extra.productionType||"",
+  castIds:extra.castIds||[],setIds:extra.setIds||[],
+  creator:view,contextSnapshot:ctxSnapshot(),
+  stage:(apSummary()||{}).stage||""
+ }));
+ recTouch("artifact",a.id,title||type,view);
+ return a;
+}
+/* ============================================================
+   UX PASS 6 — CANON CONTEXT ENGINE
+   Resolves existing records. Never becomes a second Canon.
+   ============================================================ */
+/* authority: LOCKED canon > registered > project default > creator > system */
+function ctxAuthority(rec){
+ if(!rec)return "SYSTEM";
+ var st=String(rec.status||"canon").toLowerCase();
+ if(st==="locked")return "LOCKED";
+ if(st==="canon"||st==="approved")return "CANON";
+ if(st==="draft"||st==="concept")return "DRAFT";
+ return "CANON";
+}
+/* full resolution with origin + authority per value; sparse by design */
+function ctxPackage(need){
+ need=need||[];
+ var want=function(k){return need.length===0||need.indexOf(k)>=0;};
+ var p=apGet(),w=p?apEnsureWf(p):null;
+ var pkg={fields:[],ids:{}};
+ var push=function(domain,label,value,origin,authority,id){
+  pkg.fields.push({domain:domain,label:label,value:value,origin:origin,authority:authority||"SYSTEM",id:id||""});
+ };
+ if(want("project")&&p){push("Production","Project",p.name,"PROJECT","CANON",p.id);pkg.ids.project=p.id;}
+ if(want("production")&&w&&w.type){
+  push("Production","Type",(wfFor(w.type)||{}).label||w.type,"PROJECT","CANON");
+  if(w.stage)push("Production","Stage",wfLabel(w.stage),"PROJECT","CANON");
+ }
+ if(want("cast")){
+  var ids=(w&&w.castIds)||[];
+  (S.cast||[]).forEach(function(c){
+   if(ids.indexOf(c.id)<0)return;
+   push("Cast",c.name,c.identity?String(c.identity).slice(0,80):"(no identity recorded)","CANON",ctxAuthority(c),c.id);
+  });
+  pkg.ids.cast=ids.slice();
+ }
+ if(want("world")){
+  var sid=(w&&w.setId)||"";
+  var st=(S.sets||[]).find(function(x){return x.id===sid;});
+  if(st){push("World","Location",st.name+(st.vibe?(" \u2014 "+String(st.vibe).slice(0,60)):""),"CANON",ctxAuthority(st),st.id);pkg.ids.world=st.id;}
+ }
+ if(want("visual")){
+  var r=(S.cine||{}).render||"";
+  if(r)push("Visual","Render profile",(CINE_RENDER[r]||["",""])[0]||r,"SYSTEM","DEFAULT");
+  if(rcStyleOn())push("Visual","House style lock",(S.rcStyle.name||"locked"),"MANUAL","CANON");
+ }
+ return pkg;
+}
+/* the snapshot stored on every artifact — IDs + resolved values, never the whole registry */
+function ctxSnapshot(){
+ var pkg=ctxPackage([]);
+ return {ts:Date.now(),ids:pkg.ids,fields:pkg.fields.map(function(f){return {label:f.label,value:f.value,origin:f.origin};})};
+}
+/* conflict = an explicit production choice disagreeing with a higher authority */
+function ctxConflicts(view){
+ var out=[],p=apGet(),w=p?apEnsureWf(p):null;
+ if(!w)return out;
+ var stationCast=null,stationSet=null;
+ if(view==="sitcom"&&S.sitcom){stationCast=S.sitcom.cast;stationSet=S.sitcom.setId;}
+ if(view==="vlog"&&S.vlog){stationCast=S.vlog.cast;stationSet=S.vlog.setId;}
+ if(view==="sketch"&&S.sketch){stationCast=S.sketch.cast;stationSet=S.sketch.setId;}
+ if(stationSet&&w.setId&&stationSet!==w.setId){
+  var a=(S.sets||[]).find(function(x){return x.id===w.setId;});
+  var b=(S.sets||[]).find(function(x){return x.id===stationSet;});
+  if(a&&b)out.push({field:"Location",canon:a.name,current:b.name,origins:["PROJECT","MANUAL"],
+   note:"The project is set in "+a.name+" but this production uses "+b.name+"."});
+ }
+ return out;
+}
+/* scene state is NOT canon — it lives on the production, never written back */
+function ctxSceneState(set){
+ var p=apGet();if(!p)return null;var w=apEnsureWf(p);
+ if(set!==undefined){w.scene=String(set||"").slice(0,240);save();}
+ return w.scene||"";
+}
+function ctxInspect(){
+ var pkg=ctxPackage([]);
+ var conf=ctxConflicts(S.view||"");
+ if(!pkg.fields.length){
+  sendSheet('<div style="font-family:var(--slate);font-weight:800;margin-bottom:6px">What S&amp;M knows</div><div class="hint" style="text-transform:none;letter-spacing:0">Nothing registered on an active project yet. That is fine \u2014 you can still create; registered context only makes it faster.</div>');
+  return;
+ }
+ var byDomain={};
+ pkg.fields.forEach(function(f){(byDomain[f.domain]=byDomain[f.domain]||[]).push(f);});
+ var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:6px">What S&amp;M knows</div>';
+ if(conf.length){
+  h+='<div class="card" style="border-left:3px solid #c9a94a;padding:8px;margin-bottom:8px"><b>\u26a0 Context conflict</b>';
+  conf.forEach(function(c){h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">'+esc(c.note)+'</div>';});
+  h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px;opacity:.7">Neither value was changed. Pick deliberately.</div></div>';
+ }
+ Object.keys(byDomain).forEach(function(dm){
+  h+='<div style="font-family:var(--slate);color:var(--bud);font-size:11.5px;margin-top:8px">'+esc(dm.toUpperCase())+'</div>';
+  byDomain[dm].forEach(function(f){
+   h+='<div style="font-size:13px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05)">'+esc(f.label)+': '+esc(f.value)
+    +' <span style="opacity:.45;font-size:10.5px;font-family:var(--slate)">'+esc(f.origin)+(f.authority==="LOCKED"?" \u00b7 LOCKED":"")+'</span></div>';
+  });
+ });
+ sendSheet(h);
+}
+function ctxBadgeHTML(){
+ var pkg=ctxPackage([]);
+ var conf=ctxConflicts(S.view||"");
+ if(!pkg.fields.length)return "";
+ var warn=conf.length>0;
+ return '<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px;cursor:pointer" onclick="ctxInspect()">'
+  +(warn?'<span style="color:#c9a94a">\u26a0 Context conflict</span>':'<span style="color:var(--bud)">\u2713 Context loaded</span>')
+  +' <span style="opacity:.55">\u00b7 '+pkg.fields.length+' known \u00b7 tap to inspect</span></div>';
 }
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];
@@ -8438,7 +8650,7 @@ function renderSketch(){
  var tx=$("skObs");
  if(tx){if(tx.value!==(C.obs||""))tx.value=C.obs||"";tx.oninput=function(){C.obs=this.value;save();};}
  var o=$("skOut");
- if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="skCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="skToNote()">\ud83d\udcdd Keep as a note</button></div>'):"";
+ if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="skCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.sketch||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="skToNote()">\ud83d\udcdd Note</button></div>'):"";
 }
 async function skWrite(){
  if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
@@ -8457,7 +8669,9 @@ async function skWrite(){
    " "+SKG_OUT[C.output][1]+" Plain text, clear headers, script format where a script is requested. No markdown tables.";
   var usr="OBSERVATION / IDEA: "+C.obs.trim()+"\nDeliver the requested work in full.";
   var res=await _llmRun(sys,usr);
-  C.last=String(res||"").trim();save();renderSketch();
+  C.last=String(res||"").trim();
+  C.lastArt=(creatorArtifact("sketch","sketch",SKG_OUT[C.output][0],C.last,{productionType:"sketch",castIds:C.cast||[],setIds:C.setId?[C.setId]:[]})||{}).id||"";
+  save();renderSketch();
   if(st)st.innerHTML="";
  }catch(e){if(st)st.innerHTML=errLine(e);}
 }
@@ -8527,7 +8741,7 @@ function renderComedy(){
  var tx=$("cdBrief");
  if(tx){if(tx.value!==(C.brief||""))tx.value=C.brief||"";tx.oninput=function(){C.brief=this.value;save();};}
  var o=$("cdOut");
- if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="clCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="clToBible()">\ud83d\udcd6 Keep as a note</button></div>'):"";
+ if(o)o.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="clCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.comedy||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="clToBible()">\ud83d\udcd6 Note</button></div>'):"";
 }
 function clCopy(){navigator.clipboard.writeText((S.comedy||{}).last||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
 function clToBible(){var t=(S.comedy||{}).last||"";if(!t){toast("Nothing yet.",true);return;}
@@ -8548,7 +8762,9 @@ async function clWrite(){
   var sys=vibeCtx("full",C.brief||"")+" You are the WRITERS\u2019 ROOM for Smoke & Mirrors, developing an original comedy property."+cfamLaw()+cdnaLaw()+cmixLaw()+castBlock+setBlock+orig+" "+CROOM_OUT[C.output||"premise"][1]+" Plain text, clear headers, no markdown tables.";
   var usr="BRIEF: "+((C.brief||"").trim()||"(none given \u2014 derive the arena from the family, DNA and cast)")+"\nDeliver the requested development work in full.";
   var res=await _llmRun(sys,usr);
-  C.last=String(res||"").trim();save();renderComedy();
+  C.last=String(res||"").trim();
+  C.lastArt=(creatorArtifact("comedy","premise",CROOM_OUT[C.output||"premise"][0],C.last,{productionType:"show",castIds:C.cast||[]})||{}).id||"";
+  save();renderComedy();
   if(st)st.innerHTML="";
  }catch(e){if(st)st.innerHTML=errLine(e);}
 }
@@ -8606,7 +8822,7 @@ function renderVlog(){
   chipDefLine("vlgWriterDef",(C.writers&&C.writers.length)?("Writing in the craft of "+wrNames(C.writers).join(" + ")+"."):("Nobody equipped \u2014 it will use the recommended room: "+wrNames(recs).join(" + ")+"."));}
  var go=$("vlgGo");if(go)go.onclick=vlgWrite;
  var out=$("vlgOut");
- if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="vlgCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="vlgToBoard()">\ud83c\udfac To Pre-Roll</button></div>'):"";
+ if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="vlgCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.vlog||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="vlgToBoard()">\ud83c\udfac Pre-Roll</button></div>'):"";
 }
 function vlgCopy(){navigator.clipboard.writeText((S.vlog||{}).last||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
 function vlgToBoard(){var t=(S.vlog||{}).last||"";if(!t){toast("Nothing to send yet.",true);return;}
@@ -8633,7 +8849,9 @@ async function vlgWrite(){
    " Plain text, clear section headers, no markdown tables. Spoken lines written out as they would actually be said.";
   var usr="WHAT\u2019S HAPPENING: "+C.situation.trim()+"\nDeliver the requested output in full.";
   var res=await _llmRun(sys,usr);
-  C.last=String(res||"").trim();save();renderVlog();
+  C.last=String(res||"").trim();
+  C.lastArt=(creatorArtifact("vlog","script",VLG_OUTPUTS[C.output||"short"][0],C.last,{productionType:"vlog",castIds:C.cast||[],setIds:C.setId?[C.setId]:[]})||{}).id||"";
+  save();renderVlog();
   if(st)st.innerHTML="";
  }catch(e){if(st)st.innerHTML=errLine(e);}
 }
@@ -8723,7 +8941,7 @@ function renderSitcom(){
   chipDefLine("sitWriterDef",(C.writers&&C.writers.length)?("Writing in the craft of "+wrNames(C.writers).join(" + ")+"."):("Nobody equipped \u2014 it will use the recommended room: "+wrNames(recs).join(" + ")+"."));}
  var go=$("sitGo");if(go)go.onclick=sitWrite;
  var out=$("sitOut");
- if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="sitCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="sitToBoard()">\ud83c\udfac To Pre-Roll</button></div>'):"";
+ if(out)out.innerHTML=C.last?('<label class="fld" style="margin-top:14px">Output</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(C.last)+'</div><div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="sitCopy()">\u29c9 Copy</button><button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.sitcom||{}).lastArt)">\u2197 Send to</button><button class="btn ghost sm" style="flex:1" onclick="sitToBoard()">\ud83c\udfac Pre-Roll</button></div>'):"";
 }
 function shortDef(t){var i=String(t).indexOf(": ");var v=i>0?String(t).slice(i+2):String(t);return v.split(". ")[0]+".";}
 function sitCopy(){navigator.clipboard.writeText((S.sitcom||{}).last||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
@@ -8747,7 +8965,9 @@ async function sitWrite(){
    " Write in clean plain text with clear section headers. No markdown tables. Audience responses appear inline in their correct positions, in brackets, e.g. [audience: strong laugh].";
   var usr="SITUATION: "+C.situation.trim()+"\nDeliver the requested output in full.";
   var res=await _llmRun(sys,usr);
-  C.last=String(res||"").trim();save();renderSitcom();
+  C.last=String(res||"").trim();
+  C.lastArt=(creatorArtifact("sitcom","script",SIT_OUTPUTS[C.output||"scene"][0],C.last,{productionType:"sitcom",castIds:C.cast||[],setIds:C.setId?[C.setId]:[]})||{}).id||"";
+  save();renderSitcom();
   if(st)st.innerHTML="";
  }catch(e){if(st)st.innerHTML=errLine(e);}
 }

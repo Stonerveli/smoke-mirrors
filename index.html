@@ -1291,7 +1291,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.50 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.52 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -3032,6 +3032,105 @@ function vhOpen(view){
  h+='<button class="btn ghost sm" style="width:100%;margin-top:6px" onclick="vhCheckpoint(&quot;'+view+'&quot;,&quot;Manual checkpoint&quot;)">\uff0b Save checkpoint</button>';
  sendSheet(h);
 }
+/* ============================================================
+   SHARED CRAFT LAWS — techniques any station can borrow
+   ============================================================ */
+/* every prop counted and owned, so nothing respawns or vanishes */
+function propLedgerLaw(items){
+ var list=(items&&items.length)?(" LEDGER: exactly "+items.join(", ")+"."):"";
+ return " PROP LEDGER (count and ownership are absolute):"+list+
+  " State how many of each object exist and who owns or carries each one. An object that breaks, drops, is thrown or is set down STAYS in that state and that place for the rest of the piece."+
+  " No resets, no repairs, no duplicates, no teleporting, no vanishing, no respawning. If something is destroyed, no intact version of it appears afterwards."+
+  " When a prop changes hands, show the handover.";
+}
+/* fights read as chaos when everyone attacks at once — this is the fix */
+function soloEngagementLaw(){
+ return " ENGAGEMENT ORDER (this is what separates readable action from a mob):"+
+  " Attackers engage in a stated order. While one is engaged, the others hold at a named distance, circling, closing or recovering — visibly present and threatening, but not touching."+
+  " Two attacks only overlap when the text says they overlap, and then state exactly how the two lines cross."+
+  " A downed opponent stays down permanently and remains visible where they fell."+
+  " Every miss becomes recovery, pursuit or interception — nobody waits, poses or watches.";
+}
+/* tells the model what to IGNORE in a reference image */
+function refIgnoreLaw(){
+ return " REFERENCE DISCIPLINE: the reference image is the sole authority for identity, proportions, hair, wardrobe, materials and rendering style."+
+  " IGNORE everything else in it — its background, any white sheet or backdrop, captions or labels, repeated character-sheet views, alternate poses, colour swatches and duplicated heads."+
+  " Never redesign, restyle or substitute the character, and never add an accessory the reference does not show.";
+}
+/* hide a change behind an object instead of morphing */
+function occlusionLaw(){
+ return " OCCLUSION TRANSITIONS: when wardrobe, time or location must change, hide the change behind a real object that fills the frame — a towel, a door, a passing body, a lid closing."+
+  " The change happens under the occlusion and is complete when the frame clears. Never morph clothing or features on screen.";
+}
+/* original, not a remake of the prompt it was built from */
+function originalityLaw(kind){
+ return " ORIGINALITY: build an ORIGINAL "+(kind||"piece")+" in this world with these characters."+
+  " Use the structural techniques only — beat counts, engagement order, camera logic, prop discipline."+
+  " Never reproduce a specific existing sequence, its setting, its choreography order, its named moves, its props or its ending."+
+  " If the result resembles a recognisable scene from an existing property, change the setting, the objects and the resolution until it does not.";
+}
+/* ============================================================
+   CHARACTER SHEETS — lock a character before anything else uses them
+   ============================================================ */
+var SHEET_KINDS={
+ board:["Identity Board (2:1)","A premium cinematic identity board. RIGHT 25%: one full-height edge-to-edge hero portrait filling that area completely, no margins. LEFT 10%: the character name as a clean editorial title, with exactly four expression portraits stacked beneath it \u2014 front, left three-quarter, right three-quarter and side profile, each a distinctly different emotion, gaze following the head angle. CENTER 65%: one large off-center hero full-body facing the viewer with the face sharp and unobstructed, plus a back full-body in a different pose, a side full-body in a different pose, one top-down body angle and one low body angle. Clean minimal background colour chosen to contrast elegantly with the character\u2019s palette. Never overlap or crop the studies."],
+ turnaround:["Turnaround + expressions","A clean multi-view model sheet: front, three-quarter, side profile and back full-body views in a neutral standing pose; an expression row of six close-ups (neutral, warm, serious, surprised, amused, hard); two pose variations that show personality; and detail call-outs for hair, face, hands, footwear and any signature accessory. Evenly spaced panels, clear separation, minimal neutral background."],
+ nine:["Nine-section reference board","A dense professional reference board in nine labelled sections: (1) five full-body views \u2014 front, side, back, front three-quarter, back three-quarter; (2) five head views \u2014 front, profile, 45 degrees, from above, from below; (3) nine expression close-ups; (4) detail panels for eyes, brows, nose, mouth, ears, jawline, skin and hands; (5) hair views \u2014 front, side, back, ends, flow direction; (6) combined hair-and-face angles; (7) a short feature-notes list; (8) six colour swatches taken from the character (hair, eyes, skin, lips, clothing, shadow); (9) six FIXED-POINT labels naming what must never change. Thin borders, organised rectangular panels, all labels in English."],
+ wardrobe:["Wardrobe board (headless)","A six-panel wardrobe and casting board on seamless light-grey. TOP ROW: three full-body outfit panels shown WITHOUT the head \u2014 the neck and above faded smoothly into the background so only the outfit and body read \u2014 in front, back and side profile, every garment detail visible: fabric, colour, stitching, closures, collar, sleeves, cuffs, legwear, footwear and any jewellery. BOTTOM ROW: three head-and-shoulders portraits \u2014 front with a neutral gaze to camera, three-quarter left, and right profile. Even softbox lighting, no shadows on the background."],
+ expression:["Expression sheet only","A single expression sheet: twelve close-up facial panels of the same character, each a distinctly different emotion and head direction, identical identity, hairstyle, age and rendering in every panel. Only the expression changes."]
+};
+function sheetLaw(){
+ return " IDENTITY LOCK: analyse the reference and establish a strict visual identity lock from every observable trait, proportion, design detail and stylistic rule, then apply it identically across every panel."+
+  " Nothing may drift, relocate, disappear, duplicate or be invented; only perspective-dependent visibility may change."+
+  " Correct obvious generation errors such as malformed hands WITHOUT changing the intended design."+
+  " Keep the same rendering medium, linework, shading and texture as the reference throughout."+
+  refIgnoreLaw()+
+  " NO: arrows, annotation marks, handwritten notes, environments, extra characters, alternate costumes, logos, watermarks, style drift, inconsistent features, duplicated details, obscured faces or overlapping figures. All text in English, minimal and editorial.";
+}
+function sheetBuild(castId,kind){
+ var c=(S.cast||[]).find(function(x){return x.id===castId;});
+ if(!c)return "";
+ var k=SHEET_KINDS[kind]||SHEET_KINDS.board;
+ var vs=(c.views||[]).filter(function(v){return v.src;});
+ var prof=(CINE_RENDER[(S.cine||{}).render]||CINE_RENDER.stoneralia_animated)[1];
+ var L=[];
+ L.push("Create a professional CHARACTER REFERENCE SHEET for "+c.name+", using the supplied reference image as the ONLY visual source for the character.");
+ L.push("SHEET TYPE: "+k[0]+". "+k[1]);
+ if(c.identity)L.push("CHARACTER: "+c.name+" \u2014 "+String(c.identity).slice(0,400)+".");
+ if(c.voice)L.push("BEARING: "+String(c.voice).slice(0,200)+".");
+ L.push("RENDER: "+prof);
+ L.push(sheetLaw());
+ L.push("NAME TO PRINT: "+c.name);
+ if(!vs.length)L.push("NOTE: no reference image is attached to this character yet. Attach one for a true identity lock, or this generates from the written description alone.");
+ return L.join("\n\n");
+}
+function sheetOpen(castId){
+ var c=(S.cast||[]).find(function(x){return x.id===castId;});
+ if(!c){toast("Pick a character first.",true);return;}
+ var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:2px">Character sheet</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">'+esc(c.name)+' \u2014 pick a sheet type. Lock the character once, reuse it everywhere.</div>';
+ Object.keys(SHEET_KINDS).forEach(function(k){
+  h+='<button class="btn ghost sm" style="width:100%;margin-bottom:6px;text-align:left" onclick="sheetMake(&quot;'+castId+'&quot;,&quot;'+k+'&quot;)">'+esc(SHEET_KINDS[k][0])
+   +'<span class="sub" style="display:block;opacity:.7">'+esc(String(SHEET_KINDS[k][1]).slice(0,84))+'\u2026</span></button>';
+ });
+ sendSheet(h);
+}
+function sheetMake(castId,kind){
+ var out=sheetBuild(castId,kind);
+ if(!out){toast("Could not build that.",true);return;}
+ var c=(S.cast||[]).find(function(x){return x.id===castId;});
+ var a=creatorArtifact("cast","prompt",(c?c.name:"Character")+" \u2014 "+SHEET_KINDS[kind][0],out,{castIds:[castId]});
+ S.lastSheet=out;save();
+ var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:6px">'+esc(SHEET_KINDS[kind][0])+'</div>'
+  +'<div style="white-space:pre-wrap;font-size:12.5px;line-height:1.5;max-height:46vh;overflow:auto">'+esc(out)+'</div>'
+  +'<div class="row" style="margin-top:8px">'
+  +'<button class="btn ghost sm" style="flex:1" onclick="sheetCopy()">\u29c9 Copy</button>'
+  +(a?('<button class="btn ghost sm" style="flex:1" onclick="sendOpen(&quot;'+a.id+'&quot;)">\u2197 Send to</button>'):"")
+  +'</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px">Paste into Studio with the character\u2019s reference attached. Best on GPT Image 2 or Nano Banana Pro.</div>';
+ sendSheet(h);
+}
+function sheetCopy(){navigator.clipboard.writeText(S.lastSheet||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];
 function uxMode(){return (UX_MODES.indexOf(S.uxMode)>=0)?S.uxMode:"pro";}
@@ -3579,7 +3678,7 @@ CAMERA: ${c.cam}. Apply the Camera & Structure choice above and keep consistent 
 PHYSICS: realistic momentum and weight transfer, visible impact force, motion blur on fast limbs, secondary cloth and hair physics, sweat particles, heavy breathing and fatigue micro-movements, real gravity at all times.
 ENVIRONMENT: ${envLine}
 AUDIO (diegetic only): impacts, footwork, fabric, breath, environmental hits \u2014 no music.
-RULES: single coherent 10\u201315s high-motion sequence (or clean storyboarded multi-shot flow). No gore, no excessive blood, no disappearing props, no changing costumes, no unreadable combat. Hold the same characters, wardrobe and location across every beat. Replace @Image1 / @Image2 with your Hero / Villain reference images (Seedance 2.0 reference-to-video syntax).`;
+RULES: ${soloEngagementLaw()} ${propLedgerLaw([])} ${refIgnoreLaw()} ${originalityLaw("fight sequence")} Single coherent 10\u201315s high-motion sequence (or clean storyboarded multi-shot flow). No gore, no excessive blood, no disappearing props, no changing costumes, no unreadable combat. Hold the same characters, wardrobe and location across every beat. Replace @Image1 / @Image2 with your Hero / Villain reference images (Seedance 2.0 reference-to-video syntax).`;
 }
 function flBuildPeak(){
  const c=flCtx(),F=S.fight,disc=FL_DISC[F.discipline]||FL_DISC.auto;
@@ -4878,6 +4977,7 @@ function renderAssetEditor(){
   const it=assetOf();if(!it){closeAsset(aKind);return;}
   const labels=aKind==="cast"?CAST_LABELS:SET_LABELS;const vs=viewsOf(it).filter(v=>v.src);
   let h='<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div><div style="font-family:var(--slate);font-stretch:condensed;font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:.04em">'+esc(it.name)+'</div><div class="hint">'+vs.length+' reference'+(vs.length===1?'':'s')+'</div></div><button class="btn sm ghost" id="aClose" style="margin-left:auto;flex:0">Done</button></div>';
+  if(aKind==="cast")h+='<button class="btn ghost sm" style="width:100%;margin-bottom:10px" onclick="sheetOpen(&quot;'+it.id+'&quot;)">\u25a6 Build character sheet <span class="sub">lock this character before generating</span></button>';
   h+='<label class="fld">Name</label><input type="text" id="aName" value="'+esc(it.name)+'">';
   if(aKind==="cast"){
     h+='<label class="fld">Identity lock — injected into every shot for consistency</label><textarea id="aIdentity" style="min-height:84px">'+esc(it.identity||"")+'</textarea>';h+='<button class="btn ghost sm" id="aDnaBtn" style="margin-top:6px;width:100%">✦ Generate character DNA</button><div id="aDnaStatus"></div>';

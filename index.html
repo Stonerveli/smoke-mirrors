@@ -1267,13 +1267,13 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div style="font-weight:800;font-family:var(--slate);margin-bottom:6px">⚡ MODEL PLAYBOOK</div>
   <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">Which model, when, and what it costs. Rates move — check fal for the current number.</div>
   <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:8px">THE LADDER — iterate cheap, finish expensive</div>
-  <div class="hint" style="text-transform:none;letter-spacing:0">Draft every idea at the cheapest tier; only the keeper earns a full-price render. A 10-second shot: H3 Max ~$0.25 → Wan 3.0 480p $0.50 → Wan 720p $1.00 → Wan 1080p $2.00 → Seedance 2.5 $2.20–$4.70.</div>
+  <div class="hint" style="text-transform:none;letter-spacing:0">Draft every idea at the cheapest tier; only the keeper earns a full-price render. A 10-second shot: H3 Max ~$0.50 → Wan 3.0 480p $0.50 → Wan 720p $1.00 → Wan 1080p $2.00 → Seedance 2.5 $2.20–$4.70.</div>
   <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:10px">VIDEO — pick by the job</div>
   <div class="hint" style="text-transform:none;letter-spacing:0"><b>Wan 3.0</b> — the workhorse: 30s single take, native audio, references, up to 1080p, ~5× cheaper than Seedance.<br><b>Seedance 2.5</b> — hero shots only. 50 refs = best consistency in crowded scenes. Caps at 720p.<br><b>H3 Max</b> — cheapest motion. Animates ONE frame with lip-sync.<br><b>MiniMax H3</b> — 9 refs and legible on-screen text.<br><b>Flux Upscale</b> — finishing only; precise mode keeps faces exact.</div>
   <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:10px">IMAGE — pick by the job</div>
   <div class="hint" style="text-transform:none;letter-spacing:0"><b>Nano Banana 2</b> — house style, known-good.<br><b>Muse Image</b> — $0.01, plans before it renders. Use it when the image contains READABLE TEXT or when batching dozens of variants.<br><b>Recraft V4 Vector</b> — true SVG: print-ready apparel art straight out of the app.<br><b>Recraft V4</b> — exact RGB brand palette for on-brand batches.<br><b>Nano Banana Pro</b> — $0.15 finals.</div>
   <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:10px">THREE SHORTCUTS</div>
-  <div class="hint" style="text-transform:none;letter-spacing:0"><b>1 · Keyframe then animate.</b> Build the frame in Studio with nano-banana (~$0.02, refs keep the character right), then animate with H3 Max. A 10s shot lands near $0.42 instead of $4.70.<br><b>2 · Draft at 480p, always.</b> Judge composition and motion cheap; resolution is the last decision, never the first.<br><b>3 · Upscaling isn’t always cheaper.</b> Flux at $0.14/sec beats generating on Wan at $0.10/sec only when you need 2K/4K or must rescue an existing keeper.</div>
+  <div class="hint" style="text-transform:none;letter-spacing:0"><b>1 · Keyframe then animate.</b> Build the frame in Studio with nano-banana (~$0.06), then animate with H3 Max. A 10s shot lands near $0.60 instead of $4.70.<br><b>2 · Draft at 480p, always.</b> Judge composition and motion cheap; resolution is the last decision, never the first.<br><b>3 · Upscaling isn’t always cheaper.</b> Flux at $0.14/sec beats generating on Wan at $0.10/sec only when you need 2K/4K or must rescue an existing keeper.</div>
   <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:10px">LONGER PIECES — frame chaining</div>
   <div class="hint" style="text-transform:none;letter-spacing:0">Video models drift late in a clip and always start slow then speed up. So: generate the shot → watch for the second it degrades → cut it there and keep only the clean opening → take a frame from that end point, clean it up in Studio, and generate the next section starting from it → when you join them, trim about 1 second off the front of the second clip so the pace matches. Chain as many as you need — that is how a 15-second model makes a minute.</div>
   <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:10px">TEXT IN MOTION — it works now</div>
@@ -1291,7 +1291,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.54 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.55 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -3400,7 +3400,7 @@ async function runGenerate(){
     if(sceneText)input.prompt=prompt2+sceneText;}
   if(st.kind==="video"){
     if(model.indexOf("h3")>=0&&S.promptExp)input.prompt_expansion=S.promptExp;var _dur=parseInt((($("duration")||{}).value))||8;
-    var _rate={"alibaba/wan-3.0/reference-to-video":[0.05,0.20],"alibaba/wan-3.0/image-to-video":[0.05,0.20],"alibaba/wan-3.0/text-to-video":[0.05,0.20],"blackforestlabs/flux-video-upscale":[0.14,0.79],"minimax/h3-max/image-to-video":[0.025,0.08],"minimax/h3-max/text-to-video":[0.025,0.08],"minimax/h3/reference-to-video":[0.26,0.26],"bytedance/seedance-2.5/reference-to-video":[0.22,0.47],"bytedance/seedance-2.0/reference-to-video":[0.30,0.30]}[model]||[0.05,0.47];
+    var _rate={"alibaba/wan-3.0/reference-to-video":[0.05,0.20],"alibaba/wan-3.0/image-to-video":[0.05,0.20],"alibaba/wan-3.0/text-to-video":[0.05,0.20],"blackforestlabs/flux-video-upscale":[0.14,0.79],"minimax/h3-max/image-to-video":[0.05,0.08],"minimax/h3-max/text-to-video":[0.05,0.08],"minimax/h3/reference-to-video":[0.26,0.26],"bytedance/seedance-2.5/reference-to-video":[0.22,0.47],"bytedance/seedance-2.0/reference-to-video":[0.30,0.30]}[model]||[0.05,0.47];
     var _lo=(_dur*_rate[0]).toFixed(2),_hi=(_dur*_rate[1]).toFixed(2);if(!confirm("Paid video · 1 clip · ~"+_dur+"s · est $"+_lo+"—$"+_hi+". Approve the plan before paying for the pixels?"))return;
     if(model.includes("kling")){input.duration=String($("duration").value);const cv=flattenRefs(refItems,1);if(cv[0])input.image_url=cv[0];}
     else{input.resolution=$("resolution").value;input.duration=String($("duration").value);if(aspect!=="auto")input.aspect_ratio=aspect;const urls=flattenRefs(refItems,4);if(urls.length)input.image_urls=urls;if($("genAudio").checked)input.generate_audio=true;}
@@ -4970,8 +4970,8 @@ const MODEL_COSTS={
  "alibaba/wan-3.0/image-to-video":"$0.20/sec 1080p · $0.10/sec 720p · $0.05/sec 480p · animates a frame, optional end frame",
  "alibaba/wan-3.0/text-to-video":"$0.20/sec 1080p · $0.10/sec 720p · $0.05/sec 480p · text only",
  "blackforestlabs/flux-video-upscale":"precise: $0.14/sec 1080p · $0.25/sec 2K · $0.55/sec 4K (creative mode costs more) · keeps faces exact, audio carries over",
- "minimax/h3-max/image-to-video":"$0.04/sec at 768p · $0.025/sec at 480p (launch promo, doubles Sept 1) · animates ONE frame, native audio + lip-sync",
- "minimax/h3-max/text-to-video":"$0.04/sec at 768p · $0.025/sec at 480p (launch promo, doubles Sept 1) · text only, no refs",
+ "minimax/h3-max/image-to-video":"$0.08/sec at 768p · $0.05/sec at 480p · animates ONE frame, native audio + lip-sync",
+ "minimax/h3-max/text-to-video":"$0.08/sec at 768p · $0.05/sec at 480p · text only, no refs",
  "minimax/h3/reference-to-video":"$0.26/sec at 2K · 9 image refs + 3 clips + 3 audio, renders legible text",
  "bytedance/seedance-2.0/reference-to-video":"$0.30/sec at 720p · ~$1.50 per 5-sec clip",
  "fal-ai/kling-video/v3/pro/image-to-video":"$0.11–0.17 per second"

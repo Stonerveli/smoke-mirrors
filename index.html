@@ -1286,7 +1286,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.44 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.45 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -2723,6 +2723,144 @@ async function refineRun(view,instruction){
   save();cur.re();
   toast("Revised \u2014 previous version kept in lineage.");
  }catch(e){toast("Refine failed: "+e.message,true);}
+}
+/* ============================================================
+   UX PASS 8 — S&M REVIEW (diagnose before regenerating)
+   ============================================================ */
+var REVIEW_PROFILES={
+ writing:["Writing","premise clarity, character motivation, distinct character voice, structure, pacing, repetition, over-exposition, dialogue specificity, payoff, ending strength, continuity"],
+ comedy:["Comedy","comedic premise, whether the comedy is CHARACTER-GENERATED rather than interchangeable, escalation, variation between beats, reaction opportunities, status play, how each character fails, callbacks, joke redundancy, the ending button, and commitment (whether characters play it straight)"],
+ sketch:["Sketch","whether the GAME is identifiable in one sentence, whether each beat heightens rather than repeats, variation, the breaking point, whether the exit arrives shortly after the strongest payoff, and whether the ending belongs to THIS sketch"],
+ sitcom:["Sitcom","audience timing (punchline first, then the hold, then the response), whether every line wrongly gets a laugh, ensemble reaction opportunities, act-break placement, set geography consistency, and period wardrobe discipline"],
+ vlog:["Vlog","whether the camera has a reason to exist, who is holding it and whether that stays consistent, motivated imperfection, audio perspective following the camera, and whether B-roll serves the story"],
+ canon:["Canon","consistency with the supplied character and location context ONLY. Never invent a canon rule. If the context does not state something, do not treat it as a violation."],
+ originality:["Originality","premise distinctiveness, over-reliance on recognisable existing properties, derivative character construction, and familiar scene structure. When uncertain say Potential Similarity Concern rather than making a claim."]
+};
+var SEVERITY_ORDER=["info","minor","moderate","major","blocking"];
+function reviewProfilesFor(a){
+ var t=(a&&a.type)||"text",st=(a&&a.station)||"";
+ var out=["writing"];
+ if(st==="sketch"||t==="sketch")out.push("sketch","comedy");
+ if(st==="sitcom")out.push("sitcom","comedy");
+ if(st==="vlog")out.push("vlog");
+ if(st==="comedy")out.push("comedy");
+ out.push("canon","originality");
+ return out.filter(function(v,i,arr){return arr.indexOf(v)===i;});
+}
+function reviewStatusFrom(findings){
+ var max=-1;
+ (findings||[]).forEach(function(f){
+  var i=SEVERITY_ORDER.indexOf(String(f.severity||"minor").toLowerCase());
+  if(i>max)max=i;
+ });
+ if(max>=4)return "FAIL";
+ if(max>=2)return "WARN";
+ return "PASS";
+}
+function reviewHash(t){var h=0,x=String(t||"");for(var i=0;i<x.length;i++){h=((h<<5)-h+x.charCodeAt(i))|0;}return String(h);}
+async function reviewRun(artId){
+ var a=artGet(artId);
+ if(!a){toast("Nothing to review.",true);return null;}
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return null;}
+ var profs=reviewProfilesFor(a);
+ var ctx=ctxPackage([]);
+ var ctxTxt=ctx.fields.length?(" CONTEXT AVAILABLE (this is the ONLY canon you know \u2014 never invent more): "+ctx.fields.map(function(f){return f.label+": "+f.value;}).join("; ")+"."):" No registered context supplied \u2014 do not raise canon findings.";
+ sendSheet('<div style="font-family:var(--slate);font-weight:800">S&amp;M Review</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">Reviewing as '+esc(profs.map(function(p){return REVIEW_PROFILES[p][0];}).join(" + "))+'\u2026</div>');
+ try{
+  var sys="You are S&M REVIEW, the internal quality pass for the Smoke & Mirrors studio."
+   +" Diagnose before regenerating. Identify what works, what does not, why, how severe it is, where it is, and the smallest fix that would resolve it."
+   +" REVIEW PROFILES ACTIVE: "+profs.map(function(p){return REVIEW_PROFILES[p][0]+" ("+REVIEW_PROFILES[p][1]+")";}).join(" || ")+"."
+   +ctxTxt
+   +" SEVERITY: info, minor, moderate, major, blocking. Reserve BLOCKING for something that genuinely prevents production (missing required information, broken structure, a real canon contradiction). Do NOT let a stylistic preference become a major finding."
+   +" Intentional creative choices are not errors \u2014 an awkward pause may BE the joke."
+   +" Never assign numeric scores. Never invent canon."
+   +" Return JSON ONLY, no prose, no markdown fences: {\"working\":[\"specific strength\",\"...\"],\"findings\":[{\"category\":\"Pacing\",\"severity\":\"moderate\",\"location\":\"Beat 4\",\"issue\":\"one sentence\",\"why\":\"one sentence on why it matters\",\"suggested\":\"the smallest fix\"}]}"
+   +" Only list strengths that are actually present. If nothing is wrong, return an empty findings array.";
+  var usr="ARTIFACT TYPE: "+(a.type||"text")+"\nTITLE: "+(a.title||"(untitled)")+"\n\n"+a.body;
+  var res=await _llmRun(sys,usr);
+  var txt=String(res||"").replace(/```json|```/g,"").trim();
+  var data;try{data=JSON.parse(txt);}catch(e){data={working:[],findings:[{category:"Review",severity:"info",location:"",issue:"The reviewer did not return usable structure.",why:"Try running review again.",suggested:"Re-run review."}]};}
+  var findings=Array.isArray(data.findings)?data.findings:[];
+  a.review={status:reviewStatusFrom(findings),working:Array.isArray(data.working)?data.working:[],findings:findings,ignored:[],ts:Date.now(),hash:reviewHash(a.body)};
+  artSave(a);
+  reviewShow(a.id);
+  return a.review;
+ }catch(e){
+  var sh=$("sendsheet");if(sh)sh.remove();
+  toast("Review failed: "+e.message,true);return null;
+ }
+}
+function reviewOutdated(a){return !!(a&&a.review&&a.review.hash!==reviewHash(a.body));}
+function reviewShow(artId){
+ var a=artGet(artId);if(!a||!a.review){toast("Not reviewed yet.",true);return;}
+ var r=a.review,m=uxMode();
+ var colour=r.status==="PASS"?"var(--bud)":(r.status==="FAIL"?"#d46a6a":"#c9a94a");
+ var live=(r.findings||[]).filter(function(f,i){return (r.ignored||[]).indexOf(i)<0;});
+ var shown=(m==="simple")?live.slice(0,4):live;
+ var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:2px">S&amp;M Review</div>'
+  +'<div style="font-family:var(--slate);font-weight:800;font-size:18px;color:'+colour+'">'+r.status
+  +'<span style="font-size:11px;opacity:.6;font-weight:400"> \u00b7 '+live.length+' finding'+(live.length===1?"":"s")+(reviewOutdated(a)?" \u00b7 OUTDATED":"")+'</span></div>';
+ if((r.working||[]).length){
+  h+='<div style="font-family:var(--slate);color:var(--bud);font-size:11px;margin-top:8px">WORKING</div>';
+  r.working.slice(0,5).forEach(function(x){h+='<div style="font-size:13px;padding:2px 0">\u2713 '+esc(x)+'</div>';});
+ }
+ if(!live.length){
+  h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px">Nothing blocking. Move it forward.</div>';
+ }
+ shown.forEach(function(f,idx){
+  var i=(r.findings||[]).indexOf(f);
+  var sev=String(f.severity||"minor").toUpperCase();
+  h+='<div class="card" style="margin-top:8px;padding:9px"><div style="font-family:var(--slate);font-size:11px;color:'+colour+'">'+esc(f.category||"Note")+' \u2014 '+esc(sev)+(f.location?(' \u00b7 '+esc(f.location)):"")+'</div>'
+   +'<div style="font-size:13.5px;margin-top:3px">'+esc(f.issue||"")+'</div>'
+   +(f.why?('<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:3px">'+esc(f.why)+'</div>'):"")
+   +(f.suggested?('<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:3px;opacity:.8">Suggested: '+esc(f.suggested)+'</div>'):"")
+   +'<div class="row" style="margin-top:6px">'
+   +'<button class="btn ghost sm" style="flex:1;font-size:11px" onclick="reviewFix(&quot;'+a.id+'&quot;,'+i+')">Fix this</button>'
+   +'<button class="btn ghost sm" style="flex:1;font-size:11px" onclick="reviewIgnore(&quot;'+a.id+'&quot;,'+i+')">Ignore</button>'
+   +'</div></div>';
+ });
+ h+='<div class="row" style="margin-top:10px">'
+  +'<button class="btn ghost sm" style="flex:1" onclick="reviewRun(&quot;'+a.id+'&quot;)">Re-run</button>'
+  +'<button class="btn green sm" style="flex:1" onclick="reviewApprove(&quot;'+a.id+'&quot;)">Approve</button></div>';
+ sendSheet(h);
+}
+function reviewIgnore(artId,i){
+ var a=artGet(artId);if(!a||!a.review)return;
+ if(!Array.isArray(a.review.ignored))a.review.ignored=[];
+ if(a.review.ignored.indexOf(i)<0)a.review.ignored.push(i);
+ a.review.status=reviewStatusFrom((a.review.findings||[]).filter(function(f,j){return a.review.ignored.indexOf(j)<0;}));
+ artSave(a);reviewShow(artId);
+ toast("Accepted for this version \u2014 it will not be raised again here.");
+}
+function reviewApprove(artId){
+ var a=artGet(artId);if(!a)return;
+ var blocking=(a.review&&a.review.findings||[]).some(function(f,i){
+  return String(f.severity||"").toLowerCase()==="blocking"&&(a.review.ignored||[]).indexOf(i)<0;});
+ if(blocking){toast("Resolve the blocking finding first.",true);return;}
+ a.status="approved";a.approvedAt=Date.now();a.approvedVersion=a.version||1;
+ artSave(a);
+ var sh=$("sendsheet");if(sh)sh.remove();
+ toast("Approved for this stage \u2014 not canon, not published.");
+ var sum=apSummary();
+ if(sum&&sum.type&&wfHas(sum.type,"review"))apCompleteStage("review");
+}
+async function reviewFix(artId,i){
+ var a=artGet(artId);if(!a||!a.review)return;
+ var f=(a.review.findings||[])[i];if(!f)return;
+ var sh=$("sendsheet");if(sh)sh.remove();
+ var view=a.station;
+ if(!refineCurrent(view)){toast("Open the Creator that made this to fix it.",true);return;}
+ await refineRun(view,(f.suggested||f.issue||"")+" (targeted fix: change only this, preserve everything else)");
+}
+function reviewCurrentArt(view){
+ var m={sketch:(S.sketch||{}).lastArt,sitcom:(S.sitcom||{}).lastArt,vlog:(S.vlog||{}).lastArt,comedy:(S.comedy||{}).lastArt};
+ return m[view]||"";
+}
+function reviewOpen(view){
+ var id=reviewCurrentArt(view);
+ if(!id){toast("Nothing to review yet.",true);return;}
+ var a=artGet(id);
+ if(a&&a.review&&!reviewOutdated(a))reviewShow(id);else reviewRun(id);
 }
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];

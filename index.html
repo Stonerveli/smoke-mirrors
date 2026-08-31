@@ -1298,7 +1298,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.62 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.64 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1650,7 +1650,8 @@ function bkPaint(){
  var col=pct>=80?"var(--red)":(pct>=60?"#c9a94a":"var(--bud)");
  el.innerHTML='<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--bone-dim)"><span>'+(Math.round(used/1048576*100)/100)+' MB used</span><span>~5 MB browser limit</span></div>'+(IDB.ok?'<div style="font-size:11px;color:var(--bud);margin-top:2px">🗄 '+IDB.map.size+' image'+(IDB.map.size===1?'':'s')+' in the vault (unlimited, outside this bar)</div>':'')+'<div style="height:8px;border:1px solid var(--line);border-radius:999px;margin-top:4px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+col+'"></div></div><div id="bkPersist" class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px"></div>';
  try{if(navigator.storage&&navigator.storage.persisted)navigator.storage.persisted().then(function(p){var t=$("bkPersist");if(t)t.textContent=p?"✓ Android granted persistent storage — data protected from auto-eviction.":"⚠ Persistent storage not granted yet — install as app + revisit often to earn it.";});}catch(e){}}
-function save(){try{var j=JSON.stringify(IDB.ok?smDehydrate(S):S);localStorage.setItem(LS,j);
+function save(){try{try{var _fresh=DropStore.read();if(_fresh)S.dropRun=_fresh;}catch(e){}
+ var j=JSON.stringify(IDB.ok?smDehydrate(S):S);localStorage.setItem(LS,j);
  if(IDB.ok)idbFlush();
  if(j.length>3800000&&!window.__smWarned){window.__smWarned=true;toast("Heads up: "+(Math.round(j.length/1048576*10)/10)+" MB of ~5 MB storage used — export a backup in Setup.",true);}
 }catch(e){
@@ -1989,6 +1990,7 @@ function go(name){
   if(name==="sketch")renderSketch();
   if(name==="talent")renderTalent();
   try{apbMount();}catch(e){}
+  try{if(name==="run"){var _f=DropStore.read();if(_f)S.dropRun=_f;}}catch(e){}
   try{if(MODE_CFG[name])modeRender(name);}catch(e){}
   try{if(VIEW_GROUP[name]==="create"&&name!=="chief")recTouch("station",name,navLabel(name)||name,name);}catch(e){}
   if(name==="templates")renderTemplates();
@@ -3383,7 +3385,7 @@ function dropSeedCommonScents(){
   ]
  };
 }
-function dropRun(){return S.dropRun||null;}
+function dropRun(){var r=DropStore.read();if(r)S.dropRun=r;return r||null;}
 function dropStart(seed,startISO){
  var d=seed||dropSeedCommonScents();
  d.start=startISO||runToday();
@@ -3394,9 +3396,10 @@ function dropStart(seed,startISO){
   day.date=dt.toISOString().slice(0,10);
   day.origDate=day.date;
  });
- S.dropRun=d;save();return d;
+
+ DropStore.write(d);S.dropRun=d;save();return d;
 }
-function dropClear(){if(!confirm("Clear the active Drop Run? The plan file is untouched."))return;S.dropRun=null;save();try{renderRun();}catch(e){}}
+function dropClear(){if(!confirm("Clear the active Drop Run? The plan file is untouched."))return;DropStore.clear();S.dropRun=null;save();try{renderRun();}catch(e){}}
 function dropDayDone(day){
  if(!day)return false;
  var must=day.must||[];
@@ -3411,18 +3414,15 @@ function dropProgress(day){
 /* TODAY = the first day whose required work is unfinished */
 function dropToday(){
  var d=dropRun();if(!d)return null;
- for(var i=0;i<d.days.length;i++){if(!d.days[i].closed)return d.days[i];}
- return null;
+ return DropStore.today(d);
 }
-function dropDaysBehind(){
- var t=dropToday();if(!t||!t.date)return 0;
- var today=new Date(runToday()+"T12:00:00").getTime();
- var due=new Date(t.date+"T12:00:00").getTime();
- var diff=Math.round((today-due)/86400000);
- return diff>0?diff:0;
-}
+function dropDaysBehind(){return DropStore.daysBehind(dropRun());}
 /* MISSED DAY = SCHEDULE SHIFT, NOT A PILEUP */
 function dropRollForward(){
+ var r=DropStore.rollForward();if(r)S.dropRun=DropStore.read();
+ return r;
+}
+function dropRollForwardLegacy(){
  var d=dropRun();if(!d)return null;
  var behind=dropDaysBehind();
  if(behind<=0)return null;
@@ -3442,18 +3442,15 @@ function dropRollForward(){
  save();
  return {shift:behind,moved:moved.length,conflict:conflict};
 }
-function dropMark(dayN,i,v){
- var d=dropRun();if(!d)return;
- var day=d.days.find(function(x){return x.n===dayN;});if(!day)return;
- day.done[i]=(v===undefined)?!day.done[i]:v;
- save();renderRun();
-}
+function dropMark(dayN,i,v){DropStore.mark(dayN,i,v);S.dropRun=DropStore.read();renderRun();}
 function dropCloseDay(){
  var d=dropRun(),t=dropToday();if(!d||!t)return;
  if(!dropDayDone(t)){toast("Required work is still open on this day.",true);return;}
- t.posted=Date.now();t.closed=1;
- var r=runState();r.streak=(r.streak||0)+1;r.lastDone=runToday();save();
- toast("Day "+t.n+" closed. Streak "+r.streak+".");
+ var res=DropStore.closeDay();
+ if(!res.ok){toast(res.why,true);return;}
+ S.dropRun=DropStore.read();
+ if(S.run)S.run.streak=res.streak;
+ toast("Day "+res.day+" closed. Streak "+res.streak+".");
  renderRun();
 }
 function dropNext(){
@@ -7889,6 +7886,108 @@ function ashtrayCard(){
  var body=R.length?'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">'+R.slice(0,60).map(function(x){
   return '<span title="'+esc(x.day+" — "+x.title)+'" style="display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:8px;padding:4px 8px;background:#141414"><span style="width:16px;height:8px;border-radius:2px;background:#8a6a3f;display:inline-block"></span><span style="font-size:10px;color:var(--bone-dim)">'+esc(x.day.slice(5))+"</span></span>";}).join("")+"</div>":'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">Empty — close a day and drop the first one in.</div>';
  return '<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><label class="fld" style="margin:0">🗑 The ashtray</label><div style="font-weight:800">'+((S.roaches||[]).length)+'</div></div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:2px">Every finished lap leaves a roach. Lightning in a bottle, one clip at a time.</div>'+body+"</div>";}
+/* ============================================================
+   DROPSTORE — the shared contract between S&M and Drop Desk.
+   Same origin, same localStorage, ONE Drop Run. Both apps talk
+   to the store through these functions, never to each other.
+   Keep this block byte-identical in dropdesk.html.
+   ============================================================ */
+var DropStore=(function(){
+ var KEY="smokemirrors_v1", FIELD="dropRun", CONTRACT=1;
+ function all(){try{return JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){return {};}}
+ function persist(o){try{localStorage.setItem(KEY,JSON.stringify(o));return true;}catch(e){return false;}}
+ function read(){var o=all();return o[FIELD]||null;}
+ function write(run){var o=all();o[FIELD]=run;o.dropContract=CONTRACT;return persist(o);}
+ function clear(){var o=all();o[FIELD]=null;return persist(o);}
+ function streak(){var o=all();return (o.run&&o.run.streak)||0;}
+ function bumpStreak(iso){var o=all();o.run=o.run||{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null};
+  o.run.streak=(o.run.streak||0)+1;o.run.lastDone=iso||new Date().toISOString().slice(0,10);return persist(o);}
+ function iso(d){return new Date(d).toISOString().slice(0,10);}
+ function todayISO(){var d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
+ function dayDone(day){if(!day)return false;var m=day.must||[];for(var i=0;i<m.length;i++){if(!day.done[i])return false;}return true;}
+ function today(run){run=run||read();if(!run)return null;
+  for(var i=0;i<run.days.length;i++){if(!run.days[i].closed)return run.days[i];}return null;}
+ function daysBehind(run){run=run||read();var t=today(run);if(!t||!t.date)return 0;
+  var diff=Math.round((new Date(todayISO()+"T12:00:00")-new Date(t.date+"T12:00:00"))/86400000);
+  return diff>0?diff:0;}
+ function rollForward(run){run=run||read();if(!run)return null;
+  var behind=daysBehind(run);if(behind<=0)return null;
+  var t=today(run),idx=run.days.indexOf(t),moved=0,conflict=null;
+  for(var i=idx;i<run.days.length;i++){
+   var d=run.days[i];
+   if(d.fixed){conflict=d;break;}
+   d.date=iso(new Date(d.date+"T12:00:00").getTime()+behind*86400000);moved++;
+  }
+  run.history=run.history||[];
+  run.history.unshift({ts:Date.now(),shift:behind,reason:behind+" missed drop day"+(behind===1?"":"s"),moved:moved});
+  if(run.history.length>20)run.history=run.history.slice(0,20);
+  write(run);
+  return {shift:behind,moved:moved,conflict:conflict};}
+ function mark(n,i,v){var run=read();if(!run)return null;
+  var d=run.days.find(function(x){return x.n===n;});if(!d)return null;
+  d.done[i]=(v===undefined)?!d.done[i]:v;write(run);return run;}
+ function closeDay(){var run=read();if(!run)return {ok:false,why:"No active run."};
+  var t=today(run);if(!t)return {ok:false,why:"Run already complete."};
+  if(!dayDone(t))return {ok:false,why:"Required work is still open."};
+  t.closed=1;t.posted=Date.now();write(run);bumpStreak(todayISO());
+  return {ok:true,day:t.n,streak:streak()};}
+ function stats(run){run=run||read();if(!run)return null;
+  var days=run.days||[],closed=0,mustTotal=0,mustDone=0,posts=0;
+  days.forEach(function(d){
+   if(d.closed){closed++;if(d.posted)posts++;}
+   (d.must||[]).forEach(function(_,i){mustTotal++;if(d.done[i])mustDone++;});});
+  var shift=(run.history||[]).reduce(function(a,h){return a+(h.shift||0);},0);
+  var assets=(run.assets||[]);
+  return {days:days.length,closed:closed,mustTotal:mustTotal,mustDone:mustDone,posts:posts,shift:shift,
+   assetsReady:assets.filter(function(a){return a.state==="ready"||a.state==="posted"||a.state==="reused";}).length,
+   assetsTotal:assets.length,
+   pct:days.length?Math.round(closed/days.length*100):0};}
+ return {contract:CONTRACT,key:KEY,read:read,write:write,clear:clear,today:today,dayDone:dayDone,
+  daysBehind:daysBehind,rollForward:rollForward,mark:mark,closeDay:closeDay,stats:stats,
+  todayISO:todayISO,streak:streak};
+})();
+/* ---- CAMPAIGN STRATEGIES — shape a plan from a brief ---- */
+var DROP_STRATEGIES={
+ quick:["Quick Drop","3 days · one tease, launch, one push. For restocks and small pieces.",[["-1","warmup","Tease"],["1","launch","Launch"],["2","rhythm","Push"]]],
+ capsule:["Capsule / Mini",'6 days · two teases, launch, three rhythm days.',[["-2","warmup","Tease"],["-1","warmup","Countdown"],["1","launch","Launch"],["2","rhythm","Character"],["3","rhythm","Product"],["4","close","Last call"]]],
+ standard:["Standard Drop","14 days · setup, five-day warm-up, launch, rhythm, close. The Common Scents shape.",null],
+ major:["Major Drop","21 days · longer warm-up and a longer tail.",null],
+ restock:["Restock","4 days · announce, launch, remind, close.",[["-1","warmup","Announce"],["1","launch","Back in stock"],["2","rhythm","Remind"],["3","close","Last call"]]],
+ custom:["Custom","You define every day yourself.",[]]
+};
+function dropBuildFromBrief(brief,strategyKey){
+ var st=DROP_STRATEGIES[strategyKey]||DROP_STRATEGIES.standard;
+ var b=brief||{};
+ if(strategyKey==="standard"||strategyKey==="major"||!st[2]){
+  var base=dropSeedCommonScents();
+  base.name=b.name||base.name;base.sub=b.sub||"";
+  base.brief=b;
+  if(strategyKey==="major"){
+   var extra=[15,16,17,18,19,20,21].map(function(n){
+    return {n:n,phase:"rhythm",title:"Extended day "+n,must:["Post the day\u2019s piece"],station:"",how:"",caption:"",bonus:"",prep:"",fixed:false,done:{},posted:0,closed:0};});
+   base.days=base.days.concat(extra);
+  }
+  return base;
+ }
+ return {
+  id:"drop_"+uid(),name:b.name||"New Drop",sub:b.sub||"",window:b.window||"6\u20139pm local",
+  rules:b.rules||[],recovery:["Missed a day? The run shifts. Order matters, dates don\u2019t."],
+  bonusStanding:"",brief:b,created:Date.now(),history:[],assets:[],
+  days:st[2].map(function(row){
+   return {n:parseInt(row[0],10),phase:row[1],title:row[2],
+    must:[row[2]==="Launch"||row[2]==="Back in stock"?"Publish the product":"Make the piece","Post it"],
+    station:"",how:"",caption:"",bonus:"",prep:"",fixed:(row[1]==="launch"),done:{},posted:0,closed:0};})
+ };
+}
+/* ---- ASSET STATE (references only, production stays in S&M) ---- */
+var ASSET_STATES=["needed","producing","ready","posted","reused"];
+function dropAssets(){var d=dropRun();if(!d)return [];if(!d.assets)d.assets=[];return d.assets;}
+function dropAssetAdd(name,dayN){var d=dropRun();if(!d)return;if(!d.assets)d.assets=[];
+ d.assets.unshift({id:uid(),name:name||"Untitled asset",day:(dayN===undefined?null:dayN),state:"needed",artId:"",ts:Date.now()});
+ DropStore.write(d);S.dropRun=d;}
+function dropAssetState(id,state){var d=dropRun();if(!d)return;
+ var a=(d.assets||[]).find(function(x){return x.id===id;});if(!a)return;
+ a.state=state;DropStore.write(d);S.dropRun=d;}
 /* ---- PLAN IMPORT / EXPORT ----------------------------------
    Research happens outside S&M. The plan comes in as JSON.
    ------------------------------------------------------------ */

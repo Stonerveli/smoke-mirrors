@@ -243,6 +243,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button data-go="vlog"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 10l5-3v10l-5-3z'/><rect x='3' y='6' width='12' height='12' rx='2'/></svg></span>Vlog</button>
   <button data-go="comedy"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3a9 9 0 100 18 9 9 0 000-18z'/><path d='M8 14s1.5 2 4 2 4-2 4-2'/><path d='M9 9h.01M15 9h.01'/></svg></span>Comedy Lab</button>
   <button data-go="sketch"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5h16v11H4z'/><path d='M9 20l3-4 3 4'/><path d='M8 9l2 2 4-4'/></svg></span>Sketch</button>
+  <button data-go="talent"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'/><path d='M4 21c0-4 3.6-6 8-6s8 2 8 6'/><path d='M18 3l1 2 2 1-2 1-1 2-1-2-2-1 2-1z'/></svg></span>Talent</button>
   <button data-go="fight"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M13 2 4.5 13.5H11l-1 8.5 9.5-12.5H12z'/></svg></span>Fight</button>
 <button data-go="vibe"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4z'/><path d='M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z'/></svg></span>Vibe</button>
   <button data-go="smg"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18V5l12-2v13'/><circle cx='6' cy='18' r='3'/><circle cx='18' cy='16' r='3'/></svg></span>SMG</button>
@@ -559,6 +560,12 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
 <section class="view" id="view-templates">
   <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='7' height='7' rx='1'/><rect x='14' y='3' width='7' height='7' rx='1'/><rect x='3' y='14' width='7' height='7' rx='1'/><path d='M14 17.5h7M17.5 14v7'/></svg></span><h2>Templates</h2><span class="tag">Prompt Library</span></div>
   <div id="tplBody"></div>
+</section>
+
+<!-- ===== VIRTUAL TALENT / WHAT\u2019S BUZZIN\u2019 ===== -->
+<section class="view" id="view-talent">
+  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'/><path d='M4 21c0-4 3.6-6 8-6s8 2 8 6'/></svg></span><h2>Talent</h2><span class="tag">Virtual Talent</span></div>
+  <div id="talentBody"></div>
 </section>
 
 <!-- ===== SKETCH COMEDY GROUP CREATOR ===== -->
@@ -1291,7 +1298,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.55 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.58 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1939,7 +1946,7 @@ const VIEW_GROUP={
   /* CREATE — where you start */
   chief:"create",run:"create",studio:"create",vibe:"create",
   /* WRITE — develop the idea */
-  story:"write",episodes:"write",comedy:"write",sketch:"write",sitcom:"write",vlog:"write",fight:"write",
+  story:"write",episodes:"write",comedy:"write",sketch:"write",talent:"write",sitcom:"write",vlog:"write",fight:"write",
   /* VISUALIZE — turn writing into pictures */
   board:"visual",csb:"visual",comics:"visual",cloudtoons:"visual",songvid:"visual",
   /* AUDIO */
@@ -1980,6 +1987,7 @@ function go(name){
   if(name==="vlog")renderVlog();
   if(name==="comedy")renderComedy();
   if(name==="sketch")renderSketch();
+  if(name==="talent")renderTalent();
   try{apbMount();}catch(e){}
   try{if(MODE_CFG[name])modeRender(name);}catch(e){}
   try{if(VIEW_GROUP[name]==="create"&&name!=="chief")recTouch("station",name,navLabel(name)||name,name);}catch(e){}
@@ -2227,6 +2235,8 @@ var INTENTS=[
   kw:["episode","ep ","full episode","installment","act one","act two"]},
  {id:"story",label:"Develop an Idea",type:"story",why:"Turn a rough idea into structured material before writing it.",
   kw:["idea","develop","concept","brainstorm","figure out","story","plot","premise"]},
+ {id:"talent",label:"Character content",type:"video",station:"talent",why:"Run a registered character as a public personality \u2014 reactions, commentary, segments.",
+  kw:["chieff content","character content","chieff doing","doing today","talent","what\u2019s buzzin","whats buzzin","buzzin","trend","reaction","react to","commentary","persona","in character"]},
  {id:"comic",label:"Comic",type:"comic",why:"Panels with dialogue \u2014 the daily format.",
   kw:["comic","strip","panel","panels","daily","chiefinese"]},
  {id:"image",label:"Image / Design",type:"image",why:"A single still \u2014 art, design, graphic or reference.",
@@ -2260,7 +2270,7 @@ function irRoute(text){
   intentId:chosen.id,
   label:chosen.label,
   type:chosen.type,
-  station:wfStationFor(chosen.type),
+  station:chosen.station||wfStationFor(chosen.type),
   why:chosen.why,
   confident:!!confident,
   stages:wfStages(chosen.type),
@@ -2277,7 +2287,7 @@ function irNeeds(type){
  return map[type]||[];
 }
 function irById(id){var i=INTENTS.find(function(x){return x.id===id;});if(!i)return null;
- return {ok:true,intentId:i.id,label:i.label,type:i.type,station:wfStationFor(i.type),why:i.why,confident:true,stages:wfStages(i.type),needs:irNeeds(i.type),alternatives:[]};}
+ return {ok:true,intentId:i.id,label:i.label,type:i.type,station:i.station||wfStationFor(i.type),why:i.why,confident:true,stages:wfStages(i.type),needs:irNeeds(i.type),alternatives:[]};}
 function irApply(route,opts){
  if(!route||!route.ok)return null;
  opts=opts||{};
@@ -2758,6 +2768,7 @@ var REVIEW_PROFILES={
  sitcom:["Sitcom","audience timing (punchline first, then the hold, then the response), whether every line wrongly gets a laugh, ensemble reaction opportunities, act-break placement, set geography consistency, and period wardrobe discipline"],
  vlog:["Vlog","whether the camera has a reason to exist, who is holding it and whether that stays consistent, motivated imperfection, audio perspective following the camera, and whether B-roll serves the story"],
  canon:["Canon","consistency with the supplied character and location context ONLY. Never invent a canon rule. If the context does not state something, do not treat it as a violation."],
+ trend:["Trend commentary","factual support for every claim, freshness of the information, source quality, whether fiction or comedy could be mistaken for fact, whether the character stays in character, hook strength, clarity for an unfamiliar viewer, pacing, whether the humour emerges naturally, whether the character contributes visually, and whether the ending pays off"],
  originality:["Originality","premise distinctiveness, over-reliance on recognisable existing properties, derivative character construction, and familiar scene structure. When uncertain say Potential Similarity Concern rather than making a claim."]
 };
 var SEVERITY_ORDER=["info","minor","moderate","major","blocking"];
@@ -2768,6 +2779,7 @@ function reviewProfilesFor(a){
  if(st==="sitcom")out.push("sitcom","comedy");
  if(st==="vlog")out.push("vlog");
  if(st==="comedy")out.push("comedy");
+ if(st==="talent"||t==="episode")out.push("trend");
  out.push("canon","originality");
  return out.filter(function(v,i,arr){return arr.indexOf(v)===i;});
 }
@@ -3153,6 +3165,144 @@ function fightPropLaw(){
  if(!raw)return propLedgerLaw([]);
  var items=raw.split(/[,;\n]+/).map(function(x){return x.trim();}).filter(Boolean).slice(0,10);
  return propLedgerLaw(items);
+}
+/* ============================================================
+   STONERALIA VIRTUAL TALENT — PHASE A
+   Character first. Content second. Platform third.
+   Reads existing Cast records; never a second Canon.
+   ============================================================ */
+var TALENT_FORMATS={
+ reaction:["Reaction","A short response to something happening now.",["visual","short"]],
+ commentary:["Commentary","Their take on a cultural moment.",["voice","short"]],
+ short:["Short / Reel","Vertical short-form piece.",["visual","short"]],
+ post:["Social post","Image plus caption.",["visual"]],
+ selfie:["In-universe selfie","A photo they took themselves, inside the world.",["visual"]],
+ vlog:["Vlog","Camera in their hand, their reason for filming.",["voice","visual"]],
+ interview:["Interview","Someone asks, they answer.",["voice"]],
+ qa:["Q&A","Audience questions answered in character.",["voice"]],
+ advice:["Advice","Guidance only this character would give.",["voice"]],
+ segment:["Recurring segment","Their owned format, run again.",["visual","short"]],
+ observation:["Cultural observation","Something noticed, not explained.",["visual"]],
+ meme:["Meme response","A reply to a format everyone knows.",["visual"]],
+ fakead:["Fake advertisement","An original spot for something absurd.",["visual","voice"]],
+ brand:["Brand appearance","With an approved product in an approved way.",["visual"]],
+ bts:["Behind the scenes","The unglamorous middle.",["visual"]],
+ crossover:["Cross-character","Two registered characters together.",["visual"]],
+ update:["Character update","A direct word to the audience.",["voice"]]
+};
+function talentOf(c){
+ if(!c)return null;
+ if(!c.talent)c.talent={enabled:false,publicName:"",pillars:[],persona:"",never:"",speaks:"normal"};
+ return c.talent;
+}
+function talentRoster(){return (S.cast||[]).filter(function(c){return c.talent&&c.talent.enabled;});}
+function talentToggle(id){
+ var c=(S.cast||[]).find(function(x){return x.id===id;});if(!c)return;
+ var t=talentOf(c);t.enabled=!t.enabled;save();
+ toast(t.enabled?(c.name+" is now Virtual Talent."):(c.name+" removed from the roster."));
+ try{renderTalent();}catch(e){}
+}
+/* CHARACTER FIT — would this character actually do this? */
+function talentFit(c,fmtKey){
+ if(!c)return {level:"LOW",why:"No character selected."};
+ var t=talentOf(c),f=TALENT_FORMATS[fmtKey];
+ if(!f)return {level:"LOW",why:"Unknown format."};
+ var needs=f[2]||[],reasons=[],score=2;
+ var speaks=t.speaks||"normal";
+ if(needs.indexOf("voice")>=0){
+  if(speaks==="silent"){score-=2;reasons.push("this format needs them to talk and they do not speak in canon");}
+  else if(speaks==="rare"){score-=1;reasons.push("they rarely speak, so a narrator would have to carry it");}
+ }
+ if(needs.indexOf("visual")>=0&&!(c.views||[]).filter(function(v){return v.src;}).length){
+  score-=1;reasons.push("no approved visual reference is attached yet");
+ }
+ if((t.never||"").trim()&&f[0]&&(t.never||"").toLowerCase().indexOf(f[0].toLowerCase())>=0){
+  score-=2;reasons.push("their never-do list rules this out");
+ }
+ if(!c.identity)reasons.push("their identity is thin, so the treatment will be generic");
+ var level=score>=2?"HIGH":(score>=1?"MEDIUM":"LOW");
+ return {level:level,why:reasons.length?reasons.join("; "):"personality, voice rules and references all support it."};
+}
+function talentLaw(c){
+ if(!c)return "";
+ var t=talentOf(c);
+ var speaks=t.speaks||"normal";
+ var sp=speaks==="silent"?" SPEECH RULE: this character DOES NOT SPEAK. All information is carried by a narrator or by on-screen text. They communicate through visual behaviour, reaction, staging and environmental comedy only. Never give them dialogue."
+  :speaks==="rare"?" SPEECH RULE: this character speaks RARELY and briefly. A narrator carries the information. When they do speak it is short and it lands — never a paragraph, never exposition."
+  :" SPEECH RULE: this character speaks in their registered voice and vocabulary.";
+ return " VIRTUAL TALENT — "+(t.publicName||c.name)+" is a registered Stoneralia character operating as a public-facing personality. The character determines the treatment; the format never reshapes the character."+
+  (c.identity?(" IDENTITY: "+String(c.identity).slice(0,300)+"."):"")+
+  (c.voice?(" BEARING: "+String(c.voice).slice(0,200)+"."):"")+
+  (t.persona?(" PUBLIC PERSONA: "+String(t.persona).slice(0,300)+" Public persona never overrides canon."):"")+
+  ((t.pillars||[]).length?(" CONTENT PILLARS: "+t.pillars.join(", ")+"."):"")+
+  ((t.never||"").trim()?(" WOULD NEVER: "+String(t.never).slice(0,240)+"."):"")+
+  sp+
+  " TRANSPARENCY: this is entertainment IP and the fiction is part of the product. Never fabricate real-world endorsements, testimonials or personal human experiences presented as fact.";
+}
+/* ============================================================
+   WHAT’S BUZZIN’ WITH CHIEFF — PHASE B
+   ============================================================ */
+var WB_CATS={
+ buzz:["What’s Buzzin’","A major current conversation."],
+ asking:["Everybody’s Asking","A question people keep asking."],
+ culture:["Culture Check","A behaviour, slang term or cultural trend."],
+ explain:["Explain This","Something confusing, simplified."],
+ argument:["Internet Argument","A popular disagreement."],
+ business:["Business Is Wild","An industry development."],
+ policy:["Policy / Legal","A policy or legal development."],
+ myth:["Myth / Reality","A misconception corrected with evidence."],
+ reacts:["Reacts","Reaction-forward, light on information."]
+};
+var WB_LENGTHS={
+ micro:["Micro (15–30s)","15 to 30 seconds — one idea, one button."],
+ standard:["Standard (30–60s)","30 to 60 seconds — the default."],
+ extended:["Extended (60–90s)","60 to 90 seconds — needs real substance to earn it."],
+ deep:["Deeper take (2–6 min)","2 to 6 minutes — only for genuinely complex topics."]
+};
+var WB_SCORES=["low","medium","high"];
+function wbState(){
+ if(!S.wb)S.wb={topic:"",cat:"buzz",len:"standard",facts:"",sources:"",avoid:"",checked:0,
+  buzz:"medium",relevance:"medium",fit:"medium",angle:"medium",comedy:"medium",info:"medium",shelf:"short",
+  castId:"",last:"",lastArt:""};
+ return S.wb;
+}
+function wbVerdict(){
+ var w=wbState();
+ var v=function(x){return WB_SCORES.indexOf(x)+1;};
+ var core=v(w.buzz)+v(w.fit)+v(w.relevance);
+ var craft=v(w.comedy)+v(w.angle)+v(w.info);
+ if(v(w.fit)<=1)return {call:"SKIP",why:"Character fit is low — this is somebody else’s topic, or Block Report’s."};
+ if(core>=7&&craft>=6)return {call:"COVER",why:"Strong current conversation with a clear character and comedic angle."};
+ if(core>=6)return {call:"MAYBE",why:"The attention is there but the angle or the evidence needs work first."};
+ return {call:"SKIP",why:"Not enough attention or not enough to say. Let it go."};
+}
+function wbStale(){
+ var w=wbState();
+ if(!w.checked)return false;
+ return (Date.now()-w.checked)>(1000*60*60*48);
+}
+function wbLaw(){
+ var w=wbState();
+ var c=(S.cast||[]).find(function(x){return x.id===w.castId;});
+ var cat=WB_CATS[w.cat]||WB_CATS.buzz;
+ var len=WB_LENGTHS[w.len]||WB_LENGTHS.standard;
+ var facts=(w.facts||"").trim();
+ var src=(w.sources||"").trim();
+ var avoid=(w.avoid||"").trim();
+ return " You are writing an episode of WHAT’S BUZZIN’ — a recurring cannabis-culture trend and commentary format. This is NOT straight news: it is trend explanation plus cultural commentary plus character."+
+  " SEGMENT: "+cat[0]+" — "+cat[1]+" LENGTH: "+len[1]+
+  (c?talentLaw(c):"")+
+  " NARRATOR RELATIONSHIP: the narrator explains and the character reacts. The narrator introduces the topic, gives context, says why people care and sets up the comedy. The character supplies visual commentary, contradiction, reaction and the button."+
+  " VISUAL COMEDY ENGINE: for every beat, answer what the character is physically DOING while the narrator explains. Never default to them standing beside graphics. Use environment, props, staging, timing, background action, physical contradiction and escalation. The visuals must be funny independently of the narration."+
+  " EPISODE ENGINE: Hook (why anyone should care) → What’s happening → Why people are talking → the Stoneralia angle → the character button → out. Do not label these sections; let it flow. Exit immediately after the strongest payoff."+
+  " HOOK: build it from real audience curiosity — a question, a surprising fact, a contradiction, a misconception, an absurd real development. Never fake sensationalism, never “you won’t believe”."+
+  " BUTTON: end on a strong visual payoff. Do not force dialogue. Sometimes the character doing absolutely nothing is the joke."+
+  " FACT / JOKE SEPARATION (critical): mark every line internally as FACT, COMMENTARY, JOKE or STONERALIA FICTION. Never present fictional universe material as real cannabis news, and never let the comedy invent a factual claim."+
+  (facts?(" VERIFIED FACTS — you may state these and nothing beyond them: "+facts.slice(0,900)):" NO VERIFIED FACTS WERE SUPPLIED. Do not state any factual claim as fact. Write the structure, the angle and the comedy, and mark clearly where a verified fact must be inserted before this can be published.")+
+  (src?(" SOURCES: "+src.slice(0,400)+"."):"")+
+  (avoid?(" DO NOT CLAIM: "+avoid.slice(0,400)+"."):"")+
+  " SENSITIVE TOPICS: for health, legal or policy material — preserve uncertainty, avoid diagnosis, avoid personalised medical or legal advice, distinguish jurisdiction where relevant, and timestamp anything that changes fast. Comedy may surround the information; it may never corrupt it."+
+  " Deliver: the hook, the beats with narrator lines and character action side by side, the button, and a short list of every factual claim used so it can be checked.";
 }
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];
@@ -9208,6 +9358,108 @@ var SK_COMBOS=[
  {n:"Honest Table Read",w:"Paste a sketch you already wrote and get real revision notes.",m:"ensemble",o:"table",t:"",l:"short"},
  {n:"Group Identity",w:"Define what makes YOUR troupe recognisable across every sketch.",m:"ensemble",o:"identity",t:"",l:"short"}
 ];
+function tlSet(k,v){var W=wbState();W[k]=v;save();renderTalent();}
+function tlPick(id){if(!S.talentSel)S.talentSel="";S.talentSel=(S.talentSel===id)?"":id;save();renderTalent();}
+function tlProfile(id,k,v){var c=(S.cast||[]).find(function(x){return x.id===id;});if(!c)return;var t=talentOf(c);t[k]=v;save();}
+function tlPillars(id,v){var c=(S.cast||[]).find(function(x){return x.id===id;});if(!c)return;
+ talentOf(c).pillars=String(v||"").split(/[,;]+/).map(function(x){return x.trim();}).filter(Boolean).slice(0,8);save();}
+function tlTopicChecked(){var W=wbState();W.checked=Date.now();save();renderTalent();toast("Topic timestamped as checked now.");}
+function renderTalent(){
+ var host=$("talentBody");if(!host)return;
+ var W=wbState();
+ var roster=talentRoster();
+ var sel=(S.cast||[]).find(function(x){return x.id===S.talentSel;});
+ var h="";
+ h+='<details class="collapse" style="margin-bottom:12px"><summary>\u2753 How to use this</summary><div class="body">'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px"><b>Run a registered character as a public personality.</b> The character decides the treatment \u2014 never the other way round.</div>'
+  +'<div style="font-size:13.5px;line-height:1.7">1. Enable a character as Virtual Talent below.<br>2. Set how they speak \u2014 that one setting protects them.<br>3. Pick a format; the Fit check tells you if they belong in it.<br>4. For <b>What\u2019s Buzzin\u2019</b>: enter the topic and the verified facts, score it, then write.</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px;color:#c9a94a">S&amp;M cannot discover trends by itself. You supply the topic and the facts \u2014 it will not invent either.</div></div></details>';
+ /* roster */
+ h+='<div class="card"><label class="fld">Roster \u2014 tap to enable as Virtual Talent</label><div class="tokenchips">';
+ h+=(S.cast||[]).filter(function(c){return c.name&&(c.status||"canon")!=="archived";}).map(function(c){
+  var on=c.talent&&c.talent.enabled;
+  return '<span class="chip'+(on?" on":"")+'" onclick="talentToggle(&quot;'+c.id+'&quot;)">'+esc(c.name)+'</span>';}).join("")||'<span class="hint">No cast yet.</span>';
+ h+='</div>';
+ if(!roster.length)h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">Nobody enabled yet. Not every character should be \u2014 only the ones who can carry public content.</div>';
+ h+='</div>';
+ /* selected talent */
+ if(roster.length){
+  h+='<div class="card" style="margin-top:12px"><label class="fld">Working with</label><div class="tokenchips">'
+   +roster.map(function(c){return '<span class="chip'+(S.talentSel===c.id?" on":"")+'" onclick="tlPick(&quot;'+c.id+'&quot;)">'+esc(c.name)+'</span>';}).join("")+'</div>';
+  if(sel){
+   var t=talentOf(sel);
+   h+='<label class="fld" style="margin-top:10px">How they speak <span style="text-transform:none;letter-spacing:0;color:var(--bone-dim)">the setting that protects them</span></label>'
+    +'<select onchange="tlProfile(&quot;'+sel.id+'&quot;,&quot;speaks&quot;,this.value);renderTalent()">'
+    +['normal','rare','silent'].map(function(k){
+      var lbl={normal:"Speaks normally",rare:"Speaks rarely \u2014 narrator carries it",silent:"Never speaks \u2014 visual only"}[k];
+      return '<option value="'+k+'"'+((t.speaks||"normal")===k?" selected":"")+'>'+lbl+'</option>';}).join("")+'</select>';
+   h+='<label class="fld" style="margin-top:10px">Public persona</label><textarea style="min-height:50px" oninput="tlProfile(&quot;'+sel.id+'&quot;,&quot;persona&quot;,this.value)" placeholder="how they behave in public-facing media\u2026">'+esc(t.persona||"")+'</textarea>';
+   h+='<label class="fld" style="margin-top:10px">Content pillars <span style="text-transform:none;letter-spacing:0;color:var(--bone-dim)">comma separated</span></label><input type="text" oninput="tlPillars(&quot;'+sel.id+'&quot;,this.value)" value="'+esc((t.pillars||[]).join(", "))+'" placeholder="cultural reactions, visual comedy, brand appearances">';
+   h+='<label class="fld" style="margin-top:10px">Would never</label><input type="text" oninput="tlProfile(&quot;'+sel.id+'&quot;,&quot;never&quot;,this.value)" value="'+esc(t.never||"")+'" placeholder="things this character would not do">';
+   /* fit grid */
+   h+='<label class="fld" style="margin-top:12px">Formats \u2014 fit checked against this character</label><div style="display:grid;grid-template-columns:1fr;gap:4px">';
+   Object.keys(TALENT_FORMATS).forEach(function(k){
+    var f=talentFit(sel,k),col=f.level==="HIGH"?"var(--bud)":(f.level==="LOW"?"#d46a6a":"#c9a94a");
+    h+='<div style="display:flex;gap:8px;align-items:baseline;font-size:12.5px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05)">'
+     +'<span style="font-family:var(--slate);font-size:10px;color:'+col+';min-width:56px">'+f.level+'</span>'
+     +'<span style="flex:1">'+esc(TALENT_FORMATS[k][0])+'<span style="opacity:.55"> \u00b7 '+esc(f.why)+'</span></span></div>';
+   });
+   h+='</div></div>';
+  } else h+='</div>';
+ }
+ /* what's buzzin desk */
+ h+='<div class="card" style="margin-top:12px"><div style="font-family:var(--slate);font-weight:800;margin-bottom:2px">\u25c9 WHAT\u2019S BUZZIN\u2019</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">Trend explanation + cultural commentary + character. You bring the topic and the facts.</div>';
+ h+='<label class="fld">Who fronts it</label><select onchange="tlSet(&quot;castId&quot;,this.value)"><option value="">\u2014 pick talent \u2014</option>'
+  +roster.map(function(c){return '<option value="'+c.id+'"'+(W.castId===c.id?" selected":"")+'>'+esc(c.name)+'</option>';}).join("")+'</select>';
+ h+='<label class="fld" style="margin-top:10px">Segment \u00b7 length</label><div class="row">'
+  +'<select style="flex:1" onchange="tlSet(&quot;cat&quot;,this.value)">'+Object.keys(WB_CATS).map(function(k){return '<option value="'+k+'"'+(W.cat===k?" selected":"")+'>'+esc(WB_CATS[k][0])+'</option>';}).join("")+'</select>'
+  +'<select style="flex:1" onchange="tlSet(&quot;len&quot;,this.value)">'+Object.keys(WB_LENGTHS).map(function(k){return '<option value="'+k+'"'+(W.len===k?" selected":"")+'>'+esc(WB_LENGTHS[k][0])+'</option>';}).join("")+'</select></div>';
+ h+='<label class="fld" style="margin-top:10px">Topic</label><input type="text" id="wbTopic" value="'+esc(W.topic||"")+'" oninput="S.wb.topic=this.value;save()" placeholder="what is actually being talked about">';
+ h+='<label class="fld" style="margin-top:10px">Verified facts <span style="text-transform:none;letter-spacing:0;color:var(--bone-dim)">one per line \u2014 it will not state anything else as fact</span></label><textarea style="min-height:70px" oninput="S.wb.facts=this.value;save()" placeholder="only what you have actually verified\u2026">'+esc(W.facts||"")+'</textarea>';
+ h+='<label class="fld" style="margin-top:10px">Sources</label><input type="text" oninput="S.wb.sources=this.value;save()" value="'+esc(W.sources||"")+'" placeholder="where each fact came from">';
+ h+='<label class="fld" style="margin-top:10px">Do not claim</label><input type="text" oninput="S.wb.avoid=this.value;save()" value="'+esc(W.avoid||"")+'" placeholder="known traps, disputed points, overreach">';
+ /* scoring */
+ h+='<label class="fld" style="margin-top:12px">Score it</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">';
+ [["buzz","Buzz"],["relevance","Relevance"],["fit","Character fit"],["angle","Stoneralia angle"],["comedy","Comedy"],["info","Info value"]].forEach(function(p){
+  h+='<div><div class="hint" style="text-transform:none;letter-spacing:0">'+p[1]+'</div><select onchange="tlSet(&quot;'+p[0]+'&quot;,this.value)">'
+   +WB_SCORES.map(function(v){return '<option value="'+v+'"'+(W[p[0]]===v?" selected":"")+'>'+v+'</option>';}).join("")+'</select></div>';
+ });
+ h+='</div>';
+ var vd=wbVerdict(),vc=vd.call==="COVER"?"var(--bud)":(vd.call==="SKIP"?"#d46a6a":"#c9a94a");
+ h+='<div class="card" style="margin-top:10px;padding:9px;border-left:3px solid '+vc+'"><div style="font-family:var(--slate);font-weight:800;color:'+vc+'">'+vd.call+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:2px">'+esc(vd.why)+'</div></div>';
+ if(wbStale())h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px;color:#c9a94a">\u26a0 This topic was checked over 48 hours ago \u2014 it may be outdated. Re-check before publishing.</div>';
+ h+='<div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="tlTopicChecked()">\u21ba Mark checked now</button></div>';
+ h+='<button class="btn green" style="width:100%;margin-top:10px" onclick="wbWrite()">\u2726 Write the episode <span class="sub">pennies per call (text)</span></button>';
+ h+='<div id="wbStatus"></div><div id="wbOut"></div></div>';
+ host.innerHTML=h;
+ var o=$("wbOut");
+ if(o&&W.last)o.innerHTML='<label class="fld" style="margin-top:14px">Episode</label><div class="card" style="white-space:pre-wrap;font-size:13.5px;line-height:1.5">'+esc(W.last)+'</div>'
+  +'<div class="row" style="margin-top:8px">'
+  +'<button class="btn ghost sm" style="flex:1" onclick="wbCopy()">\u29c9 Copy</button>'
+  +'<button class="btn ghost sm" style="flex:1" onclick="reviewOpen(&quot;talent&quot;)">\u2713 Review</button>'
+  +'<button class="btn ghost sm" style="flex:1" onclick="sendOpen((S.wb||{}).lastArt)">\u2197 Send to</button></div>';
+}
+function wbCopy(){navigator.clipboard.writeText((S.wb||{}).last||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
+async function wbWrite(){
+ if(!S.apiKey){toast("Add your fal key in Setup.",true);go("settings");return;}
+ var W=wbState();
+ if(!(W.topic||"").trim()){toast("Give it a topic first.",true);return;}
+ if(!W.castId){toast("Pick who fronts it.",true);return;}
+ var vd=wbVerdict();
+ if(vd.call==="SKIP"&&!confirm("The desk says SKIP \u2014 "+vd.why+"\n\nWrite it anyway?"))return;
+ var st=$("wbStatus");if(st)st.innerHTML=spinner("Working the desk\u2026");
+ try{
+  var sys=vibeCtx("full",W.topic)+wbLaw()+" Plain text. No markdown tables.";
+  var usr="TOPIC: "+W.topic.trim()+"\nDeliver the episode.";
+  var res=await _llmRun(sys,usr);
+  W.last=String(res||"").trim();
+  var c=(S.cast||[]).find(function(x){return x.id===W.castId;});
+  W.lastArt=(creatorArtifact("talent","episode","What\u2019s Buzzin\u2019 \u2014 "+String(W.topic).slice(0,40),W.last,{castIds:[W.castId],productionType:"video"})||{}).id||"";
+  save();renderTalent();
+  if(st)st.innerHTML="";
+ }catch(e){if(st)st.innerHTML=errLine(e);}
+}
 function skState(){if(!S.sketch)S.sketch={mode:"ensemble",phil:null,type:"",length:"short",output:"game",obs:"",cast:[],setId:"",last:""};if(!S.sketch.phil)S.sketch.phil=skgPhilDefault();return S.sketch;}
 function skSet(k,v){var C=skState();C[k]=v;save();if(k!=="obs")renderSketch();}
 function skPhilSet(k,v){var C=skState();C.phil[k]=parseInt(v,10);save();var el=$("skp_"+k);if(el)el.textContent=C.phil[k];}

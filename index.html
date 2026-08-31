@@ -1298,7 +1298,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.58 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.62 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -3303,6 +3303,167 @@ function wbLaw(){
   (avoid?(" DO NOT CLAIM: "+avoid.slice(0,400)+"."):"")+
   " SENSITIVE TOPICS: for health, legal or policy material — preserve uncertainty, avoid diagnosis, avoid personalised medical or legal advice, distinguish jurisdiction where relevant, and timestamp anything that changes fast. Comedy may surround the information; it may never corrupt it."+
   " Deliver: the hook, the beats with narrator lines and character action side by side, the button, and a short list of every factual claim used so it can be checked.";
+}
+/* ============================================================
+   DROP RUN — reusable campaign execution. Content is drop-specific.
+   Owns nothing: reads Projects, drives Daily Run, routes via go().
+   ============================================================ */
+var DROP_PHASES={setup:"Setup",warmup:"Warm-up",launch:"Launch",rhythm:"Rhythm",close:"Close"};
+/* Common Scents is the FIRST INSTANCE, not the system. */
+function dropSeedCommonScents(){
+ var mk=function(n,phase,title,must,station,how,caption,bonus,fixed,prep){
+  return {n:n,phase:phase,title:title,must:must,station:station||"",how:how||"",caption:caption||"",bonus:bonus||"",fixed:!!fixed,prep:prep||"",done:{},posted:0};
+ };
+ return {
+  id:"drop_cs01",name:"Common Scents",sub:"Drop 01 \u00b7 Peace & Pull",
+  start:"",created:Date.now(),history:[],window:"6\u20139pm local",
+  rules:["Sign-off \u201c\u2014 Chief\u201d only on Days 2, 4, 8, 10, 13","Meta wink only Days 4, 10, 13","Never two sell posts back to back","One question max per caption","Don\u2019t explain jokes","Cannabis-forward on Shopify/IG/X \u00b7 streetwear-led on TikTok"],
+  recovery:["Missed a warm-up day? Push the whole run back one day. Order matters, dates don\u2019t.","Missed a post? Post it late. Late beats never.","Missed three days? Jump straight to Day 1 and launch."],
+  bonusStanding:"1\u20132 extra TikToks \u00b7 2\u20134 IG Stories \u00b7 a few X one-liners \u00b7 20\u201330 real interactions in adjacent niches",
+  days:[
+   mk(-6,"setup","Build the clips & set up accounts",
+    ["Export all-black Chieff PNG to CapCut","Cut Clips A, B, D, E in CapCut","TikTok Shop seller account","Shopify product live (unpublished)","Link IG + FB in Meta Business Suite"],"assets",
+    "Assets \u2192 all-black Chieff PNG \u2192 CapCut \u00d74. 9:16, Chieff centered ~70%, keyframe the motion, overlays on Screen blend, white text bottom-third, 5\u20136s, export 1080\u00d71920. Skip Clip C.","",
+    "Nothing posts tonight"),
+   mk(-5,"warmup","Stay quiet \u00b7 static silhouette",["Generate the silhouette frame","Post to Story only"],"studio",
+    "Studio \u2192 House-style image \u2192 Cast: Chieff \u2192 static silhouette \u2192 save to Assets.","","Story only"),
+   mk(-4,"warmup","Clip A \u2014 Chief Doesn\u2019t Move",["Generate the static macro","Post static + Clip A \u2014 TikTok first, then IG Reels"],"studio",
+    "Studio \u2192 House-style image \u2192 macro / tight crop. Clip A is already cut.","Everybody\u2019s in a hurry. Not him.","Extra TikTok"),
+   mk(-3,"warmup","Clip B \u2014 The Slow Turn",["Generate the shadowed frame","Post static + Clip B \u2014 TikTok + IG Reels"],"studio",
+    "Studio \u2192 House-style image \u2192 low-key / shadow lighting prompt.","He sees you scrolling.","2\u20134 IG Stories"),
+   mk(-2,"warmup","Clip E \u2014 Blink-and-Miss",["Generate the name-drop frame","Post static + Clip E \u2014 all platforms","Start the Story countdown sticker"],"studio",
+    "Studio \u2192 Image with text (NOT House-style) \u2014 this one needs \u201cCommon Scents\u201d set as on-image type.","Did you catch that? Me neither.",""),
+   mk(-1,"warmup","Clip D \u2014 Patient Countdown",["Generate the \u2018tomorrow\u2019 frame","Post static + Clip D \u2014 all platforms","Countdown hits zero tonight","DM / group-chat seed","BUILD THE ENTIRE DAY 1 CAROUSEL TONIGHT"],"studio",
+    "Studio \u2192 Image with text \u2192 \u201ctomorrow\u201d copy. Then build all five launch cards \u2014 launch day should be posting only, not generating.","He\u2019s not early. He\u2019s just patient.","",
+    false,"Day 1 carousel \u2014 all five cards"),
+   mk(1,"launch","LAUNCH \u2014 hero Chieff goes live",
+    ["Publish the Shopify product","IG: 5-card carousel hero \u2192 back \u2192 on-body \u2192 detail \u2192 closer","IG: link in FIRST COMMENT + 21+, bio link live","IG Stories: all 5 as tap-through, link sticker on closer","TikTok: video cut 1\u21922\u21923\u2192closer + trending sound + Shop product tag","X: cards 1 + 2, link direct in post","DM it out \u00b7 ask 10 people to engage","Pin the post"],"socials",
+    "Cards: 1 hero (Studio house-style) \u00b7 2 back graphic (Studio) \u00b7 3 on-body (Templates \u2192 Drop Film) \u00b7 4 detail macro (Studio) \u00b7 5 closer with printed SHOP NOW bar (Studio \u2192 Image with text). Facebook: nothing, it mirrors from IG.",
+    "Common sense left. The scent stayed. \ud83c\udf3f COMMON SCENTS \u2014 Drop 01 from the Peace & Pull collection. Mineral-wash, boxy, front + back. You Smell the Vibes. Link in bio. 21+",
+    "Stay online two hours and reply to everyone",true),
+   mk(2,"rhythm","Character \u00b7 Carlin \u00b7 clean portrait",["Build the portrait sheet","Post it"],"cast",
+    "Cast \u2192 Chieff \u2192 Build character sheet. Straight portrait sheet \u2014 NOT the expression sheet, that\u2019s Day 8.",
+    "They asked what I\u2019m thinking about. I said nothing. They didn\u2019t believe me. Must be exhausting, being that busy upstairs. \u2014 Chief",""),
+   mk(3,"rhythm","Product \u00b7 soft \u00b7 macro detail",["Generate the macro","Post it"],"studio",
+    "Studio \u2192 House-style image \u2192 close crop on fabric / stitch detail.",
+    "Everybody says \u2018it\u2019s the little things,\u2019 then cuts every little corner. We didn\u2019t. Get close. \ud83c\udf3f",""),
+   mk(4,"rhythm","Culture \u00b7 talking-loop video",["Write it in Vlog","Storyboard","Generate the shots","Cut and loop","Post \u2014 TikTok first"],"vlog",
+    "Write \u2192 Vlog (script \u2192 storyboard) \u2192 Studio (generate shots) \u2192 Library \u2192 The Cut (assemble, loop).",
+    "Oh, you\u2019re back. Day four. You know this is still an ad, right? I know it\u2019s an ad. We\u2019re all adults here. 21+, anyway. \u2014 Chief","1\u20132 extra TikToks"),
+   mk(5,"rhythm","Product \u00b7 lifestyle \u00b7 street on-body",["Build it in Drop Film","Post it"],"templates",
+    "Library \u2192 Templates \u2192 Drop Film. Set Cast: Chieff, set street location, generate.",
+    "Dress like you\u2019ve got nowhere to be and you\u2019re already welcome there. Common Scents, live now. \ud83c\udf3f",""),
+   mk(6,"rhythm","Product \u00b7 hero \u00b7 the back graphic",["Generate the back-of-garment shot","Post it"],"studio",
+    "Studio \u2192 House-style image \u2192 back-of-garment framing. This is the want-trigger, give it room.",
+    "Front says hello. Back says everything I didn\u2019t feel like explaining. Drop 01, Peace & Pull. 21+",""),
+   mk(7,"rhythm","Community + scarcity \u00b7 Patrice",["Post the scarcity nudge"],"",
+    "Nothing to build \u2014 caption only. Post against an existing library asset.",
+    "One week of Common Scents. Some of you get it. The rest of you\u2019ll smell it eventually \u2014 you always do. First run\u2019s not forever. Link in bio.",""),
+   mk(8,"rhythm","Character \u00b7 Gregory \u00b7 depth day",["Build the expression sheet","Post the philosophical frame"],"cast",
+    "Cast \u2192 Build character sheet \u2192 Expression sheet only. Pick the ones that read philosophical, not jokey.",
+    "I\u2019m not above anybody. I\u2019m just downwind. Different view, better information. \u2014 Chief",""),
+   mk(9,"rhythm","World \u00b7 Stoneralia tease",["Build it \u2014 Comics OR Pre-Roll, pick one","Post it"],"comics",
+    "Visuals \u2192 Comics for a strip, or Visuals \u2192 Pre-Roll for a moving teaser. Pick one. Don\u2019t build both.",
+    "There\u2019s a whole world behind the leaf. You\u2019re early to it. That\u2019s the good seat. \ud83c\udf3f",""),
+   mk(10,"rhythm","World \u00b7 motion signal",["Build the mograph piece","Post it"],"board",
+    "Visuals \u2192 Pre-Roll \u2192 tap Motion graphics: ON. Designed animation, tight palette, not live action.",
+    "I\u2019d move faster but the budget for that is in Drop 02. Everything comes back around anyway. \u2014 Chiefin\u2019 Season",""),
+   mk(11,"rhythm","Product \u00b7 practical \u00b7 styling",["Generate the styled shot","Post it"],"studio",
+    "Studio \u2192 House-style image \u2192 styled fit-in-context shot. Removes a buying objection.",
+    "Boxy fit. Wears like you meant it, not like you tried. Goes with everything you already own and ignore.",""),
+   mk(12,"rhythm","Community \u00b7 repost UGC",["Pull a customer tag","Repost and thank them"],"",
+    "Nothing to build. Early buyers are founders \u2014 treat them like it.",
+    "Day-one crowd hits different. You didn\u2019t catch the wave \u2014 you were the reason it moved. Tag us. I\u2019m watching. Respectfully. \ud83c\udf3f",""),
+   mk(13,"rhythm","Momentum \u00b7 tease Drop 01.5",["Post the tease"],"",
+    "Nothing to build \u2014 caption only. The meta line sets up Day 14. Don\u2019t add anything to it.",
+    "Heard you wanted something lighter on the wallet. It\u2019s coming. I\u2019d tell you when but then what would we talk about Day 14? \u2014 Chief",""),
+   mk(14,"close","Recap + last call",["Reuse the Day 1 carousel","Post with the closing caption","Count what actually moved"],"assets",
+    "Assets \u2192 reuse the EXACT Day 1 carousel. Don\u2019t regenerate. New closing caption, same five cards.",
+    "Two weeks of Common Scents. First run\u2019s thinning out. If you were waiting for a sign \u2014 this is just the smell of one. Link in bio. \ud83c\udf3f 21+","")
+  ]
+ };
+}
+function dropRun(){return S.dropRun||null;}
+function dropStart(seed,startISO){
+ var d=seed||dropSeedCommonScents();
+ d.start=startISO||runToday();
+ /* assign calendar dates in order from the start date */
+ var base=new Date(d.start+"T12:00:00");
+ d.days.forEach(function(day,i){
+  var dt=new Date(base.getTime()+i*86400000);
+  day.date=dt.toISOString().slice(0,10);
+  day.origDate=day.date;
+ });
+ S.dropRun=d;save();return d;
+}
+function dropClear(){if(!confirm("Clear the active Drop Run? The plan file is untouched."))return;S.dropRun=null;save();try{renderRun();}catch(e){}}
+function dropDayDone(day){
+ if(!day)return false;
+ var must=day.must||[];
+ for(var i=0;i<must.length;i++){if(!day.done[i])return false;}
+ return true;
+}
+function dropProgress(day){
+ var must=(day&&day.must)||[],n=0;
+ must.forEach(function(_,i){if(day.done[i])n++;});
+ return {done:n,total:must.length};
+}
+/* TODAY = the first day whose required work is unfinished */
+function dropToday(){
+ var d=dropRun();if(!d)return null;
+ for(var i=0;i<d.days.length;i++){if(!d.days[i].closed)return d.days[i];}
+ return null;
+}
+function dropDaysBehind(){
+ var t=dropToday();if(!t||!t.date)return 0;
+ var today=new Date(runToday()+"T12:00:00").getTime();
+ var due=new Date(t.date+"T12:00:00").getTime();
+ var diff=Math.round((today-due)/86400000);
+ return diff>0?diff:0;
+}
+/* MISSED DAY = SCHEDULE SHIFT, NOT A PILEUP */
+function dropRollForward(){
+ var d=dropRun();if(!d)return null;
+ var behind=dropDaysBehind();
+ if(behind<=0)return null;
+ var t=dropToday();
+ var idx=d.days.indexOf(t);
+ var moved=[],conflict=null;
+ for(var i=idx;i<d.days.length;i++){
+  var day=d.days[i];
+  if(day.fixed){conflict=day;break;}
+  var dt=new Date(day.date+"T12:00:00");
+  dt=new Date(dt.getTime()+behind*86400000);
+  day.date=dt.toISOString().slice(0,10);
+  moved.push(day.n);
+ }
+ d.history.unshift({ts:Date.now(),shift:behind,reason:behind+" missed drop day"+(behind===1?"":"s"),moved:moved.length});
+ if(d.history.length>20)d.history=d.history.slice(0,20);
+ save();
+ return {shift:behind,moved:moved.length,conflict:conflict};
+}
+function dropMark(dayN,i,v){
+ var d=dropRun();if(!d)return;
+ var day=d.days.find(function(x){return x.n===dayN;});if(!day)return;
+ day.done[i]=(v===undefined)?!day.done[i]:v;
+ save();renderRun();
+}
+function dropCloseDay(){
+ var d=dropRun(),t=dropToday();if(!d||!t)return;
+ if(!dropDayDone(t)){toast("Required work is still open on this day.",true);return;}
+ t.posted=Date.now();t.closed=1;
+ var r=runState();r.streak=(r.streak||0)+1;r.lastDone=runToday();save();
+ toast("Day "+t.n+" closed. Streak "+r.streak+".");
+ renderRun();
+}
+function dropNext(){
+ var d=dropRun(),t=dropToday();if(!d||!t)return null;
+ var i=d.days.indexOf(t);
+ return (i>=0&&i+1<d.days.length)?d.days[i+1]:null;
+}
+function dropLabel(day){
+ if(!day)return "";
+ return (day.n<0?("Day "+day.n):("Day "+day.n))+" · "+(DROP_PHASES[day.phase]||day.phase);
 }
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];
@@ -7728,13 +7889,143 @@ function ashtrayCard(){
  var body=R.length?'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">'+R.slice(0,60).map(function(x){
   return '<span title="'+esc(x.day+" — "+x.title)+'" style="display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:8px;padding:4px 8px;background:#141414"><span style="width:16px;height:8px;border-radius:2px;background:#8a6a3f;display:inline-block"></span><span style="font-size:10px;color:var(--bone-dim)">'+esc(x.day.slice(5))+"</span></span>";}).join("")+"</div>":'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">Empty — close a day and drop the first one in.</div>';
  return '<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><label class="fld" style="margin:0">🗑 The ashtray</label><div style="font-weight:800">'+((S.roaches||[]).length)+'</div></div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:2px">Every finished lap leaves a roach. Lightning in a bottle, one clip at a time.</div>'+body+"</div>";}
+/* ---- PLAN IMPORT / EXPORT ----------------------------------
+   Research happens outside S&M. The plan comes in as JSON.
+   ------------------------------------------------------------ */
+var DROP_PLAN_SHAPE='{\n  "name": "Drop name",\n  "sub": "collection \u00b7 subtitle",\n  "window": "6\u20139pm local",\n  "rules": ["standing order", "..."],\n  "recovery": ["what to do if it slips", "..."],\n  "bonusStanding": "optional extra volume",\n  "start": "2026-09-01",\n  "days": [\n    {\n      "n": -3,\n      "phase": "setup|warmup|launch|rhythm|close",\n      "title": "what this day is",\n      "must": ["required task", "required task"],\n      "station": "studio|vlog|cast|comics|board|templates|socials|assets|projects|",\n      "how": "the exact tool path and method",\n      "caption": "paste-ready caption",\n      "bonus": "optional volume",\n      "prep": "what must be ready for tomorrow",\n      "fixed": false\n    }\n  ]\n}';
+function dropValidate(o){
+ var errs=[];
+ if(!o||typeof o!=="object")return ["Not a JSON object."];
+ if(!o.name)errs.push("Missing name.");
+ if(!Array.isArray(o.days)||!o.days.length)errs.push("Missing days array.");
+ (o.days||[]).forEach(function(d,i){
+  if(typeof d.n!=="number")errs.push("Day "+(i+1)+": n must be a number.");
+  if(!d.title)errs.push("Day "+(i+1)+": missing title.");
+  if(!Array.isArray(d.must)||!d.must.length)errs.push("Day "+(i+1)+": must[] is required (what has to happen).");
+  if(d.station&&!VIEW_GROUP[d.station])errs.push("Day "+(i+1)+": station \u201c"+d.station+"\u201d is not a real station.");
+ });
+ return errs;
+}
+function dropImport(){
+ var raw=($("dropPlanIn")||{}).value||"";
+ if(!raw.trim()){toast("Paste a plan first.",true);return;}
+ var o;
+ try{o=JSON.parse(raw);}catch(e){toast("That is not valid JSON: "+e.message,true);return;}
+ var errs=dropValidate(o);
+ if(errs.length){
+  sendSheet('<div style="font-family:var(--slate);font-weight:800;margin-bottom:6px">Plan not loaded</div>'
+   +errs.slice(0,10).map(function(x){return '<div style="font-size:13px;padding:2px 0;color:#d46a6a">\u00b7 '+esc(x)+'</div>';}).join("")
+   +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px">Nothing was changed. Fix these and paste again.</div>');
+  return;
+ }
+ if(dropRun()&&!confirm("Replace the active Drop Run? Its progress will be lost."))return;
+ var d={
+  id:"drop_"+uid(),name:o.name,sub:o.sub||"",window:o.window||"",
+  rules:o.rules||[],recovery:o.recovery||[],bonusStanding:o.bonusStanding||"",
+  created:Date.now(),history:[],
+  days:o.days.map(function(x){
+   return {n:x.n,phase:x.phase||"rhythm",title:x.title,must:x.must||[],station:x.station||"",
+    how:x.how||"",caption:x.caption||"",bonus:x.bonus||"",prep:x.prep||"",fixed:!!x.fixed,
+    done:{},posted:0,closed:0};
+  })
+ };
+ dropStart(d,o.start||runToday());
+ renderRun();
+ toast(d.name+" loaded \u2014 "+d.days.length+" days.");
+}
+function dropExport(){
+ var d=dropRun();if(!d){toast("No active run to export.",true);return;}
+ var out={name:d.name,sub:d.sub,window:d.window,rules:d.rules,recovery:d.recovery,
+  bonusStanding:d.bonusStanding,start:d.start,
+  days:d.days.map(function(x){return {n:x.n,phase:x.phase,title:x.title,must:x.must,station:x.station,how:x.how,caption:x.caption,bonus:x.bonus,prep:x.prep,fixed:x.fixed};})};
+ var txt=JSON.stringify(out,null,2);
+ navigator.clipboard.writeText(txt).then(function(){toast("Plan copied as JSON \u2014 save it somewhere.");}).catch(function(){
+  sendSheet('<div style="font-family:var(--slate);font-weight:800;margin-bottom:6px">Plan JSON</div><textarea style="min-height:40vh;font-size:11px">'+esc(txt)+'</textarea>');
+ });
+}
+function dropImportOpen(){
+ var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:2px">Load a plan</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">Research it outside S&amp;M, write the plan as JSON, paste it here. It runs the same way Common Scents does.</div>'
+  +'<textarea id="dropPlanIn" style="min-height:26vh;font-size:11.5px" placeholder="paste the plan JSON\u2026"></textarea>'
+  +'<div class="row" style="margin-top:8px"><button class="btn green sm" style="flex:1" onclick="dropImport()">Load plan</button>'
+  +'<button class="btn ghost sm" style="flex:1" onclick="dropShowShape()">Show the format</button></div>'
+  +(dropRun()?'<button class="btn ghost sm" style="width:100%;margin-top:6px" onclick="dropExport()">\u29c9 Copy current run as JSON</button>':"");
+ sendSheet(h);
+}
+function dropShowShape(){
+ sendSheet('<div style="font-family:var(--slate);font-weight:800;margin-bottom:6px">Plan format</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:6px">Only <b>name</b>, <b>days[].n</b>, <b>days[].title</b> and <b>days[].must[]</b> are required. Everything else is optional.</div>'
+  +'<textarea style="min-height:40vh;font-size:11px">'+esc(DROP_PLAN_SHAPE)+'</textarea>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">Negative day numbers are warm-up. <b>fixed:true</b> pins a day to its date so a slip flags a conflict instead of moving it.</div>');
+}
+function dropCardHTML(){
+ var d=dropRun();
+ if(!d)return '<div class="card" style="margin-bottom:12px"><div class="hint" style="text-transform:none;letter-spacing:0">No Drop Run active. A Drop knows its own days, tasks, captions and recovery rules \u2014 S&amp;M just runs it.</div><button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="dropStart(null);renderRun();toast(&quot;Common Scents loaded \u2014 starting today.&quot;)">\uff0b Start Common Scents \u00b7 Drop 01</button><button class="btn ghost sm" style="width:100%;margin-top:6px" onclick="dropImportOpen()">\u2b07 Load a plan (JSON)</button></div>';
+ var t=dropToday();
+ if(!t)return '<div class="card gold" style="margin-bottom:12px"><div style="font-family:var(--slate);font-weight:800">'+esc(d.name)+' \u2014 COMPLETE</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">Every required day is closed. Count what moved, then plan the next drop.</div><button class="btn ghost sm" style="width:100%;margin-top:8px" onclick="dropClear()">Clear this run</button></div>';
+ var behind=dropDaysBehind();
+ var shifted=null;
+ if(behind>0)shifted=dropRollForward();
+ var pr=dropProgress(t),nx=dropNext();
+ var h='<div class="card gold" style="margin-bottom:12px">';
+ h+='<div style="display:flex;align-items:baseline;gap:8px"><div style="font-family:var(--slate);font-weight:800;font-size:15px">'+esc(d.name).toUpperCase()+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-left:auto">'+esc(dropLabel(t))+'</div></div>';
+ if(shifted&&shifted.shift>0){
+  h+='<div class="card" style="margin:8px 0;padding:8px;border-left:3px solid #c9a94a"><div style="font-family:var(--slate);font-size:12px;color:#c9a94a">'+shifted.shift+' DAY'+(shifted.shift===1?"":"S")+' BEHIND</div>'
+   +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:2px">Unfinished required work moved to today. '+shifted.moved+' day'+(shifted.moved===1?"":"s")+' shifted \u2014 nothing was dropped or piled up.</div>'
+   +(shifted.conflict?('<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px;color:#d46a6a">\u26a0 Schedule conflict: Day '+shifted.conflict.n+' is fixed-date and did not move.</div>'):"")
+   +(behind>=3?('<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">This drop\u2019s recovery rules allow: <b>jump straight to Day 1 and launch.</b></div>'):"")
+   +'</div>';
+ }
+ h+='<div style="font-family:var(--slate);font-weight:800;font-size:14px;margin-top:6px">'+esc(t.title)+'</div>';
+ if(t.how)h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">'+esc(t.how)+'</div>';
+ /* MUST DO */
+ h+='<div style="font-family:var(--slate);color:var(--bud);font-size:10.5px;margin-top:10px">MUST DO \u00b7 '+pr.done+'/'+pr.total+'</div>';
+ (t.must||[]).forEach(function(m,i){
+  var on=!!t.done[i];
+  h+='<div onclick="dropMark('+t.n+','+i+')" style="display:flex;gap:8px;align-items:flex-start;font-size:13.5px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer">'
+   +'<span style="color:'+(on?"var(--bud)":"rgba(255,255,255,.3)")+'">'+(on?"\u2713":"\u25cb")+'</span>'
+   +'<span style="flex:1'+(on?";opacity:.5;text-decoration:line-through":"")+'">'+esc(m)+'</span></div>';
+ });
+ if(t.prep)h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px;color:#c9a94a">\u26a1 PREP FOR TOMORROW \u2014 REQUIRED: '+esc(t.prep)+'</div>';
+ if(t.caption){
+  h+='<div style="font-family:var(--slate);color:var(--bud);font-size:10.5px;margin-top:10px">CAPTION</div>'
+   +'<div style="font-size:13px;font-style:italic;padding:4px 0">'+esc(t.caption)+'</div>'
+   +'<button class="btn ghost sm" style="width:100%" onclick="dropCopyCaption()">\u29c9 Copy caption</button>';
+ }
+ if(t.station){
+  h+='<button class="btn green sm" style="width:100%;margin-top:8px" onclick="dropGo()">Open '+esc(navLabel(t.station)||t.station)+' \u2192</button>';
+ }
+ if(t.bonus)h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px;opacity:.65">BONUS (never blocks the day): '+esc(t.bonus)+'</div>';
+ h+='<button class="btn'+(dropDayDone(t)?" green":" ghost")+' sm" style="width:100%;margin-top:10px" onclick="dropCloseDay()">CLOSE DAY '+(dropDayDone(t)?"\u2713":"\u2014 finish the must-do list first")+'</button>';
+ /* NEXT + LATER */
+ if(nx)h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:10px">NEXT \u00b7 '+esc(dropLabel(nx))+' \u2014 '+esc(nx.title)+(nx.prep?" \u00b7 needs prep":"")+'</div>';
+ h+='<details class="collapse" style="margin-top:8px"><summary>Full run \u00b7 posting window '+esc(d.window)+'</summary><div class="body">';
+ d.days.forEach(function(x){
+  var done=!!x.closed;
+  h+='<div style="font-size:12.5px;padding:3px 0;opacity:'+(done?".45":(x===t?"1":".75"))+'">'+(done?"\u2713":(x===t?"\u25cf":"\u25cb"))+' '+esc(dropLabel(x))+' \u00b7 '+esc(x.date||"")+' \u00b7 '+esc(x.title)+'</div>';
+ });
+ h+='<div style="font-family:var(--slate);color:var(--bud);font-size:10.5px;margin-top:8px">STANDING ORDERS</div>';
+ (d.rules||[]).forEach(function(x){h+='<div class="hint" style="text-transform:none;letter-spacing:0">\u00b7 '+esc(x)+'</div>';});
+ h+='<div style="font-family:var(--slate);color:var(--bud);font-size:10.5px;margin-top:8px">IF IT SLIPS</div>';
+ (d.recovery||[]).forEach(function(x){h+='<div class="hint" style="text-transform:none;letter-spacing:0">\u00b7 '+esc(x)+'</div>';});
+ if((d.history||[]).length){
+  h+='<div style="font-family:var(--slate);color:var(--bud);font-size:10.5px;margin-top:8px">SCHEDULE HISTORY</div>';
+  d.history.slice(0,5).forEach(function(x){h+='<div class="hint" style="text-transform:none;letter-spacing:0">\u00b7 shifted +'+x.shift+' \u2014 '+esc(x.reason)+'</div>';});
+ }
+ h+='<div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="dropImportOpen()">\u2b07 Load a plan</button><button class="btn ghost sm" style="flex:1" onclick="dropExport()">\u29c9 Export</button></div>';
+ h+='<button class="btn ghost sm" style="width:100%;margin-top:6px" onclick="dropClear()">Clear this run</button>';
+ h+='</div></details></div>';
+ return h;
+}
+function dropCopyCaption(){var t=dropToday();if(!t)return;navigator.clipboard.writeText(t.caption||"").then(function(){toast("Caption copied.");}).catch(function(){toast("Copy failed.",true);});}
+function dropGo(){var t=dropToday();if(!t||!t.station)return;go(t.station);}
 function renderRun(){
  var host=$("runBody");if(!host)return;var r=runState();
  var c=S.comics&&S.comics[0];var todayT=new Date(runToday()+"T00:00:00").getTime();
  var drawn=!!(c&&c.ts>=todayT&&c.panels&&c.panels.some(function(p){return p.url;}));
  if(drawn&&!r.steps.render){r.steps.render=true;save();}
  var i3=S.comicIdea3||{};
- var h=hudChips("run")+'<div class="card" style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-family:var(--slate)">'+r.day+'</div><div class="hint" style="text-transform:none;letter-spacing:0">One lap. Every day. That’s the whole trick.</div></div><div style="font-size:20px;font-weight:800">🔥 '+(r.streak||0)+'</div></div>';
+ var h=hudChips("run")+dropCardHTML()+'<div class="card" style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:800;font-family:var(--slate)">'+r.day+'</div><div class="hint" style="text-transform:none;letter-spacing:0">One lap. Every day. That’s the whole trick.</div></div><div style="font-size:20px;font-weight:800">🔥 '+(r.streak||0)+'</div></div>';
  h+=jointCard(r);
  h+='<div class="tonerow" style="margin:4px 0 12px"><button type="button" class="tonechip'+(r.lane==="comic"?" on":"")+'" data-rl="comic">Comic post</button><button type="button" class="tonechip'+(r.lane==="clip"?" on":"")+'" data-rl="clip">Video clip</button></div>';
  function card(key,title,desc,inner){var done=!!r.steps[key];

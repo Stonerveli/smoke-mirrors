@@ -1,9 +1,10 @@
 {
+  "id": "/smoke-mirrors/victorylap/",
   "name": "VictoryLap — Chiefin’ Season",
   "short_name": "VictoryLap",
   "description": "Every drop is a Marython. Every day is a Lap.",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/smoke-mirrors/victorylap/",
+  "scope": "/smoke-mirrors/victorylap/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0D0D0D",
@@ -14,25 +15,25 @@
   ],
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "vl-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "vl-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-maskable.png",
+      "src": "vl-icon-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "icon.svg",
+      "src": "vl-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml"
     }

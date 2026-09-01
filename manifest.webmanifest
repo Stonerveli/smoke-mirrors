@@ -1,15 +1,18 @@
 {
+  "id": "/smoke-mirrors/",
   "name": "Smoke & Mirrors",
   "short_name": "S&M",
   "description": "Creative production studio for the Stoneralia universe.",
-  "id": "/smoke-mirrors/",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "/smoke-mirrors/index.html",
+  "scope": "/smoke-mirrors/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0a0a0a",
   "theme_color": "#0a0a0a",
-  "categories": ["productivity", "entertainment"],
+  "categories": [
+    "productivity",
+    "entertainment"
+  ],
   "icons": [
     {
       "src": "icon-192.png",

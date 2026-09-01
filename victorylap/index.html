@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>VictoryLap</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0D0D0D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="VictoryLap">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap');
+:root{--bg:#0D0D0D;--card:#1C1C1C;--line:rgba(242,239,230,.10);--bone:#F2EFE6;--dim:#4A4A4A;--dim2:#8b877f;--green:#7FA36A;--warn:#C9A94A;--bad:#C4675F;
+--disp:'Bebas Neue',Impact,sans-serif;--ui:'Space Grotesk',ui-monospace,'SF Mono',Menlo,sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--bone);font-family:var(--ui);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:50;background:rgba(13,13,13,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:calc(12px + env(safe-area-inset-top)) 16px 11px}
+.wordmark{font-family:var(--disp);font-size:26px;letter-spacing:.02em;line-height:1;font-style:italic}
+.tagline{font-family:var(--ui);font-size:8.5px;letter-spacing:.34em;color:var(--green);text-transform:uppercase;margin-top:2px}
+main{padding:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:12px}
+.card.hero{border-color:rgba(127,163,106,.35)}
+.card.warn{border-left:3px solid var(--warn)}
+.drop{font-family:var(--ui);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim2)}
+.mary{font-family:var(--disp);font-size:30px;line-height:1;letter-spacing:.01em;margin-top:5px}
+.lapline{font-family:var(--disp);font-size:19px;color:var(--green);letter-spacing:.06em;margin-top:2px}
+.laptitle{font-family:var(--disp);font-size:23px;line-height:1.05;margin-top:12px;letter-spacing:.01em}
+.phase{font-family:var(--ui);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--green)}
+.hint{font-size:12.5px;color:var(--dim2);line-height:1.5}
+.lbl{font-family:var(--ui);font-size:9.5px;letter-spacing:.24em;color:var(--green);text-transform:uppercase;margin:15px 0 6px;font-weight:500}
+.task{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid rgba(242,239,230,.055);cursor:pointer;font-size:14.5px}
+.bx{width:21px;height:21px;flex:0 0 21px;border-radius:50%;border:1.5px solid var(--dim);display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;margin-top:1px}
+.task.on .bx{background:var(--green);border-color:var(--green);color:#0D0D0D}
+.task.on .tx{opacity:.42;text-decoration:line-through}
+.tx{flex:1}
+.btn{display:block;width:100%;padding:15px;border-radius:11px;border:1px solid var(--line);background:transparent;color:var(--bone);font-family:var(--disp);font-size:17px;letter-spacing:.09em;margin-top:11px;cursor:pointer}
+.btn.go{background:var(--green);border-color:var(--green);color:#0D0D0D}
+.btn.sm{padding:11px;font-size:14px;margin-top:8px}
+.btn:disabled{opacity:.4}
+.row{display:flex;gap:9px}.row>*{flex:1}
+input,textarea,select{width:100%;background:#131313;border:1px solid var(--line);border-radius:10px;color:var(--bone);padding:12px;font-size:15px;font-family:var(--ui);margin-top:5px}
+textarea{min-height:76px;resize:vertical}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:60;display:flex;background:#0A0A0A;border-top:1px solid var(--line);padding:7px 2px calc(7px + env(safe-area-inset-bottom))}
+nav button{flex:1 1 0;min-width:0;background:none;border:none;color:var(--dim);padding:5px 0;display:flex;flex-direction:column;align-items:center;gap:5px;font-family:var(--ui);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;font-weight:500}
+nav button.on{color:var(--green)}
+nav svg{width:19px;height:19px;display:block}
+.pill{display:inline-block;font-family:var(--ui);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;padding:4px 8px;border-radius:5px;border:1px solid var(--line);color:var(--dim2);font-weight:500}
+.pill.now{border-color:var(--green);color:var(--green)}
+.pill.done{opacity:.4}
+.pill.fix{border-color:var(--warn);color:var(--warn)}
+.pace{display:flex;gap:7px;align-items:center;font-family:var(--ui);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);padding:5px 0}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.dot.warn{background:var(--warn)}
+.bar{height:7px;background:rgba(242,239,230,.07);border-radius:4px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--green)}
+.dayrow{display:flex;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid rgba(242,239,230,.055);font-size:13.5px;cursor:pointer}
+.lapno{font-family:var(--disp);font-size:19px;color:var(--green);min-width:26px}
+.stat{font-family:var(--disp);font-size:29px;line-height:1.1}
+.statlbl{font-family:var(--ui);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim2)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.toast{position:fixed;left:15px;right:15px;bottom:calc(86px + env(safe-area-inset-bottom));background:#232323;border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-size:13px;z-index:90;box-shadow:0 8px 28px rgba(0,0,0,.6)}
+.finish{font-family:var(--disp);font-size:15px;letter-spacing:.08em;color:var(--bone)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark">VICTORYLAP</div>
+  <div class="tagline">Chiefin&rsquo; Season</div>
+</header>
+<main id="main"></main>
+<nav><button data-tab="today" onclick="go('today')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>TODAY</button><button data-tab="calendar" onclick="go('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>CALENDAR</button><button data-tab="drop" onclick="go('drop')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>DROP</button><button data-tab="assets" onclick="go('assets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>ASSETS</button><button data-tab="progress" onclick="go('progress')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>PROGRESS</button></nav>
+<script>
+"use strict";
+var DropStore=(function(){
+ var KEY="smokemirrors_v1", FIELD="dropRun", CONTRACT=1;
+ function all(){try{return JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){return {};}}
+ function persist(o){try{localStorage.setItem(KEY,JSON.stringify(o));return true;}catch(e){return false;}}
+ function read(){var o=all();return o[FIELD]||null;}
+ function write(run){var o=all();o[FIELD]=run;o.dropContract=CONTRACT;return persist(o);}
+ function clear(){var o=all();o[FIELD]=null;return persist(o);}
+ function streak(){var o=all();return (o.run&&o.run.streak)||0;}
+ function bumpStreak(iso){var o=all();o.run=o.run||{lane:"comic",day:"",steps:{},streak:0,lastDone:"",platform:"ig",cap:null};
+  o.run.streak=(o.run.streak||0)+1;o.run.lastDone=iso||new Date().toISOString().slice(0,10);return persist(o);}
+ function iso(d){return new Date(d).toISOString().slice(0,10);}
+ function todayISO(){var d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
+ function dayDone(day){if(!day)return false;var m=day.must||[];for(var i=0;i<m.length;i++){if(!day.done[i])return false;}return true;}
+ function today(run){run=run||read();if(!run)return null;
+  for(var i=0;i<run.days.length;i++){if(!run.days[i].closed)return run.days[i];}return null;}
+ function daysBehind(run){run=run||read();var t=today(run);if(!t||!t.date)return 0;
+  var diff=Math.round((new Date(todayISO()+"T12:00:00")-new Date(t.date+"T12:00:00"))/86400000);
+  return diff>0?diff:0;}
+ function rollForward(run){run=run||read();if(!run)return null;
+  var behind=daysBehind(run);if(behind<=0)return null;
+  var t=today(run),idx=run.days.indexOf(t),moved=0,conflict=null;
+  for(var i=idx;i<run.days.length;i++){
+   var d=run.days[i];
+   if(d.fixed){conflict=d;break;}
+   d.date=iso(new Date(d.date+"T12:00:00").getTime()+behind*86400000);moved++;
+  }
+  run.history=run.history||[];
+  run.history.unshift({ts:Date.now(),shift:behind,reason:behind+" missed drop day"+(behind===1?"":"s"),moved:moved});
+  if(run.history.length>20)run.history=run.history.slice(0,20);
+  write(run);
+  return {shift:behind,moved:moved,conflict:conflict};}
+ function mark(n,i,v){var run=read();if(!run)return null;
+  var d=run.days.find(function(x){return x.n===n;});if(!d)return null;
+  d.done[i]=(v===undefined)?!d.done[i]:v;write(run);return run;}
+ function closeDay(){var run=read();if(!run)return {ok:false,why:"No active run."};
+  var t=today(run);if(!t)return {ok:false,why:"Run already complete."};
+  if(!dayDone(t))return {ok:false,why:"Required work is still open."};
+  t.closed=1;t.posted=Date.now();write(run);bumpStreak(todayISO());
+  return {ok:true,day:t.n,streak:streak()};}
+ function stats(run){run=run||read();if(!run)return null;
+  var days=run.days||[],closed=0,mustTotal=0,mustDone=0,posts=0;
+  days.forEach(function(d){
+   if(d.closed){closed++;if(d.posted)posts++;}
+   (d.must||[]).forEach(function(_,i){mustTotal++;if(d.done[i])mustDone++;});});
+  var shift=(run.history||[]).reduce(function(a,h){return a+(h.shift||0);},0);
+  var assets=(run.assets||[]);
+  return {days:days.length,closed:closed,mustTotal:mustTotal,mustDone:mustDone,posts:posts,shift:shift,
+   assetsReady:assets.filter(function(a){return a.state==="ready"||a.state==="posted"||a.state==="reused";}).length,
+   assetsTotal:assets.length,
+   pct:days.length?Math.round(closed/days.length*100):0};}
+ return {contract:CONTRACT,key:KEY,read:read,write:write,clear:clear,today:today,dayDone:dayDone,
+  daysBehind:daysBehind,rollForward:rollForward,mark:mark,closeDay:closeDay,stats:stats,
+  todayISO:todayISO,streak:streak};
+})();
+var TAB="today";
+function $(id){return document.getElementById(id);}
+function esc(x){return String(x==null?"":x).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function toast(m){var t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove();},2800);}
+function go(tab){TAB=tab;render();window.scrollTo(0,0);}
+function phaseName(p){return {setup:"Setup",warmup:"Warm-Up",launch:"Launch",rhythm:"Rhythm",close:"Close"}[p]||p;}
+function lapNo(d){return d.n;}
+function fmtDate(iso){if(!iso)return "";var d=new Date(iso+"T12:00:00");return d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});}
+function finishLine(run){if(!run||!run.days.length)return "";var last=run.days[run.days.length-1];return fmtDate(last.date);}
+function lapIndex(run,t){return run.days.indexOf(t)+1;}
+
+/* ---------------- TODAY ---------------- */
+function viewToday(){
+ var run=DropStore.read();
+ if(!run)return empty();
+ var t=DropStore.today(run);
+ if(!t)return '<div class="card hero"><div class="mary">MARYTHON COMPLETE</div><div class="hint" style="margin-top:6px">Every lap crossed. '+esc(run.name)+' is done.</div><button class="btn sm" onclick="go(\'progress\')">See the run</button></div>';
+ var shifted=null,behind=DropStore.daysBehind(run);
+ if(behind>0){shifted=DropStore.rollForward(run);run=DropStore.read();t=DropStore.today(run);}
+ var must=t.must||[],doneN=must.filter(function(_,i){return t.done[i];}).length;
+ var ready=DropStore.dayDone(t);
+ var h='<div class="card hero">';
+ h+='<div class="drop">'+esc(run.name)+(run.sub?' \u00b7 '+esc(run.sub):'')+'</div>';
+ h+='<div class="mary">MARYTHON</div>';
+ h+='<div class="lapline">LAP '+lapIndex(run,t)+' / '+run.days.length+'</div>';
+ h+='<div class="phase" style="margin-top:8px">'+esc(phaseName(t.phase))+'</div>';
+ h+='<div class="laptitle">'+esc(t.title)+'</div>';
+ if(t.how)h+='<div class="hint" style="margin-top:7px">'+esc(t.how)+'</div>';
+ if(shifted&&shifted.shift>0){
+  h+='<div class="card warn" style="margin:13px 0 0;padding:12px"><div class="phase" style="color:var(--warn)">Pace Adjusted +'+shifted.shift+' day'+(shifted.shift===1?"":"s")+'</div>'
+   +'<div class="hint" style="margin-top:4px">Yesterday\u2019s unfinished lap is now today. '+shifted.moved+' lap'+(shifted.moved===1?"":"s")+' moved with it. Completed work preserved.</div>'
+   +(shifted.conflict?'<div class="hint" style="color:var(--bad);margin-top:5px">\u26a0 Schedule conflict \u2014 Lap '+shifted.conflict.n+' is fixed-date and did not move.</div>':"")
+   +'</div>';
+ }
+ h+='<div class="lbl">Must Do \u00b7 '+doneN+'/'+must.length+'</div>';
+ must.forEach(function(m,i){
+  h+='<div class="task'+(t.done[i]?" on":"")+'" onclick="tap('+t.n+','+i+')"><span class="bx">\u2713</span><span class="tx">'+esc(m)+'</span></div>';
+ });
+ if(t.prep)h+='<div class="hint" style="margin-top:10px;color:var(--warn)">\u26a1 Prep for the next lap: '+esc(t.prep)+'</div>';
+ if(t.station){
+  h+='<div class="lbl">Make</div><button class="btn sm" onclick="makeInSM()">MAKE IN S&amp;M \u2192 '+esc(String(t.station).toUpperCase())+'</button>';
+ }
+ if(t.caption){
+  h+='<div class="lbl">Post</div><div style="font-size:13.5px;font-style:italic;line-height:1.5">'+esc(t.caption)+'</div>';
+  if(run.window)h+='<div class="hint" style="margin-top:5px">Window '+esc(run.window)+'</div>';
+  h+='<button class="btn sm" onclick="copyCap()">\u29c9 COPY CAPTION</button>';
+ }
+ if(t.bonus)h+='<div class="lbl">Bonus</div><div class="hint">'+esc(t.bonus)+' \u2014 never blocks the lap.</div>';
+ h+='<button class="btn'+(ready?" go":"")+'" onclick="closeLap()" '+(ready?"":"")+'>'+(ready?"COMPLETE LAP":"CONTINUE LAP")+'</button>';
+ if(!ready)h+='<div class="hint" style="text-align:center;margin-top:7px">'+(must.length-doneN)+' required item'+((must.length-doneN)===1?"":"s")+' left</div>';
+ h+='</div>';
+ var i=run.days.indexOf(t),nx=run.days[i+1];
+ if(nx)h+='<div class="card"><div class="lbl" style="margin-top:0">Next Lap</div><div style="font-size:14px">'+esc(phaseName(nx.phase))+' \u00b7 '+esc(nx.title)+'</div><div class="hint">'+(nx.prep?"Needs prep today.":"No preparation required.")+'</div></div>';
+ h+='<div class="card"><div class="pace"><span class="dot'+(behind>0?" warn":"")+'"></span>PACE: '+(behind>0?(behind+" DAY"+(behind===1?"":"S")+" BEHIND"):"ON SCHEDULE")+'</div>'
+  +'<div class="pace"><span class="dot"></span>FINISH LINE: <span class="finish">'+esc(finishLine(run).toUpperCase())+'</span></div></div>';
+ return h;
+}
+function empty(){
+ return '<div class="card hero"><div class="mary">NO MARYTHON</div>'
+  +'<div class="hint" style="margin-top:7px">A Marython is one drop, run day by day. Every day is a Lap. Smoke &amp; Mirrors makes the work \u2014 VictoryLap gets it across the line.</div>'
+  +'<button class="btn go" onclick="go(\'new\')">START A MARYTHON</button>'
+  +'<button class="btn sm" onclick="go(\'drop\')">IMPORT A DROP</button></div>';
+}
+function tap(n,i){DropStore.mark(n,i);render();}
+function copyCap(){var t=DropStore.today();if(!t)return;navigator.clipboard.writeText(t.caption||"").then(function(){toast("Caption copied.");}).catch(function(){toast("Copy failed.");});}
+function closeLap(){
+ var r=DropStore.closeDay();
+ if(!r.ok){toast(r.why);return;}
+ toast("Lap "+r.day+" complete \u00b7 streak "+r.streak);
+ render();
+}
+function makeInSM(){var t=DropStore.today();if(!t)return;location.href="../index.html#"+encodeURIComponent(t.station||"run");}
+
+/* ---------------- CALENDAR ---------------- */
+function viewCalendar(){
+ var run=DropStore.read();if(!run)return empty();
+ var t=DropStore.today(run);
+ var h='<div class="card"><div class="drop">'+esc(run.name)+'</div><div class="mary">MARYTHON</div>'
+  +'<div class="lapline">LAP '+(t?lapIndex(run,t):run.days.length)+' / '+run.days.length+'</div></div>';
+ var phase="";
+ run.days.forEach(function(d,i){
+  if(d.phase!==phase){phase=d.phase;h+='<div class="lbl">'+esc(phaseName(phase))+'</div>';}
+  var st=d.closed?"complete":(d===t?"today":(d.fixed?"fixed":"upcoming"));
+  var cls=d.closed?"pill done":(d===t?"pill now":(d.fixed?"pill fix":"pill"));
+  var moved=d.origDate&&d.date&&d.origDate!==d.date;
+  h+='<div class="dayrow" onclick="lapInfo('+d.n+')">'
+   +'<span class="lapno">'+(i+1)+'</span>'
+   +'<span style="flex:1">'+esc(d.title)+'<br><span class="hint">'+esc(fmtDate(d.date))+(moved?" \u00b7 moved":"")+'</span></span>'
+   +'<span class="'+cls+'">'+st+'</span></div>';
+ });
+ return h;
+}
+function lapInfo(n){
+ var run=DropStore.read();var d=run.days.find(function(x){return x.n===n;});if(!d)return;
+ var L=["LAP "+n+" \u00b7 "+phaseName(d.phase),d.title,""];
+ L.push("REQUIRED:");(d.must||[]).forEach(function(m,i){L.push((d.done[i]?"\u2713 ":"\u25cb ")+m);});
+ if(d.how)L.push("","HOW: "+d.how);
+ if(d.caption)L.push("","CAPTION: "+d.caption);
+ if(d.prep)L.push("","PREP: "+d.prep);
+ if(d.origDate&&d.origDate!==d.date)L.push("","Originally "+fmtDate(d.origDate)+" \u2192 now "+fmtDate(d.date));
+ alert(L.join("\n"));
+}
+
+/* ---------------- DROP ---------------- */
+function viewDrop(){
+ var run=DropStore.read();var h="";
+ if(run){
+  h+='<div class="card"><div class="drop">Active Drop</div><div class="mary">'+esc(run.name.toUpperCase())+'</div>';
+  if(run.sub)h+='<div class="hint" style="margin-top:4px">'+esc(run.sub)+'</div>';
+  h+='<div class="grid2" style="margin-top:14px">'
+   +'<div><div class="statlbl">Laps</div><div class="stat">'+run.days.length+'</div></div>'
+   +'<div><div class="statlbl">Finish line</div><div class="stat" style="font-size:20px;padding-top:7px">'+esc(finishLine(run).toUpperCase())+'</div></div></div>';
+  if(run.window)h+='<div class="lbl">Posting window</div><div class="hint">'+esc(run.window)+'</div>';
+  if(run.notes)h+='<div class="lbl">Notes</div><div class="hint">'+esc(run.notes)+'</div>';
+  if((run.rules||[]).length){h+='<div class="lbl">Campaign rules</div>';run.rules.forEach(function(r){h+='<div class="hint">\u00b7 '+esc(r)+'</div>';});}
+  if((run.recovery||[]).length){h+='<div class="lbl">If the pace slips</div>';run.recovery.forEach(function(r){h+='<div class="hint">\u00b7 '+esc(r)+'</div>';});}
+  if((run.history||[]).length){h+='<div class="lbl">History</div>';run.history.slice(0,6).forEach(function(x){h+='<div class="hint">\u00b7 Pace adjusted +'+x.shift+' \u2014 '+esc(x.reason)+'</div>';});}
+  h+='<button class="btn sm" onclick="exportRun()">\u29c9 EXPORT DROP</button>';
+  h+='<button class="btn sm" onclick="clearRun()">CLEAR THIS MARYTHON</button></div>';
+ }
+ h+='<div class="card"><div class="lbl" style="margin-top:0">New</div><button class="btn go" onclick="go(\'new\')">START A MARYTHON</button></div>';
+ h+='<div class="card"><div class="lbl" style="margin-top:0">Import</div><div class="hint">Paste a drop package. Validated before anything changes.</div>'
+  +'<textarea id="pkgIn" placeholder="paste JSON\u2026"></textarea><button class="btn sm" onclick="importRun()">LOAD DROP</button></div>';
+ return h;
+}
+function exportRun(){var run=DropStore.read();if(!run)return;var txt=JSON.stringify(run,null,2);
+ navigator.clipboard.writeText(txt).then(function(){toast("Drop copied as JSON.");}).catch(function(){var ta=$("pkgIn");if(ta){ta.value=txt;toast("Shown in the box.");}});}
+function importRun(){
+ var raw=($("pkgIn")||{}).value||"";if(!raw.trim()){toast("Paste a drop first.");return;}
+ var o;try{o=JSON.parse(raw);}catch(e){toast("Not valid JSON.");return;}
+ var errs=[];
+ if(!o.name)errs.push("missing name");
+ if(!Array.isArray(o.days)||!o.days.length)errs.push("missing days");
+ (o.days||[]).forEach(function(d,i){
+  if(typeof d.n!=="number")errs.push("lap "+(i+1)+": n must be a number");
+  if(!d.title)errs.push("lap "+(i+1)+": missing title");
+  if(!Array.isArray(d.must)||!d.must.length)errs.push("lap "+(i+1)+": must[] required");});
+ if(errs.length){alert("Not loaded:\n\n"+errs.slice(0,8).join("\n")+"\n\nNothing changed.");return;}
+ if(DropStore.read()&&!confirm("Replace the active Marython? Its progress is lost."))return;
+ o.days=o.days.map(function(d){return {n:d.n,phase:d.phase||"rhythm",title:d.title,must:d.must,station:d.station||"",
+  how:d.how||"",caption:d.caption||"",bonus:d.bonus||"",prep:d.prep||"",fixed:!!d.fixed,
+  date:d.date||"",origDate:d.origDate||d.date||"",done:d.done||{},posted:d.posted||0,closed:d.closed||0};});
+ if(!o.days[0].date)assignDates(o,o.start||DropStore.todayISO());
+ o.history=o.history||[];o.assets=o.assets||[];
+ DropStore.write(o);toast(o.name+" loaded.");go("today");
+}
+function assignDates(run,startISO){
+ var base=new Date(startISO+"T12:00:00");
+ run.days.forEach(function(d,i){var dt=new Date(base.getTime()+i*86400000);d.date=dt.toISOString().slice(0,10);d.origDate=d.date;});
+ run.start=startISO;
+}
+function clearRun(){if(!confirm("Clear this Marython? Smoke & Mirrors shares the same data."))return;DropStore.clear();toast("Cleared.");go("today");}
+
+/* ---------------- ASSETS ---------------- */
+var STATES=["needed","producing","ready","posted","reused"];
+function viewAssets(){
+ var run=DropStore.read();if(!run)return empty();
+ var as=run.assets||[];
+ var h='<div class="card"><div class="drop">Campaign</div><div class="mary">ASSETS</div>'
+  +'<div class="hint" style="margin-top:6px">References only. Production lives in Smoke &amp; Mirrors.</div>'
+  +'<input id="assetName" placeholder="what needs making"><button class="btn sm" onclick="addAsset()">\uff0b TRACK AN ASSET</button></div>';
+ if(!as.length)return h+'<div class="card"><div class="hint">Nothing tracked yet.</div></div>';
+ STATES.forEach(function(st){
+  var g=as.filter(function(a){return a.state===st;});
+  if(!g.length)return;
+  h+='<div class="lbl">'+st+' \u00b7 '+g.length+'</div>';
+  g.forEach(function(a){
+   h+='<div class="dayrow"><span style="flex:1">'+esc(a.name)+'</span>'
+    +'<select style="width:auto;margin:0;padding:6px 8px;font-size:11px" onchange="setAsset(\''+a.id+'\',this.value)">'
+    +STATES.map(function(x){return '<option value="'+x+'"'+(a.state===x?" selected":"")+'>'+x+'</option>';}).join("")+'</select></div>';
+  });
+ });
+ return h;
+}
+function addAsset(){
+ var n=($("assetName")||{}).value||"";if(!n.trim()){toast("Name it first.");return;}
+ var run=DropStore.read();if(!run){toast("No active Marython.");return;}
+ run.assets=run.assets||[];
+ run.assets.unshift({id:"a"+Date.now().toString(36),name:n.trim(),state:"needed",day:null,artId:"",ts:Date.now()});
+ DropStore.write(run);render();
+}
+function setAsset(id,state){
+ var run=DropStore.read();if(!run)return;
+ var a=(run.assets||[]).find(function(x){return x.id===id;});if(!a)return;
+ a.state=state;DropStore.write(run);render();
+}
+
+/* ---------------- PROGRESS ---------------- */
+function viewProgress(){
+ var run=DropStore.read();if(!run)return empty();
+ var s=DropStore.stats(run),t=DropStore.today(run),behind=DropStore.daysBehind(run);
+ var h='<div class="card hero"><div class="drop">'+esc(run.name)+'</div><div class="mary">'+(behind>0?("PACE ADJUSTED"):("ON SCHEDULE"))+'</div>'
+  +'<div class="bar"><i style="width:'+s.pct+'%"></i></div>'
+  +'<div class="hint" style="margin-top:7px">'+s.closed+' of '+s.days+' laps complete \u00b7 '+s.pct+'%</div></div>';
+ h+='<div class="card"><div class="grid2">'
+  +'<div><div class="statlbl">Laps complete</div><div class="stat">'+s.closed+'</div></div>'
+  +'<div><div class="statlbl">Streak</div><div class="stat">'+DropStore.streak()+'</div></div>'
+  +'<div><div class="statlbl">Required done</div><div class="stat">'+s.mustDone+'<span style="font-size:15px;color:var(--dim2)">/'+s.mustTotal+'</span></div></div>'
+  +'<div><div class="statlbl">Posts made</div><div class="stat">'+s.posts+'</div></div>'
+  +'<div><div class="statlbl">Assets ready</div><div class="stat">'+s.assetsReady+'<span style="font-size:15px;color:var(--dim2)">/'+s.assetsTotal+'</span></div></div>'
+  +'<div><div class="statlbl">Pace shift</div><div class="stat">'+(s.shift?("+"+s.shift):"0")+'</div></div>'
+  +'</div></div>';
+ h+='<div class="card"><div class="statlbl">Current phase</div><div class="stat" style="font-size:23px">'+(t?esc(phaseName(t.phase).toUpperCase()):"DONE")+'</div>'
+  +'<div class="statlbl" style="margin-top:13px">Finish line</div><div class="stat" style="font-size:23px">'+esc(finishLine(run).toUpperCase())+'</div></div>';
+ return h;
+}
+
+/* ---------------- NEW MARYTHON ---------------- */
+var STRATS={
+ quick:["QUICK","3 laps \u00b7 tease, launch, push",[[-1,"warmup","Tease"],[1,"launch","Launch"],[2,"rhythm","Push"]]],
+ capsule:["CAPSULE","6 laps \u00b7 two teases, launch, three rhythm",[[-2,"warmup","Tease"],[-1,"warmup","Countdown"],[1,"launch","Launch"],[2,"rhythm","Character"],[3,"rhythm","Product"],[4,"close","Last call"]]],
+ restock:["RESTOCK","4 laps \u00b7 announce, launch, remind, close",[[-1,"warmup","Announce"],[1,"launch","Back in stock"],[2,"rhythm","Remind"],[3,"close","Last call"]]],
+ standard:["STANDARD","20 laps \u00b7 setup, warm-up, launch, rhythm, close",null],
+ major:["MAJOR","27 laps \u00b7 longer warm-up, longer tail",null]
+};
+function viewNew(){
+ var h='<div class="card"><div class="drop">New</div><div class="mary">START A MARYTHON</div>'
+  +'<div class="hint" style="margin-top:6px">Only the name is required. Fill the rest in as you run it.</div>'
+  +'<div class="lbl">Drop name</div><input id="nName" placeholder="Common Scents">'
+  +'<div class="lbl">Collection</div><input id="nSub" placeholder="Drop 02 \u00b7 Peace &amp; Pull">'
+  +'<div class="lbl">Start date</div><input id="nStart" type="date" value="'+DropStore.todayISO()+'">'
+  +'<div class="lbl">Posting window</div><input id="nWin" value="6\u20139pm local">'
+  +'<div class="lbl">Price / notes</div><input id="nNotes" placeholder="$52 retail \u00b7 $44 intro">'
+  +'<div class="lbl">Shape</div>';
+ Object.keys(STRATS).forEach(function(k){
+  h+='<div class="dayrow" onclick="buildRun(\''+k+'\')"><span style="flex:1"><span class="finish">'+esc(STRATS[k][0])+'</span><br><span class="hint">'+esc(STRATS[k][1])+'</span></span><span class="pill now">build</span></div>';
+ });
+ h+='<div class="hint" style="margin-top:12px">Standard follows the proven Common Scents shape. The others give a skeleton to fill in.</div></div>';
+ return h;
+}
+function buildRun(key){
+ var name=($("nName")||{}).value||"";
+ if(!name.trim()){toast("Name the drop first.");return;}
+ var st=STRATS[key],start=($("nStart")||{}).value||DropStore.todayISO();
+ var shape=st[2];
+ if(!shape){
+  shape=[[-6,"setup","Build assets & set up accounts"],[-5,"warmup","Stay quiet"],[-4,"warmup","Tease 1"],[-3,"warmup","Tease 2"],[-2,"warmup","Tease 3"],[-1,"warmup","Countdown \u00b7 build launch assets"],
+   [1,"launch","LAUNCH"],[2,"rhythm","Character"],[3,"rhythm","Product \u00b7 detail"],[4,"rhythm","Culture"],[5,"rhythm","Product \u00b7 lifestyle"],[6,"rhythm","Product \u00b7 hero"],[7,"rhythm","Scarcity"],
+   [8,"rhythm","Character \u00b7 depth"],[9,"rhythm","World"],[10,"rhythm","Motion"],[11,"rhythm","Practical"],[12,"rhythm","Community"],[13,"rhythm","Momentum"],[14,"close","Recap + last call"]];
+  if(key==="major")for(var i=15;i<=21;i++)shape.push([i,"rhythm","Extended lap "+i]);
+ }
+ var run={id:"drop_"+Date.now().toString(36),name:name.trim(),sub:($("nSub")||{}).value||"",
+  window:($("nWin")||{}).value||"",notes:($("nNotes")||{}).value||"",
+  rules:[],recovery:["Miss a lap and the pace adjusts. Order matters, dates don\u2019t."],
+  created:Date.now(),history:[],assets:[],days:[]};
+ run.days=shape.map(function(r){
+  return {n:r[0],phase:r[1],title:r[2],must:["Make the piece","Post it"],station:"",how:"",caption:"",bonus:"",prep:"",
+   fixed:(r[1]==="launch"),done:{},posted:0,closed:0};});
+ assignDates(run,start);
+ if(DropStore.read()&&!confirm("Replace the active Marython?"))return;
+ DropStore.write(run);
+ toast(run.name+" \u2014 "+run.days.length+" laps to the finish line.");
+ go("today");
+}
+
+/* ---------------- shell ---------------- */
+function render(){
+ var v={today:viewToday,calendar:viewCalendar,drop:viewDrop,assets:viewAssets,progress:viewProgress,"new":viewNew}[TAB]||viewToday;
+ $("main").innerHTML=v();
+ [].forEach.call(document.querySelectorAll("nav button"),function(b){b.className=(b.dataset.tab===TAB)?"on":"";});
+}
+window.addEventListener("DOMContentLoaded",function(){
+ render();
+ if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(function(){});
+});
+window.addEventListener("focus",render);
+document.addEventListener("visibilitychange",function(){if(!document.hidden)render();});
+</script>
+</body>
+</html>

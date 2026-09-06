@@ -1315,7 +1315,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.75 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.77 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -2788,6 +2788,7 @@ var REVIEW_PROFILES={
  sitcom:["Sitcom","audience timing (punchline first, then the hold, then the response), whether every line wrongly gets a laugh, ensemble reaction opportunities, act-break placement, set geography consistency, and period wardrobe discipline"],
  vlog:["Vlog","whether the camera has a reason to exist, who is holding it and whether that stays consistent, motivated imperfection, audio perspective following the camera, and whether B-roll serves the story"],
  canon:["Canon","consistency with the supplied character and location context ONLY. Never invent a canon rule. If the context does not state something, do not treat it as a violation."],
+ clay:["Tactile Clay","whether the character still reads as themselves in the new medium, believable physical plasticine rather than smooth CGI clay, genuine material differentiation between clay and any hard, glass or metal elements, visible handmade surface evidence such as fingerprints, tool marks, seams and honest asymmetry, miniature-set credibility with real contact shadows and physical depth, restrained stop-motion cadence, and whether any registered canon was altered to fit the medium"],
  shot:["Shot continuity","identity consistency, exact cast with no additions or duplicates, visual track adherence, wardrobe, prop appearance and persistence, relative scale, blocking, carried state (wet, dirty, damaged, holding something), registered movement rules, environment identity and geometry, who speaks, action order, whether the shot delivers its stated intent, and continuity with the neighbouring accepted shots"],
  trend:["Trend commentary","factual support for every claim, freshness of the information, source quality, whether fiction or comedy could be mistaken for fact, whether the character stays in character, hook strength, clarity for an unfamiliar viewer, pacing, whether the humour emerges naturally, whether the character contributes visually, and whether the ending pays off"],
  originality:["Originality","premise distinctiveness, over-reliance on recognisable existing properties, derivative character construction, and familiar scene structure. When uncertain say Potential Similarity Concern rather than making a claim."]
@@ -2802,6 +2803,8 @@ function reviewProfilesFor(a){
  if(st==="comedy")out.push("comedy");
  if(st==="talent"||t==="episode")out.push("trend");
  if(a&&a.shotId)out.unshift("shot");
+ try{var _sn=(a&&a.sceneId&&typeof scnGet==="function")?scnGet(a.sceneId):null;
+  if((_sn&&_sn.treatment==="tactileclay")||(a&&a.plate&&a.plate.treatment==="tactileclay"))out.unshift("clay");}catch(e){}
  out.push("canon","originality");
  return out.filter(function(v,i,arr){return arr.indexOf(v)===i;});
 }
@@ -3983,8 +3986,9 @@ function gpCompile(sceneId,shotId,model){
  if(ad.timing==="steering")rider.push("This model runs as a continuous stream: deliver a seed paragraph followed by timed steering directions rather than one block prompt.");
  if(ad.notes)rider.push(ad.notes);
  if(rider.length)body+="\n\nMODEL NOTES ("+ad.label+"): "+rider.join(" ");
+ var _sc=tcScrub(body);body=_sc.text;
  var over=(body.length>ad.maxChars);
- return {model:model||"",adapter:ad,text:body,chars:body.length,
+ return {model:model||"",adapter:ad,text:body,chars:body.length,scrubbed:_sc.replaced,
   overLimit:over,limit:ad.maxChars,
   warning:over?("This compiles to "+body.length+" characters but "+ad.label+" accepts about "+ad.maxChars+". Trim the scene or pick a model with more room."):"",
   conflicts:lockConflicts(sceneId,shotId)};
@@ -4176,6 +4180,148 @@ function tcOn(v){var t=tcState();t.on=(v===undefined)?!t.on:!!v;save();return t.
 function tcSet(k,v){var t=tcState();t[k]=v;save();}
 function tcMat(k){var t=tcState();if(!Array.isArray(t.materials))t.materials=[];
  var i=t.materials.indexOf(k);if(i>=0)t.materials.splice(i,1);else t.materials.push(k);save();}
+/* ---- TACTILE CLAY 4 — originality guardrail --------------
+   Borrowed studio identity never leaves S&M inside a prompt.
+   The production mechanics are kept; the borrowed name is not.
+   ---------------------------------------------------------- */
+var TC_BORROWED=[
+ [/wallace\s*(&|and)\s*gromit(\s*style)?/gi,"handmade plasticine stop-motion"],
+ [/aardman[-\s]?(style|esque|like)?/gi,"handmade plasticine stop-motion"],
+ [/laika[-\s]?(style|esque)?/gi,"practical stop-motion with built miniature sets"],
+ [/chicken run(\s*style)?/gi,"handmade plasticine stop-motion"],
+ [/shaun the sheep(\s*style)?/gi,"handmade plasticine stop-motion"],
+ [/coraline(\s*style)?/gi,"practical stop-motion with built miniature sets"],
+ [/in the style of [A-Z][a-zA-Z]+\s?(Studios|Animation|Films)/g,"in an original handmade stop-motion treatment"]
+];
+function tcScrub(txt){
+ var out=String(txt||""),hits=[];
+ for(var i=0;i<TC_BORROWED.length;i++){
+  var re=TC_BORROWED[i][0];re.lastIndex=0;
+  var m=out.match(re);
+  if(m&&m.length){hits.push(String(m[0]).trim());out=out.replace(re,TC_BORROWED[i][1]);}
+ }
+ return {text:out,replaced:hits};
+}
+
+/* ============================================================
+   TACTILE CLAY 3 — CHARACTER REFERENCE PLATES
+   Production assets. Never a replacement for Registry canon.
+   ============================================================ */
+var PLATE_VIEWS={
+ fbFront:["Full body · front / slight 3-quarter","full body, feet to head, facing camera with a slight three-quarter turn"],
+ fbRear:["Full body · rear","full body from directly behind"],
+ fb34:["Full body · 3-quarter","full body at a clean three-quarter angle"],
+ fbLeft:["Full body · left profile","full body in strict left profile"],
+ fbRight:["Full body · right profile","full body in strict right profile"],
+ hsFront:["Head & shoulders · front","head and shoulders, facing camera"],
+ hs90:["Head & shoulders · 90° profile","head and shoulders in strict profile"],
+ hs34:["Head & shoulders · 3-quarter","head and shoulders at three-quarters"],
+ hsRear:["Head & shoulders · rear","head and shoulders from behind"],
+ detail:["Signature detail","close study of the character’s signature feature"],
+ wardrobe:["Wardrobe detail","close study of clothing construction and accessories"],
+ expr:["Expression studies","a small row of expressions, only those the character’s canon permits"]
+};
+var PLATE_SETS={
+ quick:["Quick plate","fbFront,fbRear,hsFront,hs90"],
+ canon:["Canon plate","fbFront,fb34,fbLeft,fbRight,fbRear,hsFront,hs34,detail,wardrobe,expr"],
+ production:["Production plate",""]
+};
+function plateBase(){
+ return " Neutral seamless studio environment, even and honest lighting, no set dressing, no background elements, no props beyond what the character already carries."+
+  " Consistent identity, proportions, wardrobe, accessories, materials and scale across every panel — the same object photographed from different angles, not redrawn each time."+
+  " No text, labels, captions, arrows, annotations, watermarks or logos rendered into the image.";
+}
+function plateLaw(castId,setKey,views){
+ var c=(S.cast||[]).find(function(x){return x.id===castId;});
+ if(!c)return "";
+ var t=(typeof talentOf==="function")?talentOf(c):{};
+ var keys=(views&&views.length)?views:String((PLATE_SETS[setKey]||PLATE_SETS.quick)[1]).split(",").filter(Boolean);
+ var out=" Create a CHARACTER REFERENCE PLATE for "+c.name+".";
+ out+=" VIEWS REQUIRED, each as its own clean panel: "+keys.map(function(k){
+   var v=PLATE_VIEWS[k];return v?(v[0]+" — "+v[1]):k;}).join("; ")+".";
+ if(c.identity)out+=" CHARACTER: "+String(c.identity).slice(0,400)+".";
+ if(c.wardrobe)out+=" WARDROBE: "+String(c.wardrobe).slice(0,240)+".";
+ if(c.movement)out+=" BEARING: "+String(c.movement).slice(0,180)+".";
+ /* hard canon that a plate must never break */
+ var silent=(t&&t.speaks==="silent")||/never speaks|silent/i.test(String(c.voice||""));
+ if(silent)out+=" This character does not speak — no open mouth mid-speech, no dialogue implied.";
+ out+=" REGISTRY IS THE AUTHORITY: reproduce the registered silhouette, proportions, face and head design, wardrobe, accessories and signature features exactly."+
+  " Do not invent, add, remove, restyle or 'improve' any detail. Where the reference does not show something, leave it as the reference shows it rather than inventing it.";
+ var tcx=tcLaw();
+ if(tcx)out+=tcx;
+ else {
+  var prof=(CINE_RENDER[(S.cine||{}).render]||[])[1]||"";
+  if(prof)out+=" "+prof;
+ }
+ out+=plateBase();
+ return out;
+}
+function plateBuild(castId,setKey,views){
+ var c=(S.cast||[]).find(function(x){return x.id===castId;});
+ if(!c)return null;
+ var txt=plateLaw(castId,setKey,views);
+ var t=tcState();
+ var a=(typeof creatorArtifact==="function")?creatorArtifact("cast","prompt",
+   c.name+" · "+((PLATE_SETS[setKey]||PLATE_SETS.quick)[0])+(t.on?" · Tactile Clay":""),
+   txt,{castIds:[castId]}):null;
+ if(a){
+  a.plate={castId:castId,set:setKey,views:views||[],treatment:t.on?"tactileclay":((S.cine||{}).render||""),
+   approved:false,created:Date.now()};
+  artSave(a);
+ }
+ S.lastPlate=txt;save();
+ return {text:txt,artifactId:a?a.id:""};
+}
+function plateApprove(artId){
+ var a=artGet(artId);if(!a||!a.plate)return;
+ a.plate.approved=true;a.status="approved";artSave(a);
+ toast("Plate approved — it can now be used as a reference input for scene packages.");
+}
+function plateApproved(castId){
+ return (S.artifacts||[]).filter(function(a){return a.plate&&a.plate.castId===castId&&a.plate.approved;});
+}
+function plateOpen(castId){
+ var c=(S.cast||[]).find(function(x){return x.id===castId;});
+ if(!c){toast("Pick a character first.",true);return;}
+ var t=tcState();
+ var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:2px">Reference plate</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">'+esc(c.name)
+  +(t.on?' \u00b7 Tactile Clay is on, so the plate is built in clay':'')+'. Production asset \u2014 it never replaces registry canon.</div>';
+ Object.keys(PLATE_SETS).forEach(function(k){
+  if(k==="production")return;
+  h+='<button class="btn ghost sm" style="width:100%;margin-bottom:6px;text-align:left" onclick="plateMake(&quot;'+castId+'&quot;,&quot;'+k+'&quot;)">'
+   +esc(PLATE_SETS[k][0])+'<span class="sub" style="display:block;opacity:.7">'
+   +esc(String(PLATE_SETS[k][1]).split(",").length+" views")+'</span></button>';
+ });
+ h+='<div style="font-family:var(--slate);color:var(--bud);font-size:10.5px;margin-top:10px">PRODUCTION PLATE</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:6px">Only the views this production actually needs. Do not generate twelve angles because a button exists.</div>'
+  +'<div class="tokenchips" id="plateViews">'
+  +Object.keys(PLATE_VIEWS).map(function(k){return '<span class="chip" data-pv="'+k+'">'+esc(PLATE_VIEWS[k][0])+'</span>';}).join("")
+  +'</div><button class="btn green sm" style="width:100%;margin-top:8px" onclick="plateMakeCustom(&quot;'+castId+'&quot;)">Build selected views</button>';
+ var ap=plateApproved(castId);
+ if(ap.length)h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:10px">'+ap.length+' approved plate'+(ap.length===1?"":"s")+' on file for this character.</div>';
+ sendSheet(h);
+ var box=$("plateViews");
+ if(box)box.onclick=function(e){var x=e.target;if(x&&x.dataset&&x.dataset.pv)x.classList.toggle("on");};
+}
+function plateMakeCustom(castId){
+ var box=$("plateViews");
+ var picked=box?[].slice.call(box.querySelectorAll(".chip.on")).map(function(x){return x.dataset.pv;}):[];
+ if(!picked.length){toast("Pick at least one view.",true);return;}
+ plateMake(castId,"production",picked);
+}
+function plateMake(castId,setKey,views){
+ var r=plateBuild(castId,setKey,views);
+ if(!r){toast("Could not build that.",true);return;}
+ var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:6px">'+esc((PLATE_SETS[setKey]||PLATE_SETS.quick)[0])+'</div>'
+  +'<div style="white-space:pre-wrap;font-size:12px;line-height:1.5;max-height:44vh;overflow:auto">'+esc(r.text)+'</div>'
+  +'<div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="plateCopy()">\u29c9 Copy</button>'
+  +(r.artifactId?('<button class="btn ghost sm" style="flex:1" onclick="sendOpen(&quot;'+r.artifactId+'&quot;)">\u2197 Send to</button>'
+   +'<button class="btn ghost sm" style="flex:1" onclick="plateApprove(&quot;'+r.artifactId+'&quot;)">Approve</button>'):"")
+  +'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">Generate in Studio with the character\u2019s reference attached. Approve it once it is right, then it becomes a usable input for scene packages.</div>';
+ sendSheet(h);
+}
+function plateCopy(){navigator.clipboard.writeText(S.lastPlate||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];
 function uxMode(){return (UX_MODES.indexOf(S.uxMode)>=0)?S.uxMode:"pro";}
@@ -6033,7 +6179,7 @@ function renderAssetEditor(){
   const it=assetOf();if(!it){closeAsset(aKind);return;}
   const labels=aKind==="cast"?CAST_LABELS:SET_LABELS;const vs=viewsOf(it).filter(v=>v.src);
   let h='<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div><div style="font-family:var(--slate);font-stretch:condensed;font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:.04em">'+esc(it.name)+'</div><div class="hint">'+vs.length+' reference'+(vs.length===1?'':'s')+'</div></div><button class="btn sm ghost" id="aClose" style="margin-left:auto;flex:0">Done</button></div>';
-  if(aKind==="cast")h+='<button class="btn ghost sm" style="width:100%;margin-bottom:10px" onclick="sheetOpen(&quot;'+it.id+'&quot;)">\u25a6 Build character sheet <span class="sub">lock this character before generating</span></button>';
+  if(aKind==="cast")h+='<button class="btn ghost sm" style="width:100%;margin-bottom:10px" onclick="sheetOpen(&quot;'+it.id+'&quot;)">\u25a6 Build character sheet <span class="sub">lock this character before generating</span></button><button class="btn ghost sm" style="width:100%;margin-bottom:10px" onclick="plateOpen(&quot;'+it.id+'&quot;)">\u25c8 Reference plate <span class="sub">production views \u00b7 follows the active treatment</span></button>';
   h+='<label class="fld">Name</label><input type="text" id="aName" value="'+esc(it.name)+'">';
   if(aKind==="cast"){
     h+='<label class="fld">Identity lock — injected into every shot for consistency</label><textarea id="aIdentity" style="min-height:84px">'+esc(it.identity||"")+'</textarea>';h+='<button class="btn ghost sm" id="aDnaBtn" style="margin-top:6px;width:100%">✦ Generate character DNA</button><div id="aDnaStatus"></div>';

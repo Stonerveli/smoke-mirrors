@@ -1315,7 +1315,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.80 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.81 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -4354,6 +4354,25 @@ function keyframeLaw(){
 function alreadyMadeLaw(who){
  return " ENTRANCE RULE: "+(who||"the character")+" enters ALREADY COMPLETE. Do not build, draw, assemble or reveal them again in this part — that already happened."+
   " They arrive from off-frame mid-motion, finished, and the piece continues from there.";
+}
+/* ---- MATCH DISCIPLINE ------------------------------------
+   "Match" and "similar" give a model permission to reinterpret.
+   Only the identical triple closes that door.
+   ---------------------------------------------------------- */
+function identicalLaw(thing,source){
+ return " CORE RULE — THE SINGLE MOST IMPORTANT CONSTRAINT OF THIS PIECE: "+
+  (thing||"the item shown")+" and "+(source||"the item in the reference")+" are the SAME object."+
+  " Identical colour, identical material, identical cut, identical proportion, identical pattern, identical every visible detail."+
+  " Not similar. Not inspired by. Not matching. Identical.";
+}
+function concreteLaw(){
+ return " DESCRIBE EVERY ITEM CONCRETELY: colour, material, cut, length and pattern, in words."+
+  " Never refer to something only as “the item in the frame” or “that garment” — a pointer is not a description, and the model will invent the rest."+
+  " The image shows what it looks like; the words pin down what it is. Both, every time.";
+}
+function staticUILaw(){
+ return " STATIC ELEMENTS: any on-screen panel, thumbnail, card or interface element is a still preview."+
+  " It stays put. It does not animate, drift, come alive or act on its own, and nothing inside it moves independently.";
 }
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];
@@ -10281,6 +10300,17 @@ var TPL_SEEDS=[
  style:"Locked perpendicular top-down camera on full-frame lightly textured white paper. No desk, no table, no visible paper edges or page corners, no reframing, no zoom, no aspect change \u2014 the same fixed canvas from first frame to last. Flat monochrome graphite doodle animation only.",
  audio:"Graphite scratching, paper rustle, tiny doodle footsteps. No dialogue, no music.",
  close:"SERIES CONTINUITY: when this is part of a chain, state clearly which elements are ALREADY DRAWN and must run into frame fully formed rather than being drawn again, and which single intermediate keyframe the drawing must naturally pass through on its way to completion. Anything already established is never redrawn."},
+{id:"tpl_swap",name:"Outfit Swap",purpose:"One figure, a panel of options, and each one worn exactly as shown. Built for colourway and drop reveals.",
+ vars:[["subject","Who wears it","the figure"],["start","What they start in","their opening outfit"],["opts","The options \u2014 describe each concretely: colour, material, cut, pattern","four options, each described in full"],["place","Where","one fixed location"],["dur","Seconds","10"]],
+ beats:["Open in the exact state of the reference \u2014 same framing, same light, same location, wearing the opening outfit. A vertical panel of framed preview thumbnails sits to one side, stacked top to bottom.",
+  "They reach to the first frame, take that outfit out and put it on. Their whole outfit becomes exactly that garment. The frame dims to a used state.",
+  "Second frame, same rhythm. Outfit becomes exactly that garment. Frame dims.",
+  "Third frame, same rhythm. Outfit becomes exactly that garment. Frame dims.",
+  "Fourth frame, same rhythm. Outfit becomes exactly that garment. Every frame now shows used.",
+  "They settle into one confident presentation pose in the final outfit and hold it for the rest of the piece."],
+ style:"One fixed shot matching the reference composition exactly. The figure and the panel both stay fully visible at all times \u2014 this is what makes each swap verifiable against its frame. No cuts, no orbit, no pan, no wide pull-out. The only camera event permitted is a push-in of no more than five percent, or a single soft flash frame, at the instant of each change, returning immediately to the fixed framing. Ten seconds runs cleaner than fifteen: roughly 0.8s to open, 1.6s per change, and the rest on the final pose.",
+ audio:"A soft fabric grab as each outfit is taken. A quick whoosh or shimmer under a third of a second at the instant it goes on. A single bright chime on the final pose. Light rhythmic backing around 120\u2013128 BPM with the downbeats landing on each take.",
+ close:"No repeated takes, no outfit that fails to match its frame, no frame left full at the end, no added garments beyond the panel options, no new people, no props beyond what the reference shows, no background change, no redesign of the figure or the panel, no gradual morph between outfits, no face or body alteration."},
 {id:"tpl_doodle",name:"Drawn Into Life",purpose:"A hand draws a character on paper, then the character rebels against the hand. Chainable into parts.",
  vars:[["subject","Who gets drawn","the character"],["want","What they want","to get off the page"],["part","Part number","1"],["dur","Seconds","15"]],
  beats:["Open on blank textured paper, full frame. A real human hand holding a graphite pencil enters and begins drawing. Every line grows visibly out of the moving pencil tip \u2014 nothing fades in.",
@@ -10432,6 +10462,7 @@ function tplBuild(t){
  L.push("AUDIO: "+t.audio+(mode==="stoneralia"?" No music, no score \u2014 the artist scores it in post.":""));
  L.push("PHYSICAL REALISM: five fingers on each hand, feet stay in contact with the ground, held objects stay separate solid objects, anything dropped stays where it lands, background objects stay put unless something moves them, and the environment stays consistent between shots.");
  if(t.id==="tpl_doodle"&&String(v.part||"1")!=="1")L.push(alreadyMadeLaw(v.subject||"the character")+keyframeLaw());
+ if(t.id==="tpl_swap")L.splice(1,0,identicalLaw("the outfit worn after each change","the garment shown inside that panel frame")+concreteLaw()+staticUILaw());
  L.push(t.close);
  return L.join("\n\n");
 }

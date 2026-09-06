@@ -239,6 +239,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <button data-go="run"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 21V4'/><path d='M5 4h13l-3 4.5L18 13H5'/></svg></span>Run</button>
   <button data-go="cloudtoons"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 17h11a3.5 3.5 0 0 0 .5-6.97A5 5 0 0 0 8 8.5 3.5 3.5 0 0 0 6 17z'/></svg></span>Cloudtoons</button>
   <button data-go="comics"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9l-4 3v-3H5a1 1 0 0 1-1-1z'/></svg></span>Comics</button>
+  <button data-go="scenes"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='13' height='14' rx='2'/><path d='M19 7v10M22 9v6'/></svg></span>Scenes</button>
   <button data-go="sitcom"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='4' width='20' height='14' rx='2'/><path d='M8 21h8'/><path d='M12 18v3'/><path d='M7 9l3 2-3 2'/></svg></span>Sitcom</button>
   <button data-go="vlog"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 10l5-3v10l-5-3z'/><rect x='3' y='6' width='12' height='12' rx='2'/></svg></span>Vlog</button>
   <button data-go="comedy"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3a9 9 0 100 18 9 9 0 000-18z'/><path d='M8 14s1.5 2 4 2 4-2 4-2'/><path d='M9 9h.01M15 9h.01'/></svg></span>Comedy Lab</button>
@@ -560,6 +561,12 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <input type="file" id="viewFile" accept="image/*" style="display:none">
   <div class="filterbar" id="stashFilter"></div>
   <div id="stashGrid"></div>
+</section>
+
+<!-- ===== SCENES / SHOTS ===== -->
+<section class="view" id="view-scenes">
+  <div class="slatehead"><span class="ic"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='13' height='14' rx='2'/><path d='M19 7v10'/></svg></span><h2>Scenes</h2><span class="tag">Generation Packages</span></div>
+  <div id="scenesBody"></div>
 </section>
 
 <!-- ===== TEMPLATE LIBRARY ===== -->
@@ -1304,7 +1311,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.69 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.73 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -1955,7 +1962,7 @@ const VIEW_GROUP={
   /* WRITE — develop the idea */
   story:"write",episodes:"write",comedy:"write",sketch:"write",talent:"write",sitcom:"write",vlog:"write",fight:"write",
   /* VISUALIZE — turn writing into pictures */
-  board:"visual",csb:"visual",comics:"visual",cloudtoons:"visual",songvid:"visual",
+  board:"visual",csb:"visual",scenes:"visual",comics:"visual",cloudtoons:"visual",songvid:"visual",
   /* AUDIO */
   smg:"audio",vo:"audio",media:"audio",
   /* WORLD — registered truth */
@@ -2000,6 +2007,7 @@ function go(name){
   try{if(MODE_CFG[name])modeRender(name);}catch(e){}
   try{if(VIEW_GROUP[name]==="create"&&name!=="chief")recTouch("station",name,navLabel(name)||name,name);}catch(e){}
   if(name==="templates")renderTemplates();
+  if(name==="scenes")renderScenes();
   if(name==="studio")renderRefs();
   if(name==="board")renderBoardChars();
   if(name==="csb")renderCSB();
@@ -2776,6 +2784,7 @@ var REVIEW_PROFILES={
  sitcom:["Sitcom","audience timing (punchline first, then the hold, then the response), whether every line wrongly gets a laugh, ensemble reaction opportunities, act-break placement, set geography consistency, and period wardrobe discipline"],
  vlog:["Vlog","whether the camera has a reason to exist, who is holding it and whether that stays consistent, motivated imperfection, audio perspective following the camera, and whether B-roll serves the story"],
  canon:["Canon","consistency with the supplied character and location context ONLY. Never invent a canon rule. If the context does not state something, do not treat it as a violation."],
+ shot:["Shot continuity","identity consistency, exact cast with no additions or duplicates, visual track adherence, wardrobe, prop appearance and persistence, relative scale, blocking, carried state (wet, dirty, damaged, holding something), registered movement rules, environment identity and geometry, who speaks, action order, whether the shot delivers its stated intent, and continuity with the neighbouring accepted shots"],
  trend:["Trend commentary","factual support for every claim, freshness of the information, source quality, whether fiction or comedy could be mistaken for fact, whether the character stays in character, hook strength, clarity for an unfamiliar viewer, pacing, whether the humour emerges naturally, whether the character contributes visually, and whether the ending pays off"],
  originality:["Originality","premise distinctiveness, over-reliance on recognisable existing properties, derivative character construction, and familiar scene structure. When uncertain say Potential Similarity Concern rather than making a claim."]
 };
@@ -2788,6 +2797,7 @@ function reviewProfilesFor(a){
  if(st==="vlog")out.push("vlog");
  if(st==="comedy")out.push("comedy");
  if(st==="talent"||t==="episode")out.push("trend");
+ if(a&&a.shotId)out.unshift("shot");
  out.push("canon","originality");
  return out.filter(function(v,i,arr){return arr.indexOf(v)===i;});
 }
@@ -2809,6 +2819,7 @@ async function reviewRun(artId){
  var profs=reviewProfilesFor(a);
  var ctx=ctxPackage([]);
  var ctxTxt=ctx.fields.length?(" CONTEXT AVAILABLE (this is the ONLY canon you know \u2014 never invent more): "+ctx.fields.map(function(f){return f.label+": "+f.value;}).join("; ")+"."):" No registered context supplied \u2014 do not raise canon findings.";
+  if(a.reviewContext)ctxTxt+=" THIS SHOT WAS GENERATED UNDER THE FOLLOWING LOCKS \u2014 check the result against every one of them, and treat a broken hard lock as a MAJOR or BLOCKING finding:\n"+a.reviewContext;
  sendSheet('<div style="font-family:var(--slate);font-weight:800">S&amp;M Review</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">Reviewing as '+esc(profs.map(function(p){return REVIEW_PROFILES[p][0];}).join(" + "))+'\u2026</div>');
  try{
   var sys="You are S&M REVIEW, the internal quality pass for the Smoke & Mirrors studio."
@@ -3521,6 +3532,128 @@ function steerCopy(){navigator.clipboard.writeText((S.steer||{}).last||"").then(
    A model prompt is a COMPILED OUTPUT, never canon.
    Reads existing Canon/Registry/Cast/Sets. Creates no second store.
    ============================================================ */
+function scnOpen(id){if(!S.gp)S.gp={};S.gp.scene=id;save();renderScenes();}
+function scnPick(id){if(!S.gp)S.gp={};S.gp.shot=(S.gp.shot===id)?"":id;save();renderScenes();}
+function scnNewFromLast(){
+ var arts=(S.artifacts||[]).filter(function(a){return a.body&&["script","sketch","episode","premise"].indexOf(a.type)>=0;});
+ if(!arts.length){toast("Write something first \u2014 a sketch, scene or episode.",true);return;}
+ var a=arts[0];
+ var sc=scnFromArtifact(a.id,{title:a.title||"Scene"});
+ scnOpen(sc.id);
+ toast("Scene package built from \u201c"+(a.title||"latest")+"\u201d.");
+}
+function scnField(id,k,v){var sc=scnGet(id);if(!sc)return;sc[k]=v;scnSave(sc);}
+function shotField(id,k,v){var sh=shotGet(id);if(!sh)return;sh[k]=v;shotSave(sh);}
+function scnCompileShot(shotId){
+ var sh=shotGet(shotId);if(!sh)return;
+ var c=gpCompileSave(sh.sceneId,shotId,sh.model||(S.picked&&S.picked.video)||"");
+ if(!c){toast("Could not compile.",true);return;}
+ shotStatus(shotId,"READY");
+ var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:2px">Compiled \u00b7 '+esc(c.adapter.label)+'</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:6px">'+c.chars+' chars \u00b7 limit ~'+c.limit+'</div>';
+ if(c.warning)h+='<div class="hint" style="text-transform:none;letter-spacing:0;color:#c9a94a;margin-bottom:6px">\u26a0 '+esc(c.warning)+'</div>';
+ if((c.conflicts||[]).length)h+='<div class="hint" style="text-transform:none;letter-spacing:0;color:#d46a6a;margin-bottom:6px">\u26a0 Lock conflict on '+esc(c.conflicts[0].family)+' \u2014 canon says: '+esc(String(c.conflicts[0].canon).slice(0,90))+'</div>';
+ h+='<div style="white-space:pre-wrap;font-size:12px;line-height:1.5;max-height:44vh;overflow:auto">'+esc(c.text)+'</div>'
+  +'<div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="scnCopyPrompt()">\u29c9 Copy</button>'
+  +(c.artifactId?('<button class="btn ghost sm" style="flex:1" onclick="sendOpen(&quot;'+c.artifactId+'&quot;)">\u2197 Send to</button>'):"")
+  +'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">The package stays the source \u2014 this prompt is just today\u2019s compilation.</div>';
+ S.gp=S.gp||{};S.gp.lastPrompt=c.text;save();
+ sendSheet(h);renderScenes();
+}
+function scnCopyPrompt(){navigator.clipboard.writeText((S.gp||{}).lastPrompt||"").then(function(){toast("Prompt copied.");}).catch(function(){toast("Copy failed.",true);});}
+function scnShowLocks(sceneId,shotId){
+ var R=locksResolve(sceneId,shotId||"");
+ var row=function(l){return '<div style="font-size:12.5px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05)">'
+  +'<span style="font-family:var(--slate);font-size:9.5px;color:'+(l.hard?"var(--bud)":"var(--bone-dim)")+'">'+esc((LOCK_FAMILIES[l.family]||[l.family])[0].toUpperCase())+' \u00b7 '+esc(l.origin)+(l.hard?" \u00b7 HARD":"")+'</span><br>'+esc(l.value)+'</div>';};
+ var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:6px">Locks</div>';
+ h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:6px">Resolved automatically from registry and canon. Hard locks cannot be overridden by a shot.</div>';
+ if(R.inherited.length){h+='<div style="font-family:var(--slate);color:var(--bud);font-size:10.5px;margin-top:8px">INHERITED</div>'+R.inherited.map(row).join("");}
+ if(R.local.length){h+='<div style="font-family:var(--slate);color:var(--bud);font-size:10.5px;margin-top:10px">THIS SHOT</div>'+R.local.map(row).join("");}
+ var cf=lockConflicts(sceneId,shotId||"");
+ if(cf.length)h+='<div class="card" style="margin-top:10px;padding:9px;border-left:3px solid #d46a6a"><div class="hint" style="text-transform:none;letter-spacing:0;color:#d46a6a">\u26a0 '+esc(cf[0].family)+' conflict \u2014 the shot says \u201c'+esc(cf[0].shot)+'\u201d but '+esc(cf[0].origin)+' says \u201c'+esc(String(cf[0].canon).slice(0,110))+'\u201d. Canon wins.</div></div>';
+ sendSheet(h);
+}
+function renderScenes(){
+ var host=$("scenesBody");if(!host)return;
+ if(!S.gp)S.gp={scene:"",shot:"",lastPrompt:""};
+ var all=gpScenes();
+ var sc=scnGet(S.gp.scene);
+ var h="";
+ h+='<details class="collapse" style="margin-bottom:12px"><summary>\u2753 How to use this</summary><div class="body">'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px"><b>A scene package is the source of truth.</b> The prompt is just what gets compiled out of it for whichever model you pick.</div>'
+  +'<div style="font-size:13.5px;line-height:1.7">1. Write something in Sketch, Sitcom or Vlog first.<br>2. Tap <b>Build from latest</b> \u2014 it pulls cast, location, wardrobe and visual track from what S&amp;M already knows.<br>3. Add shots.<br>4. Tap a shot \u2192 <b>Locks</b> to see what canon is enforcing.<br>5. <b>Compile</b> for your chosen model, copy or send it to Studio.<br>6. Generate, then <b>Review</b>, then <b>Accept</b>.</div></div></details>';
+ if(!sc){
+  h+='<div class="card"><div class="hint" style="text-transform:none;letter-spacing:0">No scene open. A scene package holds the cast, location, wardrobe, props, continuity and locks so you never restate them per shot.</div>'
+   +'<button class="btn green sm" style="width:100%;margin-top:8px" onclick="scnNewFromLast()">\uff0b Build from latest writing</button></div>';
+  if(all.length){
+   h+='<label class="fld" style="margin-top:12px">Scenes</label>';
+   all.forEach(function(x){
+    var st=scnStats(x.id);
+    h+='<div class="card" style="margin-bottom:8px;padding:10px" onclick="scnOpen(&quot;'+x.id+'&quot;)">'
+     +'<div style="font-family:var(--slate);font-weight:800;font-size:13.5px">'+esc(x.title)+'</div>'
+     +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:2px">'+st.shots+' shot'+(st.shots===1?"":"s")+' \u00b7 '+st.accepted+' accepted'+(st.needsFix?(" \u00b7 "+st.needsFix+" need fixing"):"")+'</div></div>';
+   });
+  }
+  host.innerHTML=h;return;
+ }
+ /* open scene */
+ var cast=(S.cast||[]).filter(function(c){return (sc.castIds||[]).indexOf(c.id)>=0;});
+ var set=(S.sets||[]).find(function(x){return x.id===sc.setId;});
+ h+='<div class="card"><div class="row" style="align-items:flex-start"><div style="flex:1">'
+  +'<div style="font-family:var(--slate);font-weight:800;font-size:15px">'+esc(sc.title)+'</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:2px">'
+  +(cast.length?esc(cast.map(function(c){return c.name;}).join(", ")):"no cast")
+  +(set?(" \u00b7 "+esc(set.name)):"")+'</div></div>'
+  +'<button class="btn ghost sm" style="flex:0" onclick="scnOpen(&quot;&quot;)">Back</button></div>';
+ h+='<label class="fld" style="margin-top:10px">Purpose \u2014 what this scene is for</label>'
+  +'<input type="text" value="'+esc(sc.purpose||"")+'" oninput="scnField(&quot;'+sc.id+'&quot;,&quot;purpose&quot;,this.value)" placeholder="the point of the beat">';
+ h+='<label class="fld" style="margin-top:10px">Action</label>'
+  +'<textarea style="min-height:56px" oninput="scnField(&quot;'+sc.id+'&quot;,&quot;action&quot;,this.value)">'+esc(sc.action||"")+'</textarea>';
+ h+='<div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="scnShowLocks(&quot;'+sc.id+'&quot;,&quot;&quot;)">\ud83d\udd12 Scene locks</button>'
+  +'<button class="btn ghost sm" style="flex:1" onclick="scnAddShot(&quot;'+sc.id+'&quot;,{});renderScenes()">\uff0b Add shot</button></div></div>';
+ /* the sequence strip */
+ var shots=scnShots(sc.id);
+ if(!shots.length)h+='<div class="card"><div class="hint" style="text-transform:none;letter-spacing:0">No shots yet. Add one \u2014 a scene package with no shots is just notes.</div></div>';
+ shots.forEach(function(sh){
+  var open=(S.gp.shot===sh.id);
+  var col={PLANNED:"var(--bone-dim)",READY:"var(--bud)",GENERATING:"#c9a94a",REVIEW:"#c9a94a",ACCEPTED:"var(--bud)","NEEDS FIX":"#d46a6a"}[sh.status]||"var(--bone-dim)";
+  var R=locksResolve(sc.id,sh.id);
+  var hard=R.all.filter(function(l){return l.hard;}).length;
+  h+='<div class="card" style="margin-bottom:8px;padding:11px'+(open?";border-left:3px solid var(--bud)":"")+'">'
+   +'<div class="row" style="align-items:baseline" onclick="scnPick(&quot;'+sh.id+'&quot;)">'
+   +'<div style="font-family:var(--slate);font-size:19px;color:var(--bud);flex:0;min-width:26px">'+(sh.order||1)+'</div>'
+   +'<div style="flex:1"><div style="font-size:13.5px">'+esc(sh.subject||"(no action set)")+'</div>'
+   +'<div class="hint" style="text-transform:none;letter-spacing:0">'
+   +(sh.dur?(sh.dur+"s \u00b7 "):"")+(sh.size?(esc(sh.size)+" \u00b7 "):"")
+   +(cast.length?(cast.length+" cast \u00b7 "):"")+hard+' hard locks'
+   +(sh.model?(" \u00b7 "+esc(String(sh.model).split("/").pop())):"")+'</div></div>'
+   +'<div style="flex:0;font-family:var(--slate);font-size:9.5px;color:'+col+'">'+esc(sh.status)+'</div></div>';
+  if(open){
+   h+='<div class="row" style="margin-top:9px"><input type="text" style="flex:2" placeholder="what happens in this shot" value="'+esc(sh.subject||"")+'" oninput="shotField(&quot;'+sh.id+'&quot;,&quot;subject&quot;,this.value)">'
+    +'<input type="text" style="flex:1" placeholder="secs" value="'+esc(sh.dur||"")+'" oninput="shotField(&quot;'+sh.id+'&quot;,&quot;dur&quot;,parseInt(this.value,10)||0)"></div>';
+   h+='<div class="row" style="margin-top:6px"><input type="text" style="flex:1" placeholder="size (WS/MS/CU)" value="'+esc(sh.size||"")+'" oninput="shotField(&quot;'+sh.id+'&quot;,&quot;size&quot;,this.value)">'
+    +'<input type="text" style="flex:1" placeholder="camera move" value="'+esc(sh.movement||"")+'" oninput="shotField(&quot;'+sh.id+'&quot;,&quot;movement&quot;,this.value)"></div>';
+   h+='<input type="text" style="margin-top:6px" placeholder="blocking \u2014 who is where" value="'+esc(sh.blocking||"")+'" oninput="shotField(&quot;'+sh.id+'&quot;,&quot;blocking&quot;,this.value)">';
+   h+='<label class="fld" style="margin-top:8px">Model</label><select onchange="shotField(&quot;'+sh.id+'&quot;,&quot;model&quot;,this.value)">'
+    +'<option value="">\u2014 pick \u2014</option>'
+    +Object.keys(MODEL_ADAPTERS).map(function(k){return '<option value="'+k+'"'+(sh.model===k?" selected":"")+'>'+esc(MODEL_ADAPTERS[k].label)+'</option>';}).join("")+'</select>';
+   var rdy=shotReady(sh.id);
+   if(!rdy.ok)h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px;color:#c9a94a">Not ready \u2014 '+esc(rdy.why)+'</div>';
+   h+='<div class="row" style="margin-top:8px">'
+    +'<button class="btn ghost sm" style="flex:1" onclick="scnShowLocks(&quot;'+sc.id+'&quot;,&quot;'+sh.id+'&quot;)">\ud83d\udd12 Locks</button>'
+    +'<button class="btn green sm" style="flex:1" onclick="scnCompileShot(&quot;'+sh.id+'&quot;)">\u2699 Compile</button></div>';
+   if((sh.artifactIds||[]).length){
+    h+='<div class="row" style="margin-top:6px">'
+     +'<button class="btn ghost sm" style="flex:1" onclick="shotReview(&quot;'+sh.id+'&quot;)">\u2713 Review</button>'
+     +'<button class="btn ghost sm" style="flex:1" onclick="shotAccept(&quot;'+sh.id+'&quot;)">Accept</button>'
+     +'<button class="btn ghost sm" style="flex:1" onclick="shotRegenerate(&quot;'+sh.id+'&quot;);renderScenes()">Redo</button></div>';
+   }
+   if(sh.fixNote)h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px;color:#d46a6a">Fix: '+esc(sh.fixNote)+'</div>';
+  }
+  h+='</div>';
+ });
+ host.innerHTML=h;
+}
 function gpScenes(){if(!Array.isArray(S.scenes))S.scenes=[];return S.scenes;}
 function gpShots(){if(!Array.isArray(S.gpShots))S.gpShots=[];return S.gpShots;}
 function scnMake(o){
@@ -3731,6 +3864,211 @@ function locksText(sceneId,shotId){
  if(r.inherited.length)out.push("INHERITED LOCKS — these come from the registry and canon and are not negotiable:\n"+r.inherited.map(line).join("\n"));
  if(r.local.length)out.push("SHOT LOCKS — specific to this shot:\n"+r.local.map(line).join("\n"));
  return out.join("\n\n");
+}
+/* ============================================================
+   GENERATION PACKAGE 3 — MODEL ADAPTERS + PROMPT COMPILER
+   One model-independent package. Many model-specific compilations.
+   A compiled prompt is an OUTPUT and never becomes canon.
+   ============================================================ */
+var MODEL_ADAPTERS={
+ "bytedance/seedance-2.5/reference-to-video":{
+  label:"Seedance 2.5",kind:"video",refs:50,refSyntax:"@Image1",
+  negatives:true,positiveOnly:false,timing:"timecode",audio:"describe",
+  maxChars:7500,seed:true,order:["intent","refs","cast","visual","action","camera","state","locks","audio"],
+  notes:"Reference-to-video. Caps at 720p. Best character consistency in crowded shots."},
+ "alibaba/wan-3.0/reference-to-video":{
+  label:"Wan 3.0",kind:"video",refs:8,refSyntax:"@Image1",
+  negatives:true,positiveOnly:false,timing:"timecode",audio:"native",
+  maxChars:4000,seed:true,order:["intent","refs","cast","visual","action","camera","state","locks","audio"],
+  notes:"30s single pass, native audio, up to 1080p."},
+ "minimax/h3-max/image-to-video":{
+  label:"H3 Max",kind:"video",refs:1,refSyntax:"first frame",
+  negatives:false,positiveOnly:true,timing:"timecode",audio:"native",
+  maxChars:2000,seed:true,order:["intent","visual","action","camera","state","locks","audio"],
+  notes:"One opening frame only. Plain language beats structured data. Positive-only."},
+ "minimax/h3-max/director":{
+  label:"H3 Max Director",kind:"stream",refs:1,refSyntax:"seed frame",
+  negatives:false,positiveOnly:true,timing:"steering",audio:"native",
+  maxChars:2000,seed:false,order:["intent","visual","action","state","locks"],
+  notes:"Continuous stream. Wants a seed plus timed steering directions, not one prompt."},
+ "fal-ai/nano-banana-2":{
+  label:"Nano Banana 2",kind:"image",refs:6,refSyntax:"attached reference",
+  negatives:false,positiveOnly:true,timing:"none",audio:"none",
+  maxChars:2000,seed:true,order:["intent","refs","cast","visual","action","camera","locks"],
+  notes:"House style. Positive-only reads best."},
+ "meta/muse-image/text-to-image":{
+  label:"Muse Image",kind:"image",refs:4,refSyntax:"attached reference",
+  negatives:false,positiveOnly:true,timing:"none",audio:"none",
+  maxChars:2000,seed:false,order:["intent","refs","visual","action","locks"],
+  notes:"Plans before rendering. Use when the frame contains readable text."},
+ "fal-ai/recraft/v4/text-to-vector":{
+  label:"Recraft V4 Vector",kind:"image",refs:0,refSyntax:"style_id",
+  negatives:false,positiveOnly:true,timing:"none",audio:"none",
+  maxChars:1000,seed:false,order:["intent","visual","locks"],
+  notes:"True SVG. Keep it simple — shapes, not scenes."}
+};
+function adapterFor(model){
+ if(MODEL_ADAPTERS[model])return MODEL_ADAPTERS[model];
+ /* sensible fallback so an unknown model still compiles */
+ return {label:model||"model",kind:"video",refs:4,refSyntax:"@Image1",negatives:false,positiveOnly:true,
+  timing:"timecode",audio:"describe",maxChars:3000,seed:true,
+  order:["intent","refs","cast","visual","action","camera","state","locks","audio"],notes:""};
+}
+/* ---- THE COMPILER: package + locks -> one model-shaped prompt ---- */
+function gpCompile(sceneId,shotId,model){
+ var sc=scnGet(sceneId);if(!sc)return null;
+ var sh=shotId?shotGet(shotId):null;
+ var ad=adapterFor(model||(sh&&sh.model)||(S.picked&&S.picked.video)||"");
+ var R=locksResolve(sceneId,shotId);
+ var cast=(S.cast||[]).filter(function(c){return (sc.castIds||[]).indexOf(c.id)>=0;});
+ var st=(S.sets||[]).find(function(x){return x.id===sc.setId;});
+ var part={};
+ /* 1 intent */
+ part.intent=(sh?("SHOT "+(sh.order||1)+(sh.dur?(" · "+sh.dur+"s"):"")+". "):"")
+  +(sh&&sh.subject?sh.subject:sc.action||sc.title)
+  +(sc.purpose?(" The point of this beat: "+sc.purpose+".") :"");
+ /* 2 refs */
+ var refs=(sh&&sh.refs&&sh.refs.length)?sh.refs:(sc.refs||[]);
+ if(refs.length&&ad.refs>0){
+  var use=refs.slice(0,ad.refs);
+  part.refs="REFERENCES ("+ad.refSyntax+"): "+use.join(", ")
+   +(refs.length>ad.refs?(" — "+(refs.length-ad.refs)+" more supplied than "+ad.label+" accepts; the rest were dropped."):"");
+ }
+ /* 3 cast */
+ if(cast.length)part.cast="CHARACTERS: "+cast.map(function(c){
+  return c.name+(c.identity?(" — "+String(c.identity).slice(0,180)):"");}).join(" || ")+".";
+ /* 4 visual */
+ var vt=(CINE_RENDER[sc.visualTrack]||[])[1]||"";
+ part.visual=(vt?vt:"")+(sc.treatment?(" TREATMENT: "+sc.treatment):"");
+ /* 5 action + blocking */
+ part.action=[sc.action,sh&&sh.blocking?("BLOCKING: "+sh.blocking):"",sh&&sh.performance?("PERFORMANCE: "+sh.performance):""]
+  .filter(Boolean).join(" ");
+ /* 6 camera */
+ if(sh){
+  var cam=[sh.size,sh.lens,sh.angle,sh.movement].filter(Boolean).join(", ");
+  if(cam)part.camera="CAMERA: "+cam+".";
+ }
+ /* 7 state */
+ var stateBits=[];
+ if(st)stateBits.push("LOCATION: "+st.name+(st.vibe?(" — "+String(st.vibe).slice(0,140)):""));
+ if(sh&&sh.envState)stateBits.push("ENVIRONMENT STATE: "+sh.envState);
+ if(sc.stateIn)stateBits.push("OPENS: "+sc.stateIn);
+ if(sc.stateOut)stateBits.push("CLOSES: "+sc.stateOut);
+ if(stateBits.length)part.state=stateBits.join(". ")+".";
+ /* 8 locks — structural, rendered last so nothing buries them */
+ part.locks=locksText(sceneId,shotId);
+ /* 9 audio */
+ if(ad.audio!=="none"){
+  var au=[sh&&sh.audio?sh.audio:"",sc.dialogue?("DIALOGUE: "+sc.dialogue):""].filter(Boolean).join(" ");
+  var silent=R.inherited.filter(function(l){return l.family==="speech"&&/SILENT/.test(l.value);});
+  if(silent.length)au+=" "+silent.map(function(l){return l.value;}).join(" ");
+  if(S.noMusic!==false)au+=" No music or score.";
+  if(au.trim())part.audio="AUDIO: "+au.trim();
+ }
+ /* assemble in the adapter's order */
+ var body=(ad.order||[]).map(function(k){return part[k];}).filter(Boolean).join("\n\n");
+ /* adapter-specific riders — these belong to the adapter, not to S&M globally */
+ var rider=[];
+ if(ad.positiveOnly)rider.push("Write only what is present. Do not include a list of things to avoid — this model performs worse with negatives.");
+ if(ad.negatives)rider.push("A short negative list is supported by this model if it is genuinely needed.");
+ if(ad.timing==="steering")rider.push("This model runs as a continuous stream: deliver a seed paragraph followed by timed steering directions rather than one block prompt.");
+ if(ad.notes)rider.push(ad.notes);
+ if(rider.length)body+="\n\nMODEL NOTES ("+ad.label+"): "+rider.join(" ");
+ var over=(body.length>ad.maxChars);
+ return {model:model||"",adapter:ad,text:body,chars:body.length,
+  overLimit:over,limit:ad.maxChars,
+  warning:over?("This compiles to "+body.length+" characters but "+ad.label+" accepts about "+ad.maxChars+". Trim the scene or pick a model with more room."):"",
+  conflicts:lockConflicts(sceneId,shotId)};
+}
+/* compiling never writes to canon; it only records what was produced */
+function gpCompileSave(sceneId,shotId,model){
+ var c=gpCompile(sceneId,shotId,model);
+ if(!c)return null;
+ var sc=scnGet(sceneId),sh=shotId?shotGet(shotId):null;
+ var a=(typeof creatorArtifact==="function")?creatorArtifact("studio","prompt",
+   (sc?sc.title:"Scene")+(sh?(" · shot "+(sh.order||1)):"")+" · "+c.adapter.label,
+   c.text,{castIds:sc?sc.castIds:[],setIds:(sc&&sc.setId)?[sc.setId]:[],productionType:sc?sc.productionType:""}):null;
+ if(a&&sh){if(sh.artifactIds.indexOf(a.id)<0)sh.artifactIds.push(a.id);sh.model=model||sh.model;
+  if(sh.status==="PLANNED"||sh.status==="NEEDS FIX")sh.status="READY";
+  shotSave(sh);}
+ c.artifactId=a?a.id:"";
+ return c;
+}
+/* ============================================================
+   GENERATION PACKAGE 4 — WORKFLOW + CONTINUITY REVIEW
+   Extends the existing Review. Never destroys accepted work.
+   ============================================================ */
+var SHOT_STATUS=["PLANNED","READY","GENERATING","REVIEW","ACCEPTED","NEEDS FIX"];
+function shotStatus(shotId,st){
+ var sh=shotGet(shotId);if(!sh)return null;
+ if(SHOT_STATUS.indexOf(st)<0)return sh;
+ sh.status=st;shotSave(sh);return sh;
+}
+function shotReady(shotId){
+ var sh=shotGet(shotId);if(!sh)return {ok:false,why:"No shot."};
+ var sc=scnGet(sh.sceneId);if(!sc)return {ok:false,why:"Shot has no scene."};
+ var miss=[];
+ if(!(sc.castIds||[]).length&&!sh.subject)miss.push("no cast and no subject");
+ if(!sh.subject&&!sc.action)miss.push("nothing stated to happen");
+ var cf=lockConflicts(sh.sceneId,shotId);
+ return {ok:!miss.length&&!cf.length,missing:miss,conflicts:cf,
+  why:cf.length?("a shot lock contradicts hard canon: "+cf[0].family):(miss.length?miss.join("; "):"")};
+}
+/* neighbouring ACCEPTED shots are the continuity reference */
+function shotNeighbours(shotId){
+ var sh=shotGet(shotId);if(!sh)return {prev:null,next:null};
+ var list=scnShots(sh.sceneId),i=list.findIndex(function(x){return x.id===sh.id;});
+ var back=null,fwd=null;
+ for(var k=i-1;k>=0;k--){if(list[k].status==="ACCEPTED"){back=list[k];break;}}
+ for(var j=i+1;j<list.length;j++){if(list[j].status==="ACCEPTED"){fwd=list[j];break;}}
+ return {prev:back,next:fwd};
+}
+/* review a generated shot artifact against its locks */
+async function shotReview(shotId,artId){
+ var sh=shotGet(shotId);if(!sh)return null;
+ var sc=scnGet(sh.sceneId);if(!sc)return null;
+ var a=artGet(artId||sh.artifactIds[sh.artifactIds.length-1]);
+ if(!a){toast("Nothing generated for this shot yet.",true);return null;}
+ a.shotId=shotId;a.sceneId=sh.sceneId;
+ /* the locks and the neighbours become the review context */
+ var nb=shotNeighbours(shotId);
+ a.reviewContext=locksText(sh.sceneId,shotId)
+  +(nb.prev?("\n\nPREVIOUS ACCEPTED SHOT (continuity must match): "+(nb.prev.subject||"shot "+nb.prev.order)):"")
+  +(nb.next?("\n\nNEXT ACCEPTED SHOT (continuity must lead into it): "+(nb.next.subject||"shot "+nb.next.order)):"")
+  +"\n\nSHOT INTENT: "+(sh.subject||sc.action||sc.title);
+ artSave(a);
+ shotStatus(shotId,"REVIEW");
+ return await reviewRun(a.id);
+}
+/* accept / fix / regenerate — never destroy good work */
+function shotAccept(shotId){
+ var sh=shotGet(shotId);if(!sh)return;
+ var last=sh.artifactIds[sh.artifactIds.length-1];
+ var a=last?artGet(last):null;
+ if(a&&a.review){
+  var blocking=(a.review.findings||[]).some(function(f,i){
+   return String(f.severity||"").toLowerCase()==="blocking"&&(a.review.ignored||[]).indexOf(i)<0;});
+  if(blocking){toast("Resolve the blocking finding before accepting.",true);return;}
+ }
+ if(a){a.status="approved";a.approvedAt=Date.now();artSave(a);}
+ shotStatus(shotId,"ACCEPTED");
+ toast("Shot "+(sh.order||"")+" accepted \u2014 it is now the continuity reference for its neighbours.");
+ try{renderScenes();}catch(e){}
+}
+function shotNeedsFix(shotId,note){
+ var sh=shotGet(shotId);if(!sh)return;
+ sh.fixNote=note||"";shotSave(sh);
+ shotStatus(shotId,"NEEDS FIX");
+ try{renderScenes();}catch(e){}
+}
+/* regeneration derives a new artifact; the accepted one is never overwritten */
+function shotRegenerate(shotId,model){
+ var sh=shotGet(shotId);if(!sh)return null;
+ var prev=sh.artifactIds[sh.artifactIds.length-1];
+ var c=gpCompileSave(sh.sceneId,shotId,model||sh.model);
+ if(c&&c.artifactId&&prev&&typeof artLink==="function")artLink(prev,c.artifactId);
+ shotStatus(shotId,"READY");
+ return c;
 }
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];

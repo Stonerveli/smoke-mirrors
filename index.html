@@ -1284,6 +1284,10 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <div class="row"><input type="text" id="rcManual" placeholder="style id" style="flex:1"><button class="btn ghost sm" style="flex:0" onclick="rcSetManual()">Lock</button></div>
  </div>
  <div class="card">
+  <div style="font-weight:800;font-family:var(--slate);margin-bottom:6px">◉ TACTILE CLAY <span class="hint" style="text-transform:none;letter-spacing:0">(treatment)</span></div>
+  <div id="tcBody"></div>
+ </div>
+ <div class="card">
   <div style="font-weight:800;font-family:var(--slate);margin-bottom:6px">⚡ MODEL PLAYBOOK</div>
   <div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">Which model, when, and what it costs. Rates move — check fal for the current number.</div>
   <div style="font-family:var(--slate);color:var(--bud);font-size:12px;margin-top:8px">THE LADDER — iterate cheap, finish expensive</div>
@@ -1311,7 +1315,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.73 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.75 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -2026,7 +2030,7 @@ function go(name){
   if(name==="run")renderRun();
   if(name==="train")renderLab();
   if(name==="studio"||name==="board"||name==="comics"||name==="fight"||name==="story"||name==="train"||name==="chiefinese"||name==="shows"||name==="networks")try{renderHUD("view-"+name);}catch(e){}
-  if(name==="settings")try{rcPaint();
+  if(name==="settings")try{tcPaint();rcPaint();
    var _bm=$("bkMeta");
    if(_bm){var lb=S.lastBackup?new Date(S.lastBackup):null;var days=lb?Math.floor((Date.now()-S.lastBackup)/864e5):null;
     var sz="~"+Math.round(lsBytes()/1024)+" KB";
@@ -3609,6 +3613,10 @@ function renderScenes(){
   +'<input type="text" value="'+esc(sc.purpose||"")+'" oninput="scnField(&quot;'+sc.id+'&quot;,&quot;purpose&quot;,this.value)" placeholder="the point of the beat">';
  h+='<label class="fld" style="margin-top:10px">Action</label>'
   +'<textarea style="min-height:56px" oninput="scnField(&quot;'+sc.id+'&quot;,&quot;action&quot;,this.value)">'+esc(sc.action||"")+'</textarea>';
+ h+='<label class="fld" style="margin-top:10px">Treatment</label><select onchange="scnField(&quot;'+sc.id+'&quot;,&quot;treatment&quot;,this.value)">'
+  +'<option value=""'+(!sc.treatment?" selected":"")+'>\u2014 visual track only \u2014</option>'
+  +'<option value="tactileclay"'+(sc.treatment==="tactileclay"?" selected":"")+'>Tactile Clay \u00b7 handmade stop-motion</option></select>';
+ if(sc.treatment==="tactileclay")h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px;color:var(--bud)">Medium only \u2014 registered identity, wardrobe, speech and movement still win. Tune it in Setup.</div>';
  h+='<div class="row" style="margin-top:8px"><button class="btn ghost sm" style="flex:1" onclick="scnShowLocks(&quot;'+sc.id+'&quot;,&quot;&quot;)">\ud83d\udd12 Scene locks</button>'
   +'<button class="btn ghost sm" style="flex:1" onclick="scnAddShot(&quot;'+sc.id+'&quot;,{});renderScenes()">\uff0b Add shot</button></div></div>';
  /* the sequence strip */
@@ -3939,7 +3947,8 @@ function gpCompile(sceneId,shotId,model){
   return c.name+(c.identity?(" — "+String(c.identity).slice(0,180)):"");}).join(" || ")+".";
  /* 4 visual */
  var vt=(CINE_RENDER[sc.visualTrack]||[])[1]||"";
- part.visual=(vt?vt:"")+(sc.treatment?(" TREATMENT: "+sc.treatment):"");
+ var tcx=(sc.treatment==="tactileclay")?tcLaw({force:true}):"";
+ part.visual=(tcx?tcx:(vt||""))+(sc.treatment&&sc.treatment!=="tactileclay"?(" TREATMENT: "+sc.treatment):"");
  /* 5 action + blocking */
  part.action=[sc.action,sh&&sh.blocking?("BLOCKING: "+sh.blocking):"",sh&&sh.performance?("PERFORMANCE: "+sh.performance):""]
   .filter(Boolean).join(" ");
@@ -4070,6 +4079,103 @@ function shotRegenerate(shotId,model){
  shotStatus(shotId,"READY");
  return c;
 }
+/* ============================================================
+   TACTILE CLAY — original handmade stop-motion treatment
+   A production TREATMENT, not a new universe-wide Visual Track.
+   Changes the medium. Never the character.
+   ============================================================ */
+var TC_BASE=" TACTILE CLAY — an original handmade stop-motion treatment. Everything in frame is a physical object that was sculpted, built and photographed."+
+ " SURFACE: hand-sculpted plasticine, matte and opaque, with a subtle sheen only where hands have worked it."+
+ " Fingerprints and thumb impressions where a puppet is held. Sculpting-tool marks. Faint joining seams where parts meet."+
+ " Slight handmade asymmetry — the two sides of a face were shaped by hand and do not match perfectly. Natural surface lumpiness. Occasional believable studio dust or lint caught in the light."+
+ " CONSTRUCTION: practical miniature sets, physically built, with real thickness and real edges. Believable physical depth."+
+ " CAPTURE: photographed with a real lens — true optical perspective, physical depth of field, contact shadows where objects meet surfaces, practical bounce and fill."+
+ " MOTION: restrained stop-motion cadence — stepped, deliberate, never smoothly interpolated."+
+ " Imperfections are intentional and handmade, never digital noise or damage.";
+var TC_AVOID=" Render it as physical plasticine and practical miniature photography throughout: matte opaque surfaces, real material thickness, honest studio lighting, and physically built sets in every frame.";
+var TC_ROUGH={
+ clean:["Clean handmade","Subtle fingerprints and faint seams. A polished production puppet, carefully finished."],
+ tactile:["Tactile (default)","Visible handling and sculpting evidence, balanced — handmade is obvious but the character reads instantly."],
+ rough:["Rough sculpt","Pronounced tool marks, visible asymmetry and thumb work. Still fully readable as the character."]
+};
+var TC_MATERIALS={
+ skin:["Skin / clay body","matte opaque plasticine, soft edges, faint surface lumpiness, no translucency"],
+ hair:["Hair","sculpted clay mass with tool-drawn strand grooves, or fibre where the design calls for it — never rendered strands"],
+ fabric:["Fabric clothing","either real miniature cloth with visible weave and honest drape, or clay standing in for cloth with sculpted folds — state which"],
+ plastic:["Hard plastic","smooth, hard-edged, glossy highlight, clearly a different material from the clay body"],
+ glass:["Glass","genuine transparency and refraction, hard specular highlight, thin visible edge"],
+ metal:["Metal","sharp specular, real reflection of the miniature set, cool tone, hard edge"],
+ wood:["Wood","visible grain at miniature scale, matte, slightly irregular"],
+ paper:["Paper / cardboard","true fibre edge, visible fold creases, slight warp"],
+ foam:["Foam","open matte texture, soft compressed edges"],
+ vegetation:["Miniature vegetation","dressed or sculpted at scale, never photoreal foliage"],
+ smoke:["Smoke / vapour","practical haze at miniature scale — real particles in real light, not a digital overlay"],
+ liquid:["Liquid","resin or gel standing in for liquid, with a set surface and real caught highlights"],
+ food:["Food","sculpted at scale with honest material contrast, not photographic"],
+ ground:["Environmental surfaces","built and textured by hand — painted, sanded, dressed"]
+};
+var TC_LIGHT={
+ studio:["Studio reference","even, neutral, seamless background, no drama"],
+ daylight:["Daylight","single strong key with soft bounce, believable direction"],
+ practical:["Practical interior","motivated by lamps and fixtures visible or implied in the set"],
+ night:["Night","low key with practical sources, deep shadow, controlled fill"],
+ dramatic:["Dramatic cinematic","hard key, strong shadow shaping, high contrast"],
+ broadcast:["Broadcast comedy","broad and even, everything readable, warm"],
+ promo:["Product / promo","clean controlled highlights, deliberate reflections"]
+};
+function tcState(){
+ if(!S.tc)S.tc={on:false,rough:"tactile",light:"practical",materials:["skin","fabric"],dof:"restrained"};
+ return S.tc;
+}
+function tcLaw(opts){
+ var t=tcState();
+ opts=opts||{};
+ if(!opts.force&&!t.on)return "";
+ var out=TC_BASE;
+ var r=TC_ROUGH[t.rough]||TC_ROUGH.tactile;
+ out+=" HANDMADE LEVEL — "+r[0]+": "+r[1];
+ var mats=(opts.materials||t.materials||[]).filter(function(k){return TC_MATERIALS[k];});
+ if(mats.length){
+  out+=" MATERIAL CONTRAST — these must read as genuinely different substances, not one uniform surface: "
+   +mats.map(function(k){return TC_MATERIALS[k][0]+" ("+TC_MATERIALS[k][1]+")";}).join("; ")+".";
+ }
+ var lg=TC_LIGHT[opts.light||t.light]||TC_LIGHT.practical;
+ out+=" LIGHTING — "+lg[0]+": "+lg[1]+", lit at miniature scale with practical sources and real contact shadows.";
+ out+=(t.dof==="shallow")
+  ? " Shallow depth of field is permitted here, but the subject and every continuity detail must stay readable."
+  : " Depth of field stays restrained — use it only where a real macro lens would naturally fall off, and keep the subject and all continuity details sharp.";
+ out+=TC_AVOID;
+ /* the rule that matters most */
+ out+=" MEDIUM ONLY: this treatment changes what the character is MADE OF and how it was photographed. It never changes who they are."+
+  " Preserve the registered silhouette, proportions, head and face design, wardrobe, accessories, signature features, speech rules, movement and personality exactly."+
+  " Do not impose a generic stop-motion face on them — no default oversized teeth, noses, hands, eye construction or proportions unless that character already has them."+
+  " Build THIS character out of clay. Do not replace them with a clay character.";
+ return out;
+}
+function tcPaint(){
+ var el=$("tcBody");if(!el)return;
+ var t=tcState();
+ var h='<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">An original handmade stop-motion treatment \u2014 sculpted plasticine, practical miniature sets, real lenses. It changes the medium, never the character.</div>';
+ h+='<button type="button" class="btn ghost sm" style="width:100%" onclick="tcOn();tcPaint()">'+(t.on?"\u25c9 Tactile Clay: ON \u2014 tap for off":"\u25a1 Tactile Clay: OFF \u2014 tap for on")+'</button>';
+ if(t.on){
+  h+='<label class="fld" style="margin-top:10px">Handmade level</label><div class="tokenchips">'
+   +Object.keys(TC_ROUGH).map(function(k){return '<span class="chip'+(t.rough===k?" on":"")+'" onclick="tcSet(&quot;rough&quot;,&quot;'+k+'&quot;);tcPaint()">'+esc(TC_ROUGH[k][0])+'</span>';}).join("")+'</div>'
+   +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px">'+esc((TC_ROUGH[t.rough]||TC_ROUGH.tactile)[1])+'</div>';
+  h+='<label class="fld" style="margin-top:10px">Lighting</label><select onchange="tcSet(&quot;light&quot;,this.value);tcPaint()">'
+   +Object.keys(TC_LIGHT).map(function(k){return '<option value="'+k+'"'+(t.light===k?" selected":"")+'>'+esc(TC_LIGHT[k][0])+'</option>';}).join("")+'</select>';
+  h+='<label class="fld" style="margin-top:10px">Materials in play <span style="text-transform:none;letter-spacing:0;color:var(--bone-dim)">tap what must read as different substances</span></label><div class="tokenchips">'
+   +Object.keys(TC_MATERIALS).map(function(k){return '<span class="chip'+((t.materials||[]).indexOf(k)>=0?" on":"")+'" onclick="tcMat(&quot;'+k+'&quot;);tcPaint()">'+esc(TC_MATERIALS[k][0])+'</span>';}).join("")+'</div>';
+  h+='<label class="fld" style="margin-top:10px">Depth of field</label><div class="tokenchips">'
+   +[["restrained","Restrained \u2014 keep it readable"],["shallow","Shallow macro"]].map(function(p){
+     return '<span class="chip'+(t.dof===p[0]?" on":"")+'" onclick="tcSet(&quot;dof&quot;,&quot;'+p[0]+'&quot;);tcPaint()">'+p[1]+'</span>';}).join("")+'</div>';
+  h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:8px;color:#c9a94a">Select it per scene in Visuals \u2192 Scenes \u2192 Treatment. It never becomes a universe-wide Visual Track and never overrides registered canon.</div>';
+ }
+ el.innerHTML=h;
+}
+function tcOn(v){var t=tcState();t.on=(v===undefined)?!t.on:!!v;save();return t.on;}
+function tcSet(k,v){var t=tcState();t[k]=v;save();}
+function tcMat(k){var t=tcState();if(!Array.isArray(t.materials))t.materials=[];
+ var i=t.materials.indexOf(k);if(i>=0)t.materials.splice(i,1);else t.materials.push(k);save();}
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];
 function uxMode(){return (UX_MODES.indexOf(S.uxMode)>=0)?S.uxMode:"pro";}

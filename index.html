@@ -1315,7 +1315,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.77 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.80 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -3115,10 +3115,14 @@ var SHEET_KINDS={
  turnaround:["Turnaround + expressions","A clean multi-view model sheet: front, three-quarter, side profile and back full-body views in a neutral standing pose; an expression row of six close-ups (neutral, warm, serious, surprised, amused, hard); two pose variations that show personality; and detail call-outs for hair, face, hands, footwear and any signature accessory. Evenly spaced panels, clear separation, minimal neutral background."],
  nine:["Nine-section reference board","A dense professional reference board in nine labelled sections: (1) five full-body views \u2014 front, side, back, front three-quarter, back three-quarter; (2) five head views \u2014 front, profile, 45 degrees, from above, from below; (3) nine expression close-ups; (4) detail panels for eyes, brows, nose, mouth, ears, jawline, skin and hands; (5) hair views \u2014 front, side, back, ends, flow direction; (6) combined hair-and-face angles; (7) a short feature-notes list; (8) six colour swatches taken from the character (hair, eyes, skin, lips, clothing, shadow); (9) six FIXED-POINT labels naming what must never change. Thin borders, organised rectangular panels, all labels in English."],
  wardrobe:["Wardrobe board (headless)","A six-panel wardrobe and casting board on seamless light-grey. TOP ROW: three full-body outfit panels shown WITHOUT the head \u2014 the neck and above faded smoothly into the background so only the outfit and body read \u2014 in front, back and side profile, every garment detail visible: fabric, colour, stitching, closures, collar, sleeves, cuffs, legwear, footwear and any jewellery. BOTTOM ROW: three head-and-shoulders portraits \u2014 front with a neutral gaze to camera, three-quarter left, and right profile. Even softbox lighting, no shadows on the background."],
+ video2panel:["\u25c9 Video reference (2-panel) \u2014 best for Seedance/Kling","A two-panel sheet built for VIDEO models, not for design review. LEFT PANEL: one single front-facing face close-up, straight on, neutral expression, evenly lit \u2014 this is the only face information in the sheet. RIGHT PANEL: full-body front and back views showing body shape, clothing construction and silhouette, with the face left out or de-emphasised so it cannot compete with the left panel. Any identity-critical marking \u2014 an accessory that never comes off, a mole, a tattoo, a scar, a signature detail \u2014 gets its own small clear inset. Neutral studio lighting, plain grey background, no colour grading, no mood, no atmosphere."],
+ prop:["Prop sheet \u2014 separate from the character","A clean object sheet for ONE prop or product. Front, three-quarter and back views plus one close detail of any marking, label or texture that matters. Plain grey background, neutral studio lighting, no hands, no character, no scene. This sheet answers what the object IS \u2014 nothing else."],
+ backdrop:["Background sheet \u2014 separate from the character","A clean plate of ONE location with no characters in it. A wide establishing view, one mid view and one detail of a surface or texture that defines the place. This sheet carries the environment, the architecture and the light of the place. Mood and colour grading belong here rather than on the character sheet."],
  expression:["Expression sheet only","A single expression sheet: twelve close-up facial panels of the same character, each a distinctly different emotion and head direction, identical identity, hairstyle, age and rendering in every panel. Only the expression changes."]
 };
 function sheetLaw(){
- return " IDENTITY LOCK: analyse the reference and establish a strict visual identity lock from every observable trait, proportion, design detail and stylistic rule, then apply it identically across every panel."+
+ return " ROLE SEPARATION \u2014 this sheet does ONE job. The character sheet says who the character is. A prop sheet says what an object is. A background sheet says where the place is. Colour grading, mood lighting and film look are decided in the final video prompt, never baked into a reference sheet, because strong grading distorts skin tone, clothing colour and material detail."+
+  " IDENTITY LOCK: analyse the reference and establish a strict visual identity lock from every observable trait, proportion, design detail and stylistic rule, then apply it identically across every panel."+
   " Nothing may drift, relocate, disappear, duplicate or be invented; only perspective-dependent visibility may change."+
   " Correct obvious generation errors such as malformed hands WITHOUT changing the intended design."+
   " Keep the same rendering medium, linework, shading and texture as the reference throughout."+
@@ -3146,7 +3150,8 @@ function sheetOpen(castId){
  var c=(S.cast||[]).find(function(x){return x.id===castId;});
  if(!c){toast("Pick a character first.",true);return;}
  var h='<div style="font-family:var(--slate);font-weight:800;margin-bottom:2px">Character sheet</div>'
-  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">'+esc(c.name)+' \u2014 pick a sheet type. Lock the character once, reuse it everywhere.</div>';
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">'+esc(c.name)+' \u2014 pick a sheet type.</div>'
+  +'<div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px;color:var(--bud)">Feeding a VIDEO model? Use the 2-panel one. Video models read a face better from a single clean front view \u2014 several angles give slightly different information and confuse them. The multi-angle boards are for design lock-in and merch.</div>';
  Object.keys(SHEET_KINDS).forEach(function(k){
   h+='<button class="btn ghost sm" style="width:100%;margin-bottom:6px;text-align:left" onclick="sheetMake(&quot;'+castId+'&quot;,&quot;'+k+'&quot;)">'+esc(SHEET_KINDS[k][0])
    +'<span class="sub" style="display:block;opacity:.7">'+esc(String(SHEET_KINDS[k][1]).slice(0,84))+'\u2026</span></button>';
@@ -3645,6 +3650,8 @@ function renderScenes(){
    h+='<div class="row" style="margin-top:6px"><input type="text" style="flex:1" placeholder="size (WS/MS/CU)" value="'+esc(sh.size||"")+'" oninput="shotField(&quot;'+sh.id+'&quot;,&quot;size&quot;,this.value)">'
     +'<input type="text" style="flex:1" placeholder="camera move" value="'+esc(sh.movement||"")+'" oninput="shotField(&quot;'+sh.id+'&quot;,&quot;movement&quot;,this.value)"></div>';
    h+='<input type="text" style="margin-top:6px" placeholder="blocking \u2014 who is where" value="'+esc(sh.blocking||"")+'" oninput="shotField(&quot;'+sh.id+'&quot;,&quot;blocking&quot;,this.value)">';
+   h+='<input type="text" style="margin-top:6px" placeholder="already exists \u2014 enters formed, never re-created" value="'+esc(sh.preExisting||"")+'" oninput="shotField(&quot;'+sh.id+'&quot;,&quot;preExisting&quot;,this.value)">';
+   h+='<input type="text" style="margin-top:6px" placeholder="pass-through keyframe \u2014 the exact state it must hit" value="'+esc(sh.passThrough||"")+'" oninput="shotField(&quot;'+sh.id+'&quot;,&quot;passThrough&quot;,this.value)">';
    h+='<label class="fld" style="margin-top:8px">Model</label><select onchange="shotField(&quot;'+sh.id+'&quot;,&quot;model&quot;,this.value)">'
     +'<option value="">\u2014 pick \u2014</option>'
     +Object.keys(MODEL_ADAPTERS).map(function(k){return '<option value="'+k+'"'+(sh.model===k?" selected":"")+'>'+esc(MODEL_ADAPTERS[k].label)+'</option>';}).join("")+'</select>';
@@ -3717,6 +3724,8 @@ function shotMake(o){
   locks:o.locks||{},
   audio:o.audio||"",
   transition:o.transition||"",
+  preExisting:o.preExisting||"",          /* what already exists in this shot */
+  passThrough:o.passThrough||"",          /* the intermediate state it must hit */
   status:o.status||"PLANNED",            /* PLANNED READY GENERATING REVIEW ACCEPTED NEEDS FIX */
   model:o.model||"",
   artifactIds:o.artifactIds||[],         /* generations produced from this shot */
@@ -3789,6 +3798,8 @@ var LOCK_FAMILIES={
  audio:["Audio","Dialogue, narration, music, ambience and foley requirements."],
  speech:["Speech","Exactly who may speak."],
  tone:["Tone","Required performance, comedic or dramatic behaviour."],
+ preExisting:["Pre-existing","Already established — enters fully formed and is never created again on screen."],
+ passThrough:["Pass-through keyframe","The shot must naturally reach one exact intermediate state on its way through."],
  violation:["Violations","Explicitly prohibited outcomes."]
 };
 function lockMake(family,value,origin,hard){
@@ -3848,9 +3859,18 @@ function locksResolve(sceneId,shotId){
  /* SHOT-level local locks */
  if(sh){
   Object.keys(sh.locks||{}).forEach(function(f){loc.push(lockMake(f,sh.locks[f],"SHOT",false));});
+  if(sh.preExisting)loc.push(lockMake("preExisting",sh.preExisting+" — already established before this shot begins. It enters the frame fully formed and is never drawn, built, assembled or created again on screen.","SHOT",true));
+  if(sh.passThrough)loc.push(lockMake("passThrough","On its way through, the shot must naturally reach this exact intermediate state: "+sh.passThrough+". Do not cut to it and do not skip it — pass through it in motion, then continue.","SHOT",true));
   if(sh.blocking)loc.push(lockMake("blocking",sh.blocking,"SHOT",false));
   if(sh.envState)loc.push(lockMake("state",sh.envState,"SHOT",false));
   if(sh.audio)loc.push(lockMake("audio",sh.audio,"SHOT",false));
+ }
+ /* a preceding ACCEPTED shot means its subject already exists */
+ if(sh&&typeof shotNeighbours==="function"){
+  try{var _nb=shotNeighbours(sh.id);
+   if(_nb.prev&&_nb.prev.subject&&!sh.preExisting)
+    loc.push(lockMake("preExisting","Everything established in the previous accepted shot ("+String(_nb.prev.subject).slice(0,90)+") already exists and is never re-created on screen.","SEQUENCE",true));
+  }catch(e){}
  }
  /* VIOLATIONS — always present, derived from what is locked */
  var vio=["identity drift","duplicate or added cast","disappearing or respawning props","scale drift","wardrobe mutation"];
@@ -4322,6 +4342,19 @@ function plateMake(castId,setKey,views){
  sendSheet(h);
 }
 function plateCopy(){navigator.clipboard.writeText(S.lastPlate||"").then(function(){toast("Copied.");}).catch(function(){toast("Copy failed.",true);});}
+/* ---- SERIES CONTINUITY — chaining parts without drift ----
+   Pull a frame out of the finished part and hand it to the next
+   one as a pose the new generation must pass THROUGH.
+   ---------------------------------------------------------- */
+function keyframeLaw(){
+ return " SERIES CONTINUITY — KEYFRAME HANDOFF: the supplied keyframe image is a moment from INSIDE this same piece, not a separate reference."+
+  " The generation must pass naturally THROUGH that exact state — same pose, same placement in frame, same composition — and then continue on from it."+
+  " Do not open on it and do not treat it as a target to end on. It is a checkpoint in the middle of a continuous motion.";
+}
+function alreadyMadeLaw(who){
+ return " ENTRANCE RULE: "+(who||"the character")+" enters ALREADY COMPLETE. Do not build, draw, assemble or reveal them again in this part — that already happened."+
+  " They arrive from off-frame mid-motion, finished, and the piece continues from there.";
+}
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];
 function uxMode(){return (UX_MODES.indexOf(S.uxMode)>=0)?S.uxMode:"pro";}
@@ -10226,6 +10259,39 @@ var TPL_SEEDS=[
  style:"One continuous take, no cuts. Handheld with intent \u2014 the operator is a participant, not a tripod. Practical light sources only, motivated by the location.",
  audio:"Performance audio and room only \u2014 voice, breath, footsteps, the space\u2019s own reverb.",
  close:"The unbroken take is the point \u2014 never cut, never jump."},
+{id:"tpl_cityreel",name:"District Reel",purpose:"A place, cut to a beat. Title card, build, peak, hero hold. Zero static shots.",
+ vars:[["place","The district or city","the place"],["colour","Its signature colour","the colour that belongs to this place"],["landmark","Its best single view","its most striking view"],["dur","Seconds","15"]],
+ beats:["TITLE \u2014 a stunning wide of the place plays underneath, camera slowly pushing in. The name fills 70\u201380% of the frame in a typeface that belongs to this place, in its signature colour. It holds, then dissolves. The background never cuts \u2014 it runs straight into the next act.",
+  "BUILD \u2014 four or five clips, under a second each, aggressive from the first frame: a hard bank over the rooftops, a slow-motion crowd, a fast track through a tight street, and one detail shot of food, texture or architecture.",
+  "BUILD \u2014 continue the run. Whip pans, snap tilts, fast push-ins. Every cut lands on a beat.",
+  "PEAK \u2014 the drop. Six to eight clips in two seconds, one per beat: landmarks, faces, food, streets, pure colour. Sensory overload.",
+  "PEAK \u2014 alternate density: three clips tiling the frame at once showing different sides of the place, collapsing into one.",
+  "FINAL \u2014 two or three last fast clips, then the single most stunning view the place has. Camera rising slowly. Hold it."],
+ style:"Every shot has camera movement \u2014 nothing is ever static, at any point. Anamorphic feel, subtle flares, slight vignette. 24fps with selected shots at 120fps slow motion. Colour graded to the place\u2019s own identity: warm teal-orange for Mediterranean heat, cool blue for northern cold, vivid saturation for tropical, neon high-contrast for nightlife.",
+ audio:"Fast, catchy, culturally rooted in the place. Every cut locked to the beat.",
+ close:"No voiceover. No text after the opening title. No static shots. Fifteen seconds that make someone need to go there."},
+{id:"tpl_doodlechain",name:"Doodle Chain",purpose:"Hand-drawn characters that come alive on the page. Built as a multi-part series with real continuity.",
+ vars:[["character","Who gets drawn","the character"],["second","Who or what enters later","what enters later"],["exit","Which edge they leave by","the right"],["dur","Seconds","15"]],
+ beats:["Blank lightly textured white paper, filling the whole frame. A real human right hand holding a graphite pencil enters and begins drawing from scratch. Every new line grows visibly from the moving pencil tip \u2014 nothing fades in.",
+  "The drawing completes. The hand fully exits the frame.",
+  "Only now does the drawing come alive. It waits, grows impatient, and starts reacting to the unseen artist \u2014 tapping a foot, looking upward, spreading its arms, pointing at itself.",
+  "Something beyond the edge catches its attention. It leans, squints, gives the artist one last suspicious look.",
+  "It moves toward that edge, accelerates, and exits completely through it.",
+  "End on empty textured paper with only the faint ground line left behind."],
+ style:"Locked perpendicular top-down camera on full-frame lightly textured white paper. No desk, no table, no visible paper edges or page corners, no reframing, no zoom, no aspect change \u2014 the same fixed canvas from first frame to last. Flat monochrome graphite doodle animation only.",
+ audio:"Graphite scratching, paper rustle, tiny doodle footsteps. No dialogue, no music.",
+ close:"SERIES CONTINUITY: when this is part of a chain, state clearly which elements are ALREADY DRAWN and must run into frame fully formed rather than being drawn again, and which single intermediate keyframe the drawing must naturally pass through on its way to completion. Anything already established is never redrawn."},
+{id:"tpl_doodle",name:"Drawn Into Life",purpose:"A hand draws a character on paper, then the character rebels against the hand. Chainable into parts.",
+ vars:[["subject","Who gets drawn","the character"],["want","What they want","to get off the page"],["part","Part number","1"],["dur","Seconds","15"]],
+ beats:["Open on blank textured paper, full frame. A real human hand holding a graphite pencil enters and begins drawing. Every line grows visibly out of the moving pencil tip \u2014 nothing fades in.",
+  "The drawing completes. The hand fully exits the frame.",
+  "Only now does the character come alive. They wait. They grow impatient.",
+  "They react to the unseen artist \u2014 tapping a foot, looking up, spreading their arms, pointing at themselves as if to ask what happens now.",
+  "Something past the edge of the frame catches their attention. They lean toward it, then look back up at the artist one last time.",
+  "They walk, accelerate into a run, and exit completely through the frame edge. The paper is left empty except for the ground line."],
+ style:"Locked perpendicular top-down camera. Full-frame lightly textured white paper only \u2014 no desk, no table, no visible page edges or corners. Flat monochrome graphite doodle animation. The frame never crops, zooms, reframes or becomes a panel inside itself.",
+ audio:"Graphite scratching, paper rustle, small doodle footsteps. No dialogue, no music.",
+ close:"For part 2 and beyond: the character enters ALREADY DRAWN from the frame edge \u2014 do not draw them again. Pull a frame from the finished part and feed it to the next as a pose the new generation must pass through."},
 {id:"tpl_assembly",name:"Digital Assembly",purpose:"Build a character from nothing \u2014 blueprint to finished reveal. Reference-driven.",
  vars:[["subject","Who is being built","the character"],["system","What is building them","an advanced fabrication system"],["dur","Seconds","15"]],
  beats:["Abstract digital fragments in empty space. Prototype sketches, blueprint drawings, construction lines and technical concept sheets flicker into the background.",
@@ -10307,18 +10373,21 @@ var TPL_SEEDS=[
  style:"Premium editorial layout over character art. Oversized expressive lettering in the panel\u2019s own accent colour, kept clear of the face with strong negative space around it. Small interface typography, thin grids, tiny data marks, progress bars and restrained geometric decoration. Large clean areas of darkness rather than filling every space.",
  audio:"Silent \u2014 this is a layout, not a film.",
  close:"Hierarchy is character first, title second, interface data third. Every panel looks like a different page from the same publication."},
-{id:"tpl_fashion",name:"Fashion Film",purpose:"The garment in motion \u2014 a pose sequence in one unbroken take.",
+{id:"tpl_fashion",name:"Fashion Film",purpose:"Ten poses, ten camera angles, fast and rhythmically tight. The garment on a body.",
  vars:[["subject","Who wears it","one figure"],["garment","The piece","the drop"],["place","Where","a minimal studio with hard light and a glossy floor"],["dur","Seconds","15"]],
- beats:["Centred frontal medium close-up. They face forward, one hand at the hair. Restrained push-in.",
-  "They turn three-quarter and lift the chin, then lower the gaze as both hands settle near the collar. The camera arcs down and pauses.",
-  "They rotate to a strict profile, then roll one shoulder forward so the garment edge catches the side light. The camera whips past and settles close.",
-  "They gather a fold of the garment, then release it and turn back over the shoulder. The camera dives to torso level and rises.",
-  "A low pose \u2014 the garment reads against the floor. The camera moves fast at floor level and holds on the foreshortening.",
-  "They rise into a three-quarter stance, one hand at the collarbone. The camera slides across the waistline, then eases into a portrait hold.",
-  "A final full-body pose looking down into the lens. End on a clean wide hold under a last flash."],
- style:"One uninterrupted take. The camera follows a single physically continuous path, accelerating between poses and braking sharply on every lock. Hard frontal flashes, sharp side rim light, faint haze, glossy floor reflections.",
+ beats:["Pose 1 \u2014 a confident standing pose, filmed from floor level with a dramatic wide-angle perspective.",
+  "Pose 2 \u2014 one hand beside the face, caught in an extreme side-profile close-up.",
+  "Pose 3 \u2014 an asymmetric seated pose seen directly overhead as the camera rotates.",
+  "Pose 4 \u2014 one leg extended toward the lens, the foot or footwear dominating the foreground through foreshortening.",
+  "Pose 5 \u2014 a quick fluid leg cross, caught from a low diagonal angle.",
+  "Pose 6 \u2014 fingertips catching the edge of an existing sleeve or collar, framed as a tight detail.",
+  "Pose 7 \u2014 a rear three-quarter turn with a deliberate glance back into the lens.",
+  "Pose 8 \u2014 a forward lean toward the lens, ending with the palm briefly covering it.",
+  "Pose 9 \u2014 an elongated upward stretch, revealed in a sharply tilted wide shot with strong side light.",
+  "Pose 10 \u2014 a commanding full-body hero pose looking down into the lens as the camera pulls rapidly back."],
+ style:"A minimal studio with a reflective floor, bold directional lighting and rhythmic photographic flashes. Connect the angles with whip pans, movement-matched cuts, snap zooms, flashes and lens occlusions \u2014 orbit against the turn, sweep from the floor reflection up to the face, plunge from overhead to floor level. Alternate intimate detail with dramatic wide compositions. Accelerate between poses and brake sharply on each hold. No slow motion, no lingering, no gradual drift.",
  audio:"Shutter clicks, breath, hair movement, fabric rustle.",
- close:"One continuous figure with stable identity, proportions and wardrobe throughout. Every pose is different \u2014 none repeats."},
+ close:"Exactly ten poses, each with a different silhouette and camera angle \u2014 no repeats and no extra pose changes. Hold each for only a fraction of a second while keeping its silhouette clearly readable. Build momentum toward the tenth, then stop sharply on a crisp final hold. Stable identity and anatomy throughout, fully clothed, no outfit changes, no added accessories, no text. Hair and fabric react naturally."},
 {id:"tpl_interview",name:"Street Interview",purpose:"One question, real people, honest answers \u2014 the cheapest format that always works.",
  vars:[["question","The question","the one question being asked"],["place","Where","a busy block"],["subject","Who is asked","people passing by"],["dur","Seconds","30"]],
  beats:["The question is asked on camera, plainly, no preamble.",
@@ -10362,6 +10431,7 @@ function tplBuild(t){
  L.push("VISUAL STYLE: "+(mode==="stoneralia"?"as the render profile above \u2014 never photoreal humans. ":"")+t.style);
  L.push("AUDIO: "+t.audio+(mode==="stoneralia"?" No music, no score \u2014 the artist scores it in post.":""));
  L.push("PHYSICAL REALISM: five fingers on each hand, feet stay in contact with the ground, held objects stay separate solid objects, anything dropped stays where it lands, background objects stay put unless something moves them, and the environment stays consistent between shots.");
+ if(t.id==="tpl_doodle"&&String(v.part||"1")!=="1")L.push(alreadyMadeLaw(v.subject||"the character")+keyframeLaw());
  L.push(t.close);
  return L.join("\n\n");
 }

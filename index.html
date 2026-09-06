@@ -1315,7 +1315,7 @@ nav button.grp.on{color:var(--bud)}nav button.grp.on .ic svg{filter:drop-shadow(
   <label class="fld" style="margin-top:14px">Restore from backup (replaces everything)</label>
   <input type="file" accept=".json,application/json" onchange="bkImport(this)">
 </div>
-<div class="appfooter">Smoke &amp; Mirrors v10.81 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
+<div class="appfooter">Smoke &amp; Mirrors v10.82 · Stoneralia Studio · runs on <a href="https://fal.ai" target="_blank">fal</a></div>
 </section>
 </main>
 </div></div>
@@ -3190,6 +3190,8 @@ function fightShapeLaw(){
  var sh=FIGHT_SHAPES[F.shape];
  return sh?(" "+sh[1]):"";
 }
+function fightWitnessLaw(){var F=S.fight||{};return F.witness?witnessLaw(F.witness):"";}
+function fightCamLaw(){var F=S.fight||{};return F.camrot?cameraRotationLaw(8):"";}
 function fightPropLaw(){
  var F=S.fight||{};
  var raw=String(F.props||"").trim();
@@ -4374,6 +4376,44 @@ function staticUILaw(){
  return " STATIC ELEMENTS: any on-screen panel, thumbnail, card or interface element is a still preview."+
   " It stays put. It does not animate, drift, come alive or act on its own, and nothing inside it moves independently.";
 }
+/* ---- ENVIRONMENTAL WITNESS -------------------------------
+   Give the floor a memory. Force you can see beats force
+   you have to take on faith.
+   ---------------------------------------------------------- */
+var WITNESS_MEDIA={
+ grain:["Sand / fine grain","a thick layer of tiny tan grains that compress underfoot, scatter on every pivot and hang in the air"],
+ dust:["Dust","a settled layer that lifts in clouds from footfalls and impacts and drifts through the light"],
+ ash:["Ash","a grey layer that puffs up and smears, marking every place a body has been"],
+ water:["Shallow water","a thin sheet across the floor that throws sheets of spray and holds ripples after contact"],
+ snow:["Snow","a packed layer that squeaks, compresses into prints and kicks up crystals"],
+ flour:["Spilled flour / powder","a spilled white layer that prints hands and feet and hangs bright in the air"],
+ leaves:["Dry leaves","a scatter that crunches, displaces and never returns to where it was"],
+ glass:["Broken glass / gravel","a scatter that skitters away from every step and catches the light"]
+};
+function witnessLaw(key,extra){
+ var m=WITNESS_MEDIA[key];if(!m)return "";
+ return " ENVIRONMENTAL WITNESS — the floor is covered in "+m[1]+"."+
+  " This surface is not decoration: it is the record of the fight. Every step, pivot, slide, landing and impact displaces it visibly, and what it displaces STAYS displaced."+
+  " Force that lands should be readable in the floor even after the bodies have moved on — scuffs, trails, prints and craters accumulate through the piece and never reset."+
+  " Give at least one shot to the surface alone, low and close, where the displacement is the subject rather than the fighters."+
+  (extra?(" "+extra):"");
+}
+var CAM_ROTATION=[
+ "extreme close-up on a single physical detail",
+ "medium-wide two-shot holding the geography",
+ "tight close-up on hands and arms",
+ "low angle on feet and footwork",
+ "wide, the whole space and both bodies",
+ "ground-level, camera nearly on the floor",
+ "medium close-up on the face during an exchange",
+ "smooth pull-back to a wide"
+];
+function cameraRotationLaw(n){
+ var k=Math.max(4,Math.min(10,n||8));
+ return " CAMERA ROTATION — no two consecutive shots share a framing. Work through this range and do not repeat one until the others have been used: "+
+  CAM_ROTATION.slice(0,k).join("; ")+"."+
+  " Alternate intimate detail against wide geography so the audience always knows where both bodies are, then loses itself in the contact, then finds the room again.";
+}
 /* (5) INTERACTION MODE FLAG — consumed by Part 4; no UI yet */
 var UX_MODES=["simple","guided","pro"];
 function uxMode(){return (UX_MODES.indexOf(S.uxMode)>=0)?S.uxMode:"pro";}
@@ -4842,6 +4882,8 @@ function flMigrate(){const F=S.fight;let ch=false;
  if(F.discipline&&!FL_DISC[F.discipline]){const m=FL_DISC_LEGACY[F.discipline];if(m)for(const k in m){if(F[k]===undefined||F[k]==="auto"||F[k]==="")F[k]=m[k];}F.discipline="auto";ch=true;}
  if(F.shape===undefined)F.shape="";
  if(F.props===undefined)F.props="";
+ if(F.witness===undefined)F.witness="";
+ if(F.camrot===undefined)F.camrot=false;
  if(!Array.isArray(F.extras))F.extras=[{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"},{c:"",side:"auto"}];
  while(F.extras.length<4)F.extras.push({c:"",side:"auto"});
  if(F.sideA!==undefined||F.sideB!==undefined){if(F.sideA)F.extras[0].c=F.sideA;if(F.sideB)F.extras[1].c=F.sideB;delete F.sideA;delete F.sideB;ch=true;}
@@ -4928,7 +4970,7 @@ CAMERA: ${c.cam}. Apply the Camera & Structure choice above and keep consistent 
 PHYSICS: realistic momentum and weight transfer, visible impact force, motion blur on fast limbs, secondary cloth and hair physics, sweat particles, heavy breathing and fatigue micro-movements, real gravity at all times.
 ENVIRONMENT: ${envLine}
 AUDIO (diegetic only): impacts, footwork, fabric, breath, environmental hits \u2014 no music.
-RULES: ${fightShapeLaw()} ${soloEngagementLaw()} ${fightPropLaw()} ${refIgnoreLaw()} ${originalityLaw("fight sequence")} Single coherent 10\u201315s high-motion sequence (or clean storyboarded multi-shot flow). No gore, no excessive blood, no disappearing props, no changing costumes, no unreadable combat. Hold the same characters, wardrobe and location across every beat. Replace @Image1 / @Image2 with your Hero / Villain reference images (Seedance 2.0 reference-to-video syntax).`;
+RULES: ${fightShapeLaw()} ${fightWitnessLaw()} ${fightCamLaw()} ${soloEngagementLaw()} ${fightPropLaw()} ${refIgnoreLaw()} ${originalityLaw("fight sequence")} Single coherent 10\u201315s high-motion sequence (or clean storyboarded multi-shot flow). No gore, no excessive blood, no disappearing props, no changing costumes, no unreadable combat. Hold the same characters, wardrobe and location across every beat. Replace @Image1 / @Image2 with your Hero / Villain reference images (Seedance 2.0 reference-to-video syntax).`;
 }
 function flBuildPeak(){
  const c=flCtx(),F=S.fight,disc=FL_DISC[F.discipline]||FL_DISC.auto;
@@ -5005,6 +5047,9 @@ function renderFight(){
  h+='<div class="card" style="margin-top:10px"><label class="fld">Scenario</label><select onchange="flField(\'scenario\',this.value)">'+flOpts(FL_SCEN,F.scenario)+'</select>';
  h+='<label class="fld" style="margin-top:10px">Choreography shape</label><select onchange="flField(&quot;shape&quot;,this.value)"><option value="">\u2014 let it choose \u2014</option>'+Object.keys(FIGHT_SHAPES).map(function(k){return '<option value="'+k+'"'+(F.shape===k?" selected":"")+'>'+esc(FIGHT_SHAPES[k][0])+'</option>';}).join('')+'</select>';
  if(F.shape)h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px;color:var(--bud)">'+esc(shortDef(FIGHT_SHAPES[F.shape][1]))+'</div>';
+ h+='<label class="fld" style="margin-top:10px">Floor surface <span style="text-transform:none;letter-spacing:0;color:var(--bone-dim)">makes force visible</span></label><select onchange="flField(&quot;witness&quot;,this.value)"><option value="">\u2014 plain floor \u2014</option>'+Object.keys(WITNESS_MEDIA).map(function(k){return '<option value="'+k+'"'+(F.witness===k?" selected":"")+'>'+esc(WITNESS_MEDIA[k][0])+'</option>';}).join('')+'</select>';
+ if(F.witness)h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:4px;color:var(--bud)">Displacement accumulates and never resets \u2014 plus one shot where the floor itself is the subject.</div>';
+ h+='<label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13.5px"><input type="checkbox" style="width:auto;margin:0" '+(F.camrot?"checked":"")+' onchange="flField(&quot;camrot&quot;,this.checked)"> Rotate camera framings \u2014 never two the same in a row</label>';
  h+='<label class="fld" style="margin-top:10px">Props in play <span style="text-transform:none;letter-spacing:0;color:var(--bone-dim)">comma separated \u2014 each one gets counted and owned</span></label><input type="text" placeholder="one umbrella, one tray, one knife\u2026" value="'+esc(F.props||"")+'" oninput="flField2(&quot;props&quot;,this.value)">';
  h+='<label class="fld" style="margin-top:10px">Tone / treatment</label><select onchange="flField(\'tone\',this.value)">'+flOpts(FL_TONE,F.tone)+'</select>';
  h+='<label class="fld" style="margin-top:10px">Location (from your Sets)</label><select onchange="flLoc(this.value)">'+locSel+'</select>';

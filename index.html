@@ -5701,7 +5701,7 @@ function stMenu(id){
  box.innerHTML='<div class="row" style="margin-top:6px;flex-wrap:wrap">'+opts.map(function(o){return '<button class="btn ghost sm" style="flex:1;min-width:40%" data-stk="'+o[0]+'">'+o[1]+"</button>";}).join("")+"</div>";
  box.querySelectorAll("[data-stk]").forEach(function(b){b.addEventListener("click",function(){box.innerHTML="";stGo(b.getAttribute("data-stk"),it);});});
 }
-var WRITERS={
+var WRITERS_LEGACY={
  mcgruder:["Aaron McGruder — razor social satire","razor Black social satire, hypocrisy exposure, class tension, Brand-vs-Street conflict"],
  pryor:["Richard Pryor — vulnerable truth","vulnerable confessional storytelling, pain becoming comedy, deeply flawed lovable humanity"],
  chappelle:["Dave Chappelle — slow-burn layers","layered slow-burn premises, moral ambiguity, unexpected reversals, cultural satire"],
@@ -5730,6 +5730,51 @@ var WRITERS={
  coogler:["Ryan Coogler — community weight","community loyalty, cultural identity, generational emotional stakes"],
  macfarlane:["Seth MacFarlane — rapid absurdity","rapid absurd escalation, unexpected detours, ensemble chaos"]};
 /* ===== SKETCH COMEDY GROUP CREATOR ===== */
+/* ===== CORE ATTACK DISCIPLINES (DIS-####) =====
+   Craft-system identifiers only. NOT Registry IDs, NOT canon, NOT creative objects.
+   A blend is chosen (CDNA). A discipline is used (here). A module is known (CDOM). */
+var WRITERS={
+ flip:["Premise Flip","DIS-0001","finds the hidden assumption inside a statement and attacks it from an unexpected but defensible angle \u2014 premise flips, ruthless conversational logic, rebuttals, counterarguments, reframing the question instead of answering it"],
+ economy:["Joke Economy","DIS-0002","maximum laugh, minimum language \u2014 one-liners, tags, compression, delayed stabs, cutting the explanatory half of a line. If six words outperform sixteen, use six"],
+ builtcase:["The Built Case","DIS-0003","constructs a comic argument across a scene that pays off in a formulation worth repeating \u2014 clear repeated argument, quotable logic, layered slow-burn premise, the reversal at the end of the build"],
+ sideways:["The Sideways Payoff","DIS-0004","refuses the expected payoff and lands somewhere adjacent and stranger \u2014 anti-climax, patient strange logic, deliberate awkwardness, the beat that resolves nothing and is funnier for it"],
+ wordless:["The Wordless Beat","DIS-0005","solves the beat without dialogue \u2014 expressive silence, object comedy, escalating physical mistake, framing, the hold, the reframe, the cut to someone who says nothing, visual contradiction. House rule: before writing a line, check whether the camera can do it"],
+ culture:["Lived Culture","DIS-0006","finds the specific lived behaviour underneath a premise and never accepts a stereotype in its place \u2014 cultural specificity, generational texture, community loyalty and its costs, the recognisable ritual. Carries the 420-native rule: cannabis culture supplies situations, human behaviour supplies comedy"],
+ wound:["The Honest Wound","DIS-0007","routes the joke through something genuinely true and costly about the character, without cruelty and without sentiment \u2014 the joke that only works because we know what it costs"]
+};
+/* Read-time migration for legacy equipped writers[]. null = the attribute lives in CDNA/SKG,
+   not in a discipline. An equipped slot may legitimately become empty. */
+var WR_MIGRATE={
+ mcgruder:"culture", pryor:"wound", chappelle:"builtcase", rock:"builtcase", mooney:"culture",
+ gregory:"builtcase", sykes:null, keenan:null, damon:null, shawn:null, marlon:"wordless",
+ foxx:null, bernie:"wound", katt:null, griffin:"culture", cmurphy:null, emurphy:null,
+ martin:"culture", norm:"sideways", gervais:null, atkinson:"wordless", cleese:null,
+ chaplin:"wordless", carlin:null, peele:null, coogler:"culture", macfarlane:null
+};
+function wrMig(keys){
+ var out=[];
+ (keys||[]).forEach(function(k){
+  if(WRITERS[k]){if(out.indexOf(k)<0)out.push(k);return;}
+  if(Object.prototype.hasOwnProperty.call(WR_MIGRATE,k)){
+   var t=WR_MIGRATE[k];
+   if(t&&WRITERS[t]&&out.indexOf(t)<0)out.push(t);
+  }
+ });
+ return out.slice(0,2);
+}
+/* ===== COMEDY DOMAIN MODULES (DOM-####) =====
+   Specialized environmental knowledge available to the room. Craft-system IDs only. */
+var CDOM={
+ broadcast:["Broadcast / Newsroom","DOM-0001","broadcast language, journalism procedure, chyrons, corrections, sourcing, producers, control rooms, live reports, deadlines, graphics, ratings, legal review and institutional media behaviour"]
+};
+function cdomLaw(){
+ var d=(typeof dsGet==="function")?dsGet(S.dsActive):null;
+ var D=((d&&d.domains)||[]).filter(function(k){return CDOM[k];});
+ if(!D.length)return "";
+ return " COMEDY DOMAIN"+(D.length>1?"S":"")+" available to the room: "+D.map(function(k){
+  return CDOM[k][0]+" ("+CDOM[k][1]+") \u2014 "+CDOM[k][2];
+ }).join(" | ")+". This is specialised knowledge about the environment, not a comedy engine and not an attack method. Use it to make the setting behave accurately; it changes what the room NOTICES, not what it DOES.";
+}
 var SKG_SHOWMODES={
  ensemble:["Ensemble Sketch Show","SKG-0001","A troupe of equals; sketches rotate cast functions and nobody is permanent furniture."],
  character:["Character-Driven","SKG-0002","Built on recurring original characters with repeatable games and defined return conditions."],
@@ -5953,57 +5998,65 @@ function engLaw(k){var e=COMEDY_ENGINES[k];return e?(" "+e[1]+" Apply this mecha
 var ENG_FOR_SITCOM={neighborhood:["hangout","nothing","mock"],family:["famdoc","pun","towns"],hangout:["hangout","nothing","meta"],workplace:["mock","optimist","overlap"],teen:["meta","candid","decon"],romantic:["nothing","cringe","hangout"],oddcouple:["cringe","depraved","overlap"],ensemble:["procedural","dense","callback"],fish:["deadpan","meta","surreal"]};
 /* which writers suit which job — [lead, sharpener] */
 var WR_FOR_SITCOM={
- neighborhood:["martin","foxx"], family:["bernie","foxx"], hangout:["shawn","griffin"],
- workplace:["gervais","cleese"], teen:["keenan","marlon"], romantic:["sykes","rock"],
- oddcouple:["cleese","damon"], ensemble:["keenan","shawn"], fish:["emurphy","norm"]
+ neighborhood:["culture","economy"], family:["wound","culture"], hangout:["culture","sideways"],
+ workplace:["flip","economy"], teen:["culture","economy"], romantic:["flip","builtcase"],
+ oddcouple:["flip","economy"], ensemble:["culture","economy"], fish:["sideways","flip"]
 };
 var WR_FOR_VLOG={
- day:["martin","chappelle"], street:["martin","rock"], friends:["shawn","griffin"],
- challenge:["marlon","griffin"], bts:["chappelle","norm"], food:["griffin","foxx"],
- travel:["cmurphy","emurphy"], event:["keenan","marlon"], story:["cmurphy","pryor"],
- character:["damon","martin"], workday:["gervais","sykes"], update:["rock","norm"]
+ day:["culture","economy"], street:["culture","flip"], friends:["culture","economy"],
+ challenge:["wordless","economy"], bts:["sideways","economy"], food:["culture","economy"],
+ travel:["culture","wordless"], event:["wordless","culture"], story:["builtcase","wound"],
+ character:["wound","culture"], workday:["flip","sideways"], update:["economy","flip"]
 };
-function wrNames(keys){return (keys||[]).map(function(k){return WRITERS[k]?WRITERS[k][0].split(" \u2014 ")[0]:k;});}
+function wrNames(keys){return wrMig(keys).map(function(k){return WRITERS[k]?WRITERS[k][0]:k;});}
 function wrLaw(keys,ctx){
- keys=(keys||[]).filter(function(k){return WRITERS[k];}).slice(0,2);
+ keys=wrMig(keys);
  if(!keys.length)return "";
- var names=wrNames(keys);
- var crafts=keys.map(function(k){return WRITERS[k][1];});
- return " WRITERS ROOM"+(ctx?(" ("+ctx+")"):"")+": channel the CRAFT of "+names.join(" + ")+" \u2014 "+crafts.join("; ")+
-  ". Translate that craft into THIS world and THESE characters: their rhythm, their comic logic, their sense of what a scene is really about. "+
-  (names.length>1?(names[0]+" leads the voice; "+names[1]+" sharpens it. "):"")+
-  "Channel the craft only \u2014 never imitate their actual voices, never reuse their jokes, never mention them.";
+ var names=keys.map(function(k){return WRITERS[k][0]+" ("+WRITERS[k][1]+")";});
+ var crafts=keys.map(function(k){return WRITERS[k][2];});
+ return " WRITERS ROOM"+(ctx?(" ("+ctx+")"):"")+" \u2014 EQUIPPED ATTACK DISCIPLINE"+(keys.length>1?"S":"")+": "+names.join(" + ")+". "+crafts.join("; ")+
+  ". A discipline is HOW a beat is attacked, not what the scene runs on. Apply it to THIS world and THESE characters. "+
+  (keys.length>1?(WRITERS[keys[0]][0]+" leads the house voice; "+WRITERS[keys[1]][0]+" sharpens it. "):"")+
+  "Any other discipline may still be invoked on a single beat when it serves it. Write original Stoneralia comedy: never imitate the style, voice, cadence, jokes, routines, characters, dialogue or expression of any real creator, living or deceased, and never name one.";
 }
 function wrPickerHTML(cur,recs,setter){
  var keys=Object.keys(WRITERS);
  var chips=recs.map(function(k){
-  return '<span class="chip'+((cur||[]).indexOf(k)>=0?" on":"")+'" onclick="'+setter+'(\''+k+'\')">'+String.fromCharCode(0x1f525)+' '+esc(WRITERS[k][0].split(" \u2014 ")[0])+'</span>';
+  return '<span class="chip'+((cur||[]).indexOf(k)>=0?" on":"")+'" onclick="'+setter+'(\''+k+'\')">'+String.fromCharCode(0x1f525)+' '+esc(WRITERS[k][0])+'</span>';
  }).join("");
  var others=keys.filter(function(k){return recs.indexOf(k)<0&&(cur||[]).indexOf(k)>=0;}).map(function(k){
-  return '<span class="chip on" onclick="'+setter+'(\''+k+'\')">'+esc(WRITERS[k][0].split(" \u2014 ")[0])+'</span>';
+  return '<span class="chip on" onclick="'+setter+'(\''+k+'\')">'+esc(WRITERS[k][0])+'</span>';
  }).join("");
  return chips+others;
 }
 function wroomLaw(){
  var d=(typeof dsGet==="function")?dsGet(S.dsActive):null;
- var W=(d&&d.writers)||[];
+ var W=wrMig((d&&d.writers)||[]);
  if(!W.length)return "";
- var names=W.map(function(k){return WRITERS[k]?WRITERS[k][0].split(" — ")[0]:k;});
- var crafts=W.map(function(k){return WRITERS[k]?WRITERS[k][1]:"";}).filter(Boolean);
- return "WRITERS ROOM (for the active show "+(d.name?("“"+d.name+"”"):"")+"): channel the CRAFT of "+names.join(" + ")+" — "+crafts.join("; ")+". Translate these qualities into original Stoneralia writing. NEVER copy their voices, jokes, catchphrases or material. One primary influence leads; the second only sharpens.";}
+ var names=W.map(function(k){return WRITERS[k][0]+" ("+WRITERS[k][1]+")";});
+ var crafts=W.map(function(k){return WRITERS[k][2];});
+ return "WRITERS ROOM (for the active show "+(d.name?("“"+d.name+"”"):"")+") — EQUIPPED ATTACK DISCIPLINE"+(W.length>1?"S":"")+": "+names.join(" + ")+". "+crafts.join("; ")+". These govern HOW a beat is attacked, not what the scene runs on. One leads the house voice; the second only sharpens. Any other discipline may still be invoked on a single beat. Write original Stoneralia comedy: never imitate the style, voice, cadence, jokes, routines, characters, dialogue or expression of any real creator, living or deceased, and never name one.";}
 function dsWriters(){
  var d=(typeof dsGet==="function")?dsGet(S.dsActive):null;
  if(!d){toast("Pick or create a show dataset first (Lab).",true);return;}
- d.writers=d.writers||[];
- var h='<div style="font-weight:800;font-family:var(--slate);margin-bottom:4px">✍ Writers Room — '+esc(d.name)+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">One primary voice, a second only when it clearly sharpens — max 2 (routing law). Tap to equip.</div>';
+ d.writers=wrMig(d.writers||[]);
+ d.domains=d.domains||[];
+ var h='<div style="font-weight:800;font-family:var(--slate);margin-bottom:4px">✍ Writers Room — '+esc(d.name)+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">EQUIPPED = the house voice — one leads, a second only when it clearly sharpens (max 2, routing law). Every discipline stays INVOKABLE on any single beat. Tap to equip.</div>';
  h+=Object.keys(WRITERS).map(function(k){var on=d.writers.indexOf(k)>=0;
-  return '<button class="btn '+(on?"green":"ghost")+' sm" style="width:100%;text-align:left;margin-bottom:5px;white-space:normal" data-wr="'+k+'">'+(on?"✓ ":"")+esc(WRITERS[k][0])+"</button>";}).join("");
+  return '<button class="btn '+(on?"green":"ghost")+' sm" style="width:100%;text-align:left;margin-bottom:5px;white-space:normal" data-wr="'+k+'">'+(on?"✓ ":"")+esc(WRITERS[k][0])+' · '+esc(WRITERS[k][1])+"</button>";}).join("");
+ h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin:10px 0 6px">COMEDY DOMAIN — specialised knowledge about the environment. Optional, no limit.</div>';
+ h+=Object.keys(CDOM).map(function(k){var on=d.domains.indexOf(k)>=0;
+  return '<button class="btn '+(on?"green":"ghost")+' sm" style="width:100%;text-align:left;margin-bottom:5px;white-space:normal" data-dom="'+k+'">'+(on?"✓ ":"")+esc(CDOM[k][0])+' · '+esc(CDOM[k][1])+"</button>";}).join("");
  sendSheet(h);
  var sh=$("sendsheet");
  sh.querySelectorAll("[data-wr]").forEach(function(b){b.addEventListener("click",function(){
   var k=b.getAttribute("data-wr");var i=d.writers.indexOf(k);
   if(i>=0)d.writers.splice(i,1);
   else{if(d.writers.length>=2){toast("Two max — one leads, one sharpens. Unequip one first.",true);return;}d.writers.push(k);}
+  save();sh.remove();dsWriters();}); });
+ sh.querySelectorAll("[data-dom]").forEach(function(b){b.addEventListener("click",function(){
+  var k=b.getAttribute("data-dom");var i=d.domains.indexOf(k);
+  if(i>=0)d.domains.splice(i,1);else d.domains.push(k);
   save();sh.remove();dsWriters();}); });}
 function nextHint(viewId){
  var t="";
@@ -8503,21 +8556,22 @@ async function runCaption(){
   r.steps.caption=true;save();if(st)st.innerHTML="";renderRun();
  }catch(e){if(st)st.innerHTML=errLine(e);}}
 function REC_MAP(){return [
- [["comedy","funny","sitcom","gag","laugh","sketch","humor"],["keenan","damon","rock","marlon"]],
- [["silent","wordless","no dialogue","visual","mime"],["chaplin","atkinson","norm"]],
- [["music","song","video","concert","rap","album"],["katt","emurphy","griffin"]],
- [["family","legacy","roots","ancestry","church","grandmother","elder"],["coogler","bernie","pryor"]],
- [["street","hood","block","project","hustle","satire","brand"],["mcgruder","katt","griffin"]],
- [["creepy","horror","strange","unsettling","mystery","paranoid"],["peele","gervais","norm"]],
- [["bureau","office","rules","system","permit","institution","government"],["carlin","cleese","rock"]],
- [["action","fight","hero","villain","battle","superhero"],["cmurphy","marlon","macfarlane"]],
- [["kid","cartoon","toon","animated","cloudtoons"],["keenan","damon","chaplin"]],
- [["fashion","luxury","product","commercial","merch"],["emurphy","sykes","gervais"]]];}
+ [["comedy","funny","sitcom","gag","laugh","sketch","humor"],["flip","economy","builtcase"]],
+ [["silent","wordless","no dialogue","visual","mime"],["wordless","sideways"]],
+ [["music","song","video","concert","rap","album"],["culture","economy"]],
+ [["family","legacy","roots","ancestry","church","grandmother","elder"],["wound","culture"]],
+ [["street","hood","block","project","hustle","satire","brand"],["culture","flip"]],
+ [["creepy","horror","strange","unsettling","mystery","paranoid"],["sideways","wordless"]],
+ [["bureau","office","rules","system","permit","institution","government"],["flip","builtcase"]],
+ [["action","fight","hero","villain","battle","superhero"],["wordless","economy"]],
+ [["kid","cartoon","toon","animated","cloudtoons"],["wordless","culture"]],
+ [["news","newsroom","broadcast","anchor","report","chyron","press"],["flip","builtcase","economy"]],
+ [["fashion","luxury","product","commercial","merch"],["flip","economy"]]];}
 function showRecs(d){
  var t=((d&&d.name||"")+" "+(d&&d.logline||"")).toLowerCase();
  var out=[];REC_MAP().forEach(function(pair){
   if(pair[0].some(function(k){return t.indexOf(k)>=0;}))pair[1].forEach(function(w){if(out.indexOf(w)<0)out.push(w);});});
- if(!out.length)out=["mcgruder","pryor","keenan","coogler"];
+ if(!out.length)out=["flip","economy","culture","wound"];
  return out.slice(0,6);}
 function showLogline(id){
  var d=dsGet(id);if(!d)return;
@@ -8525,12 +8579,12 @@ function showLogline(id){
  if(v===null)return;d.logline=v.trim();save();renderShows();}
 function showsToggle(id,key){
  var d=dsGet(id);if(!d||!key)return;
- d.writers=d.writers||[];
+ d.writers=wrMig(d.writers||[]);
  var i=d.writers.indexOf(key);
  if(i>=0)d.writers.splice(i,1);
  else{if(d.writers.length>=2){toast("Two max — one leads, one sharpens. Unequip one first.",true);renderShows();return;}d.writers.push(key);}
  save();renderShows();
- toast((WRITERS[key]?WRITERS[key][0].split(" — ")[0]:key)+(i>=0?" left the room.":" is writing "+d.name+"."));}
+ toast((WRITERS[key]?WRITERS[key][0]:key)+(i>=0?" left the room.":" is equipped on "+d.name+"."));}
 function showsNew(){var d=dsNewPrompt();if(d)renderShows();}
 function cfLaw(){
  var d=(typeof dsGet==="function")?dsGet(S.dsActive):null;
@@ -8550,7 +8604,7 @@ async function cfForge(id){
  var known=(S.cast||[]).filter(function(c){return c.show===d.name;}).map(function(c){return c.name+(c.nick?" \u201c"+c.nick+"\u201d":"")+(c.from?" ("+c.from+")":"");}).join("; ");
  var terms=slangActive().slice(0,14).map(function(t){return t.term;}).join(", ");
  var sys=vibeCtx()+' You are the STONERALIA CANON FORGE \u2014 the bible room. Build ONE show bible. LAW: cannabis is atmosphere never personality; comedy comes from social systems and people failing them; Hoodie Chieff NEVER speaks (signs, shade tilts, stillness); district first \u2014 every district has its own rule; slang is seasoning; identity is permanent but art style belongs to the show; flaws are personal never cultural; elders and family carry weight, never caricature; G-rated, commercially safe, all original, no real people. Identity locks must be STRUCTURAL (build, hair shape, signature items, posture) so the character survives being redrawn in another show\u2019s style. Voice/movement/stillness descriptors must be short enough to paste straight into an image or video prompt. Return JSON ONLY: {"logline":"one line","thesis":"the thing under the jokes, 2 sentences","tone":"one line","districts":[{"name":"","rule":"the rule that shapes conflict there"}],"institutions":["systems this show antagonizes"],"cast":[{"name":"","nick":"","from":"district","identity":"structural identity lock","function":"what they are in the machine","flaw":"one flaw that turns small problems into episodes","stake":"what they want across the series and what it costs","voices":{"home":"","public":"","pressure":""},"movement":"","stillness":"","wardrobe":"default fit and what never comes off","engine":"their repeatable story shape","gags":["visual repeatable bits"]}],"ensemble":[{"pair":"A + B","generates":"what that pairing reliably produces"}],"slang":[{"term":"","meaning":"","district":"","example":"one line of dialogue using it"}],"episode_engine":"the repeatable spine of a typical episode","springboards":["6 episode ideas, one line each"],"gags":["show-wide running gags"],"production":{"render":"one of: stoneralia_animated, stoneralia_cinematic, painterly, fashion, comic, commercial, ugc","pacing":"one of: balanced, contemplative, fast_action, epic, suspense, comedy, music, product","writers":["two roster keys max from the equipped writers room if set"],"style_note":"the art-style line for this show"}} \u2014 4 to 6 cast members maximum, 5 to 8 slang terms.';
- var ask="SHOW: "+d.name+(d.logline?" | LOGLINE: "+d.logline:"")+(known?" | EXISTING CAST (reuse, do not duplicate): "+known:"")+(terms?" | EXISTING CHIEFINESE: "+terms:"")+((d.writers||[]).length?" | WRITERS ROOM: "+d.writers.join(", "):"");
+ var ask="SHOW: "+d.name+(d.logline?" | LOGLINE: "+d.logline:"")+(known?" | EXISTING CAST (reuse, do not duplicate): "+known:"")+(terms?" | EXISTING CHIEFINESE: "+terms:"")+(wrMig(d.writers||[]).length?" | EQUIPPED DISCIPLINES: "+wrNames(d.writers||[]).join(", "):"");
  try{
   var b=parseJSON(await _llmRun(sys,ask,"ideas"));
   if(!b||!b.logline)throw new Error("Bible came back empty \u2014 run it again.");
@@ -8589,7 +8643,7 @@ function cfApplyProd(id){
  if(p.render&&CINE_RENDER[p.render])S.cine.render=p.render;
  if(p.pacing&&CINE_PACE[p.pacing])S.cine.pace=p.pacing;
  if(Array.isArray(p.writers)&&p.writers.length&&!(d.writers||[]).length){
-  d.writers=p.writers.filter(function(k){return WRITERS[k];}).slice(0,2);}
+  d.writers=wrMig(p.writers);}
  save();renderShows();
  toast("Production locks applied \u2014 "+((CINE_RENDER[S.cine.render]||[])[0]||"")+" \u00b7 "+((CINE_PACE[S.cine.pace]||[])[0]||"")+".");}
 function cfMarkdown(b,name){
@@ -8802,8 +8856,8 @@ function renderShows(){
    var mark=(W.indexOf(k)>=0?"★ ":"")+(recs.indexOf(k)>=0?"🔥 ":"");
    return '<option value="'+k+'">'+mark+esc(WRITERS[k][0])+"</option>";}).join("");
   var chips=W.length?W.map(function(k){
-   return '<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bud);color:var(--bud);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:800;margin:6px 6px 0 0">★ '+esc(WRITERS[k]?WRITERS[k][0].split(" — ")[0]:k)+' <button style="background:none;border:none;color:var(--bud);cursor:pointer;padding:0" onclick="showsToggle(\''+d.id+'\',\''+k+'\')">✕</button></span>';}).join(""):'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">No writers equipped — the room writes house-default.</div>';
-  var craft=W.length?'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">'+esc(W.map(function(k){return WRITERS[k]?WRITERS[k][1]:"";}).filter(Boolean).join(" + "))+"</div>":"";
+   return '<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bud);color:var(--bud);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:800;margin:6px 6px 0 0">★ '+esc(WRITERS[k]?WRITERS[k][0]:k)+' <button style="background:none;border:none;color:var(--bud);cursor:pointer;padding:0" onclick="showsToggle(\''+d.id+'\',\''+k+'\')">✕</button></span>';}).join(""):'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">No discipline equipped — the room writes house-default. Any discipline can still be invoked on a single beat.</div>';
+  var craft=W.length?'<div class="hint" style="text-transform:none;letter-spacing:0;margin-top:6px">'+esc(W.map(function(k){return WRITERS[k]?WRITERS[k][2]:"";}).filter(Boolean).join(" + "))+"</div>":"";
   var n=(typeof dsCount==="function")?dsCount(d):0;
   return '<div class="card"><label class="fld">'+esc(d.name)+'</label>'
    +'<div class="hint" style="margin-top:-2px;margin-bottom:8px;text-transform:none;letter-spacing:0">'+(d.logline?esc(d.logline):"— no logline yet —")+' <button class="btn ghost sm" style="padding:2px 8px;margin-left:4px" onclick="showLogline(\''+d.id+'\')">✎</button></div>'
@@ -11029,7 +11083,7 @@ async function clWrite(){
   var castBlock=chosen.length?(" EXISTING CAST TO BUILD AROUND (use these, do not rename them): "+chosen.map(function(c){return c.name+(c.identity?" \u2014 "+String(c.identity).slice(0,200):"");}).join(" || ")+". You MAY propose additional new characters where the ensemble needs them; mark any new one as NEW."):" No existing cast supplied \u2014 create an original ensemble from scratch.";
   var setBlock=setIt?(" HOME LOCATION: "+setIt.name+(setIt.vibe?" \u2014 "+String(setIt.vibe).slice(0,240):"")+"."):"";
   var orig=" ORIGINALITY RULE: this must be an ORIGINAL property. Never imitate, name, or reproduce any existing show, its characters, premises, dialogue or running gags. The mechanics above are abstract tools, not references to copy.";
-  var sys=vibeCtx("full",C.brief||"")+" You are the WRITERS\u2019 ROOM for Smoke & Mirrors, developing an original comedy property."+cfamLaw()+cdnaLaw()+cmixLaw()+castBlock+setBlock+orig+" "+CROOM_OUT[C.output||"premise"][1]+" Plain text, clear headers, no markdown tables.";
+  var sys=vibeCtx("full",C.brief||"")+" You are the WRITERS\u2019 ROOM for Smoke & Mirrors, developing an original comedy property."+cfamLaw()+cdnaLaw()+cmixLaw()+cdomLaw()+castBlock+setBlock+orig+" "+CROOM_OUT[C.output||"premise"][1]+" Plain text, clear headers, no markdown tables.";
   var usr="BRIEF: "+((C.brief||"").trim()||"(none given \u2014 derive the arena from the family, DNA and cast)")+"\nDeliver the requested development work in full.";
   var res=await _llmRun(sys,usr);
   C.last=String(res||"").trim();

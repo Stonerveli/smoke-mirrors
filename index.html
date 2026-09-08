@@ -1503,6 +1503,19 @@ let S=load();
  }
  localStorage.setItem(LS,JSON.stringify(S));
 }catch(e){}})();
+(function postedMig(){try{
+ /* POSTED — created using the EXISTING show/dataset record type.
+    network:"" means parent unresolved / standalone in the current data model.
+    It does NOT resolve POSTED's permanent parent network. Seeded once, never re-added. */
+ if(S.postedMig)return;
+ if(!Array.isArray(S.datasets))S.datasets=[];
+ if(!S.datasets.some(function(d){return String(d.name||"").toLowerCase()==="posted";})){
+  S.datasets.push({id:uid(),name:"POSTED",network:"",lens:"documentary",domains:["broadcast"],
+   writers:[],trigger:"",sref:"",items:[],trained:false,status:"development",
+   logline:"",ts:Date.now()});
+ }
+ S.postedMig=1;localStorage.setItem(LS,JSON.stringify(S));
+}catch(e){}})();
 (function cine25Mig(){try{
  if(S.cine25Mig)return;
  if(S.cine&&S.cine.model==="seedance")S.cine.model="seedance25";
@@ -5764,6 +5777,30 @@ function wrMig(keys){
 var CDOM={
  broadcast:["Broadcast / Newsroom","DOM-0001","broadcast language, journalism procedure, chyrons, corrections, sourcing, producers, control rooms, live reports, deadlines, graphics, ratings, legal review and institutional media behaviour"]
 };
+/* ===== LENS — what the camera is allowed to see =====
+   Network = where it belongs. Show = what it is. Lens = what the camera may see.
+   Lens is NEVER inferred from network. Blank is valid and emits nothing. */
+var LENSES={
+ broadcast:["Broadcast (Block Report)","BLOCK REPORT TEST","Would Stoneralia residents plausibly see this while watching their news? The broadcast lens represents what the Stoneralian audience sees: professional on-air behaviour, broadcast-accessible material, on-air tells and broadcast grammar. If residents would not see it on their news, it does not belong under this lens."],
+ documentary:["Documentary / Mockumentary (POSTED)","POSTED TEST","Could an embedded documentary crew at Block Report have filmed this? The documentary lens may plausibly access the newsroom, control room, archive, break room, production meetings, Street Team prep, vans, field assignments, hallways, desks, post-broadcast arguments, confessionals, and limited outside-work material when it is plausible and story-relevant. Block Report remains the gravitational workplace centre — this is not a home-life sitcom. The same employee may be messy and unguarded off air and completely composed the moment the broadcast goes live. No live audience. No laugh track."]
+};
+/* Resolve the governing lens. Episode stores only a show REFERENCE — never a copy. */
+function lensFor(ep){
+ var d=null;
+ if(ep&&ep.show&&typeof dsState==="function"){
+  var nm=String(ep.show||"").toLowerCase();
+  d=dsState().find(function(x){return String(x.name||"").toLowerCase()===nm;})||null;
+ }
+ if(!d&&!ep&&typeof dsGet==="function")d=dsGet(S.dsActive);
+ var k=(d&&d.lens)||"";
+ return LENSES[k]?k:"";
+}
+function lensLaw(ep){
+ var k=lensFor(ep);
+ if(!k)return "";
+ var L=LENSES[k];
+ return " "+L[1]+" — "+L[2];
+}
 function cdomLaw(){
  var d=(typeof dsGet==="function")?dsGet(S.dsActive):null;
  var D=((d&&d.domains)||[]).filter(function(k){return CDOM[k];});
@@ -6038,12 +6075,17 @@ function dsWriters(){
  if(!d){toast("Pick or create a show dataset first (Lab).",true);return;}
  d.writers=wrMig(d.writers||[]);
  d.domains=d.domains||[];
+ d.lens=LENSES[d.lens]?d.lens:"";
  var h='<div style="font-weight:800;font-family:var(--slate);margin-bottom:4px">✍ Writers Room — '+esc(d.name)+'</div><div class="hint" style="text-transform:none;letter-spacing:0;margin-bottom:8px">EQUIPPED = the house voice — one leads, a second only when it clearly sharpens (max 2, routing law). Every discipline stays INVOKABLE on any single beat. Tap to equip.</div>';
  h+=Object.keys(WRITERS).map(function(k){var on=d.writers.indexOf(k)>=0;
   return '<button class="btn '+(on?"green":"ghost")+' sm" style="width:100%;text-align:left;margin-bottom:5px;white-space:normal" data-wr="'+k+'">'+(on?"✓ ":"")+esc(WRITERS[k][0])+' · '+esc(WRITERS[k][1])+"</button>";}).join("");
  h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin:10px 0 6px">COMEDY DOMAIN — specialised knowledge about the environment. Optional, no limit.</div>';
  h+=Object.keys(CDOM).map(function(k){var on=d.domains.indexOf(k)>=0;
   return '<button class="btn '+(on?"green":"ghost")+' sm" style="width:100%;text-align:left;margin-bottom:5px;white-space:normal" data-dom="'+k+'">'+(on?"✓ ":"")+esc(CDOM[k][0])+' · '+esc(CDOM[k][1])+"</button>";}).join("");
+ h+='<div class="hint" style="text-transform:none;letter-spacing:0;margin:10px 0 6px">LENS — what the camera is allowed to see. Network is where it belongs; lens is never inferred from it.</div>';
+ h+='<button class="btn '+(!d.lens?"green":"ghost")+' sm" style="width:100%;text-align:left;margin-bottom:5px;white-space:normal" data-lens="">'+(!d.lens?"✓ ":"")+'No Lens</button>';
+ h+=Object.keys(LENSES).map(function(k){var on=d.lens===k;
+  return '<button class="btn '+(on?"green":"ghost")+' sm" style="width:100%;text-align:left;margin-bottom:5px;white-space:normal" data-lens="'+k+'">'+(on?"✓ ":"")+esc(LENSES[k][0])+"</button>";}).join("");
  sendSheet(h);
  var sh=$("sendsheet");
  sh.querySelectorAll("[data-wr]").forEach(function(b){b.addEventListener("click",function(){
@@ -6054,6 +6096,10 @@ function dsWriters(){
  sh.querySelectorAll("[data-dom]").forEach(function(b){b.addEventListener("click",function(){
   var k=b.getAttribute("data-dom");var i=d.domains.indexOf(k);
   if(i>=0)d.domains.splice(i,1);else d.domains.push(k);
+  save();sh.remove();dsWriters();}); });
+ sh.querySelectorAll("[data-lens]").forEach(function(b){b.addEventListener("click",function(){
+  var k=b.getAttribute("data-lens")||"";
+  d.lens=LENSES[k]?k:"";
   save();sh.remove();dsWriters();}); });}
 function nextHint(viewId){
  var t="";
@@ -7878,7 +7924,7 @@ const CREATOR_TYPES={
 function spinner(t){return '<div class="statusline"><span class="rec"></span>'+esc(t)+'</div>';}
 function errLine(e){return '<div class="statusline" style="color:var(--red)">✗ '+esc((e&&e.message)||"hiccup")+'</div>';}
 function curEp(){return S.episodes.find(x=>x.id===S.currentEp)||null;}
-function writerSys(ep){let s=STONERALIA_LAW+" "+VOICE_DNA+" "+CINE_STD+" Stay 100% consistent with the chosen LOOK and with the established characters and locations.";if(ep&&ep.line==="cloudtoon"){s+=" "+SILENT_COMEDY;if(ep.mechanic)s+=" PRIMARY COMEDY MECHANIC: "+ep.mechanic+".";if(ep.chieffMode)s+=" "+ep.chieffMode;s+=" THIS IS A CLOUDTOON: wordless visual comedy, NO dialogue, wordless frame-by-frame pacing with one clear action or idea per frame, readable setup, visual escalation, setup → hard twist, end card only. Emphasize this Stoneralia Law: "+(ep.lawUsed||"")+".";const _ld=ep.leadId?S.cast.find(c=>c.id===ep.leadId):null;if(_ld)s+=" RECURRING LEAD (wordless audience avatar, never named on screen): "+_ld.name+(_ld.identity?" — "+_ld.identity:"")+". Everything weird happens around him while he reacts minimally.";if(ep.hiddenChieff)s+=" Plant a subtle HIDDEN CHIEFF cameo in frame (figurine/sticker/poster), never acknowledged — Chieff Sighting #"+(ep.sightingNo||"")+".";}return s;}
+function writerSys(ep){let s=STONERALIA_LAW+" "+VOICE_DNA+" "+CINE_STD+lensLaw(ep)+" Stay 100% consistent with the chosen LOOK and with the established characters and locations.";if(ep&&ep.line==="cloudtoon"){s+=" "+SILENT_COMEDY;if(ep.mechanic)s+=" PRIMARY COMEDY MECHANIC: "+ep.mechanic+".";if(ep.chieffMode)s+=" "+ep.chieffMode;s+=" THIS IS A CLOUDTOON: wordless visual comedy, NO dialogue, wordless frame-by-frame pacing with one clear action or idea per frame, readable setup, visual escalation, setup → hard twist, end card only. Emphasize this Stoneralia Law: "+(ep.lawUsed||"")+".";const _ld=ep.leadId?S.cast.find(c=>c.id===ep.leadId):null;if(_ld)s+=" RECURRING LEAD (wordless audience avatar, never named on screen): "+_ld.name+(_ld.identity?" — "+_ld.identity:"")+". Everything weird happens around him while he reacts minimally.";if(ep.hiddenChieff)s+=" Plant a subtle HIDDEN CHIEFF cameo in frame (figurine/sticker/poster), never acknowledged — Chieff Sighting #"+(ep.sightingNo||"")+".";}return s;}
 function epContext(ep){
   const lookStr=ep.look==="custom"?(ep.lookCustom||""):((LOOKS[ep.look]||LOOKS.flat2d).style);
   const heroes=S.cast.filter(c=>c.side==="hero").map(c=>c.name+(c.powers?" [powers: "+c.powers+"]":"")+(c.weakness?" [weakness: "+c.weakness+"]":"")).join("; ");
@@ -7890,7 +7936,7 @@ function epContext(ep){
   if(sets)t+="AVAILABLE LOCATIONS: "+sets+"\n";
   return t;
 }
-function newEpisode(){const ep={id:uid(),title:"",creatorType:"shorts",format:"serial_short",formula:"auto",look:"flat2d",lookCustom:"",series:false,logline:"",grandExpectation:"",source:"ai",sourceText:"",outline:"",script:"",optimizeNote:"",ts:Date.now()};S.episodes.unshift(ep);S.currentEp=ep.id;save();renderEpisodes();}
+function newEpisode(){const ep={id:uid(),title:"",show:"",creatorType:"shorts",format:"serial_short",formula:"auto",look:"flat2d",lookCustom:"",series:false,logline:"",grandExpectation:"",source:"ai",sourceText:"",outline:"",script:"",optimizeNote:"",ts:Date.now()};S.episodes.unshift(ep);S.currentEp=ep.id;save();renderEpisodes();}
 function renderEpisodes(){
   const host=$("epList");if(!host)return;
   if(S.currentEp){if($("epHub"))$("epHub").style.display="none";if($("epEditorWrap"))$("epEditorWrap").style.display="block";renderEpEditor();return;}
@@ -7911,6 +7957,8 @@ function renderEpEditor(){
   h+='<label class="fld" style="margin-top:12px">Format</label><select id="epFormat"></select><div class="hint" id="epFormatDesc" style="margin-top:6px"></div>';
   h+='<label class="fld" style="margin-top:12px">Look</label><select id="epLook"></select>';
   h+='<input type="text" id="epLookCustom" placeholder="describe your custom look" style="margin-top:8px;display:'+(ep.look==="custom"?"block":"none")+'" value="'+esc(ep.lookCustom||"")+'"><div class="hint" id="epLookDesc" style="margin-top:6px"></div>';
+  h+='<label class="fld" style="margin-top:12px">Show</label><select id="epShow"><option value="">\u2014 no show (no inherited lens) \u2014</option>'+((typeof dsState==="function")?dsState():[]).map(function(d){return '<option value="'+esc(d.name)+'"'+(ep.show===d.name?" selected":"")+'>'+esc(d.name)+(d.lens&&LENSES[d.lens]?" \u00b7 "+esc(LENSES[d.lens][1]):"")+'</option>';}).join("")+'</select>';
+  h+='<div class="hint" id="epLensHint" style="text-transform:none;letter-spacing:0;margin-top:6px">'+(lensFor(ep)?("Lens inherited from the show: "+esc(LENSES[lensFor(ep)][0])+". The episode stores only the show reference \u2014 change the show\u2019s lens and this follows."):"No lens inherited.")+'</div>';
   h+='<label class="row" style="margin-top:12px;align-items:center;gap:8px"><input type="checkbox" id="epSeries" style="width:auto;flex:0" '+(ep.series?"checked":"")+'> Series (multi-episode) — else single episode</label></div>';
   h+='<div class="card"><label class="fld">Logline</label><div class="row"><input type="text" id="epLogline" value="'+esc(ep.logline)+'" placeholder="one-sentence hook"><button class="btn ghost sm" id="recLogline" style="flex:0">✦</button></div><div id="loglineStatus"></div>';
   h+='<label class="fld" style="margin-top:12px">Grand Expectation</label><div class="row"><input type="text" id="epGrand" value="'+esc(ep.grandExpectation)+'" placeholder="the big promise / payoff the audience should feel"><button class="btn ghost sm" id="recGrand" style="flex:0">✦</button></div><div id="grandStatus"></div></div>';
@@ -7937,6 +7985,7 @@ function bindEpEditor(ep){
   $("epLookDesc").textContent=ep.look==="custom"?"":((LOOKS[ep.look]||{}).style||"");
   ls.addEventListener("change",e=>{ep.look=e.target.value;save();renderEpEditor();});
   $("epLookCustom").addEventListener("input",e=>{ep.lookCustom=e.target.value;save();});
+  if($("epShow"))$("epShow").addEventListener("change",e=>{ep.show=e.target.value;save();renderEpEditor();});
   $("epSeries").addEventListener("change",e=>{ep.series=e.target.checked;save();});
   $("epLogline").addEventListener("input",e=>{ep.logline=e.target.value;save();});
   $("epGrand").addEventListener("input",e=>{ep.grandExpectation=e.target.value;save();});
@@ -11079,7 +11128,7 @@ async function clWrite(){
   var castBlock=chosen.length?(" EXISTING CAST TO BUILD AROUND (use these, do not rename them): "+chosen.map(function(c){return c.name+(c.identity?" \u2014 "+String(c.identity).slice(0,200):"");}).join(" || ")+". You MAY propose additional new characters where the ensemble needs them; mark any new one as NEW."):" No existing cast supplied \u2014 create an original ensemble from scratch.";
   var setBlock=setIt?(" HOME LOCATION: "+setIt.name+(setIt.vibe?" \u2014 "+String(setIt.vibe).slice(0,240):"")+"."):"";
   var orig=" ORIGINALITY RULE: this must be an ORIGINAL property. Never imitate, name, or reproduce any existing show, its characters, premises, dialogue or running gags. The mechanics above are abstract tools, not references to copy.";
-  var sys=vibeCtx("full",C.brief||"")+" You are the WRITERS\u2019 ROOM for Smoke & Mirrors, developing an original comedy property."+cfamLaw()+cdnaLaw()+cmixLaw()+cdomLaw()+castBlock+setBlock+orig+" "+CROOM_OUT[C.output||"premise"][1]+" Plain text, clear headers, no markdown tables.";
+  var sys=vibeCtx("full",C.brief||"")+" You are the WRITERS\u2019 ROOM for Smoke & Mirrors, developing an original comedy property."+cfamLaw()+cdnaLaw()+cmixLaw()+cdomLaw()+lensLaw()+castBlock+setBlock+orig+" "+CROOM_OUT[C.output||"premise"][1]+" Plain text, clear headers, no markdown tables.";
   var usr="BRIEF: "+((C.brief||"").trim()||"(none given \u2014 derive the arena from the family, DNA and cast)")+"\nDeliver the requested development work in full.";
   var res=await _llmRun(sys,usr);
   C.last=String(res||"").trim();
